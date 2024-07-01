@@ -7,7 +7,7 @@
     "require": {
         "php": "^8.1",
         "arielmejiadev/larapex-charts": "*",
-        "chartisan/php": "*",
+        
         "guzzlehttp/guzzle": "*",
         "image-charts/image-charts": "*",
         "laravel/framework": "^10.10",
