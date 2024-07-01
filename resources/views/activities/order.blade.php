@@ -40,7 +40,6 @@
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>Action</th>
                                                 <th>Order No.</th>
                                                 <th>Customer</th>
                                                 <th>Date Order</th>
@@ -49,8 +48,8 @@
                                                 <th>QTY</th>
                                                 <th>DOD</th>
                                                 <th>Sale Price</th>
-                                                <th>State</th>
-                                                
+                                                <th>State</th>  
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -59,15 +58,6 @@
                                                     <td hidden class="ido">{{ $o->id }}</td>
                                                     <td hidden class="order_number">{{ $o->order_number }}</td>
                                                     <td>{{ $o->id }}</td>
-                                                    <td>
-                                                        <a href="{{ route('activities.editorder', ['id' => $o->id]) }}"
-                                                            class="btn-xs btn-warning"><i class="fas fa-pen"></i>
-                                                            Edit</a>
-                                                        <a href="{{ route('activities.deleteorder', ['id' => $o->id]) }}"
-                                                            data-toggle="modal" data-target="#modal-hapus{{ $o->id }}"
-                                                            class="btn-xs btn-danger"><i class="fas fa-trash-alt"></i>
-                                                            Delete</a>
-                                                    </td>
                                                     <td><a
                                                             href="{{ url('activities/order/view/' . $o->order_number) }}">{{ $o->order_number }}</a>
                                                     </td>
@@ -79,7 +69,15 @@
                                                     <td>{{$o->dod}}</td>
                                                     <td class="sale_price">{{$o->sale_price}}</td>
                                                     <td>{{$o->order_status}}</td>
-                                                    
+                                                    <td>
+                                                        <a href="{{ route('activities.editorder', ['id' => $o->id]) }}"
+                                                            class="btn-xs btn-warning"><i class="fas fa-pen"></i>
+                                                            Edit</a>
+                                                        <a href="{{ route('activities.deleteorder', ['id' => $o->id]) }}"
+                                                            data-toggle="modal" data-target="#modal-hapus{{ $o->id }}"
+                                                            class="btn-xs btn-danger"><i class="fas fa-trash-alt"></i>
+                                                            Delete</a>
+                                                    </td>
                                                 </tr>
                                                 <div class="modal fade" id="modal-hapus{{ $o->id }}">
                                                     <div class="modal-dialog">

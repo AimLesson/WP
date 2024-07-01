@@ -42,7 +42,7 @@
                                             <th>Name</th>
                                             <th>Date</th>
                                             <th>Total Amount</th>
-                                            <th>Action</th>
+                                            <th>Action 1 </th>
                                         </tr>
                                     </thead>
                                     <tbody>

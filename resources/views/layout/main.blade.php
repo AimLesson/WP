@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title id="dynamic-title">PT. ATMI SOLO</title>
     <link rel="icon" type="png" href="{{ asset('lte/dist/img/ATMILogo.png') }}">
 
@@ -210,6 +211,7 @@
                 @csrf
             </form>
         </nav>
+        
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
