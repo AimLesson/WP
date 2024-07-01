@@ -40,6 +40,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Poppins:ital,wght@1,800&family=Courgette&family=Roboto:wght@900&family=Ubuntu:wght@700&display=swap"
         rel="stylesheet">
+    
 
     <!-- Stylesheet DateTimePicker -->
     <link rel="stylesheet"
@@ -380,12 +381,35 @@
         });
 
         $(function() {
+            var logoUrl = "{{ asset('lte/dist/img/ATMILogo.png') }}";
+
             $("#machine").DataTable({
                 "responsive": false,
                 "lengthChange": false,
                 "autoWidth": false,
                 "scrollX": true,
-                "buttons": ["excel", "pdf", "print", "colvis"]
+                "buttons": [
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body)
+                                .css('font-size', '10pt')
+                                .prepend(
+                                    '<div style="text-align: center; margin-bottom: 20px;">' +
+                                    '<img src="' + logoUrl + '" style="height: 100px;" />' +
+                                    '<h1>Report Title</h1>' +
+                                    '<h3>Subtitle or Department</h3>' +
+                                    '<p>Date: ' + new Date().toLocaleDateString() + '</p>' +
+                                    '</div>'
+                                );
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    },
+                    "excel", "pdf", "colvis"
+                ]
             }).buttons().container().appendTo('#machine_wrapper .col-md-6:eq(0)');
             $("#tableorder").DataTable({
                 "responsive": false,
