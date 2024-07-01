@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Production_Sheet;
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use App\Models\Production_Sheet;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,8 +21,27 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        return view('dashboard');
+        $orders = Order::selectRaw('DATE(order_date) as date, COUNT(*) as count')
+                        ->where('order_date', '>=', Carbon::now()->subDays(30))
+                        ->groupBy('date')
+                        ->orderBy('date', 'asc')
+                        ->get();
+
+        $labels = $orders->pluck('date')->map(function($date) {
+            return Carbon::parse($date)->format('Y-m-d');
+        });
+        $data = $orders->pluck('count');
+
+        $orderStatuses = Order::select('order_status', Order::raw('count(*) as total'))
+                              ->groupBy('order_status')
+                              ->get();
+
+        $statusLabels = $orderStatuses->pluck('order_status');
+        $statusData = $orderStatuses->pluck('total');
+
+        return view('dashboard', compact('labels', 'data', 'statusLabels', 'statusData'));
     }
+
 
     public function file()
     {
@@ -216,5 +237,22 @@ class HomeController extends Controller
         $user->delete();
 
         return redirect()->route('user')->with('success','Data Berhasil dihapus');
+    }
+
+    public function dashboardindex()
+    {
+        $orders = Order::selectRaw('DATE(order_date) as date, COUNT(*) as count')
+                        ->where('order_date', '>=', Carbon::now()->subDays(30))
+                        ->groupBy('date')
+                        ->orderBy('date', 'asc')
+                        ->get();
+
+        // Format the data for Chart.js
+        $labels = $orders->pluck('date')->map(function($date) {
+            return Carbon::parse($date)->format('Y-m-d');
+        });
+        $data = $orders->pluck('count');
+
+        return view('chart', compact('labels', 'data'));
     }
 }

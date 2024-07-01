@@ -22,10 +22,8 @@
 
         <!-- Main content -->
         <section class="content">
-            <!-- /.row -->
             <!-- Main row -->
             <div class="row">
-                <!-- Left col -->
                 <section class="col-lg-12 connectedSortable">
                   <div class="card text-center m-4 mb-4">
                     <div class="card-header">
@@ -33,6 +31,22 @@
                     </div>
                     <div class="card-body">
                         <canvas id="lineChart"></canvas>
+                        <table class="table table-bordered mt-4">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Number of Orders</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($labels as $index => $label)
+                                    <tr>
+                                        <td>{{ $label }}</td>
+                                        <td>{{ $data[$index] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                     <div class="card-header">
                       Laporan Proses Order
@@ -41,18 +55,27 @@
                         <div class="pie-chart-container mt-4">
                             <canvas id="pieChart"></canvas>
                         </div>
+                        <table class="table table-bordered mt-4">
+                            <thead>
+                                <tr>
+                                    <th>Order Status</th>
+                                    <th>Number of Orders</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($statusLabels as $index => $statusLabel)
+                                    <tr>
+                                        <td>{{ $statusLabel }}</td>
+                                        <td>{{ $statusData[$index] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                    <!-- Custom tabs (Charts with tabs)-->
-                    
                 </div>
             </div>
         </section>
-        <!-- /.Left col -->
-        <section class="col-lg-12 connectedSortable">
-
-        </section>
     </div>
-</div>
 </section>
 </div>
 @endsection
@@ -79,10 +102,10 @@
         var lineChart = new Chart(ctxLine, {
             type: 'line',
             data: {
-                labels: Array.from({ length: 30 }, (_, i) => i + 1), // Labels for 30 days
+                labels: {!! json_encode($labels) !!},
                 datasets: [{
                     label: 'Jumlah Order',
-                    data: Array.from({ length: 30 }, () => Math.floor(Math.random() * 100)), // Random data for example
+                    data: {!! json_encode($data) !!},
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderWidth: 1,
@@ -106,13 +129,12 @@
                         },
                         ticks: {
                             callback: function(value) {
-                                // Only show these specific tick values
                                 if (value === 20 || value === 40 || value === 60 || value === 80 || value === 100) {
                                     return value;
                                 }
-                                return null; // Hide other tick values
+                                return null;
                             },
-                            stepSize: 20, // Ensure the step size is set to 20 for consistent tick intervals
+                            stepSize: 20,
                         }
                     }
                 }
@@ -123,10 +145,10 @@
         var pieChart = new Chart(ctxPie, {
             type: 'pie',
             data: {
-                labels: ['Not Started', 'Pending', 'Finish'],
+                labels: {!! json_encode($statusLabels) !!},
                 datasets: [{
                     label: 'Jumlah',
-                    data: [50, 25, 30],
+                    data: {!! json_encode($statusData) !!},
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',

@@ -30,8 +30,7 @@ Route::get('/fetch-table-data', [ActivitiesController::class, 'fetchData'])->nam
 Route::group(['middleware' => 'disable_back_btn'], function () {
     Route::group(['middleware' => 'auth'], function () {
         Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
-
-        //file
+                //file
         Route::get('/file', [HomeController::class, 'file'])->name('file');
         //file - change password
         Route::get('file/user/changepw', [HomeController::class, 'changepw'])->name('user.changepw');
