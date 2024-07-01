@@ -39,13 +39,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Poppins:ital,wght@1,800&family=Courgette&family=Roboto:wght@900&family=Ubuntu:wght@700&display=swap"
         rel="stylesheet">
-
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
-        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
-        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-        <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
     
 
     <!-- Stylesheet DateTimePicker -->
@@ -403,6 +396,9 @@
                                 .prepend(
                                     '<div style="text-align: center; margin-bottom: 20px;">' +
                                     '<img src="' + logoUrl + '" style="height: 100px;" />' +
+                                    '<h1>Report Title</h1>' +
+                                    '<h3>Subtitle or Department</h3>' +
+                                    '<p>Date: ' + new Date().toLocaleDateString() + '</p>' +
                                     '</div>'
                                 );
 
