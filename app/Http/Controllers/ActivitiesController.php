@@ -1256,7 +1256,7 @@ class ActivitiesController extends Controller
     public function storeprocessing(Request $request)
     {
         Log::info('StoreProcessing method called', ['request' => $request->all()]);
-    
+
         // Validation rules
         $validator = Validator::make($request->all(), [
             'order_number' => 'required',
@@ -1268,12 +1268,12 @@ class ActivitiesController extends Controller
             'item.*' => 'required|string|max:255',
             'total.*' => 'required|integer|min:1',
         ]);
-    
+
         // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-    
+
         // Iterate over each set of item details and create sub_contract entries
         foreach ($request->dod as $index => $dod) {
             processing::create([
@@ -1287,7 +1287,7 @@ class ActivitiesController extends Controller
                 'total_process' => $request->total[$index],
             ]);
         }
-    
+
         // Redirect with success message
         return redirect()->route('activities.createprocessing')->with('success', 'Processing(s) added successfully.');
     }
@@ -1343,7 +1343,8 @@ class ActivitiesController extends Controller
         return view('activities.viewstandartpart', compact('standartpartJoin'));
     }
 
-    public function getPartDetails($no_barcode) {
+    public function getPartDetails($no_barcode)
+    {
         $part = StandartpartAPI::where('no_barcode', $no_barcode)->first();
         return response()->json($part);
     }
@@ -1353,13 +1354,13 @@ class ActivitiesController extends Controller
         $orders = Order::get();
         $items = ItemAdd::get();
         $standardParts = StandartpartAPI::get();
-        return view('activities.createstandartpart', compact('standardParts', 'orders','items'));
+        return view('activities.createstandartpart', compact('standardParts', 'orders', 'items'));
     }
 
     public function storestandartpart(Request $request)
     {
         Log::info('StoreStandartPart method called', ['request' => $request->all()]);
-    
+
         // Validation rules
         $validator = Validator::make($request->all(), [
             'order_number' => 'required',
@@ -1373,12 +1374,12 @@ class ActivitiesController extends Controller
             'info.*' => 'nullable|string|max:255',
             'item.*' => 'nullable|string|max:255',
         ]);
-    
+
         // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-    
+
         // Iterate over each set of item details and create sub_contract entries
         foreach ($request->date as $index => $date) {
             standart_part::create([
@@ -1394,12 +1395,12 @@ class ActivitiesController extends Controller
                 'info' => $request->info[$index] ?? null,
             ]);
         }
-    
+
         // Redirect with success message
         return redirect()->route('activities.createstandartpart')->with('success', 'Standart Part(s) added successfully.');
     }
 
-//SubCont. Controller
+    //SubCont. Controller
     public function sub_contract()
     {
         return view('activities.subcontract');
@@ -1409,13 +1410,13 @@ class ActivitiesController extends Controller
     {
         $orders = Order::get();
         $items = ItemAdd::get();
-        return view('activities.createsub_contract', compact('orders','items'));
+        return view('activities.createsub_contract', compact('orders', 'items'));
     }
 
     public function storesub_contract(Request $request)
     {
         Log::info('StoreSubcontract method called', ['request' => $request->all()]);
-    
+
         // Validation rules
         $validator = Validator::make($request->all(), [
             'order_number' => 'required',
@@ -1428,12 +1429,12 @@ class ActivitiesController extends Controller
             'total_price.*' => 'required|numeric|min:0',
             'info.*' => 'nullable|string|max:255',
         ]);
-    
+
         // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-    
+
         // Iterate over each set of item details and create sub_contract entries
         foreach ($request->dod as $index => $dod) {
             sub_contract::create([
@@ -1448,7 +1449,7 @@ class ActivitiesController extends Controller
                 'info' => $request->info[$index] ?? null,
             ]);
         }
-    
+
         // Redirect with success message
         return redirect()->route('activities.createsub_contract')->with('success', 'Sub Contract(s) added successfully.');
     }
@@ -1467,16 +1468,16 @@ class ActivitiesController extends Controller
         $sub_contract = Sub_Contract::findOrFail($id);
         return response()->json($sub_contract);
     }
-    
+
     public function updatesub_contract(Request $request, $id)
     {
         $sub_contract = Sub_Contract::findOrFail($id);
         $sub_contract->update($request->all());
         return redirect()->route('activities.sub_contract')->with('success', 'Sub Contract updated successfully.');
     }
-    
-    
-//Overhead_manufacture Controller
+
+
+    //Overhead_manufacture Controller
     public function overhead_manufacture()
     {
         return view('activities.overheadmanufacture');
@@ -1491,7 +1492,7 @@ class ActivitiesController extends Controller
     public function storeoverhead_manufacture(Request $request)
     {
         Log::info('StoreOverheadManufacture method called', ['request' => $request->all()]);
-    
+
         // Validation rules
         $validator = Validator::make($request->all(), [
             'tanggal.*' => 'required|date',
@@ -1503,12 +1504,12 @@ class ActivitiesController extends Controller
             'keterangan.*' => 'required|string|max:255',
             'info.*' => 'nullable|string|max:255',
         ]);
-    
+
         // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-    
+
         // Iterate over each set of item details and create overhead entries
         foreach ($request->tanggal as $index => $tanggal) {
             overhead::create([
@@ -1522,71 +1523,71 @@ class ActivitiesController extends Controller
                 'info' => $request->info[$index] ?? null,
             ]);
         }
-    
+
         // Redirect with success message
         return redirect()->route('activities.createoverhead_manufacture')->with('success', 'Overhead Manufacture(s) added successfully.');
     }
 
     // Controller methods in ActivityController
 
-public function editOverheadManufacture($id)
-{
-    $overhead = overhead::findOrFail($id);
-    return response()->json($overhead);
-}
-
-public function updateOverheadManufacture(Request $request, $id)
-{
-    Log::info('UpdateOverheadManufacture method called', ['request' => $request->all()]);
-
-    // Validation rules
-    $validator = Validator::make($request->all(), [
-        'tanggal' => 'required|date',
-        'so_no' => 'required|string|max:255',
-        'order_number' => 'required|string|max:255',
-        'ref' => 'required|string|max:255',
-        'description' => 'required|string|max:255',
-        'jumlah' => 'required|integer|min:1',
-        'keterangan' => 'required|string|max:255',
-        'info' => 'nullable|string|max:255',
-    ]);
-
-    // Check if validation fails
-    if ($validator->fails()) {
-        return redirect()->back()->withErrors($validator)->withInput();
+    public function editOverheadManufacture($id)
+    {
+        $overhead = overhead::findOrFail($id);
+        return response()->json($overhead);
     }
 
-    // Find the overhead entry and update it
-    $overhead = overhead::findOrFail($id);
-    $overhead->update($request->all());
+    public function updateOverheadManufacture(Request $request, $id)
+    {
+        Log::info('UpdateOverheadManufacture method called', ['request' => $request->all()]);
 
-    // Redirect with success message
-    return redirect()->route('activities.createoverhead_manufacture')->with('success', 'Overhead Manufacture updated successfully.');
-}
+        // Validation rules
+        $validator = Validator::make($request->all(), [
+            'tanggal' => 'required|date',
+            'so_no' => 'required|string|max:255',
+            'order_number' => 'required|string|max:255',
+            'ref' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'jumlah' => 'required|integer|min:1',
+            'keterangan' => 'required|string|max:255',
+            'info' => 'nullable|string|max:255',
+        ]);
 
-public function destroyOverheadManufacture($id)
-{
-    // Find the overhead entry and delete it
-    $overhead = overhead::findOrFail($id);
-    $overhead->delete();
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-    // Redirect with success message
-    return redirect()->route('activities.createoverhead_manufacture')->with('success', 'Overhead Manufacture deleted successfully.');
-}
+        // Find the overhead entry and update it
+        $overhead = overhead::findOrFail($id);
+        $overhead->update($request->all());
 
-    
+        // Redirect with success message
+        return redirect()->route('activities.createoverhead_manufacture')->with('success', 'Overhead Manufacture updated successfully.');
+    }
+
+    public function destroyOverheadManufacture($id)
+    {
+        // Find the overhead entry and delete it
+        $overhead = overhead::findOrFail($id);
+        $overhead->delete();
+
+        // Redirect with success message
+        return redirect()->route('activities.createoverhead_manufacture')->with('success', 'Overhead Manufacture deleted successfully.');
+    }
+
+
 
     //Material Controller
     public function material()
     {
         $material = Material::get();
-        return view('activities.material',compact('material'));
+        return view('activities.material', compact('material'));
     }
 
     public function creatematerial()
     {
         $creatematerial = Material::get();
-        return view('activities.creatematerial',compact('creatematerial'));
+        return view('activities.creatematerial', compact('creatematerial'));
     }
 
     public function storeMaterial(Request $request)
@@ -1665,7 +1666,7 @@ public function destroyOverheadManufacture($id)
     {
         $order = Order::get();
         $itemadd = ItemAdd::get();
-        return view('activities.createused_time', compact('order','itemadd'));
+        return view('activities.createused_time', compact('order', 'itemadd'));
     }
     public function used_time_barcode()
     {
@@ -1676,7 +1677,7 @@ public function destroyOverheadManufacture($id)
     {
         $order = Order::get();
         $itemadd = ItemAdd::get();
-        return view('activities.createused_time_barcode', compact('order','itemadd'));
+        return view('activities.createused_time_barcode', compact('order', 'itemadd'));
     }
     public function order_approval_log()
     {
@@ -1714,6 +1715,7 @@ public function destroyOverheadManufacture($id)
         // Validate the request data
         $validatedData = $request->validate([
             'selected_order_id' => 'required|exists:order,id',
+            'order_number' => 'required|unique:order,order_number'
         ]);
 
         // Fetch the selected order
@@ -1721,11 +1723,26 @@ public function destroyOverheadManufacture($id)
 
         // Create a new Order instance with the data from the selected order
         $newOrder = $selectedOrder->replicate();
-        $newOrder->order_number = $request->input('order_number'); // Change order number if needed
+        $newOrder->order_number = $request->input('order_number');
         $newOrder->save();
 
+        $items = Item::where('order_number', $selectedOrder->order_number)->get();
+        foreach ($items as $item) {
+            $newItem = $item->replicate();
+            $newItem->order_number = $newOrder->order_number;
+            $newItem->save();
+
+            // Copy associated item additions
+            $itemAdds = ItemAdd::where('order_number', $item->order_number)->get();
+            foreach ($itemAdds as $itemAdd) {
+                $newItemAdd = $itemAdd->replicate();
+                $newItemAdd->order_number = $newItem->order_number;
+                $newItemAdd->save();
+            }
+        }
+
         // Redirect back with a success message
-        return redirect()->route('activities.order')->with('success', 'Order copied successfully.');
+        return redirect()->route('activities.order')->with('success', 'Order copied successfully with related items.');
     }
     public function data_maintenance()
     {
