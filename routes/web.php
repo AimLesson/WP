@@ -325,7 +325,11 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('/activities/calculation', [ActivitiesController::class, 'calculation'])->name('activities.calculation');
         Route::get('/activities/delivery_orders_wh', [ActivitiesController::class, 'delivery_orders_wh'])->name('activities.delivery_orders_wh');
         Route::get('/activities/maintenance_standart', [ActivitiesController::class, 'maintenance_standart'])->name('activities.maintenance_standart');
-        Route::get('/activities/copy_order', [ActivitiesController::class, 'copy_order'])->name('activities.copy_order');
+
+        //CopyOrder
+        Route::get('/activities/copy_order', [ActivitiesController::class, 'copyOrder'])->name('activities.copy_order');
+        Route::post('/store-copied-order', [ActivitiesController::class, 'storeCopiedOrder'])->name('activities.storecopyorder');
+
         Route::get('/activities/data_maintenance', [ActivitiesController::class, 'data_maintenance'])->name('activities.data_maintenance');
         Route::get('/activities/update_group_unit', [ActivitiesController::class, 'update_group_unit'])->name('activities.update_group_unit');
         Route::get('/activities/delivery_process', [ActivitiesController::class, 'delivery_process'])->name('activities.delivery_process');

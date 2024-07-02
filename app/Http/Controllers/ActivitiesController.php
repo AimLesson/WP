@@ -1703,9 +1703,29 @@ public function destroyOverheadManufacture($id)
     {
         return view('activities.maintenancestandart');
     }
-    public function copy_order()
+    public function copyOrder()
     {
-        return view('activities.copyorder');
+        $orders = Order::all(); // Fetch all orders
+        return view('activities.copy_order', compact('orders'));
+    }
+
+    public function storeCopiedOrder(Request $request)
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'selected_order_id' => 'required|exists:order,id',
+        ]);
+
+        // Fetch the selected order
+        $selectedOrder = Order::find($validatedData['selected_order_id']);
+
+        // Create a new Order instance with the data from the selected order
+        $newOrder = $selectedOrder->replicate();
+        $newOrder->order_number = $request->input('order_number'); // Change order number if needed
+        $newOrder->save();
+
+        // Redirect back with a success message
+        return redirect()->route('activities.order')->with('success', 'Order copied successfully.');
     }
     public function data_maintenance()
     {
