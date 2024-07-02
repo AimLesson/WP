@@ -12,6 +12,33 @@
         color: white;
         /* Warna teks menjadi putih atau sesuai kebutuhan */
     }
+    .judul {
+            font-size: 9rem; /* default size */
+        }
+
+        @media (max-width: 1200px) {
+            .judul {
+                font-size: 5rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .judul {
+                font-size: 5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .judul {
+                font-size: 5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .judul {
+                font-size: 3rem;
+            }
+        }
 </style>
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">

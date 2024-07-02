@@ -11,6 +11,33 @@
             color: white;
             /* Warna teks menjadi putih atau sesuai kebutuhan */
         }
+        .judul {
+            font-size: 9rem; /* default size */
+        }
+
+        @media (max-width: 1200px) {
+            .judul {
+                font-size: 5rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .judul {
+                font-size: 5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .judul {
+                font-size: 5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .judul {
+                font-size: 3rem;
+            }
+        }
     </style>
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -121,30 +148,12 @@
                     </li>
                 </ul>
             </li>
-            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
-            <li class="nav-item {{ request()->is('setup/privileges') ? 'active' : '' }}">
-                <a href="{{ route('setup.privileges') }}" class="nav-link">
-                    <i class="nav-icon fas fa-user-check"></i>
-                    <p>
-                        Privilege
-                    </p>
-                </a>
-            </li>
-            @endif
             @if (Auth::user()->role == 'superadmin')
             <li class="nav-item {{ request()->is('setup/companyinfo') ? 'active' : '' }}">
                 <a href="{{ route('setup.companyinfo') }}" class="nav-link">
                     <i class="nav-icon fas fa-info-circle"></i>
                     <p>
                         Company Info
-                    </p>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('setup/settinghost3') ? 'active' : '' }}">
-                <a href="{{ route('setup.settinghost3') }}" class="nav-link">
-                    <i class="nav-icon fas fa-dragon"></i>
-                    <p>
-                        Setting Host 3
                     </p>
                 </a>
             </li>

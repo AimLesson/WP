@@ -33,7 +33,7 @@
                             <!-- /.card-header -->
                             {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
                             <div class="card-body">
-                                <table id="tableorder" class="table table-head-fixed text-nowrap">
+                                <table id="machine" class="table table-head-fixed text-nowrap">
                                     {{-- <table id="machine" class="table table-bordered table-striped"> --}}
                                     <thead>
                                         <tr>

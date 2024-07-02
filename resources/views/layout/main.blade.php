@@ -42,6 +42,7 @@
         href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Poppins:ital,wght@1,800&family=Courgette&family=Roboto:wght@900&family=Ubuntu:wght@700&display=swap"
         rel="stylesheet">
     
+        
 
     <!-- Stylesheet DateTimePicker -->
     <link rel="stylesheet"
@@ -140,6 +141,8 @@
             color: #000000;
             /* Warna teks menjadi hitam atau sesuai kebutuhan */
         }
+
+
     </style>
 </head>
 
@@ -154,7 +157,7 @@
 
 
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <nav class="main-header navbar navbar-expand-lg navbar-white navbar-light">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -163,33 +166,27 @@
                     </a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ route('dashboard') }}"
-                        class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">Dashboard</a>
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">Dashboard</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ route('file') }}" class="nav-link {{ Request::is('file') ? 'active' : '' }}">File</a>
                 </li>
                 @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ route('setup') }}"
-                        class="nav-link {{ Request::is('setup') ? 'active' : '' }}">Setup</a>
+                    <a href="{{ route('setup') }}" class="nav-link {{ Request::is('setup') ? 'active' : '' }}">Setup</a>
                 </li>
                 @endif
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ route('tables') }}"
-                        class="nav-link {{ Request::is('tables') ? 'active' : '' }}">Table</a>
+                    <a href="{{ route('tables') }}" class="nav-link {{ Request::is('tables') ? 'active' : '' }}">Table</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ route('activities') }}"
-                        class="nav-link {{ Request::is('activities') ? 'active' : '' }}">Activities</a>
+                    <a href="{{ route('activities') }}" class="nav-link {{ Request::is('activities') ? 'active' : '' }}">Activities</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ route('report') }}"
-                        class="nav-link {{ Request::is('report') ? 'active' : '' }}">Report</a>
+                    <a href="{{ route('report') }}" class="nav-link {{ Request::is('report') ? 'active' : '' }}">Report</a>
                 </li>
             </ul>
-
-
+        
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <!-- Messages Dropdown Menu -->
@@ -198,19 +195,31 @@
                         <i class="fas fa-expand-arrows-alt"></i>
                     </a>
                 </li>
-                {{-- </ul> --}}
-                {{-- <ul class="navbar-nav ml-auto"> --}}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('logout') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bars"></i>
                     </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="{{ route('dashboard') }}" class="dropdown-item {{ Request::is('dashboard') ? 'active' : '' }}">Dashboard</a>
+                        <a href="{{ route('file') }}" class="dropdown-item {{ Request::is('file') ? 'active' : '' }}">File</a>
+                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                        <a href="{{ route('setup') }}" class="dropdown-item {{ Request::is('setup') ? 'active' : '' }}">Setup</a>
+                        @endif
+                        <a href="{{ route('tables') }}" class="dropdown-item {{ Request::is('tables') ? 'active' : '' }}">Table</a>
+                        <a href="{{ route('activities') }}" class="dropdown-item {{ Request::is('activities') ? 'active' : '' }}">Activities</a>
+                        <a href="{{ route('report') }}" class="dropdown-item {{ Request::is('report') ? 'active' : '' }}">Report</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
                 </li>
             </ul>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>
         </nav>
+        
         
         <!-- /.navbar -->
 
@@ -383,36 +392,49 @@
         });
 
         $(function() {
-            var logoUrl = "{{ asset('lte/dist/img/ATMILogo.png') }}";
+    var logoUrl = "{{ asset('lte/dist/img/ATMILogo.png') }}";
 
-            $("#machine").DataTable({
-                "responsive": false,
-                "lengthChange": false,
-                "autoWidth": false,
-                "scrollX": true,
-                "buttons": [
-                    {
-                        extend: 'print',
-                        customize: function (win) {
-                            $(win.document.body)
-                                .css('font-size', '10pt')
-                                .prepend(
-                                    '<div style="text-align: center; margin-bottom: 20px;">' +
-                                    '<img src="' + logoUrl + '" style="height: 100px;" />' +
-                                    '<h1>Report Title</h1>' +
-                                    '<h3>Subtitle or Department</h3>' +
-                                    '<p>Date: ' + new Date().toLocaleDateString() + '</p>' +
-                                    '</div>'
-                                );
+    $("#machine").DataTable({
+        "responsive": false,
+        "lengthChange": false,
+        "autoWidth": false,
+        "scrollX": true,
+        "buttons": [
+            {
+                extend: 'print',
+                customize: function (win) {
+                    $(win.document.body)
+                        .css('font-size', '10pt')
+                        .prepend(
+                            `
+                                <div class="header print-only" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                                    <div class="logo-kiri" style="display: flex; align-items: center;">
+                                        <img src="{{ asset('lte/dist/img/ptatmisolo.png') }}" alt="Logo PT. ATMI Solo" class="logo" style="height: 100px;">
+                                    </div>
+                                    <div class="company-info" style="text-align: center; flex-grow: 1; margin-left: 20px;">
+                                        <b>PT. ATMI SOLO</b>
+                                        <p>Jl. Adisucipto / Jl. Mojo No. 1 Karangasem, Laweyan, Surakarta 57145<br>
+                                            Phone: +62 271 714466 - Fax: +62 271 714390<br>
+                                            PO BOX 215 Surakarta 57145, Jawa Tengah, Indonesia<br>
+                                            Email: marketing@atmi.co.id - Website: http://www.atmi.co.id</p>
+                                    </div>
+                                    <div class="logo-kanan" style="display: flex; align-items: center;">
+                                        <img src="{{ asset('lte/dist/img/atmipro.png') }}" alt="Logo ATMI Pro" class="logo" style="height: 100px; margin-left: 10px;">
+                                        <img src="{{ asset('lte/dist/img/truv.jpg') }}" alt="Logo ISO" class="logo" style="height: 100px; margin-left: 10px;">
+                                    </div>
+                                </div>
+                                <br>
+                            `
+                        );
 
-                            $(win.document.body).find('table')
-                                .addClass('compact')
-                                .css('font-size', 'inherit');
-                        }
-                    },
-                    "excel", "pdf", "colvis"
-                ]
-            }).buttons().container().appendTo('#machine_wrapper .col-md-6:eq(0)');
+                    $(win.document.body).find('table')
+                        .addClass('compact')
+                        .css('font-size', 'inherit');
+                }
+            },
+            "excel", "pdf", "colvis"
+        ]
+    }).buttons().container().appendTo('#machine_wrapper .col-md-6:eq(0)');
             $("#tableorder").DataTable({
                 "responsive": false,
                 "lengthChange": false,

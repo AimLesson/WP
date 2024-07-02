@@ -54,7 +54,6 @@
                                             <th>Date Finish</th>
                                             <th>Date Delivery</th>
                                             <th>Date By</th>
-                                            <th>asd</th>
                                         </tr>
                                     </thead>
                                     <tbody>
