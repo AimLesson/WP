@@ -39,4 +39,9 @@ class material_sheet extends Model
         'mat_price',
         
     ];
+
+    public function material_sheets()
+{
+    return $this->hasMany(Material_Sheet::class, 'order_number', 'order_number');
+}
 }

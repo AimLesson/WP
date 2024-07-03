@@ -29,98 +29,14 @@
                             <div class="card-header">
                                 <h3 class="card-title">Calculation</h3>
                             </div>
-                            
+                            <h3>Total Sales: {{ number_format($totalSales, 2) }}</h3>
+                            <h3>Total Material Cost: {{ number_format($totalMaterialCost, 2) }}</h3>
+                            <h3>Total Processing Cost: {{ number_format($totalProcessingCost, 2) }}</h3>
+                            <h3>Total Sub Contract Cost: {{ number_format($totalSubContractCost, 2) }}</h3>
                             <!-- /.card-header -->
                             {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
                             <div class="card-body">
-                                <table id="tableorder" class="table table-head-fixed text-nowrap">
-                                    {{-- <table id="machine" class="table table-bordered table-striped"> --}}
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Order No.</th>
-                                            <th>Customer</th>
-                                            <th>So. No.</th>
-                                            <th>Sales Order</th>
-                                            <th>Cost Material</th>
-                                            <th>Cost %(matt)</th>
-                                            <th>Cost Std. Part</th>
-                                            <th>Cost Labor</th>
-                                            <th>Cost (%)Labor</th>
-                                            <th>Cost Machine</th>
-                                            <th>Cost (%)Machine</th>
-                                            <th>Cost Sub Contr.</th>
-                                            <th>Cost OHM</th>
-                                            <th>COGS</th>
-                                            <th>(%)COGS</th>
-                                            <th>GPM</th>
-                                            <th>(%)PGM</th>
-                                            <th>OHM</th>
-                                            <th>(%)OHM</th>
-                                            <th>OH Org.</th>
-                                            <th>(%)OH Org.</th>
-                                            <th>NOI</th>
-                                            <th>(%)NOI</th>
-                                            <th>PEND.</th>
-                                            <th>(%)PEND.</th>
-                                            <th>Laba</th>
-                                            <th>(%)Laba</th>
-                                            <th>(%)Finish</th>
-                                            <th>Qty</th>
-                                            <th>Product</th>
-                                            <th>SubCon</th>
-                                            <th>Order Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $order = \App\Models\Standartpart_sheet::get();
-                                            // perlu ganti model database
-                                        @endphp
-                                        @foreach ($order as $m)
-                                            <tr>
-                                                <td>{{ $m->id }}</td>
-                                                <td>{{ $m->order_number }}</td>
-                                                <td>{{ $m->customer }}</td>
-                                                <td>{{ $m->product }}</td>
-                                                <td>{{ $m->so_no }}</td>
-                                                <td>{{ $m->dod }}</td>
-                                                <td>{{ $m->no_product }}</td>
-                                                <td>{{ $m->item_no }}</td>
-                                                <td>{{ $m->item_name }}</td>
-                                                <td>{{ $m->part_no }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                
-                                                {{-- <td>{{$m->total_mach}}</td> --}}
-                                            </tr>
-                                            
-                                            <!-- /.modal -->
-                                        @endforeach
-                                    </tbody>
-                                </table>
+
                             </div>
                             <!-- /.card-body -->
                         </div>

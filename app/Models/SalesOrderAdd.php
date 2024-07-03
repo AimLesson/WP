@@ -29,4 +29,20 @@ class SalesOrderAdd extends Model
     {
         return $this->belongsTo(SalesOrder::class, 'so_number', 'so_number');
     }
+
+    public function items()
+    {
+        return $this->hasMany(ItemAdd::class, 'order_number', 'order_number');
+    }
+
+    public function processings()
+    {
+        return $this->hasMany(ProcessingAdd::class, 'order_number', 'order_number');
+    }
+
+    public function sub_contracts()
+    {
+        return $this->hasMany(Sub_Contract::class, 'order_number', 'order_number');
+    }
+    
 }

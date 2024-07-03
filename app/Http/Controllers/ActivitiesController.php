@@ -1253,7 +1253,7 @@ class ActivitiesController extends Controller
 
     public function createprocessing()
     {
-        $orders      = Order::get();
+        $orders     = Order::get();
         $material   = Material::get();
         $machine    = Machine::get();
         $items    = ItemAdd::get();
@@ -1263,51 +1263,43 @@ class ActivitiesController extends Controller
 
     public function storeprocessing(Request $request)
     {
-
-        $request->validate([
-            'order_number'  => 'required',
-            'so_number'     => 'required',
-            'product'       => 'required',
-            'company_name'  => 'required',
-            'dod'           => 'required',
+        Log::info('StoreProcess method called', ['request' => $request->all()]);
+    
+        // Validation rules
+        $validator = Validator::make($request->all(), [
+            'order_number' => 'required',
+            'no_item' => 'required',
+            'nop.*' => 'required|integer|min:1',
+            'machine_name.*' => 'required|string|max:255',
+            'operation.*' => 'required|string|max:255',
+            'est_time.*' => 'required|numeric|min:0',
+            'dod.*' => 'required|date',
+            'machine_cost.*' => 'required|numeric|min:0',
+            'total.*' => 'required|numeric|min:0',
         ]);
-
-        DB::beginTransaction();
-        try {
-            $item = new Item;
-            $item->order_number = $request->order_number;
-            $item->so_number = $request->so_number;
-            $item->product = $request->product;
-            $item->company_name = $request->company_name;
-            $item->dod = $request->dod;
-            $item->save();
-            foreach ($request->item as $key => $items) {
-                $itemAdd = [
-                    'item'        => $items,
-                    'dod_item'     => $request->dod_item[$key],
-                    'id_item'     => $request->id_item[$key],
-                    'no_item'     => $request->no_item[$key],
-                    'order_number' => $item->order_number,
-                    'material'    => $request->material[$key],
-                    'weight'      => $request->weight[$key],
-                    'length'      => $request->length[$key],
-                    'width'       => $request->width[$key],
-                    'thickness'   => $request->thickness[$key],
-                    'ass_drawing' => $request->ass_drawing[$key],
-                    'drawing_no'  => $request->drawing_no[$key],
-                    'nos'         => $request->nos[$key],
-                    'nob'         => $request->nob[$key],
-                    'issued_item' => $request->issued_item[$key],
-                ];
-                ItemAdd::create($itemAdd);
-            }
-
-            DB::commit();
-            return redirect()->route('activities.item')->with('success', 'Item Data Saved Successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->route('activities.createitem')->with('error', 'Failed to Save Item');
+    
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
         }
+    
+        // Iterate over each set of item details and create process entries
+        foreach ($request->nop as $index => $nop) {
+            Processingadd::create([
+                'order_number' => $request->order_number,
+                'item_number' => $request->no_item,
+                'nop' => $nop,
+                'machine' => $request->machine_name[$index],
+                'operation' => $request->operation[$index],
+                'estimated_time' => $request->est_time[$index],
+                'date_wanted' => $request->dod[$index],
+                'mach_cost' => $request->machine_cost[$index],
+                'total' => $request->total[$index],
+            ]);
+        }
+    
+        // Redirect with success message
+        return redirect()->route('activities.createprocessing')->with('success', 'Process(es) added successfully.');
     }
 
     public function getMachineCost(Request $request)
@@ -1712,9 +1704,35 @@ class ActivitiesController extends Controller
     }
     public function calculation()
     {
-        return view('activities.calculation');
-    }
-    public function delivery_orders_wh()
+        // Retrieve all sales orders
+        $salesOrders = SalesOrder::with(['soadd.items.material_sheets', 'soadd.processings', 'soadd.sub_contracts'])->get();
+
+        // Initialize totals
+        $totalSales = 0;
+        $totalMaterialCost = 0;
+        $totalProcessingCost = 0;
+        $totalSubContractCost = 0;
+
+        foreach ($salesOrders as $order) {
+            $totalSales += (int) $order->total_amount;
+
+            foreach ($order->soadd as $item) {
+                $totalMaterialCost += optional($item->items)->sum(function ($item) {
+                    return optional($item->material_sheets)->sum(function ($sheet) {
+                        return (float) $sheet->mat_price;
+                    });
+                });
+                $totalProcessingCost += optional($item->processings)->sum(function ($process) {
+                    return (float) $process->mach_cost;
+                });
+                $totalSubContractCost += optional($item->sub_contracts)->sum(function ($contract) {
+                    return (float) $contract->total_price;
+                });
+            }
+        }
+
+        return view('activities.calculation', compact('totalSales', 'totalMaterialCost', 'totalProcessingCost', 'totalSubContractCost'));
+    }    public function delivery_orders_wh()
     {
         return view('activities.deliveryorderstowh');
     }
@@ -1735,21 +1753,22 @@ class ActivitiesController extends Controller
             'selected_order_id' => 'required|exists:order,id',
             'order_number' => 'required|unique:order,order_number'
         ]);
-
+    
         // Fetch the selected order
         $selectedOrder = Order::find($validatedData['selected_order_id']);
-
+    
         // Create a new Order instance with the data from the selected order
         $newOrder = $selectedOrder->replicate();
         $newOrder->order_number = $request->input('order_number');
         $newOrder->save();
-
+    
+        // Copy related items
         $items = Item::where('order_number', $selectedOrder->order_number)->get();
         foreach ($items as $item) {
             $newItem = $item->replicate();
             $newItem->order_number = $newOrder->order_number;
             $newItem->save();
-
+    
             // Copy associated item additions
             $itemAdds = ItemAdd::where('order_number', $item->order_number)->get();
             foreach ($itemAdds as $itemAdd) {
@@ -1758,10 +1777,19 @@ class ActivitiesController extends Controller
                 $newItemAdd->save();
             }
         }
-
+    
+        // Copy related processing additions
+        $processes = ProcessingAdd::where('order_number', $selectedOrder->order_number)->get();
+        foreach ($processes as $process) {
+            $newProcess = $process->replicate();
+            $newProcess->order_number = $newOrder->order_number;
+            $newProcess->save();
+        }
+    
         // Redirect back with a success message
-        return redirect()->route('activities.order')->with('success', 'Order copied successfully with related items.');
+        return redirect()->route('activities.order')->with('success', 'Order copied successfully with related items and processes.');
     }
+    
     public function data_maintenance()
     {
         return view('activities.datamaintenance');

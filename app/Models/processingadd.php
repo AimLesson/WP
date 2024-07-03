@@ -11,7 +11,6 @@ class ProcessingAdd extends Model
 
     protected $table = 'newprocessing';
     protected $fillable = [
-        'process_number',
         'order_number',
         'item_number',
         'machine',
@@ -28,4 +27,9 @@ class ProcessingAdd extends Model
     {
         return $this->belongsTo(Processing::class, 'processing_id', 'id');
     }
+
+    public function processings()
+{
+    return $this->hasMany(ProcessingAdd::class, 'order_number', 'order_number');
+}
 }

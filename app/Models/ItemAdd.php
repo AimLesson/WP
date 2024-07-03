@@ -33,4 +33,9 @@ class ItemAdd extends Model
     {
         return $this->belongsTo(Item::class, 'order_number', 'order_number');
     }
+
+    public function items()
+{
+    return $this->hasMany(ItemAdd::class, 'order_number', 'order_number');
+}
 }

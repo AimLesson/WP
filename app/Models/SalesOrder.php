@@ -57,4 +57,5 @@ class SalesOrder extends Model
     {
         return $this->hasMany(SalesOrderAdd::class, 'so_number', 'so_number');
     }
+    
 }
