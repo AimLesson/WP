@@ -802,7 +802,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Add Sales Order</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Add Sales Order</button>
                                 </div>
                             </div>
                         </div>

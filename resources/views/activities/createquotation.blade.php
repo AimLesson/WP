@@ -729,7 +729,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Add Quotation</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Add Quotation</button>
                                 </div>
                             </div>
                         </div>

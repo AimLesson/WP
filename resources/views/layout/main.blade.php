@@ -142,6 +142,23 @@
             /* Warna teks menjadi hitam atau sesuai kebutuhan */
         }
 
+        .btn-custom {
+    background-color: #337EFF; /* Change this to your desired background color */
+    color: white; /* Change this to your desired text color */
+    border: 2px solid #ffffff; /* Add a border with your desired color and width */
+    border-radius: 5px; /* Optional: Add rounded corners */
+    padding: 10px 20px; /* Adjust padding as needed */
+    font-size: 16px; /* Adjust font size as needed */
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; /* Optional: Add transition for smooth color changes */
+     }
+
+        .btn-custom:hover {
+    background-color: #337EFF; /* Change this to your desired hover background color */
+    border-color: #0c65ff; /* Change this to your desired hover border color */
+     }
+
+
 
     </style>
 </head>
@@ -402,6 +419,7 @@
         "buttons": [
             {
                 extend: 'print',
+                className: 'btn-custom',  // Add custom class here
                 customize: function (win) {
                     $(win.document.body)
                         .css('font-size', '10pt')
@@ -432,7 +450,14 @@
                         .css('font-size', 'inherit');
                 }
             },
-            "excel", "pdf", "colvis"
+            {
+                extend: 'excel',
+                className: 'btn-custom'  // Add custom class here
+            },
+            {
+                extend: 'colvis',
+                className: 'btn-custom'  // Add custom class here
+            }
         ]
     }).buttons().container().appendTo('#machine_wrapper .col-md-6:eq(0)');
             $("#tableorder").DataTable({

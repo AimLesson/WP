@@ -206,7 +206,7 @@
                                                     style="display: flex; justify-content: space-between; align-items: center; margin-bottom:0px;"
                                                     class="form-label">
                                                     Produk
-                                                    <button type="button" id="add-product-row" class="btn btn-primary btn-xs">
+                                                    <button type="button" id="add-product-row" class="btn btn-primary btn-xs btn-custom">
                                                         <a href="javascript:void(0)" class="text-light font-18" title="Add Product"
                                                             id="addBtn"><i class="fa fa-plus"></i></a>
                                                     </button>
@@ -247,7 +247,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Add Used Time</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Add Used Time</button>
                                 </div>
                             </div>
                         </div>

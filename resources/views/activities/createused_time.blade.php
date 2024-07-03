@@ -247,7 +247,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Add Used Time</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Add Used Time</button>
                                 </div>
                             </div>
                         </div>
