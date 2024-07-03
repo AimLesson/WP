@@ -452,11 +452,11 @@
             },
             {
                 extend: 'excel',
-                className: 'btn-custom'  // Add custom class here
+                className: 'btn-custom'  
             },
             {
                 extend: 'colvis',
-                className: 'btn-custom'  // Add custom class here
+                className: 'btn-custom'  
             }
         ]
     }).buttons().container().appendTo('#machine_wrapper .col-md-6:eq(0)');

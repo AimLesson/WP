@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Add KBLI Code</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Add KBLI Code</button>
                                 </div>
                             </div>
                         </div>

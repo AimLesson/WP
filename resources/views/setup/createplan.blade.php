@@ -77,7 +77,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Add Plan</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Add Plan</button>
                                 </div>
                             </div>
                         </div>

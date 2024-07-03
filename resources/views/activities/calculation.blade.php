@@ -29,7 +29,7 @@
                         <form id="calculation-form">
                             @csrf
                             <div class="form-group">
-                                <label for="order_id">Order Number</label>
+                                <label for="order_id"></label>
                                 <select name="order_id" id="order_id" class="form-control" required>
                                     <option value="" disabled selected>-- Select Order Number --</option>
                                     @foreach($orders as $id => $orderNumber)
@@ -41,24 +41,34 @@
                     
                         <div id="calculation-result" style="display: none;">
                             <h2>Calculation Result</h2>
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th>Total Sales</th>
-                                    <td id="totalSales"></td>
-                                </tr>
-                                <tr>
-                                    <th>Total Material Cost</th>
-                                    <td id="totalMaterialCost"></td>
-                                </tr>
-                                <tr>
-                                    <th>Total Processing Cost</th>
-                                    <td id="totalProcessingCost"></td>
-                                </tr>
-                                <tr>
-                                    <th>Total Sub-Contract Cost</th>
-                                    <td id="totalSubContractCost"></td>
-                                </tr>
-                            </table>
+                            <div class="table-responsive rounded">
+                                <table class="table table-bordered table-striped rounded">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Category</th>
+                                            <th scope="col">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Total Sales</td>
+                                            <td id="totalSales"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Material Cost</td>
+                                            <td id="totalMaterialCost"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Processing Cost</td>
+                                            <td id="totalProcessingCost"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Sub-Contract Cost</td>
+                                            <td id="totalSubContractCost"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                     
