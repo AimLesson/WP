@@ -6,13 +6,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Edit Standard Part</h1>
+                    <h1 class="m-0">Edit Processing</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('activities') }}">Activities</a></li>
-                        <li class="breadcrumb-item active">Edit Standard Part</li>
+                        <li class="breadcrumb-item active">Edit Processing</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -27,51 +27,47 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Edit Standard Part</h3>
+                            <h3 class="card-title">Edit Processing</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <form action="{{ route('activities.updatestandartpart', $standartpart->id) }}" method="POST">
+                            <form action="{{ route('activities.updateprocessing', $processing->id) }}" method="POST">
                                 @csrf
                                 <div class="form-group">
                                     <label for="order_number">Order Number</label>
-                                    <input type="text" name="order_number" class="form-control" value="{{ $standartpart->order_number }}" required>
+                                    <input type="text" name="order_number" class="form-control" value="{{ $processing->order_number }}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="no_item">Item Number</label>
-                                    <input type="text" name="no_item" class="form-control" value="{{ $standartpart->item_no }}" required>
+                                    <input type="text" name="no_item" class="form-control" value="{{ $processing->item_number }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="date">Date</label>
-                                    <input type="date" name="date" class="form-control" value="{{ $standartpart->date }}" required>
+                                    <label for="nop">NOP</label>
+                                    <input type="number" name="nop" class="form-control" value="{{ $processing->nop }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="part_name">Part Name</label>
-                                    <input type="text" name="part_name" class="form-control" value="{{ $standartpart->part_name }}" required>
+                                    <label for="machine_name">Machine</label>
+                                    <input type="text" name="machine_name" class="form-control" value="{{ $processing->machine }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="qty">Quantity</label>
-                                    <input type="number" name="qty" class="form-control" value="{{ $standartpart->qty }}" required>
+                                    <label for="operation">Operation</label>
+                                    <input type="text" name="operation" class="form-control" value="{{ $processing->operation }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="unit">Unit</label>
-                                    <input type="text" name="unit" class="form-control" value="{{ $standartpart->unit }}" required>
+                                    <label for="est_time">Estimated Time</label>
+                                    <input type="number" name="est_time" class="form-control" value="{{ $processing->estimated_time }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="price_unit">Price per Unit</label>
-                                    <input type="number" name="price_unit" class="form-control" value="{{ $standartpart->price }}" required>
+                                    <label for="dod">Date Wanted</label>
+                                    <input type="date" name="dod" class="form-control" value="{{ $processing->date_wanted }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="total_price">Total Price</label>
-                                    <input type="number" name="total_price" class="form-control" value="{{ $standartpart->total }}" required>
+                                    <label for="machine_cost">Machine Cost</label>
+                                    <input type="number" name="machine_cost" class="form-control" value="{{ $processing->mach_cost }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="info">Info</label>
-                                    <input type="text" name="info" class="form-control" value="{{ $standartpart->info }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="item">Item</label>
-                                    <input type="text" name="item" class="form-control" value="{{ $standartpart->item_name }}">
+                                    <label for="total">Total</label>
+                                    <input type="number" name="total" class="form-control" value="{{ $processing->total }}" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Update</button>
                             </form>

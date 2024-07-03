@@ -58,12 +58,16 @@
                                                 <td>{{ $m->order_number }}</td>
                                                 <td>{{ $m->id }}</td>
                                                 <td>
-                                                    <a href="{{ url('activities/standart_part/edit/' . $m->no_barcode) }}" class="btn-xs btn-warning">
-                                                        <i class="fas fa-pen"></i> Edit
-                                                    </a>
-                                                    <a href="#" data-toggle="modal" data-target="#modal-hapus{{ $m->no_barcode }}" class="btn-xs btn-danger">
-                                                        <i class="fas fa-trash-alt"></i> Delete
-                                                    </a>
+                                                    <a href="{{ route('activities.editstandartpart', $m->id) }}"
+                                                        class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
+                                                    <form action="{{ route('activities.deletestandartpart', $m->id) }}"
+                                                        method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn-xs btn-danger"
+                                                            onclick="return confirm('Are you sure you want to delete this entry?')">Delete</button>
+                                                    </form>
+
                                                 </td>
                                                 <td>{{ $m->part_name }}</td>
                                                 <td>{{ $m->qty }}</td>
@@ -74,12 +78,15 @@
                                                 <td>{{ $m->item_no }}</td>
                                             </tr>
                                             <!-- Modal for delete confirmation -->
-                                            <div class="modal fade" id="modal-hapus{{ $m->no_barcode }}" tabindex="-1" role="dialog" aria-labelledby="modal-hapusLabel" aria-hidden="true">
+                                            <div class="modal fade" id="modal-hapus{{ $m->no_barcode }}" tabindex="-1"
+                                                role="dialog" aria-labelledby="modal-hapusLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="modal-hapusLabel">Delete Confirmation</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <h5 class="modal-title" id="modal-hapusLabel">Delete
+                                                                Confirmation</h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
@@ -87,7 +94,8 @@
                                                             Are you sure you want to delete this item?
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">Cancel</button>
                                                             <a href="#" class="btn btn-danger">Delete</a>
                                                         </div>
                                                     </div>
@@ -104,7 +112,7 @@
                 </div>
                 <!-- /.row (main row) -->
             </div><!-- /.container-fluid -->
-        </section> 
+        </section>
         <!-- /.content -->
     </div>
 

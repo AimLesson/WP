@@ -24,7 +24,48 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-
+        <a href="/tasks/create" class="btn btn-primary mb-3">Create Task</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Pending At</th>
+                    <th>Finished At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($tasks as $task)
+                    <tr>
+                        <td>{{ $task->title }}</td>
+                        <td>{{ ucfirst(str_replace('_', ' ', $task->status)) }}</td>
+                        <td>{{ $task->pending_at }}</td>
+                        <td>{{ $task->finished_at }}</td>
+                        <td>
+                            <form action="{{ route('tasks.markAsPending', $task) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-warning" {{ $task->status == 'pending' || $task->status == 'finished' ? 'disabled' : '' }}>
+                                    Mark as Pending
+                                </button>
+                            </form>
+                            <form action="{{ route('tasks.markAsFinished', $task) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-success" {{ $task->status == 'finished' ? 'disabled' : '' }}>
+                                    Mark as Finished
+                                </button>
+                            </form>
+                            <form action="{{ route('tasks.refreshFromPending', $task) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-primary" {{ $task->status != 'pending' || $task->status == 'finished' ? 'disabled' : '' }}>
+                                    Start
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
                 </div>
                 <!-- /.row (main row) -->
             </div><!-- /.container-fluid -->
