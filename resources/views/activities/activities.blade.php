@@ -76,7 +76,7 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('activities/item')||request()->is('activities/item/create')||(request()->is('activities/item/edit/*')&&request()->route('id')==$item->id) ? 'active' : '' }}">
+            <li class="nav-item {{ request()->is('activities/item')||request()->is('activities/item/create')||(request()->is('activities/item/edit/{id}')&&request()->route('id')==$item->id) ? 'active' : '' }}">
                 <a href="{{route('activities.item')}}" class="nav-link">
                     <i class="nav-icon fas fa-box"></i>
                     <p>
@@ -84,7 +84,7 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('activities/processing') ? 'active' : '' }}">
+            <li class="nav-item {{ request()->is('activities/processing') ||request()->is('activities/processing/create')||(request()->is('activities/processing/edit/*')&&request()->route('id')==$item->id) ? 'active' : '' }}">
                 <a href="{{route('activities.processing')}}" class="nav-link">
                     <i class="nav-icon fas fa-retweet"></i>
                     <p>
@@ -92,7 +92,7 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('activities/standartpart') ? 'active' : '' }}">
+            <li class="nav-item {{ request()->is('activities/standartpart') ||request()->is('activities/standartpart/create')||(request()->is('activities/standartpart/edit/{id}')&&request()->route('id')==$item->id) ? 'active' : '' }}">
                 <a href="{{route('activities.standartpart')}}" class="nav-link">
                     <i class="nav-icon fas fa-archive"></i>
                     <p>
@@ -100,7 +100,7 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('activities/sub_contract') ? 'active' : '' }}">
+            <li class="nav-item {{ request()->is('activities/sub_contract') ||request()->is('activities/sub_contract/create')||(request()->is('activities/sub_contract/edit/{id}')&&request()->route('id')==$item->id) ? 'active' : '' }}">
                 <a href="{{route('activities.sub_contract')}}" class="nav-link">
                     <i class="nav-icon fas fa-people-arrows"></i>
                     <p>
@@ -108,7 +108,7 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('activities/overhead_manufacture') ? 'active' : '' }}">
+            <li class="nav-item {{ request()->is('activities/overhead_manufacture') ||request()->is('activities/overhead_manufacture/create')||(request()->is('activities/overhead_manufacture/edit/{id}')&&request()->route('id')==$item->id) ? 'active' : '' }}">
                 <a href="{{route('activities.overhead_manufacture')}}" class="nav-link">
                     <i class="nav-icon fas fa-exclamation"></i>
                     <p>
@@ -116,7 +116,7 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('activities/material') ? 'active' : '' }}">
+            <li class="nav-item {{ request()->is('activities/material') ||request()->is('activities/material/create_material')||(request()->is('activities/material/edit/(id)')&&request()->route('id')==$item->id) ? 'active' : '' }}">
                 <a href="{{route('activities.material')}}" class="nav-link">
                     <i class="nav-icon fas fa-puzzle-piece"></i>
                     <p>

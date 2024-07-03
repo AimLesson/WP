@@ -73,7 +73,7 @@
                                     <label for="item">Item</label>
                                     <input type="text" name="item" class="form-control" value="{{ $standartpart->item_name }}">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" class="btn btn-primary btn-custom">Update</button>
                             </form>
                         </div>
                         <!-- /.card-body -->

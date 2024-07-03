@@ -61,9 +61,9 @@
             </li>
             <li class="nav-item {{ request()->is('setup/plan')||request()->is('setup/plan/create')||(request()->is('setup/plan/edit/*')&&request()->route('plan_name')==$plan->plan_name)||request()->is('setup/plan/view/*') ? 'active' : '' }}">
                 <a href="{{ route('setup.plan') }}" class="nav-link">
-                    <i class="nav-icon fas fa-bullseye"></i>
+                    <i class="nav-icon fas fa-industry"></i>
                     <p>
-                        Plan
+                        Plant
                     </p>
                 </a>
             </li>
@@ -99,7 +99,7 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('setup/sotarget')||request()->is('setup/sotarget/add')||(request()->is('setup/sotarget/edit/*')&&request()->route('id')==$sotarget->id) ? 'active' : '' }}">
+          <!--<li class="nav-item {{ request()->is('setup/sotarget')||request()->is('setup/sotarget/add')||(request()->is('setup/sotarget/edit/*')&&request()->route('id')==$sotarget->id) ? 'active' : '' }}">
                 <a href="{{ route('setup.sotarget') }}" class="nav-link">
                     <i class="nav-icon fas fa-check-square"></i>
                     <p>
@@ -130,7 +130,7 @@
                         Shipping
                     </p>
                 </a>
-            </li>
+            </li> -->
             <li class="nav-item ">
                 <a href="" class="nav-link">
                     <i class="nav-icon fas fa-print"></i>

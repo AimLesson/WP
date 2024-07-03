@@ -90,7 +90,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Edit SO Target</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Edit SO Target</button>
                                 </div>
                             </div>
                         </div>

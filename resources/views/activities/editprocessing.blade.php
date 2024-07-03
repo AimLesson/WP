@@ -69,7 +69,7 @@
                                     <label for="total">Total</label>
                                     <input type="number" name="total" class="form-control" value="{{ $processing->total }}" required>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" class="btn btn-primary btn-custom">Update</button>
                             </form>
                         </div>
                         <!-- /.card-body -->

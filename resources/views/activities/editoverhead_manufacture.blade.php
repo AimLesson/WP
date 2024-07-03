@@ -65,7 +65,7 @@
                                     <label for="info">Info</label>
                                     <input type="text" name="info" class="form-control" value="{{ $overhead->info }}">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" class="btn btn-primary btn-custom">Update</button>
                             </form>
                         </div>
                         <!-- /.card-body -->

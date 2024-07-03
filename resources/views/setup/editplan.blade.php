@@ -6,14 +6,14 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Edit Plan</h1>
+                        <h1 class="m-0">Edit Plant</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('setup') }}">Setup</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('setup.plan') }}">Plan</a></li>
-                            <li class="breadcrumb-item active">Edit Plan</li>
+                            <li class="breadcrumb-item active">Edit Plant</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -33,7 +33,7 @@
                         <div class="col-md-6">
                             <div class="card card-primary">
                                 <div class="card-header">
-                                    <h3 class="card-title">Edit Plan Form</h3>
+                                    <h3 class="card-title">Edit Plant Form</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
@@ -92,7 +92,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Update Plan</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Update Plant</button>
                                 </div>
                             </div>
                         </div>

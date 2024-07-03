@@ -6,13 +6,13 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Add Plan</h1>
+                        <h1 class="m-0">Add Plant</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('setup') }}">Setup</a></li>
-                            <li class="breadcrumb-item active">Add Plan</li>
+                            <li class="breadcrumb-item active">Add Plant</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -30,13 +30,13 @@
                         <div class="col-md-6">
                             <div class="card card-primary">
                                 <div class="card-header">
-                                    <h3 class="card-title">Add Plan Form</h3>
+                                    <h3 class="card-title">Add Plant Form</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label for="exampleInputUsername">Plan Name</label>
+                                        <label for="exampleInputUsername">Plant Name</label>
                                         <input type="text" name="plan_name" class="form-control"
-                                            id="exampleInputUsername" placeholder="Insert Plan Name" required>
+                                            id="exampleInputUsername" placeholder="Insert Plant Name" required>
                                         @error('plan_name')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -46,7 +46,7 @@
                                             style="display: flex; justify-content: space-between; align-items: center;"
                                             class="form-label">
                                             Group
-                                            <button type="button" id="add-group-row" class="btn btn-primary btn-xs">
+                                            <button type="button" id="add-group-row" class="btn btn-primary btn-custom btn-xs">
                                                 <a href="javascript:void(0)" class="text-light font-18" title="Add Group"
                                                     id="addBtn"><i class="fa fa-plus"></i></a>
                                             </button>
@@ -77,7 +77,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary btn-custom">Add Plan</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Add Plant</button>
                                 </div>
                             </div>
                         </div>

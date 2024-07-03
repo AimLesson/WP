@@ -34,7 +34,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="quotation" class="table table-head-fixed text-nowrap">
+                                <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -88,8 +88,7 @@
                                                                 @method('DELETE')
                                                                 <button type="button" class="btn btn-default"
                                                                     data-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn btn-danger">Ya,
-                                                                    Delete</button>
+                                                                <button type="submit" class="btn btn-danger btn-remove">Delete</button>
                                                             </form>
                                                         </div>
                                                     </div>

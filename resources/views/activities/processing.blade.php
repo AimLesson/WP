@@ -34,9 +34,10 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="quotation" class="table table-head-fixed text-nowrap">
+                                <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
+                                            <th>ID</th>
                                             <th>Order Number</th>
                                             <th>Item Number</th>
                                             <th>Date Wanted</th>
@@ -51,7 +52,7 @@
                                     <tbody>
                                         @foreach ($processing as $pr)
                                             <tr>
-                                                <td hidden class="ids">{{ $pr->id }}</td>
+                                                <td >{{ $pr->id }}</td>
                                                 <td><a href="#">{{ $pr->order_number }}</a></td>
                                                 <td>{{ $pr->item_number }}</td>
                                                 <td>{{ $pr->date_wanted }}</td>
@@ -63,29 +64,26 @@
                                                 <td>
                                                     <a href="{{ url('activities/processing/edit/' . $pr->id) }}"
                                                         class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
-                                                    <form action="{{ route('activities.deleteprocessing', $pr->id) }}"
-                                                        method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn-xs btn-danger"
-                                                            onclick="return confirm('Are you sure you want to delete this processing entry?')">
-                                                            <i class="fas fa-trash"></i> Delete
-                                                        </button>
-                                                    </form>
+                                                    <a href="{{ route('activities.deleteprocessing', $pr->id) }}"
+                                                        data-toggle="modal" data-target="#modal-delete{{ $pr->id }}"
+                                                        class="btn-xs btn-danger"><i class="fas fa-trash-alt"></i>
+                                                        Delete</a>
                                                 </td>
                                             </tr>
-                                            <div class="modal fade" id="modal-hapus{{ $pr->id }}">
+                                            <div class="modal fade" id="modal-delete{{ $pr->id }}">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title">Confirm Delete Item</h4>
+                                                            <h4 class="modal-title">Confirm Delete Processing</h4>
                                                             <button type="button" class="close" data-dismiss="modal"
                                                                 aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <p>Are you sure to delete</p>
+                                                            <p>Are you sure to delete
+                                                                <b>{{ $pr->order_number }}?</b>
+                                                            </p>
                                                         </div>
                                                         <div class="modal-footer justify-content-between">
                                                             <form
@@ -96,7 +94,7 @@
                                                                 <button type="button" class="btn btn-default"
                                                                     data-dismiss="modal">Cancel</button>
                                                                 <button type="submit"
-                                                                    class="btn btn-danger">Delete</button>
+                                                                    class="btn btn-danger btn-remove">Delete</button>
                                                             </form>
                                                         </div>
                                                     </div>

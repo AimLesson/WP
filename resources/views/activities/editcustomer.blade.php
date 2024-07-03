@@ -186,11 +186,12 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="card-footer">
+                                        <button type="submit" class="btn btn-primary btn-custom">Update Customer</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Update Customer</button>
-                            </div>
+                            
                         </div>
                     </div>
             </div>

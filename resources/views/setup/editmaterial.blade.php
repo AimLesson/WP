@@ -102,7 +102,7 @@
 
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Edit</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Edit</button>
                                 </div>
                             </div>
                         </div>
