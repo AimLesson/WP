@@ -179,7 +179,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Add Customer</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Add Customer</button>
                                 </div>
                             </div>
                         </div>

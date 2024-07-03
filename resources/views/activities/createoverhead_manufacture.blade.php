@@ -100,7 +100,7 @@
 
                             <h3>Details</h3>
                             <div class="form-group">
-                                <button type="button" class="btn btn-primary" onclick="addRow()">Add Row</button>
+                                <button type="button" class="btn btn-primary btn-custom" onclick="addRow()">Add Row</button>
                             </div>
                             <table class="table table-bordered" id="itemsTable">
                                 <thead>
@@ -133,7 +133,7 @@
                             </table>
 
                             <div class="form-group">
-                                <button type="submit" class="btn btn-success">Submit</button>
+                                <button type="submit" class="btn btn-success btn-custom">Submit</button>
                             </div>
 
                         </form>

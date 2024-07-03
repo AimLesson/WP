@@ -229,7 +229,7 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Add Items</button>
+                                <button type="submit" class="btn btn-primary btn-custom">Add Items</button>
                             </div>
                         </div>
                     </div>

@@ -202,7 +202,7 @@
                         </table>
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="submit" class="btn btn-success btn-custom">Submit</button>
                         </div>
 
                     </form>

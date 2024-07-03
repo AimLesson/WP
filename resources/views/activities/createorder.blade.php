@@ -306,7 +306,7 @@
 
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Add Order</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Add Order</button>
                                 </div>
                             </div>
                         </div>
