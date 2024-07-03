@@ -148,14 +148,14 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('activities/used_time_barcode') ? 'active' : '' }}">
+            {{-- <li class="nav-item {{ request()->is('activities/used_time_barcode') ? 'active' : '' }}">
                 <a href="{{route('activities.used_time_barcode')}}" class="nav-link">
                     <i class="nav-icon fas fa-barcode"></i>
                     <p>
                         Used Time (Barcode ID)
                     </p>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item {{ request()->is('activities/calculation') ? 'active' : '' }}">
                 <a href="{{route('activities.calculation')}}" class="nav-link">
                     <i class="nav-icon fas fa-calculator"></i>

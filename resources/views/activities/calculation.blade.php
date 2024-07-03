@@ -24,30 +24,82 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Calculation</h3>
+                    <div class="container">
+                        <h1>Select Order Number</h1>
+                        <form id="calculation-form">
+                            @csrf
+                            <div class="form-group">
+                                <label for="order_id">Order Number</label>
+                                <select name="order_id" id="order_id" class="form-control" required>
+                                    <option value="" disabled selected>-- Select Order Number --</option>
+                                    @foreach($orders as $id => $orderNumber)
+                                        <option value="{{ $id }}">{{ $orderNumber }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <h3>Total Sales: {{ number_format($totalSales, 2) }}</h3>
-                            <h3>Total Material Cost: {{ number_format($totalMaterialCost, 2) }}</h3>
-                            <h3>Total Processing Cost: {{ number_format($totalProcessingCost, 2) }}</h3>
-                            <h3>Total Sub Contract Cost: {{ number_format($totalSubContractCost, 2) }}</h3>
-                            <!-- /.card-header -->
-                            {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
-                            <div class="card-body">
-
-                            </div>
-                            <!-- /.card-body -->
+                        </form>
+                    
+                        <div id="calculation-result" style="display: none;">
+                            <h2>Calculation Result</h2>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Total Sales</th>
+                                    <td id="totalSales"></td>
+                                </tr>
+                                <tr>
+                                    <th>Total Material Cost</th>
+                                    <td id="totalMaterialCost"></td>
+                                </tr>
+                                <tr>
+                                    <th>Total Processing Cost</th>
+                                    <td id="totalProcessingCost"></td>
+                                </tr>
+                                <tr>
+                                    <th>Total Sub-Contract Cost</th>
+                                    <td id="totalSubContractCost"></td>
+                                </tr>
+                            </table>
                         </div>
-                        <!-- /.card -->
                     </div>
+                    
+                    
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 </div>
                 <!-- /.row (main row) -->
             </div><!-- /.container-fluid -->
         </section>
         <!-- /.content -->
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#order_id').change(function() {
+            var orderId = $(this).val();
+            if (orderId) {
+                $.ajax({
+                    url: '{{ route("calculations.calculate") }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        order_id: orderId
+                    },
+                    success: function(response) {
+                        $('#calculation-result').show();
+                        $('#totalSales').text(response.totalSales);
+                        $('#totalMaterialCost').text(response.totalMaterialCost);
+                        $('#totalProcessingCost').text(response.totalProcessingCost);
+                        $('#totalSubContractCost').text(response.totalSubContractCost);
+                    },
+                    error: function(response) {
+                        console.log('Error:', response);
+                    }
+                });
+            } else {
+                $('#calculation-result').hide();
+            }
+        });
+    });
+</script>
 
     <script>
         // Fungsi untuk mengubah judul berdasarkan halaman

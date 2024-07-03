@@ -1704,35 +1704,35 @@ class ActivitiesController extends Controller
     }
     public function calculation()
     {
-        // Retrieve all sales orders
-        $salesOrders = SalesOrder::with(['soadd.items.material_sheets', 'soadd.processings', 'soadd.sub_contracts'])->get();
+        $orders = Order::pluck('order_number', 'id'); // Fetch all orders for selection
+        return view('activities.calculation', compact('orders'));
+    }
 
-        // Initialize totals
-        $totalSales = 0;
-        $totalMaterialCost = 0;
-        $totalProcessingCost = 0;
-        $totalSubContractCost = 0;
-
-        foreach ($salesOrders as $order) {
-            $totalSales += (int) $order->total_amount;
-
-            foreach ($order->soadd as $item) {
-                $totalMaterialCost += optional($item->items)->sum(function ($item) {
-                    return optional($item->material_sheets)->sum(function ($sheet) {
-                        return (float) $sheet->mat_price;
-                    });
-                });
-                $totalProcessingCost += optional($item->processings)->sum(function ($process) {
-                    return (float) $process->mach_cost;
-                });
-                $totalSubContractCost += optional($item->sub_contracts)->sum(function ($contract) {
-                    return (float) $contract->total_price;
-                });
-            }
-        }
-
-        return view('activities.calculation', compact('totalSales', 'totalMaterialCost', 'totalProcessingCost', 'totalSubContractCost'));
-    }    public function delivery_orders_wh()
+    public function calculate(Request $request)
+    {
+        $validatedData = $request->validate([
+            'order_id' => 'required|exists:order,id',
+        ]);
+    
+        $order = Order::with(['items', 'processings', 'subContracts'])->findOrFail($validatedData['order_id']);
+    
+        // Calculate totals
+        $totalSales = $order->total_amount;
+    
+        // Example calculations based on related models
+        $totalMaterialCost = $order->items->sum('material_cost');
+        $totalProcessingCost = $order->processings->sum('mach_cost');
+        $totalSubContractCost = $order->subContracts->sum('total_price');
+    
+        return response()->json([
+            'totalSales' => number_format($totalSales, 2),
+            'totalMaterialCost' => number_format($totalMaterialCost, 2),
+            'totalProcessingCost' => number_format($totalProcessingCost, 2),
+            'totalSubContractCost' => number_format($totalSubContractCost, 2),
+        ]);
+    }
+    
+    public function delivery_orders_wh()
     {
         return view('activities.deliveryorderstowh');
     }
