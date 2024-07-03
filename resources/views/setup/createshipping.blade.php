@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Add Shipping</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Add Shipping</button>
                                 </div>
                             </div>
                         </div>

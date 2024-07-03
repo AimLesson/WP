@@ -75,7 +75,6 @@ class SetupController extends Controller
                 'groupseq_name'         => 'required',
                 'machine_state'         => 'required',
                 'process'               => 'required',
-                'image'                 => 'image',
                 'purchase_date'         => 'required',
                 'purchase_price'        => 'required',
                 'depreciation_age'      => 'required',
@@ -102,7 +101,7 @@ class SetupController extends Controller
         );
 
         if ($validator->fails()) {
-            return redirect()->route('setup.createmachine')->withErrors($validator)->withInput();
+            return redirect()->route('setup.machine')->withErrors($validator)->withInput();
         }
 
         $machine = new Machine();
@@ -176,12 +175,6 @@ class SetupController extends Controller
         $machTotal = str_replace(['Rp.', '.', ','], '', $inputMachTotal);
         $machine->total_mach = $machTotal;
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image'); // Ubah dari 'image_path' menjadi 'image'
-            $imageName = $image->getClientOriginalName();
-            $image->storeAs('public/lte/dist/img', $imageName); // Simpan gambar ke direktori yang sesuai
-            $machine->image = $imageName;
-        }
         $machine->save();
 
         return redirect()->route('setup.machine')->with('success', 'Machine data saved successfully.');

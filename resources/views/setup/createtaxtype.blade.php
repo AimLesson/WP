@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Add Tax Type</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Add Tax Type</button>
                                 </div>
                             </div>
                         </div>

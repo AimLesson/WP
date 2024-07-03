@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Add Product Type</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Add Product Type</button>
                                 </div>
                             </div>
                         </div>
