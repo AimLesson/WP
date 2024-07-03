@@ -1,35 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('task.activities')
+@section('content')
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Used Time</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('activities') }}">Activities</a></li>
+                            <li class="breadcrumb-item active">Used Time</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <title>Document</title>
-</head>
-
-<body>
-    <div class="container">
-        <table border="1">
-            <tr>
-                <td>Nama</td>
-                <td>Username</td>
-                <td>Email</td>
-                <td>Unit</td>
-                <td>Role</td>                
-            </tr>
-
-            @foreach ($user as $u)
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+        <a href="/tasks/create" class="btn btn-primary mb-3">Create Task</a>
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>{{ $u->name }}</td>
-                    <td>{{ $u->username }}</td>
-                    <td>{{ $u->email }}</td>
-                    <td>{{ $u->unit }}</td>
-                    <td>{{ $u->role }}</td>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Pending At</th>
+                    <th>Finished At</th>
+                    <th>Action</th>
                 </tr>
-            @endforeach
+            </thead>
+            <tbody>
+                @foreach($tasks as $task)
+                    <tr>
+                        <td>{{ $task->title }}</td>
+                        <td>{{ ucfirst(str_replace('_', ' ', $task->status)) }}</td>
+                        <td>{{ $task->pending_at }}</td>
+                        <td>{{ $task->finished_at }}</td>
+                        <td>
+                            <form action="{{ route('tasks.markAsPending', $task) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-warning" {{ $task->status == 'pending' || $task->status == 'finished' ? 'disabled' : '' }}>
+                                    Mark as Pending
+                                </button>
+                            </form>
+                            <form action="{{ route('tasks.markAsFinished', $task) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-success" {{ $task->status == 'finished' ? 'disabled' : '' }}>
+                                    Mark as Finished
+                                </button>
+                            </form>
+                            <form action="{{ route('tasks.refreshFromPending', $task) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-primary" {{ $task->status != 'pending' || $task->status == 'finished' ? 'disabled' : '' }}>
+                                    Start
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
         </table>
-</body>
+                </div>
+                <!-- /.row (main row) -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
 
-</html>
+    <script>
+        // Fungsi untuk mengubah judul berdasarkan halaman
+        function updateTitle(pageTitle) {
+            document.title = pageTitle;
+        }
+
+        // Panggil fungsi ini saat halaman "barcode" dimuat
+        updateTitle('Used Time');
+    </script>
+@endsection
