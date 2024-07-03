@@ -45,7 +45,7 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <form action="{{ route('setup.storemachine') }}" method="POST" 
+                <form action="{{ route('setup.storemachine') }}" method="POST" enctype="multipart/form-data"
                     onsubmit="return validateForm();">
                     @csrf
                     <div class="row">
@@ -192,7 +192,19 @@
                                             </div>
                                         </div>
 
-                                        
+                                        <div class="col-md-4">
+                                            <!-- Bagian Atas - Bagian Ketiga (Horizontal) -->
+                                            <!-- Elemen untuk gambar -->
+                                            <div class="form-group">
+                                                <label for="InputImage">Upload Image</label>
+                                                <input type="file" name="image" class="form-control-file"
+                                                    id="InputImage" accept="image/*">
+                                            </div>
+                                            <!-- Tambahkan elemen <img> untuk menampilkan preview gambar -->
+                                            <img id="imagePreview" src="#" alt=""
+                                                style="max-width: 100%; max-height: 200px; display: block; margin: 0 auto;">
+                                            <!-- Menambahkan properti display dan margin -->
+                                        </div>
                                     </div>
 
                                     <div class="my-4"></div>
@@ -402,7 +414,7 @@
                                 </div>
                                 <!-- /.card-body -->
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary btn-custom">Add</button>
+                                    <button type="submit" class="btn btn-primary">Add</button>
                                 </div>
                             </div>
                         </div>
