@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,7 +9,7 @@ class Task extends Model
 {
     use HasFactory;
 
-    protected $table = 'used_time';
+    protected $table = 'tasks';
 
     protected $fillable = ['title'];
 }

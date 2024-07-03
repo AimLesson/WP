@@ -1232,23 +1232,8 @@ class ActivitiesController extends Controller
 
     public function processing()
     {
-        $processing     = DB::table('processing')->get();
-        $processingJoin = DB::table('processing')
-            ->join('newprocessing', 'processing.order_number', '=', 'newprocessing.order_number')
-            ->select('processing.*', 'newprocessing.*')
-            ->get();
-
-        return view('activities.processing', compact('processing', 'processingJoin'));
-    }
-    public function viewprocessing($order_number)
-    {
-        $processing = DB::table('processing')->get();
-        $processingJoin = DB::table('processing')
-            ->join('newprocessing', 'processing.order_number', '=', 'newprocessing.order_number')
-            ->select('processing.*', 'newprocessing.*')
-            ->where('newprocessing.order_number', $order_number)
-            ->get();
-        return view('activities.viewprocessing', compact('processing', 'processingJoin'));
+        $processing     = processingadd::get();
+        return view('activities.processing', compact('processing'));
     }
 
     public function createprocessing()
@@ -1264,7 +1249,7 @@ class ActivitiesController extends Controller
     public function storeprocessing(Request $request)
     {
         Log::info('StoreProcess method called', ['request' => $request->all()]);
-    
+
         // Validation rules
         $validator = Validator::make($request->all(), [
             'order_number' => 'required',
@@ -1277,12 +1262,12 @@ class ActivitiesController extends Controller
             'machine_cost.*' => 'required|numeric|min:0',
             'total.*' => 'required|numeric|min:0',
         ]);
-    
+
         // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-    
+
         // Iterate over each set of item details and create process entries
         foreach ($request->nop as $index => $nop) {
             Processingadd::create([
@@ -1297,10 +1282,89 @@ class ActivitiesController extends Controller
                 'total' => $request->total[$index],
             ]);
         }
-    
+
         // Redirect with success message
         return redirect()->route('activities.createprocessing')->with('success', 'Process(es) added successfully.');
     }
+
+    public function editprocessing($id)
+    {
+        $processing = Processingadd::find($id);
+        if (!$processing) {
+            return redirect()->route('activities.processing')->with('error', 'Processing entry not found.');
+        }
+
+        $orders = Order::get();
+        $material = Material::get();
+        $machine = Machine::get();
+        $items = ItemAdd::get();
+
+        return view('activities.editprocessing', compact('processing', 'orders', 'material', 'machine', 'items'));
+    }
+
+    public function updateprocessing(Request $request, $id)
+    {
+        Log::info('UpdateProcess method called', ['request' => $request->all()]);
+
+        // Validation rules
+        $validator = Validator::make($request->all(), [
+            'order_number' => 'required',
+            'no_item' => 'required',
+            'nop' => 'required|integer|min:1',
+            'machine_name' => 'required|string|max:255',
+            'operation' => 'required|string|max:255',
+            'est_time' => 'required|numeric|min:0',
+            'dod' => 'required|date',
+            'machine_cost' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Find the processing entry
+        $processing = Processingadd::find($id);
+        if (!$processing) {
+            return redirect()->route('activities.processing')->with('error', 'Processing entry not found.');
+        }
+
+        // Update the processing entry
+        $processing->update([
+            'order_number' => $request->order_number,
+            'item_number' => $request->no_item,
+            'nop' => $request->nop,
+            'machine' => $request->machine_name,
+            'operation' => $request->operation,
+            'estimated_time' => $request->est_time,
+            'date_wanted' => $request->dod,
+            'mach_cost' => $request->machine_cost,
+            'total' => $request->total,
+        ]);
+
+        // Redirect with success message
+        return redirect()->route('activities.processing')->with('success', 'Processing entry updated successfully.');
+    }
+
+
+    public function deleteprocessing($id)
+    {
+        // Find the processing entry by its ID
+        $processing = Processingadd::find($id);
+
+        // Check if the entry exists
+        if (!$processing) {
+            return redirect()->route('activities.processing')->with('error', 'Processing entry not found.');
+        }
+
+        // Delete the entry
+        $processing->delete();
+
+        // Redirect with success message
+        return redirect()->route('activities.processing')->with('success', 'Processing entry deleted successfully.');
+    }
+
 
     public function getMachineCost(Request $request)
     {
@@ -1327,10 +1391,7 @@ class ActivitiesController extends Controller
     }
 
 
-    public function standart_part()
-    {
-        return view('activities.standartpart');
-    }
+
     // activities - standartpart
     public function standartpartindex()
     {
@@ -1410,6 +1471,82 @@ class ActivitiesController extends Controller
         return redirect()->route('activities.createstandartpart')->with('success', 'Standart Part(s) added successfully.');
     }
 
+    public function editstandartpart($id)
+    {
+        $standartpart = DB::table('standart_part')->where('id', $id)->first();
+        if (!$standartpart) {
+            return redirect()->route('activities.standartpart')->with('error', 'Standard part not found.');
+        }
+
+        $orders = Order::get();
+        $items = ItemAdd::get();
+        $standardParts = StandartpartAPI::get();
+
+        return view('activities.editstandartpart', compact('standartpart', 'orders', 'items', 'standardParts'));
+    }
+
+    public function updatestandartpart(Request $request, $id)
+    {
+        Log::info('UpdateStandartPart method called', ['request' => $request->all()]);
+
+        // Validation rules
+        $validator = Validator::make($request->all(), [
+            'order_number' => 'required',
+            'no_item' => 'required',
+            'date' => 'required|date',
+            'part_name' => 'required|string|max:255',
+            'qty' => 'required|integer|min:1',
+            'unit' => 'required|string|max:255',
+            'price_unit' => 'required|numeric|min:0',
+            'total_price' => 'required|numeric|min:0',
+            'info' => 'nullable|string|max:255',
+            'item' => 'nullable|string|max:255',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Find the standard part entry
+        $standartpart = DB::table('standart_part')->where('id', $id)->first();
+        if (!$standartpart) {
+            return redirect()->route('activities.standartpart')->with('error', 'Standard part not found.');
+        }
+
+        // Update the standard part entry
+        DB::table('standart_part')->where('id', $id)->update([
+            'order_number' => $request->order_number,
+            'item_no' => $request->no_item,
+            'item_name' => $request->item,
+            'date' => $request->date,
+            'part_name' => $request->part_name,
+            'qty' => $request->qty,
+            'unit' => $request->unit,
+            'price' => $request->price_unit,
+            'total' => $request->total_price,
+            'info' => $request->info ?? null,
+        ]);
+
+        // Redirect with success message
+        return redirect()->route('activities.standartpart')->with('success', 'Standard part updated successfully.');
+    }
+
+    public function deletestandartpart($id)
+    {
+        $standartpart = DB::table('standart_part')->where('id', $id)->first();
+        if (!$standartpart) {
+            return redirect()->route('activities.standartpart')->with('error', 'Standard part not found.');
+        }
+
+        // Delete the standard part entry
+        DB::table('standart_part')->where('id', $id)->delete();
+
+        // Redirect with success message
+        return redirect()->route('activities.standartpart')->with('success', 'Standard part deleted successfully.');
+    }
+
+
     //SubCont. Controller
     public function sub_contract()
     {
@@ -1464,27 +1601,78 @@ class ActivitiesController extends Controller
         return redirect()->route('activities.createsub_contract')->with('success', 'Sub Contract(s) added successfully.');
     }
 
-    public function destroysub_contract($id)
-    {
-        $subContract = sub_contract::findOrFail($id);
-        $subContract->delete();
-
-        return redirect()->route('activities.sub_contract')
-            ->with('success', 'Sub Contract deleted successfully.');
-    }
-
     public function editsub_contract($id)
     {
-        $sub_contract = Sub_Contract::findOrFail($id);
-        return response()->json($sub_contract);
+        $sub_contract = sub_contract::find($id);
+        if (!$sub_contract) {
+            return redirect()->route('activities.sub_contract')->with('error', 'Sub-contract not found.');
+        }
+
+        $orders = Order::get();
+        $items = ItemAdd::get();
+
+        return view('activities.editsub_contract', compact('sub_contract', 'orders', 'items'));
     }
 
     public function updatesub_contract(Request $request, $id)
     {
-        $sub_contract = Sub_Contract::findOrFail($id);
-        $sub_contract->update($request->all());
-        return redirect()->route('activities.sub_contract')->with('success', 'Sub Contract updated successfully.');
+        Log::info('UpdateSubcontract method called', ['request' => $request->all()]);
+
+        // Validation rules
+        $validator = Validator::make($request->all(), [
+            'order_number' => 'required',
+            'no_item' => 'required',
+            'dod' => 'required|date',
+            'description' => 'required|string|max:255',
+            'qty' => 'required|integer|min:1',
+            'unit' => 'required|string|max:255',
+            'price_unit' => 'required|numeric|min:0',
+            'total_price' => 'required|numeric|min:0',
+            'info' => 'nullable|string|max:255',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Find the sub-contract entry
+        $sub_contract = sub_contract::find($id);
+        if (!$sub_contract) {
+            return redirect()->route('activities.sub_contract')->with('error', 'Sub-contract not found.');
+        }
+
+        // Update the sub-contract entry
+        $sub_contract->update([
+            'order_number' => $request->order_number,
+            'item_no' => $request->no_item,
+            'dod' => $request->dod,
+            'description' => $request->description,
+            'qty' => $request->qty,
+            'unit' => $request->unit,
+            'price_unit' => $request->price_unit,
+            'total_price' => $request->total_price,
+            'info' => $request->info ?? null,
+        ]);
+
+        // Redirect with success message
+        return redirect()->route('activities.sub_contract')->with('success', 'Sub-contract updated successfully.');
     }
+
+    public function deletesub_contract($id)
+    {
+        $sub_contract = sub_contract::find($id);
+        if (!$sub_contract) {
+            return redirect()->route('activities.sub_contract')->with('error', 'Sub-contract not found.');
+        }
+
+        // Delete the sub-contract entry
+        $sub_contract->delete();
+
+        // Redirect with success message
+        return redirect()->route('activities.sub_contract')->with('success', 'Sub-contract deleted successfully.');
+    }
+
 
 
     //Overhead_manufacture Controller
@@ -1538,15 +1726,19 @@ class ActivitiesController extends Controller
         return redirect()->route('activities.createoverhead_manufacture')->with('success', 'Overhead Manufacture(s) added successfully.');
     }
 
-    // Controller methods in ActivityController
-
-    public function editOverheadManufacture($id)
+    public function editoverhead_manufacture($id)
     {
-        $overhead = overhead::findOrFail($id);
-        return response()->json($overhead);
+        $overhead = overhead::find($id);
+        if (!$overhead) {
+            return redirect()->route('activities.overhead_manufacture')->with('error', 'Overhead manufacture record not found.');
+        }
+
+        $orders = Order::get();
+
+        return view('activities.editoverhead_manufacture', compact('overhead', 'orders'));
     }
 
-    public function updateOverheadManufacture(Request $request, $id)
+    public function updateoverhead_manufacture(Request $request, $id)
     {
         Log::info('UpdateOverheadManufacture method called', ['request' => $request->all()]);
 
@@ -1567,24 +1759,41 @@ class ActivitiesController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Find the overhead entry and update it
-        $overhead = overhead::findOrFail($id);
-        $overhead->update($request->all());
+        // Find the overhead manufacture entry
+        $overhead = overhead::find($id);
+        if (!$overhead) {
+            return redirect()->route('activities.overhead_manufacture')->with('error', 'Overhead manufacture record not found.');
+        }
+
+        // Update the overhead manufacture entry
+        $overhead->update([
+            'tanggal' => $request->tanggal,
+            'so_no' => $request->so_no,
+            'order_number' => $request->order_number,
+            'ref' => $request->ref,
+            'description' => $request->description,
+            'jumlah' => $request->jumlah,
+            'keterangan' => $request->keterangan,
+            'info' => $request->info ?? null,
+        ]);
 
         // Redirect with success message
-        return redirect()->route('activities.createoverhead_manufacture')->with('success', 'Overhead Manufacture updated successfully.');
+        return redirect()->route('activities.overhead_manufacture')->with('success', 'Overhead manufacture record updated successfully.');
     }
 
-    public function destroyOverheadManufacture($id)
+    public function deleteoverhead_manufacture($id)
     {
-        // Find the overhead entry and delete it
-        $overhead = overhead::findOrFail($id);
+        $overhead = overhead::find($id);
+        if (!$overhead) {
+            return redirect()->route('activities.overhead_manufacture')->with('error', 'Overhead manufacture record not found.');
+        }
+
+        // Delete the overhead manufacture entry
         $overhead->delete();
 
         // Redirect with success message
-        return redirect()->route('activities.createoverhead_manufacture')->with('success', 'Overhead Manufacture deleted successfully.');
+        return redirect()->route('activities.overhead_manufacture')->with('success', 'Overhead manufacture record deleted successfully.');
     }
-
 
 
     //Material Controller
@@ -1713,17 +1922,17 @@ class ActivitiesController extends Controller
         $validatedData = $request->validate([
             'order_id' => 'required|exists:order,id',
         ]);
-    
+
         $order = Order::with(['items', 'processings', 'subContracts'])->findOrFail($validatedData['order_id']);
-    
+
         // Calculate totals
         $totalSales = $order->total_amount;
-    
+
         // Example calculations based on related models
         $totalMaterialCost = $order->items->sum('material_cost');
         $totalProcessingCost = $order->processings->sum('mach_cost');
         $totalSubContractCost = $order->subContracts->sum('total_price');
-    
+
         return response()->json([
             'totalSales' => number_format($totalSales, 2),
             'totalMaterialCost' => number_format($totalMaterialCost, 2),
@@ -1731,7 +1940,7 @@ class ActivitiesController extends Controller
             'totalSubContractCost' => number_format($totalSubContractCost, 2),
         ]);
     }
-    
+
     public function delivery_orders_wh()
     {
         return view('activities.deliveryorderstowh');
@@ -1753,22 +1962,22 @@ class ActivitiesController extends Controller
             'selected_order_id' => 'required|exists:order,id',
             'order_number' => 'required|unique:order,order_number'
         ]);
-    
+
         // Fetch the selected order
         $selectedOrder = Order::find($validatedData['selected_order_id']);
-    
+
         // Create a new Order instance with the data from the selected order
         $newOrder = $selectedOrder->replicate();
         $newOrder->order_number = $request->input('order_number');
         $newOrder->save();
-    
+
         // Copy related items
         $items = Item::where('order_number', $selectedOrder->order_number)->get();
         foreach ($items as $item) {
             $newItem = $item->replicate();
             $newItem->order_number = $newOrder->order_number;
             $newItem->save();
-    
+
             // Copy associated item additions
             $itemAdds = ItemAdd::where('order_number', $item->order_number)->get();
             foreach ($itemAdds as $itemAdd) {
@@ -1777,7 +1986,7 @@ class ActivitiesController extends Controller
                 $newItemAdd->save();
             }
         }
-    
+
         // Copy related processing additions
         $processes = ProcessingAdd::where('order_number', $selectedOrder->order_number)->get();
         foreach ($processes as $process) {
@@ -1785,11 +1994,11 @@ class ActivitiesController extends Controller
             $newProcess->order_number = $newOrder->order_number;
             $newProcess->save();
         }
-    
+
         // Redirect back with a success message
         return redirect()->route('activities.order')->with('success', 'Order copied successfully with related items and processes.');
     }
-    
+
     public function data_maintenance()
     {
         return view('activities.datamaintenance');

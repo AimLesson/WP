@@ -39,8 +39,10 @@
                                         <tr>
                                             <th>Order Number</th>
                                             <th>Item Number</th>
-                                            <th>DOD</th>
-                                            <th>Nama Item</th>
+                                            <th>Date Wanted</th>
+                                            <th>Machine</th>
+                                            <th>Operation</th>
+                                            <th>Estimated Time</th>
                                             <th>Total Process</th>
                                             <th>Created At</th>
                                             <th>Action</th>
@@ -50,22 +52,26 @@
                                         @foreach ($processing as $pr)
                                             <tr>
                                                 <td hidden class="ids">{{ $pr->id }}</td>
-                                                <td><a
-                                                        href="#">{{ $pr->order_number }}</a>
-                                                </td>
-                                                <td>{{ $pr->item_no }}</td>
-                                                <td>{{ $pr->dod }}</td>
-                                                <td>{{ $pr->item }}</td>
-                                                <td>{{ $pr->total_process}}</td>
-                                                <td>{{ $pr->created_at}}</td>
+                                                <td><a href="#">{{ $pr->order_number }}</a></td>
+                                                <td>{{ $pr->item_number }}</td>
+                                                <td>{{ $pr->date_wanted }}</td>
+                                                <td>{{ $pr->machine }}</td>
+                                                <td>{{ $pr->operation }}</td>
+                                                <td>{{ $pr->estimated_time }}</td>
+                                                <td>{{ $pr->mach_cost }}</td>
+                                                <td>{{ $pr->created_at }}</td>
                                                 <td>
-                                                    <a href="{{ url('activities/processing/edit/' . $pr->order_number) }}"
-                                                        class="btn-xs btn-warning"><i class="fas fa-pen"></i>
-                                                        Edit</a>
-                                                    <a href="{{ route('activities.destroyprocessing', ['id' => $pr->id]) }}"
-                                                        data-toggle="modal" data-target="#modal-hapus{{ $pr->id }}"
-                                                        class="btn-xs btn-danger"><i class="fas fa-trash-alt"></i>
-                                                        Delete</a>
+                                                    <a href="{{ url('activities/processing/edit/' . $pr->id) }}"
+                                                        class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
+                                                    <form action="{{ route('activities.deleteprocessing', $pr->id) }}"
+                                                        method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn-xs btn-danger"
+                                                            onclick="return confirm('Are you sure you want to delete this processing entry?')">
+                                                            <i class="fas fa-trash"></i> Delete
+                                                        </button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                             <div class="modal fade" id="modal-hapus{{ $pr->id }}">
@@ -79,12 +85,11 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <p>Are you sure to delete
-                                                            </p>
+                                                            <p>Are you sure to delete</p>
                                                         </div>
                                                         <div class="modal-footer justify-content-between">
                                                             <form
-                                                                action="{{ route('activities.destroyprocessing', ['id' => $pr->id]) }}"
+                                                                action="{{ route('activities.deleteprocessing', $pr->id) }}"
                                                                 method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -177,7 +182,6 @@
 
             // Menetapkan nilai yang sudah dikonversi ke elemen HTML
             totalAmountElement.textContent = formattedTotalAmount;
-
 
             // Fungsi untuk mengubah judul berdasarkan halaman
             function updateTitle(pageTitle) {

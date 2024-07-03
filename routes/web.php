@@ -1,14 +1,16 @@
 <?php
 
-use App\Http\Controllers\ActivitiesController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\SetupController;
-use App\Http\Controllers\TablesController;
-use Illuminate\Support\Facades\Route;
-
 use function Laravel\Prompts\table;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\SetupController;
+use App\Http\Controllers\ReportController;
+
+use App\Http\Controllers\TablesController;
+use App\Http\Controllers\UsedTimeController;
+use App\Http\Controllers\ActivitiesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -296,10 +298,10 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('/activities/processing', [ActivitiesController::class, 'processing'])->name('activities.processing');
         Route::get('/activities/processing/create', [ActivitiesController::class, 'createprocessing'])->name('activities.createprocessing');
         Route::post('/activities/processing/store', [ActivitiesController::class, 'storeprocessing'])->name('activities.storeprocessing');
-        Route::get('/activities/processing/edit/{order_number}', [ActivitiesController::class, 'editprocessing']);
-        Route::post('/activities/processing/update', [ActivitiesController::class, 'updateprocessing'])->name('activities.updateprocessing');
-        Route::delete('/activities/processing/{id}/destroy', [ActivitiesController::class, 'destroyprocessing'])->name('activities.destroyprocessing');
-        Route::post('/activities/soadd/delete', [ActivitiesController::class, 'deleteprocessing'])->name('activities.deleteprocessing');
+        Route::get('/activities/processing/edit/{id}', [ActivitiesController::class, 'editprocessing'])->name('activities.editprocessing');
+        Route::post('/activities/processing/update/{id}', [ActivitiesController::class, 'updateprocessing'])->name('activities.updateprocessing');
+        Route::delete('/activities/processing/{id}', [ActivitiesController::class, 'deleteprocessing'])->name('activities.deleteprocessing');
+        // Route::post('/activities/soadd/delete', [ActivitiesController::class, 'deleteprocessing'])->name('activities.deleteprocessing');
         Route::get('activities/processing/view/{order_number}', [ActivitiesController::class, 'viewprocessing']);
         Route::get('activities/processing/get-Order-data/{OrderNo}', [ActivitiesController::class, 'getOrderData']);
         Route::get('activities/processing/get-itemadd-by-orderno', [ActivitiesController::class, 'getItemAddByOrderNo'])->name('get.itemadd.byorderno');
@@ -345,10 +347,10 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('/activities/usedtime/create', [ActivitiesController::class, 'createusedtime'])->name('activities.createusedtime');
         Route::get('activities/standart_part/view/{order_number}', [ActivitiesController::class, 'viewstandartpart']);
         Route::post('/activities/standart_part/store', [ActivitiesController::class, 'storestandartpart'])->name('activities.storestandartpart');
-        Route::get('/activities/standart_part/edit/{order_number}', [ActivitiesController::class, 'editstandartpart']);
-        Route::post('/activities/standart_part/update', [ActivitiesController::class, 'updatestandartpart'])->name('activities.updatestandartpart');
-        Route::delete('/activities/standart_part/{id}/destroy', [ActivitiesController::class, 'destroystandartpart'])->name('activities.destroystandartpart');
-        Route::delete('/activities/standartpartadd/delete', [ActivitiesController::class, 'deletestandartpartadd'])->name('activities.deletestandartpartadd');
+        Route::get('/activities/standartpart/edit/{id}', [ActivitiesController::class, 'editstandartpart'])->name('activities.editstandartpart');
+        Route::post('/activities/standartpart/update/{id}', [ActivitiesController::class, 'updatestandartpart'])->name('activities.updatestandartpart');
+        Route::delete('/activities/standartpart/delete/{id}', [ActivitiesController::class, 'deletestandartpart'])->name('activities.deletestandartpart');
+                Route::delete('/activities/standartpartadd/delete', [ActivitiesController::class, 'deletestandartpartadd'])->name('activities.deletestandartpartadd');
         Route::get('/activities/standart_part/get-customer-data/{companyName}', [ActivitiesController::class, 'getCustomerData']);
         Route::get('/activities/standart_part/print/', [ActivitiesController::class, 'printstandartpart'])->name('activities.printstandartpart');
 
@@ -359,10 +361,10 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
                 Route::get('/activities/usedtime/create', [ActivitiesController::class, 'createusedtime'])->name('activities.createusedtime');
                 Route::get('activities/sub_contract/view/{order_number}', [ActivitiesController::class, 'viewsub_contract']);
                 Route::post('/activities/sub_contract/store', [ActivitiesController::class, 'storesub_contract'])->name('activities.storesub_contract');
-                Route::get('activities/sub_contract/edit/{id}', [ActivitiesController::class, 'editsub_contract'])->name('activities.editsub_contract');
-                Route::post('activities/sub_contract/update/{id}', [ActivitiesController::class, 'update'])->name('activities.updatesub_contract');
-                Route::delete('activities/sub_contract/{id}', [ActivitiesController::class, 'destroysub_contract'])->name('activities.destroysub_contract');
-                Route::delete('/activities/sub_contractadd/delete', [ActivitiesController::class, 'deletesub_contractadd'])->name('activities.deletesub_contractadd');
+                Route::get('/activities/sub_contract/edit/{id}', [ActivitiesController::class, 'editsub_contract'])->name('activities.editsub_contract');
+                Route::post('/activities/sub_contract/update/{id}', [ActivitiesController::class, 'updatesub_contract'])->name('activities.updatesub_contract');
+                Route::delete('/activities/sub_contract/delete/{id}', [ActivitiesController::class, 'deletesub_contract'])->name('activities.deletesub_contract');
+             Route::delete('/activities/sub_contractadd/delete', [ActivitiesController::class, 'deletesub_contractadd'])->name('activities.deletesub_contractadd');
                 Route::get('/activities/sub_contract/get-customer-data/{companyName}', [ActivitiesController::class, 'getCustomerData']);
                 Route::get('/activities/sub_contract/print/', [ActivitiesController::class, 'printsub_contract'])->name('activities.printsub_contract');
 
@@ -373,13 +375,14 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
                 Route::get('/activities/usedtime/create', [ActivitiesController::class, 'createusedtime'])->name('activities.createusedtime');
                 Route::get('activities/overhead_manufacture/view/{order_number}', [ActivitiesController::class, 'viewoverhead_manufacture']);
                 Route::post('/activities/overhead_manufacture/store', [ActivitiesController::class, 'storeoverhead_manufacture'])->name('activities.storeoverhead_manufacture');
-                Route::get('activities/overhead_manufacture/edit/{id}', [ActivitiesController::class, 'editOverheadManufacture'])->name('activities.editoverhead_manufacture');                
-                Route::post('activities/overhead_manufacture/update/{id}', [ActivitiesController::class, 'updateOverheadManufacture'])->name('activities.updateoverhead_manufacture');                
-                Route::delete('activities/overhead_manufacture/destroy/{id}', [ActivitiesController::class, 'destroyOverheadManufacture'])->name('activities.destroyoverhead_manufacture');                
+                Route::get('/activities/overhead_manufacture/edit/{id}', [ActivitiesController::class, 'editoverhead_manufacture'])->name('activities.editoverhead_manufacture');
+                Route::post('/activities/overhead_manufacture/update/{id}', [ActivitiesController::class, 'updateoverhead_manufacture'])->name('activities.updateoverhead_manufacture');
+                Route::delete('/activities/overhead_manufacture/delete/{id}', [ActivitiesController::class, 'deleteoverhead_manufacture'])->name('activities.deleteoverhead_manufacture');
                 Route::get('/activities/overhead_manufacture/get-customer-data/{companyName}', [ActivitiesController::class, 'getCustomerData']);
                 Route::get('/activities/overhead_manufacture/print/', [ActivitiesController::class, 'printoverhead_manufacture'])->name('activities.printoverhead_manufacture');
 
                 //activities - Used Time
+
                 Route::get('/activities', [ActivitiesController::class, 'activities'])->name('activities');
                 Route::get('/activities/used_time', [ActivitiesController::class, 'used_time'])->name('activities.used_time');
                 Route::get('/activities/used_time/create', [ActivitiesController::class, 'createused_time'])->name('activities.createused_time');
@@ -464,6 +467,13 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 
         Route::get('/activities/calculations', [ActivitiesController::class, 'showForm'])->name('calculations.form');
         Route::post('/activities/calculations/calculate', [ActivitiesController::class, 'calculate'])->name('calculations.calculate');
-        
-    });
+
+        Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
+        Route::get('/tasks/create', [TaskController::class, 'create']);
+        Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+        Route::post('/tasks/{task}/mark-as-pending', [TaskController::class, 'markAsPending'])->name('tasks.markAsPending');
+        Route::post('/tasks/{task}/mark-as-finished', [TaskController::class, 'markAsFinished'])->name('tasks.markAsFinished');
+        Route::post('/tasks/{task}/mark-as-not-started', [TaskController::class, 'markAsNotStarted'])->name('tasks.markAsNotStarted');
+        Route::post('/tasks/{task}/refresh-from-pending', [TaskController::class, 'refreshFromPending'])->name('tasks.refreshFromPending');
+        Route::get('/taskdataAPI', [TaskController::class, 'getData']);});
 });

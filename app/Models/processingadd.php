@@ -20,7 +20,8 @@ class ProcessingAdd extends Model
         'date_wanted',
         'barcode_id',
         'mach_cost',
-        'nop'
+        'nop',
+        'processing_id'
     ];
 
     public function processing()
@@ -29,6 +30,16 @@ class ProcessingAdd extends Model
     }
 
     public function processings()
+{
+    return $this->hasMany(ProcessingAdd::class, 'order_number', 'order_number');
+}
+
+public function processingused()
+{
+    return $this->belongsTo(Processing::class, 'processing_id', 'id');
+}
+
+public function processingsused()
 {
     return $this->hasMany(ProcessingAdd::class, 'order_number', 'order_number');
 }

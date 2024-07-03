@@ -52,8 +52,12 @@
                                             <tr>
                                                 <td>{{ $m->id }}</td>
                                                 <td>
-                                                    <button class="btn btn-warning btn-xs edit-btn" data-id="{{ $m->id }}"><i class="fas fa-pen"></i> Edit</button>
-                                                    <button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#modal-hapus{{ $m->id }}"><i class="fas fa-trash-alt"></i> Delete</button>
+                                                    <a href="{{ route('activities.editoverhead_manufacture', $m->id) }}" class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
+                                                    <form action="{{ route('activities.deleteoverhead_manufacture', $m->id) }}" method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</button>
+                                                    </form>
                                                 </td>
                                                 <td>{{ $m->tanggal }}</td>
                                                 <td>{{ $m->ref }}</td>
@@ -62,29 +66,6 @@
                                                 <td>{{ $m->keterangan }}</td>
                                                 <td>{{ $m->info }}</td>
                                             </tr>
-                                            <div class="modal fade" id="modal-hapus{{ $m->id }}" tabindex="-1" role="dialog" aria-labelledby="modalHapusLabel{{ $m->id }}" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="modalHapusLabel{{ $m->id }}">Delete Confirmation</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            Are you sure you want to delete this overhead manufacture?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                            <form action="{{ route('activities.destroyoverhead_manufacture', $m->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>
