@@ -317,7 +317,7 @@ class ActivitiesController extends Controller
                     'quotation_no' => $request->quotation_no,
                     'item'         => $item,
                     'item_desc'    => $request->item_desc[$key],
-                    'disc'         => $request->disc[$key],
+                    //'disc'         => $request->disc[$key],
                     'qty'          => $request->qty[$key],
                     'unit_price'   => str_replace(['Rp', ',', '.'], '', $request->unit_price[$key]),
                     'unit'         => $request->unit[$key],
@@ -439,7 +439,6 @@ class ActivitiesController extends Controller
             'net_days'          => 'required',
             'fob'               => 'required',
             'ship_date'         => 'required|date',
-            'po_number'         => 'required',
             'salesman'          => 'required',
             'dp'                => 'required',
             'dp_percent'        => 'required',
@@ -623,7 +622,6 @@ class ActivitiesController extends Controller
                 'net_days'          => $request->net_days,
                 'fob'               => $request->fob,
                 'ship_date'         => $request->ship_date,
-                'po_number'         => $request->po_number,
                 'salesman'          => $request->salesman,
                 'dp'          => str_replace(['Rp', '.', ','], '', $request->dp),
                 'dp_percent'        => $request->dp_percent,
@@ -1242,6 +1240,16 @@ class ActivitiesController extends Controller
 
         return view('activities.processing', compact('processing', 'processingJoin'));
     }
+    public function viewprocessing($order_number)
+    {
+        $processing = DB::table('processing')->get();
+        $processingJoin = DB::table('processing')
+            ->join('newprocessing', 'processing.order_number', '=', 'newprocessing.order_number')
+            ->select('processing.*', 'newprocessing.*')
+            ->where('newprocessing.order_number', $order_number)
+            ->get();
+        return view('activities.viewprocessing', compact('processing', 'processingJoin'));
+    }
 
     public function createprocessing()
     {
@@ -1255,41 +1263,51 @@ class ActivitiesController extends Controller
 
     public function storeprocessing(Request $request)
     {
-        Log::info('StoreProcessing method called', ['request' => $request->all()]);
 
-        // Validation rules
-        $validator = Validator::make($request->all(), [
-            'order_number' => 'required',
-            'item_no' => 'required',
-            'dod.*' => 'required|date',
-            'est_time.*' => 'required|integer|min:1',
-            'operation.*' => 'required|string|max:255',
-            'machine_name.*' => 'required|string|max:255',
-            'item.*' => 'required|string|max:255',
-            'total.*' => 'required|integer|min:1',
+        $request->validate([
+            'order_number'  => 'required',
+            'so_number'     => 'required',
+            'product'       => 'required',
+            'company_name'  => 'required',
+            'dod'           => 'required',
         ]);
 
-        // Check if validation fails
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+        DB::beginTransaction();
+        try {
+            $item = new Item;
+            $item->order_number = $request->order_number;
+            $item->so_number = $request->so_number;
+            $item->product = $request->product;
+            $item->company_name = $request->company_name;
+            $item->dod = $request->dod;
+            $item->save();
+            foreach ($request->item as $key => $items) {
+                $itemAdd = [
+                    'item'        => $items,
+                    'dod_item'     => $request->dod_item[$key],
+                    'id_item'     => $request->id_item[$key],
+                    'no_item'     => $request->no_item[$key],
+                    'order_number' => $item->order_number,
+                    'material'    => $request->material[$key],
+                    'weight'      => $request->weight[$key],
+                    'length'      => $request->length[$key],
+                    'width'       => $request->width[$key],
+                    'thickness'   => $request->thickness[$key],
+                    'ass_drawing' => $request->ass_drawing[$key],
+                    'drawing_no'  => $request->drawing_no[$key],
+                    'nos'         => $request->nos[$key],
+                    'nob'         => $request->nob[$key],
+                    'issued_item' => $request->issued_item[$key],
+                ];
+                ItemAdd::create($itemAdd);
+            }
 
-        // Iterate over each set of item details and create sub_contract entries
-        foreach ($request->dod as $index => $dod) {
-            processing::create([
-                'order_number' => $request->order_number,
-                'item_no' => $request->item_no,
-                'dod' => $dod,
-                'est_time' => $request->est_time[$index],
-                'operation' => $request->operation[$index],
-                'machine' => $request->machine_name[$index],
-                'item' => $request->item[$index],
-                'total_process' => $request->total[$index],
-            ]);
+            DB::commit();
+            return redirect()->route('activities.item')->with('success', 'Item Data Saved Successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('activities.createitem')->with('error', 'Failed to Save Item');
         }
-
-        // Redirect with success message
-        return redirect()->route('activities.createprocessing')->with('success', 'Processing(s) added successfully.');
     }
 
     public function getMachineCost(Request $request)

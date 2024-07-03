@@ -461,5 +461,6 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         //fetch input
         Route::get('/getOrderData', [ActivitiesController::class, 'getOrderData'])->name('getOrderData');
         Route::get('/getItemData', [ActivitiesController::class, 'getItemData'])->name('getItemData');
+        
     });
 });

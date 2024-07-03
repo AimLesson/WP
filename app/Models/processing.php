@@ -12,7 +12,7 @@ class processing extends Model
     protected $table='processing';
     protected $fillable=[
         'order_number' ,
-        'no_item' ,
+        'item_no' ,
         'dod' ,
         'item' ,
         'total_process' ,

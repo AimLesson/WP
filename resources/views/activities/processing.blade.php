@@ -25,58 +25,54 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <a href="{{ route('activities.createprocessing') }}" class="btn btn-primary mb-3">
-                            <i class="fas fa-plus"></i> Add
-                        </a>
+                        <a href="{{ route('activities.createprocessing') }}" class="btn btn-primary mb-3"><i
+                                class="fas fa-plus"></i>
+                            Add</a>
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Processing Data</h3>
+                                <h3 class="card-title">Processings Data</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="quotation" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
-                                            <th>Number Of Piece</th>
-                                            <th>Place</th>
-                                            <th>Operation</th>
-                                            <th>Estimated Time</th>
-                                            <th>Date Wanted</th>
-                                            <th>Barcode ID</th>
-                                            <th>Mach. Cost</th>
+                                            <th>Order Number</th>
+                                            <th>Item Number</th>
+                                            <th>DOD</th>
+                                            <th>Nama Item</th>
+                                            <th>Total Process</th>
+                                            <th>Created At</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($processing as $it) 
+                                        @foreach ($processing as $pr)
                                             <tr>
-                                                <td hidden class="ids">{{ $it->id }}</td>
-                                                <td hidden class="so_number">{{ $it->so_number }}</td>
-                                                <td>
-                                                    <a href="{{ url('activities/processing/view/' . $it->order_number) }}">{{ $it->order_number }}</a>
+                                                <td hidden class="ids">{{ $pr->id }}</td>
+                                                <td><a
+                                                        href="#">{{ $pr->order_number }}</a>
                                                 </td>
-                                                <td>{{ $it->nos }}</td>
-                                                <td>{{ $it->place }}</td>
-                                                <td>{{ $it->operation}}</td>
-                                                <td>{{ $it->estimated_time }}</td>
-                                                <td>{{ $it->date_wanted }}</td>
-                                                <td>{{ $it->barcode_id }}</td>
-                                                <td>{{ $it->mach_cost }}</td>
+                                                <td>{{ $pr->item_no }}</td>
+                                                <td>{{ $pr->dod }}</td>
+                                                <td>{{ $pr->item }}</td>
+                                                <td>{{ $pr->total_process}}</td>
+                                                <td>{{ $pr->created_at}}</td>
                                                 <td>
-                                                    <a href="{{ url('activities/processing/edit/' . $it->order_number) }}"
+                                                    <a href="{{ url('activities/processing/edit/' . $pr->order_number) }}"
                                                         class="btn-xs btn-warning"><i class="fas fa-pen"></i>
                                                         Edit</a>
-                                                    <a href="#" data-toggle="modal" data-target="#modal-hapus{{ $it->id }}"
+                                                    <a href="{{ route('activities.destroyprocessing', ['id' => $pr->id]) }}"
+                                                        data-toggle="modal" data-target="#modal-hapus{{ $pr->id }}"
                                                         class="btn-xs btn-danger"><i class="fas fa-trash-alt"></i>
                                                         Delete</a>
                                                 </td>
                                             </tr>
-                                            <div class="modal fade" id="modal-hapus{{ $it->id }}">
+                                            <div class="modal fade" id="modal-hapus{{ $pr->id }}">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title">Confirm Delete Process</h4>
+                                                            <h4 class="modal-title">Confirm Delete Item</h4>
                                                             <button type="button" class="close" data-dismiss="modal"
                                                                 aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
@@ -84,15 +80,18 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <p>Are you sure to delete
-                                                                <b>{{ $it->so_number }} - {{ $it->company_name }}?</b>
                                                             </p>
                                                         </div>
                                                         <div class="modal-footer justify-content-between">
-                                                            <form action="{{ route('activities.destroyprocessing', ['id' => $it->id]) }}" method="POST">
+                                                            <form
+                                                                action="{{ route('activities.destroyprocessing', ['id' => $pr->id]) }}"
+                                                                method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                                <button type="button" class="btn btn-default"
+                                                                    data-dismiss="modal">Cancel</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-danger">Delete</button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -115,14 +114,78 @@
         </section>
         <!-- /.content -->
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Function to update the page title
-        function updateTitle(pageTitle) {
-            document.title = pageTitle;
-        }
+        window.addEventListener('DOMContentLoaded', (event) => {
+            var errorAlert = '{{ session('error') }}';
+            if (errorAlert !== '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: errorAlert,
+                    position: 'top-end', // Mengubah posisi ke tengah
+                    showConfirmButton: false, // Menampilkan tombol OK
+                    timer: 5000,
+                    toast: true,
+                });
+            }
 
-        // Call this function when the "Processing" page loads
-        updateTitle('Processing');
+            // Menampilkan pesan keberhasilan dari sesi menggunakan SweetAlert
+            var successAlert = '{{ session('success') }}';
+            if (successAlert !== '') {
+                Swal.fire({
+                    icon: 'success',
+                    text: successAlert,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    toast: true,
+                });
+            }
+
+            // Fungsi untuk mengonversi angka ke format rupiah
+            function formatRupiah(angka) {
+                var number_string = angka.toString();
+                var split = number_string.split(',');
+                var sisa = split[0].length % 3;
+                var rupiah = split[0].substr(0, sisa);
+                var ribuan = split[0].substr(sisa).match(/\d{3}/g);
+
+                if (ribuan) {
+                    var separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+
+                rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+                return 'Rp ' + rupiah;
+            }
+
+            // Mengambil elemen HTML yang menampilkan total_amount di dalam tabel
+            var totalAmountElements = document.querySelectorAll('.totalamount');
+
+            // Iterasi melalui setiap elemen dan mengonversi nilainya ke format rupiah
+            totalAmountElements.forEach(function(totalAmountElement) {
+                var totalAmount = totalAmountElement.textContent.trim();
+                var formattedTotalAmount = formatRupiah(totalAmount);
+                totalAmountElement.textContent = formattedTotalAmount;
+            });
+
+            // Mengambil nilai total_amount dan tax
+            var totalAmount = totalAmountElement.textContent.trim();
+
+            // Mengonversi nilai total_amount dan tax ke format rupiah
+            var formattedTotalAmount = formatRupiah(totalAmount);
+
+            // Menetapkan nilai yang sudah dikonversi ke elemen HTML
+            totalAmountElement.textContent = formattedTotalAmount;
+
+
+            // Fungsi untuk mengubah judul berdasarkan halaman
+            function updateTitle(pageTitle) {
+                document.title = pageTitle;
+            }
+
+            // Panggil fungsi ini saat halaman "barcode" dimuat
+            updateTitle('Items');
+        });
     </script>
 @endsection

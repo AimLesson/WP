@@ -65,7 +65,7 @@
                         <label for="order_number">New Order Number</label>
                         <input type="text" name="order_number" class="form-control" id="order_number" placeholder="Input Order No." required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Copy Order</button>
+                    <button type="submit" class="btn btn-primary btn-custom">Copy Order</button>
                 </form>
             </div>
         </section>
