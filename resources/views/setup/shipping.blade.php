@@ -29,7 +29,7 @@
                         Add</a>
                     <div class="card">
                         <div class="card-body">
-                            <table id="plan" class="table table-head-fixed text-nowrap">
+                            <table id="machine" class="table table-head-fixed text-nowrap">
                                 <thead>
                                     <tr>
                                         <th>Id</th>
