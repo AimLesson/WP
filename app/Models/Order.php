@@ -36,4 +36,19 @@ class Order extends Model
         'material_cost',
         'dod_adj',
     ];
+
+    public function items()
+    {
+        return $this->hasMany(Item::class, 'order_number', 'order_number');
+    }
+
+    public function processings()
+    {
+        return $this->hasMany(ProcessingAdd::class, 'order_number', 'order_number');
+    }
+
+    public function subContracts()
+    {
+        return $this->hasMany(Sub_Contract::class, 'order_number', 'order_number');
+    }
 }
