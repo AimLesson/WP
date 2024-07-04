@@ -140,8 +140,8 @@
                     </p>
                 </a>
             </li>-->
-            <li class="nav-item {{ request()->is('tasks/index') ? 'active' : '' }}">
-                <a href="{{ route('tasks.index') }}" class="nav-link">
+            <li class="nav-item {{ request()->is('activities/used_time') ? 'active' : '' }}">
+                <a href="{{ route('activities.used_time') }}" class="nav-link">
                     <i class="nav-icon fas fa-clock"></i>
                     <p>
                         Used Time

@@ -382,20 +382,21 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
                 Route::get('/activities/overhead_manufacture/print/', [ActivitiesController::class, 'printoverhead_manufacture'])->name('activities.printoverhead_manufacture');
 
                 //activities - Used Time
-
                 Route::get('/activities', [ActivitiesController::class, 'activities'])->name('activities');
                 Route::get('/activities/used_time', [ActivitiesController::class, 'used_time'])->name('activities.used_time');
                 Route::get('/activities/used_time/create', [ActivitiesController::class, 'createused_time'])->name('activities.createused_time');
-                Route::get('/activities/usedtime/create', [ActivitiesController::class, 'createusedtime'])->name('activities.createusedtime');
-                Route::get('activities/used_time/view/{order_number}', [ActivitiesController::class, 'viewused_time']);
                 Route::post('/activities/used_time/store', [ActivitiesController::class, 'storeused_time'])->name('activities.storeused_time');
-                Route::get('/activities/used_time/edit/{order_number}', [ActivitiesController::class, 'editused_time']);
+                Route::get('/activities/used_time/view/{order_number}', [ActivitiesController::class, 'viewused_time'])->name('activities.viewused_time');
+                Route::get('/activities/used_time/edit/{order_number}', [ActivitiesController::class, 'editused_time'])->name('activities.editused_time');
                 Route::post('/activities/used_time/update', [ActivitiesController::class, 'updateused_time'])->name('activities.updateused_time');
                 Route::delete('/activities/used_time/{id}/destroy', [ActivitiesController::class, 'destroyused_time'])->name('activities.destroyused_time');
                 Route::delete('/activities/used_timeadd/delete', [ActivitiesController::class, 'deleteused_timeadd'])->name('activities.deleteused_timeadd');
-                Route::get('/activities/used_time/get-customer-data/{companyName}', [ActivitiesController::class, 'getCustomerData']);
+                Route::get('/activities/used_time/get-customer-data/{companyName}', [ActivitiesController::class, 'getCustomerData'])->name('activities.getCustomerData');
                 Route::get('/activities/used_time/print/', [ActivitiesController::class, 'printused_time'])->name('activities.printused_time');
-        
+                Route::post('/activities/used_time/{usedTime}/start', [ActivitiesController::class, 'start'])->name('activities.startused_time');
+                Route::post('/activities/used_time/{usedTime}/stop', [ActivitiesController::class, 'stop'])->name('activities.stopused_time');
+                Route::post('/activities/used_time/{usedTime}/reset', [ActivitiesController::class, 'reset'])->name('activities.resetused_time');
+                        
                 //activities - Used Time Barcode
                 Route::get('/activities', [ActivitiesController::class, 'activities'])->name('activities');
                 Route::get('/activities/used_time_barcode', [ActivitiesController::class, 'used_time_barcode'])->name('activities.used_time_barcode');

@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
-use App\Models\StandartpartAPI;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\Order;
-use App\Models\sub_contract;
 use GuzzleHttp\Client;
 use App\Models\ItemAdd;
 use App\Models\Machine;
@@ -15,18 +13,21 @@ use App\Models\TaxType;
 use App\Models\Customer;
 use App\Models\Kblicode;
 use App\Models\Material;
-use App\Models\standart_part;
+use App\Models\overhead;
+use App\Models\UsedTime;
 use App\Models\OrderUnit;
 use App\Models\Quotation;
 use App\Models\Department;
-use App\Models\overhead;
 use App\Models\processing;
 use App\Models\SalesOrder;
 use App\Models\ProductType;
 use App\Models\QuotationAdd;
+use App\Models\sub_contract;
 use Illuminate\Http\Request;
 use App\Models\processingadd;
 use App\Models\SalesOrderAdd;
+use App\Models\standart_part;
+use App\Models\StandartpartAPI;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -37,6 +38,7 @@ class ActivitiesController extends Controller
     {
         return view('activities.activities');
     }
+
 
     //activities - quotation
     public function quotationindex()
@@ -49,7 +51,6 @@ class ActivitiesController extends Controller
 
         return view('activities.quotation', compact('quotation', 'quotationJoin'));
     }
-
     public function viewquotation($quotation_no)
     {
         $quotationJoin = DB::table('quotation')
@@ -59,7 +60,6 @@ class ActivitiesController extends Controller
             ->get();
         return view('activities.viewquotation', compact('quotationJoin'));
     }
-
     public function createquotation()
     {
         $customers = Customer::get();
@@ -68,8 +68,6 @@ class ActivitiesController extends Controller
         $user = User::get();
         return view('activities.createquotation', compact('user', 'unit', 'tax_type', 'customers'));
     }
-
-
     public function storequotation(Request $request)
     {
         if ($request->has('addcompany')) {
@@ -207,7 +205,6 @@ class ActivitiesController extends Controller
             return redirect()->route('activities.createquotation')->with('error', 'Failed addedd quotation, Try again.');
         }
     }
-
     public function editquotation($quotation_no)
     {
         $customers = Customer::get();
@@ -223,7 +220,6 @@ class ActivitiesController extends Controller
 
         return view('activities.editquotation', compact('quotation', 'quotationJoin', 'user', 'unit', 'tax_type', 'customers'));
     }
-
     public function deletequotationadd(Request $request)
     {
         DB::beginTransaction();
@@ -245,8 +241,6 @@ class ActivitiesController extends Controller
             return redirect()->back()->with('error', 'An error occurred while deleting the product.');
         }
     }
-
-
     public function updatequotation(Request $request)
     {
         DB::beginTransaction();
@@ -339,7 +333,6 @@ class ActivitiesController extends Controller
             return redirect()->back()->with('error', 'Failed to update quotation. Please try again.');
         }
     }
-
     public function destroyquotation($id)
     {
         DB::beginTransaction();
@@ -371,7 +364,6 @@ class ActivitiesController extends Controller
 
         return view('activities.salesorder', compact('salesorder', 'salesorderJoin'));
     }
-
     public function viewsalesorder($so_number)
     {
         $salesorderJoin = DB::table('salesorder')
@@ -381,7 +373,6 @@ class ActivitiesController extends Controller
             ->get();
         return view('activities.viewsalesorder', compact('salesorderJoin'));
     }
-
     public function createso()
     {
         $kbli = Kblicode::get();
@@ -394,7 +385,6 @@ class ActivitiesController extends Controller
 
         return view('activities.createso', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation'));
     }
-
     public function getQuotationData($quotation_no)
     {
         $quotation = DB::table('quotation')->where('quotation_no', $quotation_no)->first();
@@ -409,7 +399,6 @@ class ActivitiesController extends Controller
 
         return response()->json($result);
     }
-
     public function storeso(Request $request)
     {
         $request->validate([
@@ -547,7 +536,6 @@ class ActivitiesController extends Controller
             return redirect()->route('activities.createso')->with('error', 'Failed to add Sales Order. Please try again!');
         }
     }
-
     public function editsalesorder($so_number)
     {
         $kbli = Kblicode::get();
@@ -566,7 +554,6 @@ class ActivitiesController extends Controller
 
         return view('activities.editsalesorder', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation', 'salesorder', 'salesorderJoin'));
     }
-
     public function deletesoadd(Request $request)
     {
         DB::beginTransaction();
@@ -588,7 +575,6 @@ class ActivitiesController extends Controller
             return redirect()->back()->with('error', 'An error occurred while deleting the product.');
         }
     }
-
     public function updatesalesorder(Request $request)
     {
         DB::beginTransaction();
@@ -677,7 +663,6 @@ class ActivitiesController extends Controller
             return redirect()->back()->with('error', 'Failed to update salesorder. Please try again.');
         }
     }
-
     public function destroyso($id)
     {
         DB::beginTransaction();
@@ -695,12 +680,12 @@ class ActivitiesController extends Controller
         }
     }
 
+    //order controller
     public function order()
     {
         $order = Order::get();
         return view('activities.order', compact('order'));
     }
-
     public function createorder()
     {
         $soadd = SalesOrderAdd::get();
@@ -712,7 +697,6 @@ class ActivitiesController extends Controller
         $producttype = ProductType::get();
         return view('activities.createorder', compact('soadd', 'so', 'kbli_code', 'quotation_no', 'producttype', 'so_number', 'customers'));
     }
-
     public function storeorder(Request $request)
     {
         $validator = Validator::make(
@@ -766,7 +750,6 @@ class ActivitiesController extends Controller
 
         return redirect()->route('activities.order')->with('success', 'Order added successfully');
     }
-
     public function editorder(Request $request, $id)
     {
         $soadd = SalesOrderAdd::get();
@@ -792,7 +775,6 @@ class ActivitiesController extends Controller
             'producttype',
         ));
     }
-
     public function updateorder(Request $request, $id)
     {
         $validator = Validator::make(
@@ -859,8 +841,6 @@ class ActivitiesController extends Controller
         Order::whereId($id)->update($order);
         return redirect()->route('activities.order')->with('success', 'Order Updated');
     }
-
-
     public function deleteorder(Request $request, $id)
     {
         $order = Order::find($id);
@@ -874,6 +854,7 @@ class ActivitiesController extends Controller
         return redirect()->route('activities.order')->with('success', 'Order data successfully deleted');
     }
 
+
     //activities - customer
     public function customer()
     {
@@ -881,12 +862,10 @@ class ActivitiesController extends Controller
 
         return view('activities.customer', compact('customer'));
     }
-
     public function createcustomer()
     {
         return view('activities.createcustomer');
     }
-
     public function storecustomer(Request $request)
     {
         $validator = Validator::make(
@@ -938,8 +917,6 @@ class ActivitiesController extends Controller
 
         return redirect()->route('activities.customer')->with('success', 'Customer Added');
     }
-
-
     public function editcustomer(Request $request, $id)
     {
         $customer = Customer::find($id);
@@ -950,7 +927,6 @@ class ActivitiesController extends Controller
 
         return view('activities.editcustomer', compact('customer'));
     }
-
     public function updatecustomer(Request $request, $id)
     {
         $validator = Validator::make(
@@ -1028,7 +1004,6 @@ class ActivitiesController extends Controller
 
         return view('activities.item', compact('item', 'itemJoin'));
     }
-
     public function viewitem($order_number)
     {
         $item = DB::table('item')->get();
@@ -1039,7 +1014,6 @@ class ActivitiesController extends Controller
             ->get();
         return view('activities.viewitem', compact('item', 'itemJoin'));
     }
-
     public function createitem()
     {
         $material   = Material::get();
@@ -1047,7 +1021,6 @@ class ActivitiesController extends Controller
 
         return view('activities.createitem', compact('material', 'order'));
     }
-
     public function storeitem(Request $request)
     {
 
@@ -1096,7 +1069,6 @@ class ActivitiesController extends Controller
             return redirect()->route('activities.createitem')->with('error', 'Failed to Save Item');
         }
     }
-
     public function edititem($order_number)
     {
         $order = Order::get();
@@ -1109,7 +1081,6 @@ class ActivitiesController extends Controller
             ->get();
         return view('activities.edititem', compact('order', 'material', 'item', 'itemJoin'));
     }
-
     public function updateitem(Request $request)
     {
         DB::beginTransaction();
@@ -1153,7 +1124,6 @@ class ActivitiesController extends Controller
             return redirect()->back()->with('error', 'Failed Updated Item');
         }
     }
-
     public function deleteitemadd(Request $request)
     {
         DB::beginTransaction();
@@ -1173,7 +1143,6 @@ class ActivitiesController extends Controller
             return redirect()->back()->with('error', 'Failed to Delete');
         }
     }
-
     public function destroyitem($id)
     {
         DB::beginTransaction();
@@ -1188,7 +1157,6 @@ class ActivitiesController extends Controller
             return redirect()->route('activities.item')->with('error', 'Failed to Delete Item');
         }
     }
-
     public function getOrderData(Request $request)
     {
         $orderNumber = $request->query('order_number');
@@ -1207,8 +1175,6 @@ class ActivitiesController extends Controller
             return response()->json(['error' => 'Order not found'], 404);
         }
     }
-
-
     public function getItemData(Request $request)
     {
         $noItem = $request->query('no_item');
@@ -1230,12 +1196,12 @@ class ActivitiesController extends Controller
         }
     }
 
+
     public function processing()
     {
         $processing     = processingadd::get();
         return view('activities.processing', compact('processing'));
     }
-
     public function createprocessing()
     {
         $orders     = Order::get();
@@ -1245,7 +1211,6 @@ class ActivitiesController extends Controller
 
         return view('activities.createprocessing', compact('orders', 'material', 'machine', 'items'));
     }
-
     public function storeprocessing(Request $request)
     {
         Log::info('StoreProcess method called', ['request' => $request->all()]);
@@ -1286,7 +1251,6 @@ class ActivitiesController extends Controller
         // Redirect with success message
         return redirect()->route('activities.createprocessing')->with('success', 'Process(es) added successfully.');
     }
-
     public function editprocessing($id)
     {
         $processing = Processingadd::find($id);
@@ -1301,7 +1265,6 @@ class ActivitiesController extends Controller
 
         return view('activities.editprocessing', compact('processing', 'orders', 'material', 'machine', 'items'));
     }
-
     public function updateprocessing(Request $request, $id)
     {
         Log::info('UpdateProcess method called', ['request' => $request->all()]);
@@ -1346,8 +1309,6 @@ class ActivitiesController extends Controller
         // Redirect with success message
         return redirect()->route('activities.processing')->with('success', 'Processing entry updated successfully.');
     }
-
-
     public function deleteprocessing($id)
     {
         // Find the processing entry by its ID
@@ -1364,8 +1325,6 @@ class ActivitiesController extends Controller
         // Redirect with success message
         return redirect()->route('activities.processing')->with('success', 'Processing entry deleted successfully.');
     }
-
-
     public function getMachineCost(Request $request)
     {
         $machineName = $request->input('machine_name');
@@ -1381,7 +1340,6 @@ class ActivitiesController extends Controller
             'error' => 'Machine not found',
         ], 404);
     }
-
     public function getItemAddByOrderNo(Request $request)
     {
         $orderNumber = $request->input('order_number');
@@ -1876,16 +1834,130 @@ class ActivitiesController extends Controller
     {
         return view('activities.depreciationcost');
     }
-    public function used_time()
+    public function used_time(Request $request)
     {
-        return view('activities.usedtime');
+        $orderNumbers = Processingadd::select('order_number')->distinct()->get()->pluck('order_number');
+        $itemNumbers = Processingadd::select('item_number')->distinct()->get()->pluck('item_number');
+
+        $query = UsedTime::query();
+
+        if ($request->has('order_number') && $request->order_number) {
+            $query->whereHas('processing', function($q) use ($request) {
+                $q->where('order_number', $request->order_number);
+            });
+        }
+
+        if ($request->has('no_item') && $request->no_item) {
+            $query->whereHas('processing', function($q) use ($request) {
+                $q->where('item_number', $request->no_item);
+            });
+        }
+
+        $filteredUsedTimes = $query->get();
+
+        return view('activities.usedtime', compact('filteredUsedTimes', 'orderNumbers', 'itemNumbers'));
     }
 
     public function createused_time()
     {
-        $order = Order::get();
-        $itemadd = ItemAdd::get();
-        return view('activities.createused_time', compact('order', 'itemadd'));
+        $processings = Processingadd::all();
+        return view('activities.createused_time', compact('processings'));
+    }
+
+    public function storeused_time(Request $request)
+    {
+        $request->validate([
+            'processing_id' => 'required|exists:processingadd,id',
+        ]);
+
+        UsedTime::create([
+            'processing_id' => $request->processing_id,
+            'status' => 'not_started',
+        ]);
+
+        return redirect()->route('activities.used_time');
+    }
+
+    public function viewused_time($order_number)
+    {
+        $usedTimes = UsedTime::whereHas('processing', function ($query) use ($order_number) {
+            $query->where('order_number', $order_number);
+        })->with('processing')->get();
+
+        return view('activities.viewused_time', compact('usedTimes'));
+    }
+
+    public function editused_time($order_number)
+    {
+        $usedTime = UsedTime::whereHas('processing', function ($query) use ($order_number) {
+            $query->where('order_number', $order_number);
+        })->first();
+
+        if (!$usedTime) {
+            return redirect()->route('activities.used_time')->with('error', 'Used time entry not found.');
+        }
+
+        $processings = Processingadd::all();
+
+        return view('activities.editused_time', compact('usedTime', 'processings'));
+    }
+
+    public function updateused_time(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:used_times,id',
+            'processing_id' => 'required|exists:processingadd,id',
+        ]);
+
+        $usedTime = UsedTime::find($request->id);
+        $usedTime->update([
+            'processing_id' => $request->processing_id,
+        ]);
+
+        return redirect()->route('activities.used_time')->with('success', 'Used time entry updated successfully.');
+    }
+
+    public function destroyused_time($id)
+    {
+        $usedTime = UsedTime::find($id);
+
+        if (!$usedTime) {
+            return redirect()->route('activities.used_time')->with('error', 'Used time entry not found.');
+        }
+
+        $usedTime->delete();
+
+        return redirect()->route('activities.used_time')->with('success', 'Used time entry deleted successfully.');
+    }
+
+    public function deleteused_timeadd(Request $request)
+    {
+        // Assuming this method will handle bulk delete or specific conditions
+        // Adjust as needed based on your application logic
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:used_times,id',
+        ]);
+
+        UsedTime::whereIn('id', $request->ids)->delete();
+
+        return redirect()->route('activities.used_time')->with('success', 'Selected used time entries deleted successfully.');
+    }
+
+    public function getCustomerData($companyName)
+    {
+        // Implement your logic to fetch customer data based on company name
+        // Adjust this method as per your application's requirements
+        return response()->json(['data' => 'Customer data for ' . $companyName]);
+    }
+
+    public function printused_time()
+    {
+        $usedTimes = UsedTime::with('processing')->get();
+
+        // Implement your logic to print or export the used time data
+        // For demonstration, we'll just return the view
+        return view('activities.used_time.print', compact('usedTimes'));
     }
     public function used_time_barcode()
     {
