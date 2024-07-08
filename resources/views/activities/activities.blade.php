@@ -84,7 +84,7 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('activities/processing') ||request()->is('activities/processing/create')||(request()->is('activities/processing/edit/*')&&request()->route('id')==$item->id) ? 'active' : '' }}">
+            <li class="nav-item {{ request()->is('activities/processing') ||request()->is('activities/processing/create') ? 'active' : '' }}">
                 <a href="{{route('activities.processing')}}" class="nav-link">
                     <i class="nav-icon fas fa-retweet"></i>
                     <p>

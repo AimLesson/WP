@@ -62,7 +62,7 @@
                                                 <td>{{ $pr->mach_cost }}</td>
                                                 <td>{{ $pr->created_at }}</td>
                                                 <td>
-                                                    <a href="{{ url('activities/processing/edit/' . $pr->id) }}"
+                                                    <a href="{{ route('activities.editprocessing',$pr->id) }}"
                                                         class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
                                                     <a href="{{ route('activities.deleteprocessing', $pr->id) }}"
                                                         data-toggle="modal" data-target="#modal-delete{{ $pr->id }}"

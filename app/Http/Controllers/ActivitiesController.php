@@ -1262,8 +1262,9 @@ class ActivitiesController extends Controller
         $material = Material::get();
         $machine = Machine::get();
         $items = ItemAdd::get();
+        $item = ItemAdd::get();
 
-        return view('activities.editprocessing', compact('processing', 'orders', 'material', 'machine', 'items'));
+        return view('activities.editprocessing', compact('processing', 'orders', 'material', 'machine', 'items','item'));
     }
     public function updateprocessing(Request $request, $id)
     {
