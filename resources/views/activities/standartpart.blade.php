@@ -39,7 +39,6 @@
                                         <tr>
                                             <th>Order Number</th>
                                             <th>Part Number</th>
-                                            <th>Action</th>
                                             <th>Part Name</th>
                                             <th>Quantity</th>
                                             <th>Price</th>
@@ -47,6 +46,7 @@
                                             <th>Date</th>
                                             <th>Item Name</th>
                                             <th>No Item</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -57,13 +57,6 @@
                                             <tr>
                                                 <td>{{ $m->order_number }}</td>
                                                 <td>{{ $m->id }}</td>
-                                                <td>
-                                                    <a href="{{ route('activities.editstandartpart', $m->id) }}"
-                                                        class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
-                                                    <button class="btn-xs btn-danger" data-toggle="modal" data-target="#modal-hapus{{ $m->id }}">
-                                                        <i class="fas fa-trash-alt"></i> Delete
-                                                    </button>
-                                                </td>
                                                 <td>{{ $m->part_name }}</td>
                                                 <td>{{ $m->qty }}</td>
                                                 <td>{{ $m->price }}</td>
@@ -71,6 +64,13 @@
                                                 <td>{{ $m->date }}</td>
                                                 <td>{{ $m->item_name }}</td>
                                                 <td>{{ $m->item_no }}</td>
+                                                <td>
+                                                    <a href="{{ route('activities.editstandartpart', $m->id) }}"
+                                                        class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
+                                                    <button class="btn-xs btn-danger" data-toggle="modal" data-target="#modal-hapus{{ $m->id }}">
+                                                        <i class="fas fa-trash-alt"></i> Delete
+                                                    </button>
+                                                </td>
                                             </tr>
                                             <div class="modal fade" id="modal-hapus{{ $m->id }}">
                                                 <div class="modal-dialog">

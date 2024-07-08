@@ -15,11 +15,10 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="orderunit" class="table table-head-fixed text-nowrap">
+                            <table id="machine" class="table table-head-fixed text-nowrap">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Name</th>
                                         <th>Code Order</th>
                                         <th>Action</th>
                                     </tr>
@@ -32,7 +31,6 @@
                                     @foreach ($orderunit as $ot)
                                         <tr>
                                             <td>{{ $ot->id_order_unit }}</td>
-                                            <td>{{ $ot->name }}</td>
                                             <td>{{ $ot->code_order }}</td>
                                             <td>
                                                 <a href="{{ route('setup.editorderunit', ['id' => $ot->id]) }}"

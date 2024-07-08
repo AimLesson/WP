@@ -42,25 +42,24 @@
                                             <th>Customers</th>
                                             <th>Order Date</th>
                                             <th>SO. No</th>
+                                            <th>Reff Number</th>
                                             <th>KBLI</th>
                                             <th>Jenis Produk</th>
-                                            <th>D D D</th>
-                                            <th>D D D Adj.</th>
-                                            <th>D D D (real)</th>
+                                            <th>D O D</th>
+                                            <th>D O D Adj.</th>
+                                            <th>D O D (real)</th>
                                             <th>Finish Date</th>
                                             <th>Product</th>
-                                            <th>Finish (%)</th>
+                                            <th>Order Status</th>
                                             <th>Qty</th>
-                                            <th>Cost of Material</th>
-                                            <th>Cost of Proccess</th>
-                                            <th>Cost of Std Part</th>
-                                            <th>Cost of Sub. Contr</th>
+                                            <th>Sale Price</th>
                                             <th>DPD</th>
                                             <th>HPP</th>
-                                            <th>SO Amount</th>
-                                            <th>Infor</th>
+                                            <th>Material</th>
+                                            <th>Information 1</th>
+                                            <th>Information 2</th>
                                             <th>Sample</th>
-                                            <th>Letter No</th>
+                                            <th>Material Cost</th>
                                             <th>Order Finish</th>
                                         </tr>
                                     </thead>
@@ -73,27 +72,26 @@
                                             <tr>
                                                 <td>{{ $m->id }}</td>
                                                 <td>{{ $m->order_number }}</td>
-                                                <td>{{ $m->so_number }}</td>
-                                                <td>{{ $m->quotation_number }}</td>
-                                                <td>{{ $m->kbli_code }}</td>
-                                                <td>{{ $m->reff_number }}</td>
+                                                <td>{{ $m->customer }}</td>
                                                 <td>{{ $m->order_date }}</td>
-                                                <td>{{ $m->product_type }}</td>
-                                                <td>{{ $m->po_number }}</td>
-                                                <td>{{ $m->sale_price }}</td>
-                                                <td>{{ $m->production_cost}}</td>
-                                                <td>{{ $m->information }} years</td>
-                                                <td>{{ $m->information2 }} hours/day</td>
-                                                <td>{{ $m->information3 }} days</td>
-                                                <td>{{ $m->order_status }} %</td>
-                                                <td>{{ $m->customer }} M²</td>
-                                                <td>{{ $m->product }} %</td>
-                                                <td>{{ $m->qty }} kW</td>
+                                                <td>{{ $m->so_number}}</td>
+                                                <td>{{ $m->reff_number}}</td>
+                                                <td>{{ $m->kbli_code }}</td>
+                                                <td>{{ $m->product_type}}</td>
                                                 <td>{{ $m->dod }}</td>
-                                                <td>{{ $m->dod_forecast}}</td>
-                                                <td>{{ $m->sample }}</td>
+                                                <td>{{ $m->dod_adj }}</td>
+                                                <td>{{ $m->dod_forecast }}</td>
+                                                <td>{{ $m->finish_date}}</td>
+                                                <td>{{ $m->product }} </td>
+                                                <td>{{ $m->order_status }}</td>
+                                                <td>{{ $m->qty }} </td>
+                                                <td>{{ 'Rp. ' . number_format($m->sale_price, 0, ',', '.') }}</td>
+                                                <td>{{ $m->dod }}</td>
+                                                <td>{{ 'Rp. ' . number_format($m->production_cost, 0, ',', '.')}}</td>
                                                 <td>{{ $m->material }}</td>
-                                                <td>{{ $m->catalog_number }}</td>
+                                                <td>{{ $m->information }}</td>
+                                                <td>{{ $m->information2 }}</td>
+                                                <td>{{ $m->sample }}</td>
                                                 <td>{{ $m->material_cost }}</td>
                                                 <td>{{ $m->dod_adj }}</td>
 

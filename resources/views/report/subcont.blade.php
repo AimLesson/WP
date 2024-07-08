@@ -78,8 +78,8 @@
                                                 <td>{{ $m->description }}</td>
                                                 <td>{{ $m->qty }}</td>
                                                 <td>{{ $m->unit }}</td>
-                                                <td>{{ $m->price_unit}}</td>
-                                                <td>{{ $m->total_price}}</td>
+                                                <td>{{ 'Rp. ' . number_format($m->price_unit, 0, ',', '.') }}</td>
+                                                <td>{{ 'Rp. ' . number_format($m->total_price, 0, ',', '.') }}</td>
                                                 <td>{{ $m->info}}</td>
                                                 <td>{{ $m->order_number}}</td>
                                                 <td>{{ $m->pemesanan}}</td>

@@ -45,12 +45,8 @@
                                     <tbody>
                                         @foreach ($plan as $p)
                                             <tr>
-                                                <td hidden class="idp">{{ $p->id }}</td>
-                                                <td hidden class="plan_name">{{ $p->plan_name }}</td>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td><a
-                                                        href="{{ url('setup/plan/view/' . $p->plan_name) }}">{{ $p->plan_name }}</a>
-                                                </td>
+                                                <td >{{ $p->id }}</td>
+                                                <td><a href="{{ url('setup/plan/view/' . $p->plan_name) }}">{{ $p->plan_name }}</a></td>
                                                 <td>{{ $p->total_group }}</td>
                                                 <td>
                                                     <a href="{{ url('setup/plan/edit/' . $p->plan_name) }}"
@@ -142,7 +138,7 @@
             }
 
             // Panggil fungsi ini saat halaman "barcode" dimuat
-            updateTitle('Plan');
+            updateTitle('Plant');
         });
     </script>
 @endsection

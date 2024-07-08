@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="col">
                                     <label>&nbsp;</label>
-                                    <button type="submit" class="btn btn-primary form-control">Filter</button>
+                                    <button type="submit" class="btn-custom text-center form-control">Filter</button>
                                 </div>
                             </div>
                         </form>

@@ -33,7 +33,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="user" class="table table-head-fixed text-nowrap">
+                                <table id="machine" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
                                             <th>Name</th>
