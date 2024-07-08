@@ -113,7 +113,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="dod" class="form-label">DOD</label>
+                                            <label for="dod" class="form-label">Date Wanted</label>
                                             <input type="date" name="dod" class="form-control" id="dod"
                                                 placeholder="Company Name" required>
                                             @error('dod')
@@ -143,88 +143,61 @@
                                             <table class="table" id="soadd-table" style="width: 100%; overflow-x: auto;">
                                                 <thead>
                                                     <tr>
-                                                        <th class="width:80px">ID Item</th>
-                                                        <th class="width:80px">No Item</th>
+                                                        <th style="width:80px">ID Item</th>
+                                                        <th style="width:80px">No Item</th>
                                                         <th class="col-sm-2">Item Name</th>
-                                                        <th class="col-sm-2">DOD</th>
+                                                        <th class="col-sm-2">Date Wanted</th>
                                                         <th class="col-md-6">Material</th>
+                                                        <th class="col-md-6">Shape</th>
+                                                        <th style="width:80px">Massa(kg/mm³)</th>
                                                         <th style="width:80px">NOS</th>
                                                         <th style="width:80px">NOB</th>
                                                         <th class="col-sm-2">Issued</th>
                                                         <th class="col-md-6">Ass Drawing</th>
                                                         <th class="col-md-6">Drawing No</th>
-                                                        <th style="width:80px;">Weight(mm)</th>
                                                         <th style="width:100px;">Length(mm)</th>
                                                         <th style="width:80px;">Width(mm)</th>
                                                         <th>Thickness(mm)</th>
+                                                        <th style="width:80px;">Weight(kg)</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
+                                                        <td><input class="row-index form-control" style="width:50px" type="text" id="id_item${rowIdx}" name="id_item[]" value="1"></td>
+                                                        <td><input class="form-control" style="min-width:120px" type="text" id="no_item" name="no_item[]"></td>
+                                                        <td><input class="form-control" style="min-width:120px" type="text" id="item" name="item[]"></td>
+                                                        <td><input class="form-control" style="min-width:120px" type="date" id="dod_item" name="dod_item[]"></td>
                                                         <td>
-                                                            <input class="row-index form-control" style="width:50px"
-                                                                type="text" id="id_item${rowIdx}" name="id_item[]"
-                                                                value="1">
-                                                        </td>
-                                                        <td><input class="form-control" style="min-width:120px"
-                                                                type="text" id="no_item" name="no_item[]">
-                                                        </td>
-                                                        <td><input class="form-control" style="min-width:120px"
-                                                                type="text" id="item" name="item[]">
-                                                        </td>
-                                                        <td><input class="form-control" style="min-width:120px"
-                                                                type="date" id="dod_item" name="dod_item[]">
-                                                        </td>
-                                                        <td><select class="form-control select2 material"
-                                                                style="width:180px" type="text" id="material"
-                                                                name="material[]">
-                                                                <option selected="selected" required disabled>--Material--
-                                                                </option>
+                                                            <select class="form-control select2 material" style="width:180px" id="material" name="material[]">
+                                                                <option selected="selected" required disabled>--Material--</option>
                                                                 @foreach ($material as $m)
-                                                                    <option value="{{ $m->material }}">
-                                                                        {{ $m->material }}</option>
+                                                                    <option value="{{ $m->material }}">{{ $m->material }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </td>
-                                                        <td><input class="form-control"style="min-width:80px"
-                                                                type="text" id="nos" name="nos[]">
+                                                        <td>
+                                                            <select class="form-control select2 shape" style="width:180px" id="shape1" name="shape[]">
+                                                                <option selected="selected" required disabled>--Shape--</option>
+                                                                <option value="square">Persegi</option>
+                                                                <option value="circle">Lingkaran</option>
+                                                            </select>
                                                         </td>
-                                                        <td><input class="form-control"style="min-width:80px"
-                                                                type="text" id="nob" name="nob[]">
-                                                        </td>
-                                                        <td><input class="form-control" style="min-width:120px"
-                                                                type="date" id="issued_item" name="issued_item[]">
-                                                        </td>
-                                                        <td><input class="form-control"style="min-width:200px"
-                                                                type="text" id="ass_drawing" name="ass_drawing[]">
-                                                        </td>
-                                                        <td><input class="form-control"style="min-width:200px"
-                                                                type="text" id="drawing_no" name="drawing_no[]">
-                                                        </td>
-                                                        <td><input class="form-control weigth" style="width:100px"
-                                                                type="number" id="weight" name="weight[]"
-                                                                step="0.01" value="0"></td>
-                                                        <td><input class="form-control length"style="width:100px"
-                                                                type="number" id="length" name="length[]"
-                                                                step="0.01" value="0">
-                                                        </td>
-                                                        <td><input class="form-control width" style="width:100px"
-                                                                type="number" id="width" name="width[]"
-                                                                step="0.01" value="0">
-                                                        </td>
-                                                        <td><input class="form-control thickness" style="width:100px"
-                                                                type="number" id="thickness" name="thickness[]"
-                                                                step="0.01" value="0">
-                                                        </td>
-                                                        <td><a href="javascript:void(0)"
-                                                                class="text-danger font-18 remove"
-                                                                title="Delete Product"><i class="fa fa-trash"></i></a>
-                                                        </td>
-                                                    </tr>
+                                                        <td><input class="form-control massa" style="width:100px" type="number" id="massa1" name="massa[]" step="0.01" value="0"></td>
+                                                        <td><input class="form-control" style="min-width:80px" type="text" id="nos1" name="nos[]"></td>
+                                                        <td><input class="form-control" style="min-width:80px" type="text" id="nob1" name="nob[]"></td>
+                                                        <td><input class="form-control" style="min-width:120px" type="date" id="issued_item1" name="issued_item[]"></td>
+                                                        <td><input class="form-control" style="min-width:200px" type="text" id="ass_drawing1" name="ass_drawing[]"></td>
+                                                        <td><input class="form-control" style="min-width:200px" type="text" id="drawing_no1" name="drawing_no[]"></td>
+                                                        <td><input class="form-control length" style="width:100px" type="number" id="length1" name="length[]" step="0.01" value="0"></td>
+                                                        <td><input class="form-control width" style="width:100px" type="number" id="width1" name="width[]" step="0.01" value="0"></td>
+                                                        <td><input class="form-control thickness" style="width:100px" type="number" id="thickness1" name="thickness[]" step="0.01" value="0"></td>
+                                                        <td><input class="form-control weight" style="width:100px" type="number" id="weight1" name="weight[]" step="0.01" value="0" readonly></td>
+                                                        <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Delete Product"><i class="fa fa-trash"></i></a></td>                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -319,24 +292,24 @@
                                                                 <option value="{{ $m->material }}">{{ $m->material }}</option>
                                                                 @endforeach
                                                             </select></td>
-                    <td><input class="form-control"style="min-width:80px"type="text" id="nos" name="nos[]">
+                                                            <td>
+                                                            <select class="form-control select2 shape" style="width:180px" id="shape1" name="shape[]">
+                                                                <option selected="selected" required disabled>--Shape--</option>
+                                                                <option value="square">Persegi</option>
+                                                                <option value="circle">Lingkaran</option>
+                                                            </select>
                                                         </td>
-                                                        <td><input class="form-control"style="min-width:80px"
-                                                                type="text" id="nob" name="nob[]">
-                                                        </td>
-                                                        
-                                                        <td><input class="form-control" style="min-width:120px" type="date" id="issued_item" name="issued_item[]"></td>
-                                                        <td><input class="form-control"style="min-width:200px"
-                                                                type="text" id="ass_drawing" name="ass_drawing[]">
-                                                        </td>
-                                                        <td><input class="form-control"style="min-width:200px"
-                                                                type="text" id="drawing_no" name="drawing_no[]">
-                                                        </td>
-                    <td><input class="form-control weight" style="width:100px"type="number" id="weight" name="weight[]" step="0.01" value="0"></td>
-                    <td><input class="form-control length"style="min-width:100px"type="number" id="length" name="length[]" step="0.01" value="0"></td>
-                    <td><input class="form-control width" style="width:100px" type="number" id="width" name="width[]" step="0.01" value="0" ></td>
-                    <td><input class="form-control thickness" style="width:100px" type="number" id="thickness" name="thickness[]" step="0.01" value="0"></td>
-                    <td><a href="javascript:void(0)"class="text-danger font-18 remove"title="Delete Product"><i class="fa fa-trash"></i></a></td>
+                                                            <td><input class="form-control massa" style="width:100px" type="number" id="massa1" name="massa[]" step="0.01" value="0"></td>
+                                                        <td><input class="form-control" style="min-width:80px" type="text" id="nos1" name="nos[]"></td>
+                                                        <td><input class="form-control" style="min-width:80px" type="text" id="nob1" name="nob[]"></td>
+                                                        <td><input class="form-control" style="min-width:120px" type="date" id="issued_item1" name="issued_item[]"></td>
+                                                        <td><input class="form-control" style="min-width:200px" type="text" id="ass_drawing1" name="ass_drawing[]"></td>
+                                                        <td><input class="form-control" style="min-width:200px" type="text" id="drawing_no1" name="drawing_no[]"></td>
+                                                        <td><input class="form-control length" style="width:100px" type="number" id="length1" name="length[]" step="0.01" value="0"></td>
+                                                        <td><input class="form-control width" style="width:100px" type="number" id="width1" name="width[]" step="0.01" value="0"></td>
+                                                        <td><input class="form-control thickness" style="width:100px" type="number" id="thickness1" name="thickness[]" step="0.01" value="0"></td>
+                                                        <td><input class="form-control weight" style="width:100px" type="number" id="weight1" name="weight[]" step="0.01" value="0" readonly></td>
+                                                        <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Delete Product"><i class="fa fa-trash"></i></a></td>                                                    </tr>
                 </tr>`);
 
                 updateRowIndexes();
@@ -372,6 +345,31 @@
                 updateRowIndexes();
             });
 
+            $(document).ready(function () {
+        function calculateWeight() {
+            var shape = $('#shape1').val();
+            var massa = parseFloat($('#massa1').val());
+            var length = parseFloat($('#length1').val());
+            var width = parseFloat($('#width1').val());
+            var thickness = parseFloat($('#thickness1').val());
+            var weight = 0;
+
+            if (shape === 'square') {
+                var volume = length * width * thickness;
+                weight = volume * massa;
+            } else if (shape === 'circle') {
+                var radius = length / 2;
+                var volume = Math.PI * Math.pow(radius, 2) * thickness;
+                weight = volume * massa;
+            }
+
+            $('#weight1').val(weight.toFixed(2));
+        }
+
+        $('#massa1, #length1, #width1, #thickness1, #shape1').on('input change', function () {
+            calculateWeight();
+        });
+    });
 
 
         });
