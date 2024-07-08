@@ -4,11 +4,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Task extends Model
+class UsedTime extends Model
 {
     use HasFactory;
 
-    protected $table = 'used_time';
+    protected $fillable = ['processing_id', 'status', 'started_at', 'stopped_at', 'duration'];
 
-    protected $fillable = ['title'];
+    public function processing()
+    {
+        return $this->belongsTo(Processingadd::class);
+    }
 }

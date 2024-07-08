@@ -229,13 +229,13 @@
                                             <td><input type="date" class="form-control" name="dod[]" required></td>
                                             <td><input type="number" class="form-control machine_cost" name="machine_cost[]" required></td>
                                             <td><input type="number" class="form-control total" name="total[]" required readonly></td>
-                                            <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
+                                            <td><button type="button" class="btn btn-danger btn-remove" onclick="removeRow(this)">Remove</button></td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-success btn-custom">Submit</button>
-                                    <button type="reset" class="btn btn-warning btn-custom">Reset</button>
+                                    <button type="reset" class="btn btn-success btn-reset">Reset</button>
                                 </div>
                             </div>
                         </div>

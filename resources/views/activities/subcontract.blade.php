@@ -34,7 +34,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="machine" class="table table-head-fixed text-nowrap">
+                                <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -68,15 +68,34 @@
                                                 <td>{{ $m->info }}</td>
                                                 <td>
                                                     <a href="{{ route('activities.editsub_contract', $m->id) }}" class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
-                                                    <form action="{{ route('activities.deletesub_contract', $m->id) }}" method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</button>
-                                                    </form>
+                                                    <a href="{{ route('activities.deletesub_contract', $m->id) }}" data-toggle="modal" data-target="#modal-delete{{ $m->id }}" class="btn-xs btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
                                                 </td>
                                             </tr>
 
                                             <!-- Delete Confirmation Modal -->
+                                            <div class="modal fade" id="modal-delete{{ $m->id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Confirm Delete Sub Contract</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Are you sure you want to delete <b>{{ $m->order_number }}</b>?</p>
+                                                        </div>
+                                                        <div class="modal-footer justify-content-between">
+                                                            <form action="{{ route('activities.deletesub_contract', $m->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn btn-danger btn-remove">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -144,46 +163,103 @@
                             </div>
                             <button type="submit" class="btn btn-primary">Save changes</button>
                         </form>
-                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Function to update the title based on the page
-        function updateTitle(pageTitle) {
-            document.title = pageTitle;
-        }
+        window.addEventListener('DOMContentLoaded', (event) => {
+            var errorAlert = '{{ session('error') }}';
+            if (errorAlert !== '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: errorAlert,
+                    position: 'top-end', // Change position to top-end
+                    showConfirmButton: false, // Display OK button
+                    timer: 5000,
+                    toast: true,
+                });
+            }
 
-        // Call this function when the "barcode" page is loaded
-        updateTitle('Standart Part');
+            // Display success message using SweetAlert
+            var successAlert = '{{ session('success') }}';
+            if (successAlert !== '') {
+                Swal.fire({
+                    icon: 'success',
+                    text: successAlert,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    toast: true,
+                });
+            }
+
+            // Function to format value as currency (IDR)
+            function formatCurrency(value) {
+                // Use toLocaleString() with currency options for IDR format
+                var formattedValue = parseFloat(value).toLocaleString('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
+                });
+
+                return formattedValue;
+            }
+
+            // Get HTML elements displaying total_amount in the table
+            var totalAmountElements = document.querySelectorAll('.totalamount');
+
+            // Iterate through each element and convert value to IDR format
+            totalAmountElements.forEach(function(totalAmountElement) {
+                var totalAmount = totalAmountElement.textContent.trim();
+                var formattedTotalAmount = formatCurrency(totalAmount);
+                totalAmountElement.textContent = formattedTotalAmount;
+            });
+
+            // Get total_amount and tax values
+            var totalAmount = totalAmountElement.textContent.trim();
+
+            // Convert total_amount and tax values to IDR format
+            var formattedTotalAmount = formatCurrency(totalAmount);
+
+            // Set converted values to HTML elements
+            totalAmountElement.textContent = formattedTotalAmount;
+
+            // Function to update title based on page
+            function updateTitle(pageTitle) {
+                document.title = pageTitle;
+            }
+
+            // Call function when "barcode" page loads
+            updateTitle('Sub Contract');
+        });
 
         // Edit button click handler
         document.addEventListener('DOMContentLoaded', function () {
-        const editButtons = document.querySelectorAll('.edit-btn');
-        editButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const id = this.getAttribute('data-id');
-                fetch(`{{ url('activities/sub_contract/edit') }}/${id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const form = document.getElementById('editForm');
-                        form.action = `{{ url('activities/sub_contract/update') }}/${id}`;
-                        document.getElementById('order_number').value = data.order_number;
-                        document.getElementById('item_no').value = data.item_no;
-                        document.getElementById('dod').value = data.dod;
-                        document.getElementById('description').value = data.description;
-                        document.getElementById('qty').value = data.qty;
-                        document.getElementById('unit').value = data.unit;
-                        document.getElementById('price_unit').value = data.price_unit;
-                        document.getElementById('total_price').value = data.total_price;
-                        document.getElementById('info').value = data.info;
-                    });
+            const editButtons = document.querySelectorAll('.edit-btn');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    fetch(`{{ url('activities/sub_contract/edit') }}/${id}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const form = document.getElementById('editForm');
+                            form.action = `{{ url('activities/sub_contract/update') }}/${id}`;
+                            document.getElementById('order_number').value = data.order_number;
+                            document.getElementById('item_no').value = data.item_no;
+                            document.getElementById('dod').value = data.dod;
+                            document.getElementById('description').value = data.description;
+                            document.getElementById('qty').value = data.qty;
+                            document.getElementById('unit').value = data.unit;
+                            document.getElementById('price_unit').value = data.price_unit;
+                            document.getElementById('total_price').value = data.total_price;
+                            document.getElementById('info').value = data.info;
+                        });
+                });
             });
         });
-    });
 
     </script>
 @endsection

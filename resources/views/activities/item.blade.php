@@ -34,9 +34,10 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="quotation" class="table table-head-fixed text-nowrap">
+                                <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
+                                            <th>ID</th>
                                             <th>Order No.</th>
                                             <th>Company Name</th>
                                             <th>DOD</th>
@@ -49,11 +50,8 @@
                                     <tbody>
                                         @foreach ($item as $it)
                                             <tr>
-                                                <td hidden class="ids">{{ $it->id }}</td>
-                                                <td hidden class="so_number">{{ $it->so_number }}</td>
-                                                <td><a
-                                                        href="{{ url('activities/item/view/' . $it->order_number) }}">{{ $it->order_number }}</a>
-                                                </td>
+                                                <td >{{ $it->id }}</td>
+                                                <td ><a href="{{ url('activities/item/view/' . $it->order_number) }}">{{ $it->order_number }}</a></td>
                                                 <td>{{ $it->company_name }}</td>
                                                 <td>{{ $it->dod }}</td>
                                                 <td>{{ $it->so_number }}</td>
@@ -93,7 +91,7 @@
                                                                 <button type="button" class="btn btn-default"
                                                                     data-dismiss="modal">Cancel</button>
                                                                 <button type="submit"
-                                                                    class="btn btn-danger">Delete</button>
+                                                                    class="btn btn-danger btn-remove">Delete</button>
                                                             </form>
                                                         </div>
                                                     </div>

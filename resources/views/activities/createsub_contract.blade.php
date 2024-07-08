@@ -196,7 +196,7 @@
                                     <td><input type="number" class="form-control price_unit" step="0.01" name="price_unit[]" min="0" required></td>
                                     <td><input type="number" class="form-control total_price" step="0.01" name="total_price[]" min="0" required readonly></td>
                                     <td><textarea class="form-control" name="info[]"></textarea></td>
-                                    <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
+                                    <td><button type="button" class="btn btn-danger btn-remove" onclick="removeRow(this)">Remove</button></td>
                                 </tr>
                             </tbody>
                         </table>

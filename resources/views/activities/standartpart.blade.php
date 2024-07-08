@@ -34,7 +34,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="machine" class="table table-head-fixed text-nowrap">
+                                <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
                                             <th>Order Number</th>
@@ -60,14 +60,9 @@
                                                 <td>
                                                     <a href="{{ route('activities.editstandartpart', $m->id) }}"
                                                         class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
-                                                    <form action="{{ route('activities.deletestandartpart', $m->id) }}"
-                                                        method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn-xs btn-danger"
-                                                            onclick="return confirm('Are you sure you want to delete this entry?')">Delete</button>
-                                                    </form>
-
+                                                    <button class="btn-xs btn-danger" data-toggle="modal" data-target="#modal-hapus{{ $m->id }}">
+                                                        <i class="fas fa-trash-alt"></i> Delete
+                                                    </button>
                                                 </td>
                                                 <td>{{ $m->part_name }}</td>
                                                 <td>{{ $m->qty }}</td>
@@ -77,30 +72,37 @@
                                                 <td>{{ $m->item_name }}</td>
                                                 <td>{{ $m->item_no }}</td>
                                             </tr>
-                                            <!-- Modal for delete confirmation -->
-                                            <div class="modal fade" id="modal-hapus{{ $m->no_barcode }}" tabindex="-1"
-                                                role="dialog" aria-labelledby="modal-hapusLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
+                                            <div class="modal fade" id="modal-hapus{{ $m->id }}">
+                                                <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="modal-hapusLabel">Delete
-                                                                Confirmation</h5>
+                                                            <h4 class="modal-title">Confirm Delete Standart Part</h4>
                                                             <button type="button" class="close" data-dismiss="modal"
                                                                 aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            Are you sure you want to delete this item?
+                                                            <p>Are you sure to delete <b>{{ $m->part_name }}?</b></p>
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-dismiss="modal">Cancel</button>
-                                                            <a href="#" class="btn btn-danger">Delete</a>
+                                                        <div class="modal-footer justify-content-between">
+                                                            <form
+                                                                action="{{ route('activities.deletestandartpart', $m->id) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="button" class="btn btn-default"
+                                                                    data-dismiss="modal">Cancel</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-danger btn-remove">Delete</button>
+                                                            </form>
                                                         </div>
                                                     </div>
+                                                    <!-- /.modal-content -->
                                                 </div>
+                                                <!-- /.modal-dialog -->
                                             </div>
+                                            <!-- /.modal -->
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -116,6 +118,7 @@
         <!-- /.content -->
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
             $('#fetchDataButton').click(function() {
@@ -143,5 +146,31 @@
 
         // Call this function when the "Standart Part" page is loaded
         updateTitle('Standart Part');
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+        var errorAlert = '{{ session('error') }}';
+        if (errorAlert !== '') {
+            Swal.fire({
+                icon: 'error',
+                title: errorAlert,
+                position: 'top-end', // Change position to center
+                showConfirmButton: false, // Show OK button
+                timer: 5000,
+                toast: true,
+            });
+        }
+
+        var successAlert = '{{ session('success') }}';
+        if (successAlert !== '') {
+            Swal.fire({
+                icon: 'success',
+                text: successAlert,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                toast: true,
+            });
+        }
+
     </script>
 @endsection

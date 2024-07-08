@@ -274,7 +274,7 @@
                                                     class="form-label">
                                                     Produk
                                                     <button type="button" id="add-product-row"
-                                                        class="btn btn-primary btn-xs">
+                                                        class="btn btn-primary btn-custom btn-xs">
                                                         <a href="javascript:void(0)" class="text-light font-18"
                                                             title="Add Product" id="addBtn"><i
                                                                 class="fa fa-plus"></i></a>
@@ -780,7 +780,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Update Quotation</button>
+                                    <button type="submit" class="btn btn-primary btn-custom">Update Quotation</button>
                                 </div>
                             </div>
                         </div>

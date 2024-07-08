@@ -34,25 +34,23 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="quotation" class="table table-head-fixed text-nowrap">
+                                <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
+                                            <th>ID</th>
                                             <th>Quotation No.</th>
                                             <th>Company Name</th>
                                             <th>Name</th>
                                             <th>Date</th>
                                             <th>Total Amount</th>
-                                            <th>Action 1 </th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($quotation as $q)
                                             <tr>
-                                                <td hidden class="idq">{{ $q->id }}</td>
-                                                <td hidden class="quotation_no">{{ $q->quotation_no }}</td>
-                                                <td><a
-                                                        href="{{ url('activities/quotation/view/' . $q->quotation_no) }}">{{ $q->quotation_no }}</a>
-                                                </td>
+                                                <td >{{ $q->id }}</td>
+                                                <td ><a href="{{ url('activities/quotation/view/' . $q->quotation_no) }}">{{ $q->quotation_no }}</a></td>
                                                 <td>{{ $q->company_name }}</td>
                                                 <td>{{ $q->name }}</td>
                                                 <td>{{ $q->date }}</td>
@@ -91,7 +89,7 @@
                                                                 <button type="button" class="btn btn-default"
                                                                     data-dismiss="modal">Cancel</button>
                                                                 <button type="submit"
-                                                                    class="btn btn-danger">Delete</button>
+                                                                    class="btn btn-danger btn-remove">Delete</button>
                                                             </form>
                                                         </div>
                                                     </div>

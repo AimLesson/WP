@@ -224,7 +224,7 @@
                                             <textarea class="form-control" name="info[]"></textarea>
                                         </td>
                                         <td><input type="date" class="form-control" name="date[]" required></td>
-                                        <td><button type="button" class="btn btn-danger"
+                                        <td><button type="button" class="btn btn-danger btn-remove"
                                                 onclick="removeRow(this)">Remove</button></td>
                                     </tr>
                                 </tbody>

@@ -143,20 +143,52 @@
         }
 
         .btn-custom {
-    background-color: #337EFF; /* Change this to your desired background color */
-    color: white; /* Change this to your desired text color */
-    border: 2px solid #ffffff; /* Add a border with your desired color and width */
-    border-radius: 5px; /* Optional: Add rounded corners */
-    padding: 10px 20px; /* Adjust padding as needed */
-    font-size: 16px; /* Adjust font size as needed */
-    cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s; /* Optional: Add transition for smooth color changes */
-     }
+        background-color: #337EFF; /* Change this to your desired background color */
+        color: white; /* Change this to your desired text color */
+        border: 2px solid #ffffff; /* Add a border with your desired color and width */
+        border-radius: 5px; /* Optional: Add rounded corners */
+        padding: 10px 20px; /* Adjust padding as needed */
+        font-size: 16px; /* Adjust font size as needed */
+        cursor: pointer;
+        transition: background-color 0.3s, border-color 0.3s; /* Optional: Add transition for smooth color changes */
+         }
 
         .btn-custom:hover {
-    background-color: #337EFF; /* Change this to your desired hover background color */
-    border-color: #0c65ff; /* Change this to your desired hover border color */
-     }
+        background-color: #337EFF; /* Change this to your desired hover background color */
+        border-color: #0c65ff; /* Change this to your desired hover border color */
+        }
+
+        .btn-remove {
+        background-color: #ff0000; /* Change this to your desired background color */
+        color: white; /* Change this to your desired text color */
+        border: 2px solid #ffffff; /* Add a border with your desired color and width */
+        border-radius: 5px; /* Optional: Add rounded corners */
+        padding: 10px 20px; /* Adjust padding as needed */
+        font-size: 16px; /* Adjust font size as needed */
+        cursor: pointer;
+        transition: background-color 0.3s, border-color 0.3s; /* Optional: Add transition for smooth color changes */
+         }
+
+        .btn-remove:hover {
+        background-color: #ff3333; /* Change this to your desired hover background color */
+        border-color: #ff3333; /* Change this to your desired hover border color */
+        }
+
+        .btn-reset {
+        background-color: #f0c400; /* Change this to your desired background color */
+        color: white; /* Change this to your desired text color */
+        border: 2px solid #ffffff; /* Add a border with your desired color and width */
+        border-radius: 5px; /* Optional: Add rounded corners */
+        padding: 10px 20px; /* Adjust padding as needed */
+        font-size: 16px; /* Adjust font size as needed */
+        cursor: pointer;
+        transition: background-color 0.3s, border-color 0.3s; /* Optional: Add transition for smooth color changes */
+         }
+
+        .btn-reset:hover {
+        background-color: #f0c400; /* Change this to your desired hover background color */
+        border-color: #f0c400; /* Change this to your desired hover border color */
+        }
 
 
 
@@ -522,8 +554,7 @@
                 "lengthChange": false,
                 "autoWidth": false,
                 "scrollX": true,
-                "buttons": ["excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo(
+            }).container().appendTo(
                 '#customer_wrapper .col-md-6:eq(0), #sotarget_wrapper .col-md-6:eq(0)');
         });
 

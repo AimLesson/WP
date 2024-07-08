@@ -36,7 +36,7 @@
                             <!-- /.card-header -->
                             {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
                                 <div class="card-body">
-                                    <table id="order" class="table table-head-fixed text-nowrap">
+                                    <table id="customer" class="table table-head-fixed text-nowrap">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
@@ -55,19 +55,15 @@
                                         <tbody>
                                             @foreach ($order as $o)
                                                 <tr>
-                                                    <td hidden class="ido">{{ $o->id }}</td>
-                                                    <td hidden class="order_number">{{ $o->order_number }}</td>
-                                                    <td>{{ $o->id }}</td>
-                                                    <td><a
-                                                            href="{{ url('activities/order/view/' . $o->order_number) }}">{{ $o->order_number }}</a>
-                                                    </td>
+                                                    <td >{{ $o->id }}</td>
+                                                    <td ><a href="{{ url('activities/order/view/' . $o->order_number) }}">{{ $o->order_number }}</a></td>
                                                     <td>{{ $o->customer }}</td>
                                                     <td>{{ $o->order_date }}</td>
                                                     <td>{{$o->so_number}}</td>
                                                     <td>{{$o->product}}</td>
                                                     <td>{{$o->qty}}</td>
                                                     <td>{{$o->dod}}</td>
-                                                    <td class="sale_price">{{$o->sale_price}}</td>
+                                                    <td >{{$o->sale_price}}</td>
                                                     <td>{{$o->order_status}}</td>
                                                     <td>
                                                         <a href="{{ route('activities.editorder', ['id' => $o->id]) }}"
@@ -103,7 +99,7 @@
                                                                     <button type="button" class="btn btn-default"
                                                                         data-dismiss="modal">Cancel</button>
                                                                     <button type="submit"
-                                                                        class="btn btn-danger">Delete</button>
+                                                                        class="btn btn-danger btn-remove">Delete</button>
                                                                 </form>
                                                         </div>
                                                     </div>
