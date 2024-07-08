@@ -385,7 +385,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
                 Route::get('/activities', [ActivitiesController::class, 'activities'])->name('activities');
                 Route::get('/activities/used_time', [ActivitiesController::class, 'used_time'])->name('activities.used_time');
                 Route::get('/activities/used_time/create', [ActivitiesController::class, 'createused_time'])->name('activities.createused_time');
-                Route::post('/activities/used_time/store', [ActivitiesController::class, 'storeused_time'])->name('activities.storeused_time');
+                Route::post('/activities/{processing_id}/used_times', [ActivitiesController::class, 'storeUsed_Time'])->name('activities.storeused_time');
                 Route::get('/activities/used_time/view/{order_number}', [ActivitiesController::class, 'viewused_time'])->name('activities.viewused_time');
                 Route::get('/activities/used_time/edit/{order_number}', [ActivitiesController::class, 'editused_time'])->name('activities.editused_time');
                 Route::post('/activities/used_time/update', [ActivitiesController::class, 'updateused_time'])->name('activities.updateused_time');

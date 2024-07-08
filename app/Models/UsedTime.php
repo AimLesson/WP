@@ -8,6 +8,8 @@ class UsedTime extends Model
 {
     use HasFactory;
 
+    protected $table='used_times';
+
     protected $fillable = ['processing_id', 'status', 'started_at', 'stopped_at', 'duration'];
 
     public function processing()
