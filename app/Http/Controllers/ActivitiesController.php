@@ -1264,7 +1264,7 @@ class ActivitiesController extends Controller
         $items = ItemAdd::get();
         $item = ItemAdd::get();
 
-        return view('activities.editprocessing', compact('processing', 'orders', 'material', 'machine', 'items','item'));
+        return view('activities.editprocessing', compact('processing', 'orders', 'material', 'machine', 'items', 'item'));
     }
     public function updateprocessing(Request $request, $id)
     {
@@ -1843,13 +1843,13 @@ class ActivitiesController extends Controller
         $query = UsedTime::query();
 
         if ($request->has('order_number') && $request->order_number) {
-            $query->whereHas('processing', function($q) use ($request) {
+            $query->whereHas('processing', function ($q) use ($request) {
                 $q->where('order_number', $request->order_number);
             });
         }
 
         if ($request->has('no_item') && $request->no_item) {
-            $query->whereHas('processing', function($q) use ($request) {
+            $query->whereHas('processing', function ($q) use ($request) {
                 $q->where('item_number', $request->no_item);
             });
         }
@@ -1865,19 +1865,88 @@ class ActivitiesController extends Controller
         return view('activities.createused_time', compact('processings'));
     }
 
-    public function storeused_time(Request $request)
+    // Store used time record
+    public function storeUsed_Time(Request $request, $processing_id)
     {
-        $request->validate([
-            'processing_id' => 'required|exists:processingadd,id',
+        Log::info('StoreUsedTime method called', ['request' => $request->all(), 'processing_id' => $processing_id]);
+    
+        // Validation rules
+        $validator = Validator::make($request->all(), [
+            'process' => 'required|string|max:255',
+            'status' => 'required|in:queue,pending,finished',
+            'start_time' => 'nullable|date',
+            'end_time' => 'nullable|date|after_or_equal:start_time',
         ]);
-
-        UsedTime::create([
-            'processing_id' => $request->processing_id,
-            'status' => 'not_started',
-        ]);
-
-        return redirect()->route('activities.used_time');
+    
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+    
+        $usedTime = new UsedTime();
+        $usedTime->processing_id = $processing_id;
+        $usedTime->process = $request->process;
+        $usedTime->status = $request->status;
+        $usedTime->start_time = $request->start_time;
+        $usedTime->end_time = $request->end_time;
+        $usedTime->save();
+    
+        return response()->json(['usedTime' => $usedTime], 201);
     }
+
+    // Start the used time record
+    public function startUsed_Time($id)
+    {
+        $usedTime = UsedTime::findOrFail($id);
+        $usedTime->status = 'running';
+        $usedTime->start_time = now();
+        $usedTime->save();
+
+        return redirect()->route('activities.used_time')->with('success', 'Used Time started successfully.');
+    }
+
+    // Stop the used time record
+    public function stopUsed_Time($id)
+    {
+        $usedTime = UsedTime::findOrFail($id);
+        $usedTime->status = 'stopped';
+        $usedTime->end_time = now();
+        $usedTime->duration = $usedTime->end_time->diffInSeconds($usedTime->start_time);
+        $usedTime->save();
+
+        return redirect()->route('activities.used_time')->with('success', 'Used Time stopped successfully.');
+    }
+
+    // Reset the used time record
+    public function resetUsed_Time($id)
+    {
+        $usedTime = UsedTime::findOrFail($id);
+        $usedTime->status = 'queue';
+        $usedTime->start_time = null;
+        $usedTime->end_time = null;
+        $usedTime->duration = null;
+        $usedTime->save();
+
+        return redirect()->route('activities.used_time')->with('success', 'Used Time reset successfully.');
+    }
+
+    // Delete the used time record
+    public function destroyUsed_Time($id)
+    {
+        $usedTime = UsedTime::findOrFail($id);
+        $usedTime->delete();
+
+        return redirect()->route('activities.used_time')->with('success', 'Used Time deleted successfully.');
+    }
+
+    // Edit the used time record (You should handle the edit form and update in a similar manner)
+    public function editUsed_Time($order_number)
+    {
+        $processing = Processingadd::where('order_number', $order_number)->firstOrFail();
+        $usedTime = UsedTime::where('processing_id', $processing->id)->firstOrFail();
+
+        return view('activities.edit_used_time', compact('usedTime', 'processing'));
+    }
+
 
     public function viewused_time($order_number)
     {
@@ -1886,21 +1955,6 @@ class ActivitiesController extends Controller
         })->with('processing')->get();
 
         return view('activities.viewused_time', compact('usedTimes'));
-    }
-
-    public function editused_time($order_number)
-    {
-        $usedTime = UsedTime::whereHas('processing', function ($query) use ($order_number) {
-            $query->where('order_number', $order_number);
-        })->first();
-
-        if (!$usedTime) {
-            return redirect()->route('activities.used_time')->with('error', 'Used time entry not found.');
-        }
-
-        $processings = Processingadd::all();
-
-        return view('activities.editused_time', compact('usedTime', 'processings'));
     }
 
     public function updateused_time(Request $request)
@@ -1916,19 +1970,6 @@ class ActivitiesController extends Controller
         ]);
 
         return redirect()->route('activities.used_time')->with('success', 'Used time entry updated successfully.');
-    }
-
-    public function destroyused_time($id)
-    {
-        $usedTime = UsedTime::find($id);
-
-        if (!$usedTime) {
-            return redirect()->route('activities.used_time')->with('error', 'Used time entry not found.');
-        }
-
-        $usedTime->delete();
-
-        return redirect()->route('activities.used_time')->with('success', 'Used time entry deleted successfully.');
     }
 
     public function deleteused_timeadd(Request $request)

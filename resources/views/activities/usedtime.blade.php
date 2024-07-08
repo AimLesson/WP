@@ -32,8 +32,10 @@
                                     <label for="order_number">Order Number</label>
                                     <select name="order_number" id="order_number" class="form-control">
                                         <option value="">Select Order Number</option>
-                                        @foreach($orderNumbers as $orderNumber)
-                                            <option value="{{ $orderNumber }}" {{ request('order_number') == $orderNumber ? 'selected' : '' }}>{{ $orderNumber }}</option>
+                                        @foreach ($orderNumbers as $orderNumber)
+                                            <option value="{{ $orderNumber }}"
+                                                {{ request('order_number') == $orderNumber ? 'selected' : '' }}>
+                                                {{ $orderNumber }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -41,8 +43,10 @@
                                     <label for="no_item">Item Number</label>
                                     <select name="no_item" id="no_item" class="form-control">
                                         <option value="">Select Item Number</option>
-                                        @foreach($itemNumbers as $itemNumber)
-                                            <option value="{{ $itemNumber }}" {{ request('no_item') == $itemNumber ? 'selected' : '' }}>{{ $itemNumber }}</option>
+                                        @foreach ($itemNumbers as $itemNumber)
+                                            <option value="{{ $itemNumber }}"
+                                                {{ request('no_item') == $itemNumber ? 'selected' : '' }}>
+                                                {{ $itemNumber }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -53,7 +57,7 @@
                             </div>
                         </form>
                         <a href="{{ route('activities.createused_time') }}" class="btn btn-primary mb-3">Create Used Time</a>
-                        @if($filteredUsedTimes->isNotEmpty())
+                        @if ($filteredUsedTimes->isNotEmpty())
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -66,7 +70,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($filteredUsedTimes as $usedTime)
+                                    @foreach ($filteredUsedTimes as $usedTime)
                                         <tr>
                                             <td>{{ $usedTime->processing->order_number }}</td>
                                             <td>{{ ucfirst(str_replace('_', ' ', $usedTime->status)) }}</td>
@@ -74,26 +78,33 @@
                                             <td>{{ $usedTime->stopped_at }}</td>
                                             <td>{{ $usedTime->duration }}</td>
                                             <td>
-                                                <form action="{{ route('activities.startused_time', $usedTime) }}" method="POST" style="display:inline-block;">
+                                                <form action="{{ route('activities.startused_time', $usedTime) }}"
+                                                    method="POST" style="display:inline-block;">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-sm btn-primary" {{ $usedTime->status == 'running' ? 'disabled' : '' }}>
+                                                    <button type="submit" class="btn btn-sm btn-primary"
+                                                        {{ $usedTime->status == 'running' ? 'disabled' : '' }}>
                                                         Start
                                                     </button>
                                                 </form>
-                                                <form action="{{ route('activities.stopused_time', $usedTime) }}" method="POST" style="display:inline-block;">
+                                                <form action="{{ route('activities.stopused_time', $usedTime) }}"
+                                                    method="POST" style="display:inline-block;">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-sm btn-warning" {{ $usedTime->status != 'running' ? 'disabled' : '' }}>
+                                                    <button type="submit" class="btn btn-sm btn-warning"
+                                                        {{ $usedTime->status != 'running' ? 'disabled' : '' }}>
                                                         Stop
                                                     </button>
                                                 </form>
-                                                <form action="{{ route('activities.resetused_time', $usedTime) }}" method="POST" style="display:inline-block;">
+                                                <form action="{{ route('activities.resetused_time', $usedTime) }}"
+                                                    method="POST" style="display:inline-block;">
                                                     @csrf
                                                     <button type="submit" class="btn btn-sm btn-danger">
                                                         Reset
                                                     </button>
                                                 </form>
-                                                <a href="{{ route('activities.editused_time', $usedTime->processing->order_number) }}" class="btn btn-sm btn-info">Edit</a>
-                                                <form action="{{ route('activities.destroyused_time', $usedTime->id) }}" method="POST" style="display:inline-block;">
+                                                <a href="{{ route('activities.editused_time', $usedTime->processing->order_number) }}"
+                                                    class="btn btn-sm btn-info">Edit</a>
+                                                <form action="{{ route('activities.destroyused_time', $usedTime->id) }}"
+                                                    method="POST" style="display:inline-block;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger">Delete</button>
@@ -121,5 +132,38 @@
 
         // Call this function when the "Used Time" page loads
         updateTitle('Used Time');
+
+        document.getElementById('usedTimeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var processingId = document.getElementById('processing_id').value;
+            var url = `/processings/${processingId}/used_times`;
+
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: JSON.stringify({
+                        process: document.getElementById('process').value,
+                        status: document.getElementById('status').value,
+                        start_time: document.getElementById('start_time').value,
+                        end_time: document.getElementById('end_time').value,
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.errors) {
+                        // Handle validation errors
+                        console.error('Validation errors:', data.errors);
+                    } else {
+                        // Handle success
+                        $('#usedTimeModal').modal('hide');
+                        location.reload(); // Reload the page to see the updated data
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
     </script>
 @endsection
