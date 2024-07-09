@@ -1837,154 +1837,53 @@ class ActivitiesController extends Controller
     }
     public function used_time(Request $request)
     {
-        $orderNumbers = Processingadd::select('order_number')->distinct()->get()->pluck('order_number');
-        $itemNumbers = Processingadd::select('item_number')->distinct()->get()->pluck('item_number');
+        $orders     = Order::get();
+        $items    = ItemAdd::get();
+        $query = ProcessingAdd::query();
 
-        $query = UsedTime::query();
-
-        if ($request->has('order_number') && $request->order_number) {
-            $query->whereHas('processing', function ($q) use ($request) {
-                $q->where('order_number', $request->order_number);
-            });
+        if ($request->filled('order_number')) {
+            $query->where('order_number', $request->order_number);
         }
 
-        if ($request->has('no_item') && $request->no_item) {
-            $query->whereHas('processing', function ($q) use ($request) {
-                $q->where('item_number', $request->no_item);
-            });
+        if ($request->filled('item_number')) {
+            $query->where('item_number', $request->item_number);
         }
 
-        $filteredUsedTimes = $query->get();
+        $usedtime = $query->get();
 
-        return view('activities.usedtime', compact('filteredUsedTimes', 'orderNumbers', 'itemNumbers'));
+        return view('activities.used_time', compact('usedtime','orders','items'));
     }
 
-    public function createused_time()
+    public function updateStatus(Request $request, $id)
     {
-        $processings = Processingadd::all();
-        return view('activities.createused_time', compact('processings'));
-    }
-
-    // Store used time record
-    public function storeUsed_Time(Request $request, $processing_id)
-    {
-        Log::info('StoreUsedTime method called', ['request' => $request->all(), 'processing_id' => $processing_id]);
+        $processingAdd = ProcessingAdd::find($id);
     
-        // Validation rules
-        $validator = Validator::make($request->all(), [
-            'process' => 'required|string|max:255',
-            'status' => 'required|in:queue,pending,finished',
-            'start_time' => 'nullable|date',
-            'end_time' => 'nullable|date|after_or_equal:start_time',
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        if ($request->action == 'start') {
+            if ($processingAdd->status == 'pending') {
+                // Continue from the pending state
+                $processingAdd->status = 'started';
+                $processingAdd->started_at = now();
+            } else {
+                // Start from initial state
+                $processingAdd->status = 'started';
+                $processingAdd->started_at = now();
+                $processingAdd->duration = 0;
+            }
+        } elseif ($request->action == 'pending') {
+            $processingAdd->status = 'pending';
+            $processingAdd->pending_at = now();
+            $processingAdd->duration += now()->diffInSeconds($processingAdd->started_at);
+        } elseif ($request->action == 'finish') {
+            $processingAdd->status = 'finished';
+            $processingAdd->finished_at = now();
+            $processingAdd->duration += now()->diffInSeconds($processingAdd->started_at);
         }
     
-        $usedTime = new UsedTime();
-        $usedTime->processing_id = $processing_id;
-        $usedTime->process = $request->process;
-        $usedTime->status = $request->status;
-        $usedTime->start_time = $request->start_time;
-        $usedTime->end_time = $request->end_time;
-        $usedTime->save();
+        $processingAdd->save();
     
-        return response()->json(['usedTime' => $usedTime], 201);
+        return redirect()->route('activities.used_time');
     }
-
-    // Start the used time record
-    public function startUsed_Time($id)
-    {
-        $usedTime = UsedTime::findOrFail($id);
-        $usedTime->status = 'running';
-        $usedTime->start_time = now();
-        $usedTime->save();
-
-        return redirect()->route('activities.used_time')->with('success', 'Used Time started successfully.');
-    }
-
-    // Stop the used time record
-    public function stopUsed_Time($id)
-    {
-        $usedTime = UsedTime::findOrFail($id);
-        $usedTime->status = 'stopped';
-        $usedTime->end_time = now();
-        $usedTime->duration = $usedTime->end_time->diffInSeconds($usedTime->start_time);
-        $usedTime->save();
-
-        return redirect()->route('activities.used_time')->with('success', 'Used Time stopped successfully.');
-    }
-
-    // Reset the used time record
-    public function resetUsed_Time($id)
-    {
-        $usedTime = UsedTime::findOrFail($id);
-        $usedTime->status = 'queue';
-        $usedTime->start_time = null;
-        $usedTime->end_time = null;
-        $usedTime->duration = null;
-        $usedTime->save();
-
-        return redirect()->route('activities.used_time')->with('success', 'Used Time reset successfully.');
-    }
-
-    // Delete the used time record
-    public function destroyUsed_Time($id)
-    {
-        $usedTime = UsedTime::findOrFail($id);
-        $usedTime->delete();
-
-        return redirect()->route('activities.used_time')->with('success', 'Used Time deleted successfully.');
-    }
-
-    // Edit the used time record (You should handle the edit form and update in a similar manner)
-    public function editUsed_Time($order_number)
-    {
-        $processing = Processingadd::where('order_number', $order_number)->firstOrFail();
-        $usedTime = UsedTime::where('processing_id', $processing->id)->firstOrFail();
-
-        return view('activities.edit_used_time', compact('usedTime', 'processing'));
-    }
-
-
-    public function viewused_time($order_number)
-    {
-        $usedTimes = UsedTime::whereHas('processing', function ($query) use ($order_number) {
-            $query->where('order_number', $order_number);
-        })->with('processing')->get();
-
-        return view('activities.viewused_time', compact('usedTimes'));
-    }
-
-    public function updateused_time(Request $request)
-    {
-        $request->validate([
-            'id' => 'required|exists:used_times,id',
-            'processing_id' => 'required|exists:processingadd,id',
-        ]);
-
-        $usedTime = UsedTime::find($request->id);
-        $usedTime->update([
-            'processing_id' => $request->processing_id,
-        ]);
-
-        return redirect()->route('activities.used_time')->with('success', 'Used time entry updated successfully.');
-    }
-
-    public function deleteused_timeadd(Request $request)
-    {
-        // Assuming this method will handle bulk delete or specific conditions
-        // Adjust as needed based on your application logic
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'exists:used_times,id',
-        ]);
-
-        UsedTime::whereIn('id', $request->ids)->delete();
-
-        return redirect()->route('activities.used_time')->with('success', 'Selected used time entries deleted successfully.');
-    }
+    
 
     public function getCustomerData($companyName)
     {

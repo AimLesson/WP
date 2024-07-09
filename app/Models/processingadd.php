@@ -17,11 +17,16 @@ class ProcessingAdd extends Model
         'group_name',
         'operation',
         'estimated_time',
+        'duration',
+        'pending_at',
+        'started_at',
+        'finished_at',
         'date_wanted',
         'barcode_id',
         'mach_cost',
         'nop',
-        'processing_id'
+        'processing_id',
+        'status'
     ];
 
     public function processing()
