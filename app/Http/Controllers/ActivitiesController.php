@@ -855,6 +855,8 @@ class ActivitiesController extends Controller
     }
 
 
+    
+
     //activities - customer
     public function customer()
     {
@@ -1924,6 +1926,16 @@ class ActivitiesController extends Controller
     {
         return view('activities.orderapproval_ppic');
     }
+
+    //Close order Controller
+    public function CloseOrder()
+    {
+        $order = Order::get();
+        return view('activities.closeorder', compact('order'));
+    }
+
+
+
     public function calculation()
     {
         $orders = Order::pluck('order_number', 'id'); // Fetch all orders for selection

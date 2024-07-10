@@ -60,10 +60,10 @@
                                         <div class="col-md-4">
                                             <!-- Bagian Atas - Bagian Pertama (Horizontal) -->
                                             <div class="form-group">
-                                                <label>Plan</label>
+                                                <label>Plant</label>
                                                 <select class="form-control select2" name="plant" id="select-plant"
                                                     style="width: 100%;">
-                                                    <option selected="selected" disabled selected>-- Select a Plan --
+                                                    <option selected="selected" disabled selected>-- Select a Plant --
                                                     </option>
                                                     @php
                                                         // Query untuk mengambil data pengguna menggunakan Eloquent ORM

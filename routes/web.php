@@ -350,7 +350,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('/activities/standartpart/edit/{id}', [ActivitiesController::class, 'editstandartpart'])->name('activities.editstandartpart');
         Route::post('/activities/standartpart/update/{id}', [ActivitiesController::class, 'updatestandartpart'])->name('activities.updatestandartpart');
         Route::delete('/activities/standartpart/delete/{id}', [ActivitiesController::class, 'deletestandartpart'])->name('activities.deletestandartpart');
-                Route::delete('/activities/standartpartadd/delete', [ActivitiesController::class, 'deletestandartpartadd'])->name('activities.deletestandartpartadd');
+        Route::delete('/activities/standartpartadd/delete', [ActivitiesController::class, 'deletestandartpartadd'])->name('activities.deletestandartpartadd');
         Route::get('/activities/standart_part/get-customer-data/{companyName}', [ActivitiesController::class, 'getCustomerData']);
         Route::get('/activities/standart_part/print/', [ActivitiesController::class, 'printstandartpart'])->name('activities.printstandartpart');
 
@@ -364,7 +364,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
                 Route::get('/activities/sub_contract/edit/{id}', [ActivitiesController::class, 'editsub_contract'])->name('activities.editsub_contract');
                 Route::post('/activities/sub_contract/update/{id}', [ActivitiesController::class, 'updatesub_contract'])->name('activities.updatesub_contract');
                 Route::delete('/activities/sub_contract/delete/{id}', [ActivitiesController::class, 'deletesub_contract'])->name('activities.deletesub_contract');
-             Route::delete('/activities/sub_contractadd/delete', [ActivitiesController::class, 'deletesub_contractadd'])->name('activities.deletesub_contractadd');
+                Route::delete('/activities/sub_contractadd/delete', [ActivitiesController::class, 'deletesub_contractadd'])->name('activities.deletesub_contractadd');
                 Route::get('/activities/sub_contract/get-customer-data/{companyName}', [ActivitiesController::class, 'getCustomerData']);
                 Route::get('/activities/sub_contract/print/', [ActivitiesController::class, 'printsub_contract'])->name('activities.printsub_contract');
 
@@ -401,6 +401,11 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
                 Route::get('/activities/used_time_barcode/get-customer-data/{companyName}', [ActivitiesController::class, 'getCustomerData']);
                 Route::get('/activities/used_time_barcode/print/', [ActivitiesController::class, 'printused_time_barcode'])->name('activities.printused_time_barcode');
 
+        //activities - Close Order
+        Route::get('/activities/closeorder', [ActivitiesController::class, 'closeorder'])->name('activities.closeorder');
+      
+
+        
         //report
         Route::get('/report', [ReportController::class, 'report'])->name('report');
         //report-order

@@ -57,8 +57,6 @@
                                         @php
                                             // Query untuk mengambil data pengguna menggunakan Eloquent ORM
                                             $order = \App\Models\order::get();
-                                            $item = \app\models\itemadd::get();
-                                            $processing= \app\models\processingadd::get();
                                         @endphp
                                         @foreach ($order as $m)
                                             <tr>

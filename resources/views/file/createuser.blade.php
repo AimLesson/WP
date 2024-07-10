@@ -90,7 +90,7 @@
                                         <select name="role" class="form-control" id="exampleInputRole" required>
                                             <option value="Select Role" disabled selected>-- Select Role --</option>
                                             <option value="admin">Admin</option>
-                                            <option value="superadmin">Supervisor</option>
+                                            <option value="superadmin">Superadmin</option>
                                             <option value="user">User</option>
                                         </select>
                                         @error('role')
