@@ -56,14 +56,16 @@
                                     <tbody>
                                         @php
                                             // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $order = \App\Models\Delivered::get();
+                                            $order = \App\Models\order::get();
+                                            $item = \app\models\itemadd::get();
+                                            $processing= \app\models\processingadd::get();
                                         @endphp
                                         @foreach ($order as $m)
                                             <tr>
                                                 <td>{{ $m->id }}</td>
                                                 <td>{{ $m->order_number }}</td>
-                                                <td>{{ $m->customer }}</td>
-                                                <td>{{ $m->product }}</td>
+                                                <td>{{ $m->no_item }}</td>
+                                                <td>{{ $m->sn }}</td>{{-- nomor urut --}}
                                                 <td>{{ $m->cost_material }}</td>
                                                 <td>{{ $m->cost_std }}</td>
                                                 <td>{{ $m->cost_mach }}</td>
