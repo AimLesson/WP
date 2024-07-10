@@ -147,7 +147,7 @@
                                                                 @method('DELETE')
                                                                 <button type="button" class="btn btn-default"
                                                                     data-dismiss="modal">Batal</button>
-                                                                <button type="submit" class="btn btn-danger">Ya,
+                                                                <button type="submit" class="btn btn-danger btn-remove">Ya,
                                                                     Hapus</button>
                                                             </form>
                                                         </div>

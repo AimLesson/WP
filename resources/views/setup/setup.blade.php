@@ -67,14 +67,14 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('setup/ordercode/orderunit')||request()->is('setup/ordercode/orderunit/add')||(request()->is('setup/ordercode/orderunit/edit/*')&&request()->route('id')==$order_unit->id)|| request()->is('setup/ordercode/machine')||request()->is('setup/ordercode/machine-state/add')||(request()->is('setup/ordercode/machine-state/edit/*')&&request()->route('id')==$machine_state->id)|| request()->is('setup/ordercode/unit')||request()->is('setup/ordercode/unit/add')||(request()->is('setup/ordercode/unit/edit/*')&&request()->route('id')==$unit->id) ? 'active' : '' }}">
+            {{-- <li class="nav-item {{ request()->is('setup/ordercode/orderunit')||request()->is('setup/ordercode/orderunit/add')||(request()->is('setup/ordercode/orderunit/edit/*')&&request()->route('id')==$order_unit->id)|| request()->is('setup/ordercode/machine')||request()->is('setup/ordercode/machine-state/add')||(request()->is('setup/ordercode/machine-state/edit/*')&&request()->route('id')==$machine_state->id)|| request()->is('setup/ordercode/unit')||request()->is('setup/ordercode/unit/add')||(request()->is('setup/ordercode/unit/edit/*')&&request()->route('id')==$unit->id) ? 'active' : '' }}">
                 <a href="{{ route('setup.orderunit') }}" class="nav-link">
                     <i class="nav-icon fas fa-code-branch"></i>
                     <p>
                         Order Code
                     </p>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item {{ request()->is('setup/department')||request()->is('setup/department/add')||(request()->is('setup/department/edit/*')&&request()->route('id')==$department->id) ? 'active' : '' }}">
                 <a href="{{ route('setup.department') }}" class="nav-link">
                     <i class="nav-icon fas fa-house-user"></i>

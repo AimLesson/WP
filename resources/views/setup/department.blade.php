@@ -44,7 +44,6 @@
                                             <th>Group</th>
                                             <th>User Novvel</th>
                                             <th>Information</th>
-                                            <th>NIK</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -62,7 +61,6 @@
                                                 <td>{{ $d->group }}</td>
                                                 <td>{{ $d->user_novvel }}</td>
                                                 <td>{{ $d->information }}</td>
-                                                <td>{{ $d->nik }}</td>
                                                 <td>
                                                     <a href="{{ route('setup.editdepartment', ['id' => $d->id]) }}"
                                                         class="btn-xs btn-warning"><i class="fas fa-pen"></i>
@@ -97,7 +95,7 @@
                                                                 @method('DELETE')
                                                                 <button type="button" class="btn btn-default"
                                                                     data-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn btn-danger">Ya,
+                                                                <button type="submit" class="btn btn-danger btn-remove">Ya,
                                                                     Delete</button>
                                                             </form>
                                                         </div>

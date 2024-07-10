@@ -119,15 +119,6 @@
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                    <!-- Input 8 -->
-                                    <div class="form-group">
-                                        <label for="exampleInputUsername">NIK</label>
-                                        <input type="text" name="nik" class="form-control" id="exampleInputUsername"
-                                            placeholder="Insert NIK" >
-                                        @error('nik')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
                                 </div>
 
                             </div>

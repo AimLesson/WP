@@ -89,8 +89,8 @@
                                         <label for="exampleInputRole">Role</label>
                                         <select name="role" class="form-control" id="exampleInputRole" required>
                                             <option value="Select Role" disabled selected>-- Select Role --</option>
-                                            <option value="administrator">Admin</option>
-                                            <option value="supervisor">Supervisor</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="superadmin">Supervisor</option>
                                             <option value="user">User</option>
                                         </select>
                                         @error('role')
