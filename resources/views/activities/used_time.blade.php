@@ -62,6 +62,8 @@
                                 <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
+                                            <th>Order Number</th>
+                                            <th>Item Number</th>
                                             <th>Date Wanted</th>
                                             <th>Machine</th>
                                             <th>Operation</th>
@@ -77,6 +79,8 @@
                                     <tbody>
                                         @foreach ($usedtime as $ut)
                                             <tr>
+                                                <td>{{ $ut->order_number }}</td>
+                                                <td>{{ $ut->item_number }}</td>
                                                 <td>{{ $ut->date_wanted }}</td>
                                                 <td>{{ $ut->machine }}</td>
                                                 <td>{{ $ut->operation }}</td>

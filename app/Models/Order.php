@@ -51,4 +51,14 @@ class Order extends Model
     {
         return $this->hasMany(Sub_Contract::class, 'order_number', 'order_number');
     }
+
+    public function scopeFinished($query)
+    {
+        return $query->where('order_status', 'Finished');
+    }
+
+    public function scopeNotFinished($query)
+    {
+        return $query->where('order_status', '!=', 'Finished');
+    }
 }

@@ -294,6 +294,8 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::post('/activities/customer/store', [ActivitiesController::class, 'storecustomer'])->name('activities.storecustomer');
         Route::delete('/activities/customer/delete/{id}', [ActivitiesController::class, 'deletecustomer'])->name('activities.deletecustomer');
 
+        Route::get('/items-by-order/{orderNumber}', [ActivitiesController::class,'getItemsByOrderNumber']);
+
         //activities - processing
         Route::get('/activities/processing', [ActivitiesController::class, 'processing'])->name('activities.processing');
         Route::get('/activities/processing/create', [ActivitiesController::class, 'createprocessing'])->name('activities.createprocessing');

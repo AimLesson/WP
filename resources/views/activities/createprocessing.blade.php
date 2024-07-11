@@ -65,7 +65,8 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="order_number" class="form-label">Order</label>
-                                            <select name="order_number" id="order_number" class="form-control select2" style="width: 100%;" required>
+                                            <select name="order_number" id="order_number" class="form-control select2"
+                                                style="width: 100%;" required>
                                                 <option selected="selected" disabled>-- Select Order --</option>
                                                 @foreach ($orders as $o)
                                                     <option value="{{ $o->order_number }}">{{ $o->order_number }}</option>
@@ -79,7 +80,8 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="so_number" class="form-label">SO Number</label>
-                                            <input type="text" name="so_number" class="form-control" id="so_number" placeholder="SO Number" required>
+                                            <input type="text" name="so_number" class="form-control" id="so_number"
+                                                placeholder="SO Number" required>
                                             @error('so_number')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -88,7 +90,8 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="product" class="form-label">Product</label>
-                                            <input type="text" name="product" class="form-control" id="product" placeholder="Product" required>
+                                            <input type="text" name="product" class="form-control" id="product"
+                                                placeholder="Product" required>
                                             @error('product')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -102,7 +105,8 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="company_name" class="form-label">Company Name</label>
-                                            <input type="text" name="company_name" class="form-control" id="company_name" placeholder="Company Name" required>
+                                            <input type="text" name="company_name" class="form-control" id="company_name"
+                                                placeholder="Company Name" required>
                                             @error('company_name')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -111,7 +115,8 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="dod" class="form-label">DOD</label>
-                                            <input type="date" name="dod" class="form-control" id="dod" placeholder="Date of Delivery" required>
+                                            <input type="date" name="dod" class="form-control" id="dod"
+                                                placeholder="Date of Delivery" required>
                                             @error('dod')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -125,7 +130,8 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="no_item" class="form-label">Item</label>
-                                            <select name="no_item" id="no_item" class="form-control select2" style="width: 100%;" required>
+                                            <select name="no_item" id="no_item" class="form-control select2"
+                                                style="width: 100%;" required>
                                                 <option selected="selected" disabled>-- Select Item --</option>
                                                 @foreach ($items as $ia)
                                                     <option value="{{ $ia->no_item }}">{{ $ia->no_item }}</option>
@@ -139,7 +145,8 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="dod_item" class="form-label">Date Wanted</label>
-                                            <input type="date" name="dod_item" class="form-control" id="dod_item" placeholder="Date Wanted" required>
+                                            <input type="date" name="dod_item" class="form-control" id="dod_item"
+                                                placeholder="Date Wanted" required>
                                             @error('dod_item')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -148,7 +155,8 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="material" class="form-label">Material</label>
-                                            <input type="text" name="material" class="form-control" id="material" placeholder="Material" required>
+                                            <input type="text" name="material" class="form-control" id="material"
+                                                placeholder="Material" required>
                                             @error('material')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -162,7 +170,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="item" class="form-label">Item Name</label>
-                                            <input type="text" name="item" class="form-control" id="item" placeholder="Item Name" required>
+                                            <input type="text" name="item" class="form-control" id="item"
+                                                placeholder="Item Name" required>
                                             @error('item')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -171,7 +180,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="drawing_no" class="form-label">Drawing Number</label>
-                                            <input type="text" name="drawing_no" class="form-control" id="drawing_no" placeholder="Drawing Number" required>
+                                            <input type="text" name="drawing_no" class="form-control" id="drawing_no"
+                                                placeholder="Drawing Number" required>
                                             @error('drawing_no')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -180,7 +190,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="nos" class="form-label">Number Of Pieces</label>
-                                            <input type="text" name="nos" class="form-control" id="nos" placeholder="Number Of Pieces" required>
+                                            <input type="text" name="nos" class="form-control" id="nos"
+                                                placeholder="Number Of Pieces" required>
                                             @error('nos')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -189,7 +200,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="issued_item" class="form-label">Issued Date</label>
-                                            <input type="date" name="issued_item" class="form-control" id="issued_item" placeholder="Issued Date" required>
+                                            <input type="date" name="issued_item" class="form-control"
+                                                id="issued_item" placeholder="Issued Date" required>
                                             @error('issued_item')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -198,7 +210,8 @@
                                 </div>
                                 <!-- /.Additional Item Information -->
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-primary btn-custom" onclick="addRow()">Add Row</button>
+                                    <button type="button" class="btn btn-primary btn-custom" onclick="addRow()">Add
+                                        Row</button>
                                 </div>
                                 <table class="table table-bordered" id="itemsTable">
                                     <thead>
@@ -217,19 +230,26 @@
                                         <tr>
                                             <td><input type="number" class="form-control" name="nop[]" required></td>
                                             <td>
-                                                <select name="machine_name[]" class="form-control select2" style="width: 100%;" required>
+                                                <select name="machine_name[]" class="form-control select2"
+                                                    style="width: 100%;" required>
                                                     <option selected="selected" disabled>-- Select Machine --</option>
                                                     @foreach ($machine as $o)
-                                                        <option value="{{ $o->machine_name }}">{{ $o->machine_name }}</option>
+                                                        <option value="{{ $o->machine_name }}">{{ $o->machine_name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <td><input type="text" class="form-control" name="operation[]" required></td>
-                                            <td><input type="number" class="form-control est_time" name="est_time[]" required></td>
+                                            <td><input type="text" class="form-control" name="operation[]" required>
+                                            </td>
+                                            <td><input type="number" class="form-control est_time" name="est_time[]"
+                                                    required></td>
                                             <td><input type="date" class="form-control" name="dod[]" required></td>
-                                            <td><input type="number" class="form-control machine_cost" name="machine_cost[]" required></td>
-                                            <td><input type="number" class="form-control total" name="total[]" required readonly></td>
-                                            <td><button type="button" class="btn btn-danger btn-remove" onclick="removeRow(this)">Remove</button></td>
+                                            <td><input type="number" class="form-control machine_cost"
+                                                    name="machine_cost[]" required></td>
+                                            <td><input type="number" class="form-control total" name="total[]" required
+                                                    readonly></td>
+                                            <td><button type="button" class="btn btn-danger btn-remove"
+                                                    onclick="removeRow(this)">Remove</button></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -245,6 +265,35 @@
         </section>
         <!-- /.Main content -->
     </div>
+
+    <script>
+                $(document).ready(function() {
+            $('#order_number').on('change', function() {
+                var orderNumber = $(this).val();
+
+                // Clear the items select box
+                $('#no_item').empty();
+                $('#no_item').append('<option selected="selected" disabled>-- Select Item --</option>');
+
+                if (orderNumber) {
+                    $.ajax({
+                        url: '/items-by-order/' + orderNumber,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            $.each(data, function(key, item) {
+                                $('#no_item').append('<option value="' + item.no_item +
+                                    '">' + item.no_item + '</option>');
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error: ' + status + error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 
     <script>
         document.getElementById('order_number').addEventListener('change', function() {

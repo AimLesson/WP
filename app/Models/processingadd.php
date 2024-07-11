@@ -48,4 +48,9 @@ public function processingsused()
 {
     return $this->hasMany(ProcessingAdd::class, 'order_number', 'order_number');
 }
+
+public function order()
+{
+    return $this->belongsTo(Order::class, 'order_number', 'order_number');
+}
 }

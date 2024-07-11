@@ -683,7 +683,7 @@ class ActivitiesController extends Controller
     //order controller
     public function order()
     {
-        $order = Order::get();
+        $order = Order::notFinished()->get();
         return view('activities.order', compact('order'));
     }
     public function createorder()
@@ -998,14 +998,25 @@ class ActivitiesController extends Controller
 
     public function item()
     {
-        $item     = DB::table('item')->get();
+        // Get all order numbers from the Order model where order_status is not 'Finished'
+        $orderNumbers = Order::where('order_status', '!=', 'Finished')->pluck('order_number');
+    
+        // Filter items based on the order numbers
+        $item = DB::table('item')
+            ->whereIn('order_number', $orderNumbers)
+            ->get();
+    
+        // Filter joined items based on the order numbers
         $itemJoin = DB::table('item')
             ->join('itemadd', 'item.order_number', '=', 'itemadd.order_number')
+            ->whereIn('item.order_number', $orderNumbers)
             ->select('item.*', 'itemadd.*')
             ->get();
-
+    
         return view('activities.item', compact('item', 'itemJoin'));
     }
+    
+    
     public function viewitem($order_number)
     {
         $item = DB::table('item')->get();
@@ -1019,8 +1030,7 @@ class ActivitiesController extends Controller
     public function createitem()
     {
         $material   = Material::get();
-        $order  = Order::get();
-
+        $order = Order::where('order_status', '!=', 'Finished')->get();
         return view('activities.createitem', compact('material', 'order'));
     }
     public function storeitem(Request $request)
@@ -1073,7 +1083,7 @@ class ActivitiesController extends Controller
     }
     public function edititem($order_number)
     {
-        $order = Order::get();
+        $order = Order::where('order_status', '!=', 'Finished')->get();
         $material = Material::get();
         $item       = DB::table('item')->where('order_number', $order_number)->first();
         $itemJoin   = DB::table('item')
@@ -1201,18 +1211,31 @@ class ActivitiesController extends Controller
 
     public function processing()
     {
-        $processing     = processingadd::get();
+        // Get all order numbers from the Order model where order_status is not 'Finished'
+        $orderNumbers = Order::where('order_status', '!=', 'Finished')->pluck('order_number');
+    
+        // Filter processings based on the order numbers
+        $processing = processingadd::whereIn('order_number', $orderNumbers)->get();
+    
         return view('activities.processing', compact('processing'));
     }
+    
     public function createprocessing()
     {
-        $orders     = Order::get();
+        $orders = Order::where('order_status', '!=', 'Finished')->get();
         $material   = Material::get();
         $machine    = Machine::get();
         $items    = ItemAdd::get();
 
         return view('activities.createprocessing', compact('orders', 'material', 'machine', 'items'));
     }
+
+    public function getItemsByOrderNumber($orderNumber)
+        {
+            $items = ItemAdd::where('order_number', $orderNumber)->get();
+            return response()->json($items);
+        }
+
     public function storeprocessing(Request $request)
     {
         Log::info('StoreProcess method called', ['request' => $request->all()]);
@@ -1260,7 +1283,7 @@ class ActivitiesController extends Controller
             return redirect()->route('activities.processing')->with('error', 'Processing entry not found.');
         }
 
-        $orders = Order::get();
+        $order = Order::where('order_status', '!=', 'Finished')->get();
         $material = Material::get();
         $machine = Machine::get();
         $items = ItemAdd::get();
@@ -1356,14 +1379,24 @@ class ActivitiesController extends Controller
     // activities - standartpart
     public function standartpartindex()
     {
-        $standartpart     = DB::table('standart_part')->get();
+        // Get all order numbers from the Order model where order_status is not 'Finished'
+        $orderNumbers = Order::where('order_status', '!=', 'Finished')->pluck('order_number');
+    
+        // Filter standart_part based on the order numbers
+        $standartpart = DB::table('standart_part')
+            ->whereIn('order_number', $orderNumbers)
+            ->get();
+    
+        // Filter joined standart_part and standart_partadd based on the order numbers
         $standartpartJoin = DB::table('standart_part')
             ->join('standart_partadd', 'standart_part.order_number', '=', 'standart_partadd.order_number')
+            ->whereIn('standart_part.order_number', $orderNumbers)
             ->select('standart_part.*', 'standart_partadd.*')
             ->get();
-
+    
         return view('activities.standartpart', compact('standartpart', 'standartpartJoin'));
     }
+    
 
     public function viewstandartpart($order_number)
     {
@@ -1383,7 +1416,7 @@ class ActivitiesController extends Controller
 
     public function createstandartpart()
     {
-        $orders = Order::get();
+        $orders = Order::where('order_status', '!=', 'Finished')->get();
         $items = ItemAdd::get();
         $standardParts = StandartpartAPI::get();
         return view('activities.createstandartpart', compact('standardParts', 'orders', 'items'));
@@ -1516,7 +1549,7 @@ class ActivitiesController extends Controller
 
     public function createsub_contract()
     {
-        $orders = Order::get();
+        $orders = Order::where('order_status', '!=', 'Finished')->get();
         $items = ItemAdd::get();
         return view('activities.createsub_contract', compact('orders', 'items'));
     }
@@ -1644,7 +1677,7 @@ class ActivitiesController extends Controller
 
     public function createoverhead_manufacture()
     {
-        $orders = Order::get();
+        $orders = Order::where('order_status', '!=', 'Finished')->get();
         return view('activities.createoverhead_manufacture', compact('orders'));
     }
 
@@ -1694,8 +1727,7 @@ class ActivitiesController extends Controller
             return redirect()->route('activities.overhead_manufacture')->with('error', 'Overhead manufacture record not found.');
         }
 
-        $orders = Order::get();
-
+        $order = Order::where('order_status', '!=', 'Finished')->get();
         return view('activities.editoverhead_manufacture', compact('overhead', 'orders'));
     }
 
@@ -1839,22 +1871,32 @@ class ActivitiesController extends Controller
     }
     public function used_time(Request $request)
     {
-        $orders     = Order::get();
-        $items    = ItemAdd::get();
-        $query = ProcessingAdd::query();
-
+        // Get orders with order_status not 'Finished'
+        $orders = Order::where('order_status', '!=', 'Finished')->get();
+        $orderNumbers = $orders->pluck('order_number');
+    
+        // Get items where order_number is in the filtered orders
+        $items = ItemAdd::whereIn('order_number', $orderNumbers)->get();
+    
+        // Start the query for ProcessingAdd
+        $query = ProcessingAdd::whereIn('order_number', $orderNumbers);
+    
+        // Filter by order_number if provided
         if ($request->filled('order_number')) {
             $query->where('order_number', $request->order_number);
         }
-
+    
+        // Filter by item_number if provided and ensure item_number is in the filtered orders
         if ($request->filled('item_number')) {
             $query->where('item_number', $request->item_number);
         }
-
+    
+        // Get the filtered used time data
         $usedtime = $query->get();
-
-        return view('activities.used_time', compact('usedtime','orders','items'));
+    
+        return view('activities.used_time', compact('usedtime', 'orders', 'items'));
     }
+    
 
     public function updateStatus(Request $request, $id)
     {
@@ -1930,9 +1972,9 @@ class ActivitiesController extends Controller
     //Close order Controller
     public function CloseOrder()
     {
-        $order = Order::get();
+        $order = Order::finished()->get();
         return view('activities.closeorder', compact('order'));
-    }
+    }    
 
 
 

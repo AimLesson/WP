@@ -23,4 +23,9 @@ class standart_part extends Model
         'info',
     ];
     public $timestamps=false;
+
+    public function order()
+{
+    return $this->belongsTo(Order::class, 'order_number', 'order_number');
+}
 }
