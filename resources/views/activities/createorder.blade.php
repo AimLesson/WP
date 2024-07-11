@@ -187,10 +187,7 @@
                                             <div class="form-group">
                                                 <label for="order_status" class="form-label">Order Status</label>
                                                 <input type="text"  name="order_status" class="form-control"
-                                                    id="order_status" placeholder="Input Order Status" disabled>
-                                                @error('order_status')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
+                                                    id="order_status" placeholder="Queue" disabled>
                                             </div>
                                         </div>
                                     </div>

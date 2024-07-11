@@ -39,7 +39,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="no_item" class="form-label">Item</label>
                                         <select name="no_item" id="no_item" class="form-control select2" style="width: 100%;" required>
                                             <option selected="selected" disabled>-- Select Item --</option>
@@ -47,7 +47,7 @@
                                                 <option value="{{ $ia->no_item }}">{{ $ia->no_item }}</option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
                                     <button type="submit" class="btn btn-primary btn-custom">Filter</button>
                                 </form>
                             </div>
@@ -98,21 +98,22 @@
                                                             @csrf
                                                             <input type="hidden" name="action" value="start">
                                                             <button type="submit" class="btn btn-success btn-start"
-                                                                {{ $ut->status != 'pending' || $ut->status == 'finished' ? 'disabled' : '' }}>Start</button>
+                                                                {{ $ut->status != 'pending' && $ut->status != 'queue' || $ut->status == 'finished' ? 'disabled' : '' }}>Start</button>
                                                         </form>
                                                         <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="action" value="pending">
                                                             <button type="submit" class="btn btn-warning btn-reset"
-                                                                {{ $ut->status == 'pending' || $ut->status == 'finished' ? 'disabled' : '' }}>Pending</button>
+                                                                {{ $ut->status == 'pending' || $ut->status == 'finished' || $ut->status == 'queue' ? 'disabled' : '' }}>Pending</button>
                                                         </form>
                                                         <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="action" value="finish">
                                                             <button type="submit" class="btn btn-danger btn-remove"
-                                                                {{ $ut->status == 'finished' ? 'disabled' : '' }}>Finish</button>
+                                                                {{ $ut->status == 'finished' || $ut->status == 'queue' ? 'disabled' : '' }}>Finish</button>
                                                         </form>
                                                     </div>
+                                                    
                                                 </td>
                                                 
                                                 

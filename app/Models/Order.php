@@ -61,4 +61,32 @@ class Order extends Model
     {
         return $query->where('order_status', '!=', 'Finished');
     }
+
+    public function updateOrderStatus()
+    {
+        $processings = $this->processings;
+
+        if ($processings->isEmpty()) {
+            $this->order_status = 'queue';
+        } else {
+            $allStatuses = $processings->pluck('status')->unique();
+
+            if ($allStatuses->count() === 1) {
+                $status = $allStatuses->first();
+                $this->order_status = $status;
+            } else {
+                if ($allStatuses->contains('started')) {
+                    $this->order_status = 'started';
+                } elseif ($allStatuses->contains('pending')) {
+                    $this->order_status = 'pending';
+                } elseif ($allStatuses->contains('queue')) {
+                    $this->order_status = 'queue';
+                } elseif ($allStatuses->contains('finished')) {
+                    $this->order_status = 'finished';
+                }
+            }
+        }
+
+        $this->save();
+    }
 }

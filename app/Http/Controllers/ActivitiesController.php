@@ -734,7 +734,7 @@ class ActivitiesController extends Controller
         $order['information'] = $request->information;
         $order['information2'] = $request->information2;
         $order['information3'] = $request->information3;
-        $order['order_status'] = $request->order_status;
+        $order['order_status'] = 'Queue';
         $order['customer'] = $request->customer;
         $order['product'] = $request->product;
         $order['qty'] = $request->qty;
@@ -1227,7 +1227,7 @@ class ActivitiesController extends Controller
         $machine    = Machine::get();
         $items    = ItemAdd::get();
 
-        return view('activities.processing', compact('orders', 'material', 'machine', 'items'));
+        return view('activities.createprocessing', compact('orders', 'material', 'machine', 'items'));
     }
 
     public function getItemsByOrderNumber($orderNumber)
@@ -1274,7 +1274,7 @@ class ActivitiesController extends Controller
         }
 
         // Redirect with success message
-        return redirect()->route('activities.createprocessing')->with('success', 'Process(es) added successfully.');
+        return redirect()->route('activities.processing')->with('success', 'Process(es) added successfully.');
     }
     public function editprocessing($id)
     {
@@ -1896,15 +1896,12 @@ class ActivitiesController extends Controller
     
         return view('activities.used_time', compact('usedtime', 'orders', 'items'));
     }
-    
-
     public function updateStatus(Request $request, $id)
     {
         $processingAdd = ProcessingAdd::find($id);
     
         if ($request->action == 'start') {
             if ($processingAdd->status == 'pending') {
-                // Continue from the pending state
                 $processingAdd->status = 'started';
                 $processingAdd->started_at = now();
             } else {
@@ -1925,8 +1922,13 @@ class ActivitiesController extends Controller
     
         $processingAdd->save();
     
+        // Update the order status based on the new processing statuses
+        $processingAdd->order->updateOrderStatus();
+    
         return redirect()->route('activities.used_time');
     }
+    
+    
     
 
     public function getCustomerData($companyName)
