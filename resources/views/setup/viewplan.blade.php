@@ -6,14 +6,14 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Plan View</h1>
+                        <h1 class="m-0">Plant View</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('setup') }}">Setup</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('setup.plan') }}">Plan</a></li>
-                            <li class="breadcrumb-item active">View Plan</li>
+                            <li class="breadcrumb-item"><a href="{{ route('setup.plan') }}">Plant</a></li>
+                            <li class="breadcrumb-item active">View Plant</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -28,14 +28,14 @@
                     <div class="col-md-6">
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Plan Data</h3>
+                                <h3 class="card-title">Plant Data</h3>
                             </div>
                             <div class="card-body">
                                 @if($planJoin->isNotEmpty())
                                     <form>
                                         @csrf
                                         <div class="form-group">
-                                            <label for="exampleInputUsername">Plan Name</label>
+                                            <label for="exampleInputUsername">Plant Name</label>
                                             <input type="text" name="plan_name" class="form-control" id="exampleInputUsername" value="{{ $planJoin[0]->plan_name }}" readonly>
                                         </div>
                                         <div class="form-group">

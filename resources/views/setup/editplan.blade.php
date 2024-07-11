@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label for="exampleInputUsername">Plan Name</label>
+                                        <label for="exampleInputUsername">Plant Name</label>
                                         <input type="text" name="plan_name" class="form-control"
                                             id="exampleInputUsername" placeholder="Insert Plan Name"
                                             value="{{ $planJoin[0]->plan_name }}" required readonly>
@@ -50,7 +50,7 @@
                                             style="display: flex; justify-content: space-between; align-items: center;"
                                             class="form-label">
                                             Group
-                                            <button type="button" id="add-group-row" class="btn btn-primary btn-xs">
+                                            <button type="button" id="add-group-row" class="btn btn-primary btn-xs btn-custom">
                                                 <a href="javascript:void(0)" class="text-light font-18" title="Add Group"
                                                     id="addBtn"><i class="fa fa-plus"></i></a>
                                             </button>
