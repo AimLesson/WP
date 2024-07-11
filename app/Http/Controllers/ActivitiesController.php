@@ -1227,7 +1227,7 @@ class ActivitiesController extends Controller
         $machine    = Machine::get();
         $items    = ItemAdd::get();
 
-        return view('activities.createprocessing', compact('orders', 'material', 'machine', 'items'));
+        return view('activities.processing', compact('orders', 'material', 'machine', 'items'));
     }
 
     public function getItemsByOrderNumber($orderNumber)

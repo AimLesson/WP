@@ -56,14 +56,14 @@
                                             @foreach ($order as $o)
                                                 <tr>
                                                     <td >{{ $o->id }}</td>
-                                                    <td ><a href="{{ url('activities/order/view/' . $o->order_number) }}">{{ $o->order_number }}</a></td>
+                                                    <td >{{ $o->order_number }}</a></td>
                                                     <td>{{ $o->customer }}</td>
                                                     <td>{{ $o->order_date }}</td>
                                                     <td>{{$o->so_number}}</td>
                                                     <td>{{$o->product}}</td>
                                                     <td>{{$o->qty}}</td>
                                                     <td>{{$o->dod}}</td>
-                                                    <td >{{$o->sale_price}}</td>
+                                                    <td >{{ 'Rp. ' . number_format($o->sale_price, 0, ',', '.') }}</td>
                                                     <td>{{$o->order_status}}</td>
                                                     <td>
                                                         <a href="{{ route('activities.editorder', ['id' => $o->id]) }}"

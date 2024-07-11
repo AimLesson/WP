@@ -93,25 +93,29 @@
                                                 <td>{{ $ut->finished_at }}</td>
                                                 <td>{{ ucfirst($ut->status) }}</td>
                                                 <td>
-                                                    <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="action" value="start">
-                                                        <button type="submit" class="btn btn-success btn-start"
-                                                            {{ $ut->status != 'pending' || $ut->status == 'finished' ? 'disabled' : '' }}>Start</button>
-                                                    </form>
-                                                    <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="action" value="pending">
-                                                        <button type="submit" class="btn btn-warning btn-reset"
-                                                            {{ $ut->status == 'pending' || $ut->status == 'finished' ? 'disabled' : '' }}>Pending</button>
-                                                    </form>
-                                                    <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="action" value="finish">
-                                                        <button type="submit" class="btn btn-danger btn-remove"
-                                                            {{ $ut->status == 'finished' ? 'disabled' : '' }}>Finish</button>
-                                                    </form>
+                                                    <div class="button-container">
+                                                        <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="action" value="start">
+                                                            <button type="submit" class="btn btn-success btn-start"
+                                                                {{ $ut->status != 'pending' || $ut->status == 'finished' ? 'disabled' : '' }}>Start</button>
+                                                        </form>
+                                                        <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="action" value="pending">
+                                                            <button type="submit" class="btn btn-warning btn-reset"
+                                                                {{ $ut->status == 'pending' || $ut->status == 'finished' ? 'disabled' : '' }}>Pending</button>
+                                                        </form>
+                                                        <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="action" value="finish">
+                                                            <button type="submit" class="btn btn-danger btn-remove"
+                                                                {{ $ut->status == 'finished' ? 'disabled' : '' }}>Finish</button>
+                                                        </form>
+                                                    </div>
                                                 </td>
+                                                
+                                                
                                             </tr>
                                             <!-- Modal for delete confirmation -->
                                             {{-- <div class="modal fade" id="modal-delete-{{ $ut->id }}">

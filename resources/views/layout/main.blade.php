@@ -206,6 +206,30 @@
         border-color: #1be700; /* Change this to your desired hover border color */
         }
 
+        .btn:disabled {
+        background-color: gray !important;
+        border-color: gray !important;
+        cursor: not-allowed;
+        }
+
+        .button-container {
+        display: flex;
+        gap: 10px; /* Adjust the gap as needed */
+        }
+
+        .button-container form {
+         display: inline;
+        }
+
+        .button-container .btn {
+        display: inline-block;
+        }
+
+        .btn:disabled {
+         background-color: gray !important;
+         border-color: gray !important;
+        cursor: not-allowed;
+        }
 
     </style>
 </head>
