@@ -152,7 +152,7 @@
                 <a href="{{ route('activities.closeorder') }}" class="nav-link">
                     <i class="nav-icon fas fa-clipboard-list"></i>
                     <p>
-                        Close Order
+                        Finished Order
                     </p>
                 </a>
             </li>

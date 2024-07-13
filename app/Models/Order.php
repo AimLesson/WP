@@ -87,7 +87,7 @@ class Order extends Model
                 } elseif ($allStatuses->contains('queue')) {
                     $this->order_status = 'queue';
                 } elseif ($allStatuses->contains('finished')) {
-                    $this->order_status = 'finished';
+                    $this->order_status = 'Process Finished';
                 }
             }
         }
