@@ -40,7 +40,6 @@
                         </form>
                     
                         <div id="calculation-result" style="display: none;">
-                            <h2>Calculation Result</h2>
                             <div class="table-responsive rounded">
                                 <table class="table table-bordered table-striped rounded">
                                     <thead class="thead-dark">

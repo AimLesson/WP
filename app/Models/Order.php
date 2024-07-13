@@ -52,6 +52,11 @@ class Order extends Model
         return $this->hasMany(Sub_Contract::class, 'order_number', 'order_number');
     }
 
+    public function salesOrder()
+    {
+        return $this->belongsTo(SalesOrder::class, 'so_number', 'so_number');
+    }
+
     public function scopeFinished($query)
     {
         return $query->where('order_status', 'Finished');

@@ -1991,24 +1991,27 @@ class ActivitiesController extends Controller
         $validatedData = $request->validate([
             'order_id' => 'required|exists:order,id',
         ]);
-
-        $order = Order::with(['items', 'processings', 'subContracts'])->findOrFail($validatedData['order_id']);
-
-        // Calculate totals
-        $totalSales = $order->total_amount;
-
-        // Example calculations based on related models
+    
+        // Fetch the Order model along with its related SalesOrder
+        $order = Order::with(['items', 'processings', 'subContracts', 'salesOrder'])
+            ->findOrFail($validatedData['order_id']);
+    
+        // Get the total amount from the related SalesOrder
+        $totalSales = $order->salesOrder->total_amount ?? 0; // Use 0 if salesOrder or total_amount is null
+    
+        // Calculate totals based on related models
         $totalMaterialCost = $order->items->sum('material_cost');
         $totalProcessingCost = $order->processings->sum('mach_cost');
         $totalSubContractCost = $order->subContracts->sum('total_price');
-
+    
         return response()->json([
-            'totalSales' => number_format($totalSales, 2),
-            'totalMaterialCost' => number_format($totalMaterialCost, 2),
-            'totalProcessingCost' => number_format($totalProcessingCost, 2),
-            'totalSubContractCost' => number_format($totalSubContractCost, 2),
+            'totalSales' => number_format((float)$totalSales, 2),
+            'totalMaterialCost' => number_format((float)$totalMaterialCost, 2),
+            'totalProcessingCost' => number_format((float)$totalProcessingCost, 2),
+            'totalSubContractCost' => number_format((float)$totalSubContractCost, 2),
         ]);
     }
+      
 
     public function delivery_orders_wh()
     {
