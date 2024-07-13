@@ -755,8 +755,10 @@
                 // Periksa apakah nilai yang dimasukkan adalah angka yang valid
                 if (!isNaN(purchasePrice) && !isNaN(usedAge) && !isNaN(machHour) && !isNaN(daysPerYear)) {
                     // Hitung Depreciation Cost berdasarkan rumus Depresiasi Garis Lurus
-                    var depreciationCost = (((1.5 * purchasePrice) - (0.1 * purchasePrice)) / (usedAge * (
-                        machHour * daysPerYear)));
+                    // var depreciationCost = (((1.5 * purchasePrice) - (0.1 * purchasePrice)) / (usedAge * (
+                    //     machHour * daysPerYear)));
+
+                    var depreciationCost = (purchasePrice / (usedAge * (machHour * daysPerYear)))
                     // Tampilkan hasil perhitungan pada input Depreciation Cost dalam format Rupiah tanpa desimal .00
                     depreciationCostInput.value = formatRupiah(depreciationCost.toFixed(0));
                     calculateMachCostPerHour();
@@ -811,8 +813,7 @@
                 if (!isNaN(purchasePrice) && !isNaN(bankInterestPercent) && !isNaN(machHour) && !isNaN(
                         daysPerYear) && bankInterestPercent >= 0) {
                     // Hitung bank interest berdasarkan rumus yang diberikan
-                    var bankInterest = ((purchasePrice * bankInterestPercent) / (2 * 100 * (machHour *
-                        daysPerYear)));
+                    var bankInterest = ((purchasePrice * bankInterestPercent) / (2 * (machHour * daysPerYear)));                        
 
                     // Tampilkan hasil perhitungan pada input Bank Interest dalam format Rupiah tanpa desimal .00
                     document.getElementById('InputBankInterest').value = formatRupiah(bankInterest.toFixed(0));
@@ -945,8 +946,7 @@
                 if (!isNaN(maintenanceFactor) && !isNaN(purchasePrice) && !isNaN(machHour) && !isNaN(
                         daysPerYear) && maintenanceFactor >= 0) {
                     // Hitung maintenance cost berdasarkan rumus yang diberikan
-                    var maintenanceCost = (maintenanceFactor * purchasePrice) / (100 * (machHour *
-                        daysPerYear));
+                    var maintenanceCost = (maintenanceFactor * purchasePrice) / (machHour * daysPerYear);
 
                     // Tampilkan hasil perhitungan pada input Maintenance Cost dalam format Rupiah tanpa desimal .00
                     document.getElementById('InputMaintenanceCost').value = formatRupiah(maintenanceCost.toFixed(
