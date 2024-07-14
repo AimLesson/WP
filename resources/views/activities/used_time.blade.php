@@ -39,7 +39,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    {{-- <div class="form-group">
+                                    <div class="form-group">
                                         <label for="no_item" class="form-label">Item</label>
                                         <select name="no_item" id="no_item" class="form-control select2" style="width: 100%;" required>
                                             <option selected="selected" disabled>-- Select Item --</option>
@@ -47,7 +47,7 @@
                                                 <option value="{{ $ia->no_item }}">{{ $ia->no_item }}</option>
                                             @endforeach
                                         </select>
-                                    </div> --}}
+                                    </div>
                                     <button type="submit" class="btn btn-primary btn-custom">Filter</button>
                                 </form>
                             </div>
@@ -65,6 +65,7 @@
                                             <th>Order Number</th>
                                             <th>Item Number</th>
                                             <th>Date Wanted</th>
+                                            <th>Operator</th> <!-- Add this line -->
                                             <th>Machine</th>
                                             <th>Operation</th>
                                             <th>Estimated Time</th>
@@ -82,6 +83,7 @@
                                                 <td>{{ $ut->order_number }}</td>
                                                 <td>{{ $ut->item_number }}</td>
                                                 <td>{{ $ut->date_wanted }}</td>
+                                                <td>{{ $ut->user_name }}</td> <!-- Display the user name -->
                                                 <td>{{ $ut->machine }}</td>
                                                 <td>{{ $ut->operation }}</td>
                                                 <td>{{ $ut->estimated_time }}</td>
@@ -97,51 +99,27 @@
                                                         <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="action" value="start">
+                                                            <input type="hidden" name="user_name" value="{{ $user->name }}">
                                                             <button type="submit" class="btn btn-success btn-start"
                                                                 {{ $ut->status != 'pending' && $ut->status != 'queue' || $ut->status == 'finished' ? 'disabled' : '' }}>Start</button>
                                                         </form>
                                                         <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="action" value="pending">
+                                                            <input type="hidden" name="user_name" value="{{ $user->name }}">
                                                             <button type="submit" class="btn btn-warning btn-reset"
                                                                 {{ $ut->status == 'pending' || $ut->status == 'finished' || $ut->status == 'queue' ? 'disabled' : '' }}>Pending</button>
                                                         </form>
                                                         <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="action" value="finish">
+                                                            <input type="hidden" name="user_name" value="{{ $user->name }}">
                                                             <button type="submit" class="btn btn-danger btn-remove"
                                                                 {{ $ut->status == 'finished' || $ut->status == 'queue' ? 'disabled' : '' }}>Finish</button>
                                                         </form>
                                                     </div>
-                                                    
                                                 </td>
-                                                
-                                                
                                             </tr>
-                                            <!-- Modal for delete confirmation -->
-                                            {{-- <div class="modal fade" id="modal-delete-{{ $ut->id }}">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Confirm Delete</h4>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p>Are you sure you want to delete this entry?</p>
-                                                        </div>
-                                                        <div class="modal-footer justify-content-between">
-                                                            <form action="{{ route('activities.deleteusedtime', ['id' => $ut->id]) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> --}}
                                         @endforeach
                                     </tbody>
                                 </table>

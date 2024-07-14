@@ -1874,31 +1874,35 @@ class ActivitiesController extends Controller
         // Get orders with order_status not 'Finished'
         $orders = Order::where('order_status', '!=', 'Finished')->get();
         $orderNumbers = $orders->pluck('order_number');
-    
+        
         // Get items where order_number is in the filtered orders
         $items = ItemAdd::whereIn('order_number', $orderNumbers)->get();
-    
+        
         // Start the query for ProcessingAdd
         $query = ProcessingAdd::whereIn('order_number', $orderNumbers);
-    
+        
         // Filter by order_number if provided
         if ($request->filled('order_number')) {
             $query->where('order_number', $request->order_number);
         }
-    
+        
         // Filter by item_number if provided and ensure item_number is in the filtered orders
         if ($request->filled('item_number')) {
             $query->where('item_number', $request->item_number);
         }
-    
+        
         // Get the filtered used time data
         $usedtime = $query->get();
+        
+        $user = auth()->user();
     
-        return view('activities.used_time', compact('usedtime', 'orders', 'items'));
+        return view('activities.used_time', compact('usedtime', 'orders', 'items', 'user'));
     }
+    
     public function updateStatus(Request $request, $id)
     {
         $processingAdd = ProcessingAdd::find($id);
+        $user = auth()->user();
     
         if ($request->action == 'start') {
             if ($processingAdd->status == 'pending') {
@@ -1920,6 +1924,7 @@ class ActivitiesController extends Controller
             $processingAdd->duration += now()->diffInSeconds($processingAdd->started_at);
         }
     
+        $processingAdd->user_name = $user->name; // Storing the user's name
         $processingAdd->save();
     
         // Update the order status based on the new processing statuses
@@ -1927,6 +1932,7 @@ class ActivitiesController extends Controller
     
         return redirect()->route('activities.used_time');
     }
+    
     
     
     
