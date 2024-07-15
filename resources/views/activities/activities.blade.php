@@ -196,7 +196,7 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('activities/real_hpp') ? 'active' : '' }}">
+            {{-- <li class="nav-item {{ request()->is('activities/real_hpp') ? 'active' : '' }}">
                 <a href="{{route('activities.real_hpp')}}" class="nav-link">
                     <i class="nav-icon fas fa-percentage"></i>
                     <p>
@@ -211,7 +211,7 @@
                         Finish Order (Finance)
                     </p>
                 </a>
-            </li>
+            </li> --}}
         </ul>
     </nav>
 @endsection
