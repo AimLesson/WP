@@ -14,8 +14,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $user  = User::get();
-
+        $user = User::get();
         return view('index', compact('user'));
     }
 
@@ -39,16 +38,26 @@ class HomeController extends Controller
         $statusLabels = $orderStatuses->pluck('order_status');
         $statusData = $orderStatuses->pluck('total');
 
-        return view('dashboard', compact('labels', 'data', 'statusLabels', 'statusData'));
-    }
+        $wfCount = 0;
+        $mdcCount = 0;
+        $allOrders = Order::all();
 
+        foreach ($allOrders as $order) {
+            if (strpos($order->order_number, 'W') !== false) {
+                $wfCount++;
+            } elseif (strpos($order->order_number, 'M') !== false) {
+                $mdcCount++;
+            }
+        }
+
+        return view('dashboard', compact('labels', 'data', 'statusLabels', 'statusData', 'wfCount', 'mdcCount'));
+    }
 
     public function file()
     {
-        $user=User::get();
-        return view('file.file',compact('user'));
+        $user = User::get();
+        return view('file.file', compact('user'));
     }
-
 
     public function report()
     {
@@ -69,7 +78,6 @@ class HomeController extends Controller
         }
 
         $user = $users->get();
-
         return view('file.user', compact('user', 'request'));
     }
 
@@ -87,7 +95,6 @@ class HomeController extends Controller
         }
 
         $ps = $productionsheet->get();
-
         return view('setup.print_productionsheet', compact('productionsheet', 'request'));
     }
 
@@ -101,12 +108,12 @@ class HomeController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name'      => 'required',
-                'username'  => 'required|unique:users',
-                'email'     => 'required',
-                'unit'      => 'required',
-                'password'  => 'required',
-                'role'      => 'required',
+                'name' => 'required',
+                'username' => 'required|unique:users',
+                'email' => 'required',
+                'unit' => 'required',
+                'password' => 'required',
+                'role' => 'required',
             ]
         );
 
@@ -123,7 +130,7 @@ class HomeController extends Controller
         $user->role = $request->input('role');
         $user->save();
 
-        return redirect()->route('user')->with('success', 'User Berhasil ditambahkan');;
+        return redirect()->route('user')->with('success', 'User Berhasil ditambahkan');
     }
 
     public function edituser(Request $request, $id)
@@ -139,10 +146,7 @@ class HomeController extends Controller
 
     public function active()
     {
-        // Mengambil semua data pengguna menggunakan Eloquent ORM
         $users = User::all();
-
-        // Mengirim data pengguna ke tampilan 'user'
         return view('file.active', compact('users'));
     }
 
@@ -154,19 +158,19 @@ class HomeController extends Controller
     public function updatepw(Request $request)
     {
         $request->validate([
-            'password_lama'    => 'required|max:12',
-            'password_baru'    => 'required|max:12',
+            'password_lama' => 'required|max:12',
+            'password_baru' => 'required|max:12',
             'password_konfirm' => 'required|same:password_baru',
         ]);
 
         $current_user = auth()->user();
 
-        if ($current_user instanceof \App\Models\User) { // Periksa apakah $current_user adalah instance dari model User
+        if ($current_user instanceof \App\Models\User) {
             if (Hash::check($request->password_lama, $current_user->password)) {
                 $validator = Validator::make(
                     $request->all(),
                     [
-                        'password_baru'    => 'required|max:12',
+                        'password_baru' => 'required|max:12',
                         'password_konfirm' => 'required|same:password_baru',
                     ]
                 );
@@ -176,7 +180,7 @@ class HomeController extends Controller
                 }
 
                 $current_user->password = Hash::make($request->password_baru);
-                $current_user->save(); // Menyimpan perubahan password
+                $current_user->save();
 
                 return redirect()->route('user.changepw')->with('success', 'Password berhasil diubah');
             } else {
@@ -192,12 +196,12 @@ class HomeController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name'      => 'required',
-                'username'  => 'required|unique:users,username,' . $id,
-                'email'     => 'required|email',
-                'unit'      => 'required',
-                'password'  => 'nullable',
-                'role'      => 'required',
+                'name' => 'required',
+                'username' => 'required|unique:users,username,' . $id,
+                'email' => 'required|email',
+                'unit' => 'required',
+                'password' => 'nullable',
+                'role' => 'required',
             ]
         );
 
@@ -220,10 +224,8 @@ class HomeController extends Controller
         }
 
         $user->role = $request->input('role');
-
         $user->save();
         return redirect()->route('user')->with('success', 'Data User berhasil diperbarui');
-        
     }
 
     public function deleteuser(Request $request, $id)
@@ -235,8 +237,7 @@ class HomeController extends Controller
         }
 
         $user->delete();
-
-        return redirect()->route('user')->with('success','Data Berhasil dihapus');
+        return redirect()->route('user')->with('success', 'Data Berhasil dihapus');
     }
 
     public function dashboardindex()
@@ -247,7 +248,6 @@ class HomeController extends Controller
                         ->orderBy('date', 'asc')
                         ->get();
 
-        // Format the data for Chart.js
         $labels = $orders->pluck('date')->map(function($date) {
             return Carbon::parse($date)->format('Y-m-d');
         });

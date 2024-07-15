@@ -72,6 +72,29 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="card-header">
+                      Laporan Order Berdasarkan Kategori
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered mt-4">
+                            <thead>
+                                <tr>
+                                    <th>Order Category</th>
+                                    <th>Number of Orders</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>WF Orders</td>
+                                    <td>{{ $wfCount }}</td>
+                                </tr>
+                                <tr>
+                                    <td>MDC Orders</td>
+                                    <td>{{ $mdcCount }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
