@@ -36,15 +36,25 @@
                         <p><strong>Established:</strong> 1968</p>
                         <p><strong>Location:</strong> Jl. Adisucipto No. 99, Solo, Central Java, Indonesia</p>
                         <p><strong>Industry:</strong> Manufacturing, Vocational Education</p>
-                        <p><strong>About Us:</strong> </p>
-                        <p>PT ATMI Solo, also known as Akademi Teknik Mesin Industri, was established in 1968. The company operates in the manufacturing sector and also serves as a vocational education institution. ATMI Solo focuses on producing high-quality, precision-engineered components and offers specialized training programs to develop skilled professionals in the field of industrial engineering.</p>
-                        <p><strong>Vision:</strong> To be a leading institution in manufacturing and technical education, fostering innovation and excellence.</p>
-                        <p><strong>Mission:</strong> 
+                        <p><strong>About Us:</strong> PT ATMI Solo, yang juga dikenal sebagai Akademi Teknik Mesin Industri, didirikan pada tahun 1968. Perusahaan ini bergerak di bidang manufaktur dan juga berfungsi sebagai lembaga pendidikan kejuruan. ATMI Solo berfokus pada produksi komponen berkualitas tinggi dan direkayasa secara presisi dan menawarkan program pelatihan khusus untuk mengembangkan profesional yang terampil di bidang teknik industri. </p>
+                         <p><strong>Visi:</strong> Terciptanya masyarakat industri yang adil dan sejahtera, menghormati martabat manusia, dan bertanggung jawab atas keseimbangan lingkungan hidup.</p>
+                        <p><strong>Misi:</strong> Mendidik kaum muda menjadi tenaga profesional yang mampu membantu perkembangan bangsa menuju masyarakat industri yang adil dan makmur, mempunyai tanggung jawab moral dan sosial yang terumuskan dalam trilogi 3C :</p>
                             <ul>
-                                <li>1. Provide high-quality, industry-relevant training and education.</li>
-                                <li>2. Deliver precision-engineered products and solutions.</li>
-                                <li>3. Promote continuous improvement and innovation.</li>
-                                <li>4. Contribute to the development of skilled professionals in the engineering sector.</li>
+                                <li>1. Compententia ( keterampilan teknis)</li>
+                                <li>2. Conscientia ( Tanggung jawab moral)</li>
+                                <li>3. Compassio ( pengurus sosial dan kegiatan industri)</li>
+                            </ul>
+                        </p>
+                        <p><strong>Tujuan PT ATMI SOLO:</strong></p>
+                        <p>Menjadi perusahaan perseroan yang : 
+                            <ul>
+                                <li>- Menjunjung tinggi nilai kejujuran, integritas, etika moral-bisnis.</li>
+                                <li>- Mandiri dan menjalankan proses bisnis yang ideal.</li>
+                                <li>- Menanggapi secara positif permintaan pelanggan dan pasar tanpa ditunda-tunda.</li>
+                                <li>- Menghasilkan produk yang unggul dan kompetitif, memenuhi kepuasan pelanggan.</li>
+                                <li>- Berkomitmen tinggi terhadap kualitas, biaya, waktu, serah dan pelayanan.</li>
+                                <li>- Mengusahakan pertumbuhan secara terus-menerus, menjamin tercapainya kesejahteraan dan masa depan untuk para Pemegang saham, para Pelanggan, para Karyawan dan Masyarakat.</li>
+                                <li>- Mendukung pelaksanaan sistem pendidikan dan training berbasis produksi di Politeknik ATMI Surakarta agar dapat diterapkan secara konsisten.</li>
                             </ul>
                         </p>
                     </div>
