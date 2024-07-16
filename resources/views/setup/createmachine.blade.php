@@ -946,7 +946,7 @@
                 if (!isNaN(maintenanceFactor) && !isNaN(purchasePrice) && !isNaN(machHour) && !isNaN(
                         daysPerYear) && maintenanceFactor >= 0) {
                     // Hitung maintenance cost berdasarkan rumus yang diberikan
-                    var maintenanceCost = (maintenanceFactor * purchasePrice) / (machHour * daysPerYear);
+                    var maintenanceCost = ((maintenanceFactor/100) * purchasePrice) / (machHour * daysPerYear);
 
                     // Tampilkan hasil perhitungan pada input Maintenance Cost dalam format Rupiah tanpa desimal .00
                     document.getElementById('InputMaintenanceCost').value = formatRupiah(maintenanceCost.toFixed(
@@ -1009,8 +1009,7 @@
                 if (!isNaN(depreciationCost) && !isNaN(bankInterest) && !isNaN(areaCost) && !isNaN(
                         electricalCost) && !isNaN(maintenanceCost)) {
                     // Hitung machCostPerHour sesuai dengan rumus yang diberikan
-                    var machCostPerHour = depreciationCost + bankInterest + areaCost + electricalCost +
-                        maintenanceCost;
+                    var machCostPerHour = depreciationCost + bankInterest + areaCost + electricalCost + maintenanceCost;
 
                     // Tampilkan hasil perhitungan pada input Mach. Cost per Hour dalam format Rupiah tanpa desimal .00
                     machCostPerHourInput.value = formatRupiah(machCostPerHour.toFixed(0));
