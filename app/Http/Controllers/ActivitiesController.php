@@ -2011,7 +2011,7 @@ class ActivitiesController extends Controller
         $totalSubContractCost = $order->subContracts->sum('total_price');
     
         return response()->json([
-            'totalSales' => number_format((float)$totalSales, 2),
+            'inputTotalSales' => number_format((float)$totalSales, 2),
             'totalMaterialCost' => number_format((float)$totalMaterialCost, 2),
             'totalProcessingCost' => number_format((float)$totalProcessingCost, 2),
             'totalSubContractCost' => number_format((float)$totalSubContractCost, 2),

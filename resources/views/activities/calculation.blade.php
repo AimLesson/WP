@@ -30,7 +30,7 @@
                         @csrf
                         <div class="form-group">
                             <label for="order_id"></label>
-                            <select name="order_id" id="order_id" class="form-control" required>
+                            <select name="order_id" id="order_id" class="form-control">
                                 <option value="" disabled selected>-- Select Order Number --</option>
                                 @foreach($orders as $id => $orderNumber)
                                     <option value="{{ $id }}">{{ $orderNumber }}</option>
@@ -40,7 +40,7 @@
                     </form>
 
                     <div id="calculation-result" style="display: none;">
-                        <!-- Existing Calculation Result Table -->
+                        <!-- Input Table for Debugging -->
                         <div class="table-responsive rounded">
                             <table class="table table-bordered table-striped rounded">
                                 <thead class="thead-dark">
@@ -52,37 +52,38 @@
                                 <tbody>
                                     <tr>
                                         <td>Sales Order</td>
-                                        <td id="totalSales"></td>
+                                        <td><input type="number" id="inputTotalSales" class="form-control"></td>
                                     </tr>
                                     <tr>
                                         <td>Material Cost</td>
-                                        <td id="totalMaterialCost"></td>
+                                        <td><input type="number" id="inputTotalMaterialCost" class="form-control"></td>
                                     </tr>
                                     <tr>
                                         <td>Labor Cost</td>
-                                        <td id="totalProcessingCost"></td>
+                                        <td><input type="number" id="inputTotalLaborCost" class="form-control"></td>
                                     </tr>
                                     <tr>
                                         <td>Machine Cost</td>
-                                        <td id="totalProcessingCost"></td>
+                                        <td><input type="number" id="inputTotalMachineCost" class="form-control"></td>
                                     </tr>
                                     <tr>
-                                        <td>Standart Part Cost</td>
-                                        <td id="totalProcessingCost"></td>
+                                        <td>Standard Part Cost</td>
+                                        <td><input type="number" id="inputTotalStandardPartCost" class="form-control"></td>
                                     </tr>
                                     <tr>
                                         <td>Sub-Contract Cost</td>
-                                        <td id="totalSubContractCost"></td>
+                                        <td><input type="number" id="inputTotalSubContractCost" class="form-control"></td>
                                     </tr>
                                     <tr>
                                         <td>Overhead Manufacture Cost</td>
-                                        <td id="totalSubContractCost"></td>
+                                        <td><input type="number" id="inputTotalOverheadManufactureCost" class="form-control"></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <!-- New DataTable -->
+                        <button id="calculateButton" class="btn btn-primary mb-4">Calculate</button>
+
                         <div class="table-responsive rounded">
                             <table id="additional-table" class="table table-bordered table-striped rounded">
                                 <thead class="thead-dark">
@@ -94,7 +95,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Dynamic rows will be added here -->
                                 </tbody>
                             </table>
                         </div>
@@ -110,28 +110,28 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>COGS</td>
-                                        <td id="newTotalSales"></td>
+                                        <td>COGS</td><!-- COGS= (Material Cost + Labor Cost + Machining Cost + Standard Part Cost + Sub Contract Cost + Overhead Manufacture Cost) - Labor Cost -->
+                                        <td id="COGS"></td>
                                     </tr>
                                     <tr>
-                                        <td>Gross Profit Margin</td>
-                                        <td id="newTotalMaterialCost"></td>
+                                        <td>Gross Profit Margin</td><!-- Gross Profit Margin = Sales Order - COGS -->
+                                        <td id="GPM"></td>
                                     </tr>
                                     <tr>
-                                        <td>OH Organisasi</td>
-                                        <td id="newTotalLaborCost"></td>
+                                        <td>OH Organisasi</td><!-- OH Organisasi = Sales Order * 10% -->
+                                        <td id="OHorg"></td>
                                     </tr>
                                     <tr>
-                                        <td>Net Operating Income</td>
-                                        <td id="newTotalMachineCost"></td>
+                                        <td>Net Operating Income</td><!-- Net Operating Income = Gross Profit Margin - OH Organisasi -->
+                                        <td id="NOI"></td>
                                     </tr>
                                     <tr>
-                                        <td>Pend / Biaya non Oper</td>
-                                        <td id="newTotalStandardPartCost"></td>
+                                        <td>Pend / Biaya non Oper</td><!-- Biaya Non Operator = Sales Order * 2% -->
+                                        <td id="BNP"></td>
                                     </tr>
                                     <tr>
-                                        <td>Laba Sebelum pajak</td>
-                                        <td id="newTotalSubContractCost"></td>
+                                        <td>Laba Sebelum pajak</td><!-- Laba Sebelum Pajak = Net Operating Income - Biaya Non Operator -->
+                                        <td id="LSP"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -141,7 +141,7 @@
 
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-                <script src="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css"></script>
+                <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
             </div>
             <!-- /.row (main row) -->
         </div><!-- /.container-fluid -->
@@ -163,31 +163,13 @@
                     },
                     success: function(response) {
                         $('#calculation-result').show();
-                        $('#totalSales').text(response.totalSales);
-                        $('#totalMaterialCost').text(response.totalMaterialCost);
-                        $('#totalProcessingCost').text(response.totalProcessingCost);
-                        $('#totalSubContractCost').text(response.totalSubContractCost);
-
-                        // Populate new calculation result table
-                        $('#newTotalSales').text(response.newTotalSales);
-                        $('#newTotalMaterialCost').text(response.newTotalMaterialCost);
-                        $('#newTotalLaborCost').text(response.newTotalLaborCost);
-                        $('#newTotalMachineCost').text(response.newTotalMachineCost);
-                        $('#newTotalStandardPartCost').text(response.newTotalStandardPartCost);
-                        $('#newTotalSubContractCost').text(response.newTotalSubContractCost);
-                        $('#newTotalOverheadManufactureCost').text(response.newTotalOverheadManufactureCost);
-                        
-                        // Update DataTable
-                        var table = $('#additional-table').DataTable();
-                        table.clear();
-                        response.additionalData.forEach(function(item) {
-                            table.row.add([
-                                item.name,
-                                item.description,
-                                item.quantity,
-                                item.price
-                            ]).draw(false);
-                        });
+                        $('#inputTotalSales').val(response.inputTotalSales);
+                        $('#inputTotalMaterialCost').val(response.totalMaterialCost);
+                        $('#inputTotalLaborCost').val(response.totalLaborCost);
+                        $('#inputTotalMachineCost').val(response.totalMachineCost);
+                        $('#inputTotalStandardPartCost').val(response.totalStandardPartCost);
+                        $('#inputTotalSubContractCost').val(response.totalSubContractCost);
+                        $('#inputTotalOverheadManufactureCost').val(response.totalOverheadManufactureCost);
                     },
                     error: function(response) {
                         console.log('Error:', response);
@@ -198,18 +180,42 @@
             }
         });
 
+        $('#calculateButton').click(function() {
+            var totalSales = parseFloat($('#inputTotalSales').val());
+            var totalMaterialCost = parseFloat($('#inputTotalMaterialCost').val());
+            var totalLaborCost = parseFloat($('#inputTotalLaborCost').val());
+            var totalMachineCost = parseFloat($('#inputTotalMachineCost').val());
+            var totalStandardPartCost = parseFloat($('#inputTotalStandardPartCost').val());
+            var totalSubContractCost = parseFloat($('#inputTotalSubContractCost').val());
+            var totalOverheadManufactureCost = parseFloat($('#inputTotalOverheadManufactureCost').val());
+
+            var COGS = (totalMaterialCost + totalLaborCost + totalMachineCost + totalStandardPartCost + totalSubContractCost + totalOverheadManufactureCost) - totalLaborCost;
+            var GPM = totalSales - COGS;
+            var OHorg = totalSales * 0.1;
+            var NOI = GPM - OHorg;
+            var BNP = totalSales * 0.02;
+            var LSP = NOI - BNP;
+
+            $('#COGS').text(COGS.toFixed(2));
+            $('#GPM').text(GPM.toFixed(2));
+            $('#OHorg').text(OHorg.toFixed(2));
+            $('#NOI').text(NOI.toFixed(2));
+            $('#BNP').text(BNP.toFixed(2));
+            $('#LSP').text(LSP.toFixed(2));
+        });
+
         // Initialize DataTable
         $('#additional-table').DataTable();
     });
 </script>
 
 <script>
-    // Fungsi untuk mengubah judul berdasarkan halaman
+    // Function to update the page title
     function updateTitle(pageTitle) {
         document.title = pageTitle;
     }
 
-    // Panggil fungsi ini saat halaman "barcode" dimuat
+    // Call the function when the "Calculation" page is loaded
     updateTitle('Calculation');
 </script>
 @endsection
