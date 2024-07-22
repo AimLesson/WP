@@ -1988,18 +1988,19 @@ class ActivitiesController extends Controller
 
     public function calculation()
     {
-        $orders = Order::pluck('order_number', 'id'); // Fetch all orders for selection
+        $orders = Order::where('order_status', '!=', 'Finished')->pluck('order_number', 'id'); // Fetch orders with condition
         return view('activities.calculation', compact('orders'));
     }
+    
 
     public function calculate(Request $request)
     {
         $validatedData = $request->validate([
-            'order_id' => 'required|exists:order,id',
+            'order_id' => 'required|exists:order,id', // Ensure the table name matches your database schema
         ]);
     
-        // Fetch the Order model along with its related SalesOrder
-        $order = Order::with(['items', 'processings', 'subContracts', 'salesOrder'])
+        // Fetch the Order model along with its related models
+        $order = Order::with(['items', 'processings', 'subContracts', 'salesOrder', 'standartParts', 'overheads'])
             ->findOrFail($validatedData['order_id']);
     
         // Get the total amount from the related SalesOrder
@@ -2009,14 +2010,26 @@ class ActivitiesController extends Controller
         $totalMaterialCost = $order->items->sum('material_cost');
         $totalProcessingCost = $order->processings->sum('mach_cost');
         $totalSubContractCost = $order->subContracts->sum('total_price');
+        $totalStandardPartCost = $order->standartParts->sum('total');
+        $totalOverheadCost = $order->overheads->sum('jumlah');
+    
+        // Fetch overhead data based on the selected order ID
+        $overheads = $order->overheads->map(function($overhead) {
+            return $overhead->only(['description', 'keterangan', 'jumlah']);
+        });
     
         return response()->json([
             'inputTotalSales' => number_format((float)$totalSales, 2),
             'totalMaterialCost' => number_format((float)$totalMaterialCost, 2),
             'totalProcessingCost' => number_format((float)$totalProcessingCost, 2),
+            'totalStandardPartCost' => number_format((float)$totalStandardPartCost, 2),
             'totalSubContractCost' => number_format((float)$totalSubContractCost, 2),
+            'totalOverheadCost' => number_format((float)$totalOverheadCost, 2),
+            'overheads' => $overheads
         ]);
     }
+    
+    
       
 
     public function delivery_orders_wh()

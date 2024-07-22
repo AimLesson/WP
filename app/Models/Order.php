@@ -39,7 +39,7 @@ class Order extends Model
 
     public function items()
     {
-        return $this->hasMany(Item::class, 'order_number', 'order_number');
+        return $this->hasMany(Itemadd::class, 'order_number', 'order_number');
     }
 
     public function processings()
@@ -56,6 +56,16 @@ class Order extends Model
     {
         return $this->belongsTo(SalesOrder::class, 'so_number', 'so_number');
     }
+
+    public function standartParts()
+{
+    return $this->hasMany(standart_part::class, 'order_number', 'order_number');
+}
+
+public function overheads()
+{
+    return $this->hasMany(overhead::class, 'order_number', 'order_number');
+}
 
     public function scopeFinished($query)
     {
