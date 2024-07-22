@@ -106,10 +106,8 @@
                             <table id="overhead-table" class="table table-bordered table-striped rounded">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th scope="col">Product</th>
                                         <th scope="col">Description</th>
-                                        <th scope="col">Jumlah</th>
-                                        <th scope="col">Cost</th>
+                                        <th scope="col">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>

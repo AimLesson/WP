@@ -297,7 +297,7 @@
                                                 <td>{{ $item->ass_drawing }}</td>
                                                 <td>{{ $item->drawing_no }}</td>
                                                 <td>{{ $item->material }}</td>
-                                                <td>{{ $item->weight }} mg</td>
+                                                <td>{{ $item->weight }} kg</td>
                                                 <td>{{ $item->length }} mm</td>
                                                 <td>{{ $item->width }} mm</td>
                                                 <td>{{ $item->thickness }} mm</td>
