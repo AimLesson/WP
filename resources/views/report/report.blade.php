@@ -140,28 +140,13 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
+            <li class="nav-item {{ request()->is('report/wip_process') ? 'active' : '' }}">
+                <a href="{{route('report.wip_process')}}" class="nav-link">
                     <i class="nav-icon fas fa-stream"></i>
                     <p>
                         WIP
-                        <i class="right fas fa-angle-left"></i>
                     </p>
                 </a>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="{{route('report.wip_process')}}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Process</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{route('report.wip_material')}}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Material</p>
-                        </a>
-                    </li>
-                </ul>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link">
