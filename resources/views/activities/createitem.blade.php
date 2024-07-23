@@ -155,6 +155,7 @@
                                                         <th style="width:80px;">Width(mm)</th>
                                                         <th>Thickness(mm)</th>
                                                         <th style="width:80px;">Weight(kg)</th>
+                                                        <th>Material Cost</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -174,12 +175,15 @@
                                                                 style="width:180px" id="material1" name="material[]">
                                                                 <option selected="selected" required disabled>--Material--
                                                                 </option>
-                                                                @foreach ($material as $m)
-                                                                    <option value="{{ $m->material }}">
-                                                                        {{ $m->material }}</option>
+                                                                @foreach ($standardParts as $m)
+                                                                    <option value="{{ $m->nama_barang }}">
+                                                                        {{ $m->nama_barang }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </td>
+                                                        {{-- <td><input class="form-control material-price" style="width:100px"
+                                                            type="number" id="mp" name="mp[]"
+                                                            step="0.01" value="{{$standardParts->harga}}" readonly></td> --}}
                                                         <td>
                                                             <select class="form-control select2 shape" style="width:180px"
                                                                 id="shape1" name="shape[]">
@@ -215,6 +219,9 @@
                                                         <td><input class="form-control weight" style="width:100px"
                                                                 type="number" id="weight1" name="weight[]" step="0.01"
                                                                 value="0" readonly></td>
+                                                        <td><input class="form-control material-cost" style="width:100px"
+                                                                type="number" id="material_cost" name="material_cost[]" step="0.01"
+                                                                value="0" readonly></td>
                                                         <td><button class="btn btn-danger btn-remove remove" type="button">Remove</button></td>
                                                     </tr>
                                                 </tbody>
@@ -222,6 +229,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden" id="materialPrices" value='@json($standardParts)'>
                                 <div class="row">
                                     <div class="card-footer" style="width: 100%;">
                                         <button type="submit" class="btn btn-primary float-right btn-custom">Save</button>
@@ -289,79 +297,102 @@ document.getElementById('order_number').addEventListener('change', function() {
             // Panggil fungsi ini saat halaman dimuat
             updateTitle('Add Items');
 
-        $(document).ready(function () {
-            let rowIdx = 1;
-
-            function calculateWeight(row) {
-                const shape = $(row).find('.shape').val();
-                const massa = parseFloat($(row).find('.massa').val());
-                const length = parseFloat($(row).find('.length').val());
-                const width = parseFloat($(row).find('.width').val());
-                const thickness = parseFloat($(row).find('.thickness').val());
-
-                if (shape === 'square') {
-                    const weight = massa * length * width * thickness;
-                    $(row).find('.weight').val(weight.toFixed(2));
-                } else if (shape === 'circle') {
-                    const radius = width / 2;
-                    const volume = Math.PI * radius * radius * thickness;
-                    const weight = massa * volume;
-                    $(row).find('.weight').val(weight.toFixed(2));
-                }
-            }
-
-            function addListeners(row) {
-                $(row).find('.shape, .massa, .length, .width, .thickness').on('input', function () {
-                    calculateWeight(row);
-                });
-            }
-
-            addListeners($('#soadd-table tbody tr'));
-
-            $('#addBtn').click(function () {
-                rowIdx++;
-                const newRow = `
-                    <tr>
-                        <td><input class="row-index form-control" style="width:50px" type="text" id="id_item${rowIdx}" name="id_item[]" value="${rowIdx}"></td>
-                        <td><input class="form-control" style="min-width:120px" type="text" id="no_item${rowIdx}" name="no_item[]"></td>
-                        <td><input class="form-control" style="min-width:120px" type="text" id="item${rowIdx}" name="item[]"></td>
-                        <td><input class="form-control" style="min-width:120px" type="date" id="dod_item${rowIdx}" name="dod_item[]"></td>
-                        <td>
-                            <select class="form-control select2 material" style="width:180px" id="material${rowIdx}" name="material[]">
-                                <option selected="selected" required disabled>--Material--</option>
-                                @foreach ($material as $m)
-                                    <option value="{{ $m->material }}">{{ $m->material }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control select2 shape" style="width:180px" id="shape${rowIdx}" name="shape[]">
-                                <option selected="selected" required disabled>--Shape--</option>
-                                <option value="square">Persegi</option>
-                                <option value="circle">Lingkaran</option>
-                            </select>
-                        </td>
-                        <td><input class="form-control massa" style="width:100px" type="number" id="massa${rowIdx}" name="massa[]" step="0.01" value="0"></td>
-                        <td><input class="form-control" style="min-width:80px" type="text" id="nos${rowIdx}" name="nos[]"></td>
-                        <td><input class="form-control" style="min-width:80px" type="text" id="nob${rowIdx}" name="nob[]"></td>
-                        <td><input class="form-control" style="min-width:120px" type="date" id="issued_item${rowIdx}" name="issued_item[]"></td>
-                        <td><input class="form-control" style="min-width:200px" type="text" id="ass_drawing${rowIdx}" name="ass_drawing[]"></td>
-                        <td><input class="form-control" style="min-width:200px" type="text" id="drawing_no${rowIdx}" name="drawing_no[]"></td>
-                        <td><input class="form-control length" style="min-width:100px" type="number" id="length${rowIdx}" name="length[]" step="0.01" value="0"></td>
-                        <td><input class="form-control width" style="min-width:80px" type="number" id="width${rowIdx}" name="width[]" step="0.01" value="0"></td>
-                        <td><input class="form-control thickness" style="min-width:80px" type="number" id="thickness${rowIdx}" name="thickness[]" step="0.01" value="0"></td>
-                        <td><input class="form-control weight" style="width:100px" type="number" id="weight${rowIdx}" name="weight[]" step="0.01" value="0" readonly></td>
-                        <td><button class="btn btn-danger btn-remove remove" type="button">Remove</button></td>
-                    </tr>`;
-
-                $('#soadd-table tbody').append(newRow);
-                addListeners($('#soadd-table tbody tr').last());
-            });
-
-            $('#soadd-table').on('click', '.remove', function () {
-                $(this).closest('tr').remove();
-                rowIdx--;
-            });
-        });
     </script>
+
+    <script>
+    $(document).ready(function () {
+        let rowIdx = 1;
+
+        // Function to get material price based on selected material
+        function getMaterialPrice(material) {
+            const materialPrices = JSON.parse($('#materialPrices').val());
+            const selectedMaterial = materialPrices.find(m => m.nama_barang === material);
+            return selectedMaterial ? parseFloat(selectedMaterial.harga) : 0;
+        }
+
+        function calculateWeight(row) {
+            const shape = $(row).find('.shape').val();
+            const massa = parseFloat($(row).find('.massa').val());
+            const length = parseFloat($(row).find('.length').val());
+            const width = parseFloat($(row).find('.width').val());
+            const thickness = parseFloat($(row).find('.thickness').val());
+            let weight = 0;
+
+            if (shape === 'square') {
+                weight = massa * length * width * thickness;
+            } else if (shape === 'circle') {
+                const radius = width / 2;
+                const volume = Math.PI * radius * radius * thickness;
+                weight = massa * volume;
+            }
+
+            $(row).find('.weight').val(weight.toFixed(2));
+            return weight;
+        }
+
+        function calculateMaterialCost(row) {
+            const weight = calculateWeight(row);
+            const material = $(row).find('.material').val();
+            const materialPrice = getMaterialPrice(material);
+            const materialCost = weight * materialPrice;
+
+            $(row).find('.material-cost').val(materialCost.toFixed(2));
+        }
+
+        function addListeners(row) {
+            $(row).find('.shape, .massa, .length, .width, .thickness, .material').on('input change', function () {
+                calculateMaterialCost(row);
+            });
+        }
+
+        addListeners($('#soadd-table tbody tr'));
+
+        $('#addBtn').click(function () {
+            rowIdx++;
+            const newRow = `
+                <tr>
+                    <td><input class="row-index form-control" style="width:50px" type="text" id="id_item${rowIdx}" name="id_item[]" value="${rowIdx}"></td>
+                    <td><input class="form-control" style="min-width:120px" type="text" id="no_item${rowIdx}" name="no_item[]"></td>
+                    <td><input class="form-control" style="min-width:120px" type="text" id="item${rowIdx}" name="item[]"></td>
+                    <td><input class="form-control" style="min-width:120px" type="date" id="dod_item${rowIdx}" name="dod_item[]"></td>
+                    <td>
+                        <select class="form-control select2 material" style="width:180px" id="material${rowIdx}" name="material[]">
+                            <option selected="selected" required disabled>--Material--</option>
+                            @foreach ($standardParts as $m)
+                                <option value="{{ $m->nama_barang }}">{{ $m->nama_barang }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control select2 shape" style="width:180px" id="shape${rowIdx}" name="shape[]">
+                            <option selected="selected" required disabled>--Shape--</option>
+                            <option value="square">Persegi</option>
+                            <option value="circle">Lingkaran</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control massa" style="width:100px" type="number" id="massa${rowIdx}" name="massa[]" step="0.01" value="0"></td>
+                    <td><input class="form-control" style="min-width:80px" type="text" id="nos${rowIdx}" name="nos[]"></td>
+                    <td><input class="form-control" style="min-width:80px" type="text" id="nob${rowIdx}" name="nob[]"></td>
+                    <td><input class="form-control" style="min-width:120px" type="date" id="issued_item${rowIdx}" name="issued_item[]"></td>
+                    <td><input class="form-control" style="min-width:200px" type="text" id="ass_drawing${rowIdx}" name="ass_drawing[]"></td>
+                    <td><input class="form-control" style="min-width:200px" type="text" id="drawing_no${rowIdx}" name="drawing_no[]"></td>
+                    <td><input class="form-control length" style="min-width:100px" type="number" id="length${rowIdx}" name="length[]" step="0.01" value="0"></td>
+                    <td><input class="form-control width" style="min-width:80px" type="number" id="width${rowIdx}" name="width[]" step="0.01" value="0"></td>
+                    <td><input class="form-control thickness" style="min-width:80px" type="number" id="thickness${rowIdx}" name="thickness[]" step="0.01" value="0"></td>
+                    <td><input class="form-control weight" style="width:100px" type="number" id="weight${rowIdx}" name="weight[]" step="0.01" value="0" readonly></td>
+                    <td><input class="form-control material-cost" style="width:100px" type="number" id="material_cost${rowIdx}" name="material_cost[]" step="0.01" value="0" readonly></td>
+                    <td><button class="btn btn-danger btn-remove remove" type="button">Remove</button></td>
+                </tr>`;
+
+            $('#soadd-table tbody').append(newRow);
+            addListeners($('#soadd-table tbody tr').last());
+        });
+
+        $('#soadd-table').on('click', '.remove', function () {
+            $(this).closest('tr').remove();
+            rowIdx--;
+        });
+    });
+</script>
+
 @endsection

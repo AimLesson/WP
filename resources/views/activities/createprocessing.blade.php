@@ -210,8 +210,7 @@
                                 </div>
                                 <!-- /.Additional Item Information -->
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-primary btn-custom" onclick="addRow()">Add
-                                        Row</button>
+                                    <button type="button" class="btn btn-primary" onclick="addRow()">Add Row</button>
                                 </div>
                                 <table class="table table-bordered" id="itemsTable">
                                     <thead>
@@ -221,41 +220,41 @@
                                             <th>Operation</th>
                                             <th>Estimated Time (Hours)</th>
                                             <th>Date Wanted</th>
-                                            <th>Machine Cost</th>
-                                            <th>Total</th>
+                                            <th>Machine Cost/Hour</th>
+                                            <th>Labor Cost/Hour</th>
+                                            <th>Est.Total Machine Cost</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><input type="number" class="form-control" name="nop[]" required></td>
-                                            <td>
-                                                <select name="machine_name[]" class="form-control select2"
-                                                    style="width: 100%;" required>
-                                                    <option selected="selected" disabled>-- Select Machine --</option>
-                                                    @foreach ($machine as $o)
-                                                        <option value="{{ $o->machine_name }}">{{ $o->machine_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td><input type="text" class="form-control" name="operation[]" required>
-                                            </td>
-                                            <td><input type="number" class="form-control est_time" name="est_time[]"
-                                                    required></td>
-                                            <td><input type="date" class="form-control" name="dod[]" required></td>
-                                            <td><input type="number" class="form-control machine_cost"
-                                                    name="machine_cost[]" required></td>
-                                            <td><input type="number" class="form-control total" name="total[]" required
-                                                    readonly></td>
-                                            <td><button type="button" class="btn btn-danger btn-remove"
-                                                    onclick="removeRow(this)">Remove</button></td>
-                                        </tr>
+                                        <td><input type="number" class="form-control" name="nop[]" required></td>
+                                        <td>
+                                            <select name="machine_name[]" id="machine_name" class="form-control select2"
+                                                style="width: 100%;" required>
+                                                <option selected="selected" disabled>-- Select Machine --</option>
+                                                @foreach ($machine as $o)
+                                                    <option value="{{ $o->machine_name }}">{{ $o->machine_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td><input type="text" class="form-control operation" name="operation[]"
+                                                id="process" readonly required></td>
+                                        <td><input type="number" class="form-control est_time" name="est_time[]"
+                                                required></td>
+                                        <td><input type="date" class="form-control" name="dod[]" required></td>
+                                        <td><input type="number" class="form-control machine_cost" name="machine_cost[]"
+                                                id="mach_cost_per_hour" readonly required></td>
+                                        <td><input type="number" class="form-control labor_cost" name="labor_cost[]"
+                                                id="labor_cost" readonly required></td>
+                                        <td><input type="number" class="form-control total" name="total[]" required
+                                                readonly></td>
+                                        <td><button type="button" class="btn btn-danger"
+                                                onclick="removeRow(this)">Remove</button></td>
                                     </tbody>
                                 </table>
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-success btn-custom">Submit</button>
-                                    <button type="reset" class="btn btn-success btn-reset">Reset</button>
                                 </div>
                             </div>
                         </div>
@@ -266,8 +265,13 @@
         <!-- /.Main content -->
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script>
-                $(document).ready(function() {
+        $(document).ready(function() {
             $('#order_number').on('change', function() {
                 var orderNumber = $(this).val();
 
@@ -325,46 +329,120 @@
             document.getElementById('nos').value = selectedItem ? selectedItem.nos : '';
             document.getElementById('issued_item').value = selectedItem ? selectedItem.issued_item : '';
         });
+    </script>
 
+    <script>
         function addRow() {
-            var table = document.getElementById("itemsTable").getElementsByTagName('tbody')[0];
-            var row = table.insertRow(table.rows.length);
-            row.innerHTML = `
+            const table = document.getElementById('itemsTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+
+            newRow.innerHTML = `
                 <td><input type="number" class="form-control" name="nop[]" required></td>
                 <td>
-                    <select name="machine_name[]" class="form-control select2" style="width: 100%;" required>
+                    <select name="machine_name[]" class="form-control select2" style="width: 100%;" onchange="updateMachineDetails(this)" required>
                         <option selected="selected" disabled>-- Select Machine --</option>
                         @foreach ($machine as $o)
                             <option value="{{ $o->machine_name }}">{{ $o->machine_name }}</option>
                         @endforeach
                     </select>
                 </td>
-                <td><input type="text" class="form-control" name="operation[]" required></td>
-                <td><input type="number" class="form-control est_time" name="est_time[]" required></td>
+                <td><input type="text" class="form-control" name="operation[]" readonly required></td>
+                <td><input type="number" class="form-control" name="est_time[]" required></td>
                 <td><input type="date" class="form-control" name="dod[]" required></td>
-                <td><input type="number" class="form-control machine_cost" name="machine_cost[]" required></td>
+                <td><input type="number" class="form-control machine_cost" name="machine_cost[]" id="mach_cost_per_hour" readonly required></td>
+                <td><input type="number" class="form-control labor_cost" name="labor_cost[]" id="labor_cost" readonly required></td>
                 <td><input type="number" class="form-control total" name="total[]" required readonly></td>
                 <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
             `;
-            $('.select2').select2();
+
+            // Reinitialize the select2 plugin for the new select elements
+            $(newRow).find('.select2').select2();
         }
 
         function removeRow(button) {
-            var row = button.parentNode.parentNode;
-            row.parentNode.removeChild(row);
+            const row = button.closest('tr');
+            row.remove();
+        }
+    </script>
+
+    <script>
+        function updateMachineDetails(selectElement) {
+            var selectedMachineName = selectElement.value;
+
+            fetch(`/machine-details?machine_name=${selectedMachineName}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        const row = selectElement.closest('tr');
+                        row.querySelector('[name="operation[]"]').value = data.process;
+                        let machCost = parseFloat(data.mach_cost_per_hour).toFixed(2);
+                        if (!isNaN(machCost) && machCost <= 9999999999) {
+                            row.querySelector('[name="machine_cost[]"]').value = machCost;
+                            updateTotalPrice();
+                        } else {
+                            console.error('mach_cost_per_hour value is invalid or out of range:', machCost);
+                        }
+                        let LaborCost = parseFloat(data.labor_cost).toFixed(2);
+                        if (!isNaN(LaborCost) && LaborCost <= 9999999999) {
+                            row.querySelector('[name="labor_cost[]"]').value = LaborCost;
+                            updateTotalPrice();
+                        } else {
+                            console.error('labor_cost value is invalid or out of range up:', LaborCost);
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         }
 
-        document.addEventListener('input', function(event) {
-            if (event.target.classList.contains('est_time') || event.target.classList.contains('machine_cost')) {
-                var row = event.target.closest('tr');
-                var estTime = row.querySelector('.est_time').value;
-                var machineCost = row.querySelector('.machine_cost').value;
-                row.querySelector('.total').value = estTime * machineCost;
-            }
-        }, false);
+        document.getElementById('machine_name').addEventListener('change', function() {
+    var selectedMachineName = this.value;
 
-        $(document).ready(function() {
-            $('.select2').select2();
+    fetch(`/machine-details?machine_name=${selectedMachineName}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                document.getElementById('process').value = data.process;
+                
+                // Ensure the mach_cost_per_hour value is valid
+                let machCost = data.mach_cost_per_hour.toString().trim();
+                if (!isNaN(machCost) && machCost <= 9999999999) {
+                    document.getElementById('mach_cost_per_hour').value = machCost;
+                } else {
+                    console.error('mach_cost_per_hour value is invalid or out of range:', machCost);
+                }
+
+                // Ensure the labor_cost value is valid
+                let laborCost = data.labor_cost.toString().trim();
+                if (!isNaN(laborCost) && laborCost <= 9999999999) {
+                    document.getElementById('labor_cost').value = laborCost;
+                } else {
+                    console.error('labor_cost value is invalid or out of range:', laborCost);
+                }
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+
+        function updateTotalPrice() {
+            $('#itemsTable tbody tr').each(function() {
+                var qty = parseFloat($(this).find('[name="est_time[]"]').val());
+                var price = parseFloat($(this).find('[name="machine_cost[]"]').val());
+                var total = (qty * price).toFixed(2);
+                if (!isNaN(total)) {
+                    $(this).find('[name="total[]"]').val(total);
+                } else {
+                    $(this).find('[name="total[]"]').val('');
+                }
+            });
+        }
+
+        $(document).on('input', '[name="est_time[]"], [name="machine_cost[]"]', function() {
+            updateTotalPrice();
         });
     </script>
 @endsection

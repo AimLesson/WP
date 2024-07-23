@@ -53,7 +53,7 @@
                                     <tr>
                                         <td>Sales Order</td>
                                         <td>
-                                            <input type="number" id="inputTotalSales" class="form-control" hidden>
+                                            <input type="number" id="totalSales" class="form-control" hidden>
                                             <span id="displayTotalSales"></span>
                                         </td>
                                     </tr>
@@ -67,19 +67,21 @@
                                     <tr>
                                         <td>Labor Cost</td>
                                         <td>
-                                            <input type="number" id="totalProcessingCost" class="form-control" hidden>
+                                            <input type="number" id="totalLaborCost" class="form-control" hidden>
                                             <span id="displayTotalProcessingCost"></span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Machine Cost</td>
                                         <td>
-                                            <input type="number" id="inputTotalMachineCost" class="form-control">
+                                            <input type="number" id="totalMachineCost" class="form-control" hidden>
+                                            <span id="displayTotalMachineCost"></span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Standard Part Cost</td>
                                         <td>
+                                            <input type="number" id="totalStandardPartCost" class="form-control" hidden>
                                             <span id="displayTotalStandardPartCost"></span>
                                         </td>
                                     </tr>
@@ -93,6 +95,7 @@
                                     <tr>
                                         <td>Overhead Manufacture Cost</td>
                                         <td>
+                                            <input type="number" id="totalOverheadCost" class="form-control" hidden>
                                             <span id="displayTotalOverheadCost"></span>
                                         </td>
                                     </tr>
@@ -100,16 +103,12 @@
                             </table>
                         </div>
 
-                        <button id="calculateButton" class="btn btn-primary mb-4">Calculate</button>
-
                         <div class="table-responsive rounded">
                             <table id="overhead-table" class="table table-bordered table-striped rounded">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th scope="col">Product</th>
-                                        <th scope="col">Description</th>
-                                        <th scope="col">Jumlah</th>
-                                        <th scope="col">Cost</th>
+                                        <th scope="col">Deskripsi Overhead Manufacture</th>
+                                        <th scope="col">Biaya</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -169,102 +168,131 @@
 </div>
 
 <script>
-$(document).ready(function() {
-    $('#order_id').change(function() {
-        var orderId = $(this).val();
-        if (orderId) {
-            $.ajax({
-                url: '{{ route("calculations.calculate") }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    order_id: orderId
-                },
-                success: function(response) {
-                    $('#calculation-result').show();
-
-                    // Set the input values without formatting
-                    $('#inputTotalSales').val(response.inputTotalSales);
-                    $('#totalMaterialCost').val(response.totalMaterialCost);
-                    $('#totalProcessingCost').val(response.totalProcessingCost);
-                    $('#totalSubContractCost').val(response.totalSubContractCost);
-                    $('#totalStandardPartCost').val(response.totalStandardPartCost);
-                    $('#totalOverheadCost').val(response.totalStandardPartCost);
-
-                    // Format numbers for display
-                    $('#displayTotalSales').text(formatNumber(response.inputTotalSales));
-                    $('#displayTotalMaterialCost').text(formatNumber(response.totalMaterialCost));
-                    $('#displayTotalProcessingCost').text(formatNumber(response.totalProcessingCost));
-                    $('#displayTotalSubContractCost').text(formatNumber(response.totalSubContractCost));
-                    $('#displayTotalStandardPartCost').text(formatNumber(response.totalStandardPartCost));
-                    $('#displayTotalOverheadCost').text(formatNumber(response.totalOverheadCost));
-
-
-                    // Update overhead table
-                    var overheadTableBody = $('#overhead-table tbody');
-                    overheadTableBody.empty();
-                    response.overheads.forEach(function(overhead) {
-                        var row = '<tr>' +
-                            '<td>' + overhead.product + '</td>' +
-                            '<td>' + overhead.description + '</td>' +
-                            '<td>' + overhead.jumlah + '</td>' +
-                            '<td>' + overhead.cost + '</td>' +
-                            '</tr>';
-                        overheadTableBody.append(row);
-                    });
-                },
-                error: function(response) {
-                    console.log('Error:', response);
-                }
-            });
-        } else {
-            $('#calculation-result').hide();
-        }
+    $(document).ready(function() {
+        $('#order_id').change(function() {
+            var orderId = $(this).val();
+            if (orderId) {
+                $.ajax({
+                    url: '{{ route("calculations.calculate") }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        order_id: orderId
+                    },
+                    success: function(response) {
+                        if(response && response.totalSales !== undefined) {
+                            $('#calculation-result').show();
+    
+                            // Set the input values without formatting
+                            $('#totalSales').val(response.totalSales);
+                            $('#totalMaterialCost').val(response.totalMaterialCost);
+                            $('#totalLaborCost').val(response.totalLaborCost); // Corrected key
+                            $('#totalMachineCost').val(response.totalMachineCost); // Corrected key
+                            $('#totalStandardPartCost').val(response.totalStandardPartCost);
+                            $('#totalSubContractCost').val(response.totalSubContractCost);
+                            $('#totalOverheadCost').val(response.totalOverheadCost);
+    
+                            // Format numbers for display
+                            $('#displayTotalSales').text(formatNumber(response.totalSales));
+                            $('#displayTotalMaterialCost').text(formatNumber(response.totalMaterialCost));
+                            $('#displayTotalProcessingCost').text(formatNumber(response.totalLaborCost)); // Corrected key
+                            $('#displayTotalMachineCost').text(formatNumber(response.totalMachineCost)); // Corrected key
+                            $('#displayTotalStandardPartCost').text(formatNumber(response.totalStandardPartCost));
+                            $('#displayTotalSubContractCost').text(formatNumber(response.totalSubContractCost));
+                            $('#displayTotalOverheadCost').text(formatNumber(response.totalOverheadCost));
+    
+                            // Debug: Log values for each step of the calculation
+                            console.log("Total Sales: " + response.totalSales);
+                            console.log("Total Material Cost: " + response.totalMaterialCost);
+                            console.log("Total Labor Cost: " + response.totalLaborCost);
+                            console.log("Total Machine Cost: " + response.totalMachineCost);
+                            console.log("Total Standard Part Cost: " + response.totalStandardPartCost);
+                            console.log("Total Sub Contract Cost: " + response.totalSubContractCost);
+                            console.log("Total Overhead Cost: " + response.totalOverheadCost);
+    
+                            // Remove commas and parse values
+                            var totalSales = parseFloat(response.totalSales.replace(/,/g, '')) || 0;
+                            var totalMaterialCost = parseFloat(response.totalMaterialCost.replace(/,/g, '')) || 0;
+                            var totalMachineCost = parseFloat(response.totalMachineCost.replace(/,/g, '')) || 0;
+                            var totalLaborCost = parseFloat(response.totalLaborCost.replace(/,/g, '')) || 0;
+                            var totalSubContractCost = parseFloat(response.totalSubContractCost.replace(/,/g, '')) || 0;
+                            var totalStandardPartCost = parseFloat(response.totalStandardPartCost.replace(/,/g, '')) || 0;
+                            var totalOverheadCost = parseFloat(response.totalOverheadCost.replace(/,/g, '')) || 0;
+    
+                            // Debug: Log parsed values
+                            console.log("Parsed Total Sales: " + totalSales);
+                            console.log("Parsed Total Material Cost: " + totalMaterialCost);
+                            console.log("Parsed Total Labor Cost: " + totalLaborCost);
+                            console.log("Parsed Total Machine Cost: " + totalMachineCost);
+                            console.log("Parsed Total Standard Part Cost: " + totalStandardPartCost);
+                            console.log("Parsed Total Sub Contract Cost: " + totalSubContractCost);
+                            console.log("Parsed Total Overhead Cost: " + totalOverheadCost);
+    
+                            var COGS = totalMaterialCost + totalMachineCost + totalLaborCost + totalSubContractCost + totalStandardPartCost + totalOverheadCost;
+                            var GPM = totalSales - COGS;
+                            var OHorg = totalSales * 0.1;
+                            var NOI = GPM - OHorg;
+                            var BNP = totalSales * 0.02;
+                            var LSP = NOI - BNP;
+    
+                            // Debug: Log calculation steps
+                            console.log("COGS: " + COGS);
+                            console.log("GPM: " + GPM);
+                            console.log("OHorg: " + OHorg);
+                            console.log("NOI: " + NOI);
+                            console.log("BNP: " + BNP);
+                            console.log("LSP: " + LSP);
+    
+                            $('#COGS').text(formatNumber(COGS));
+                            $('#GPM').text(formatNumber(GPM));
+                            $('#OHorg').text(formatNumber(OHorg));
+                            $('#NOI').text(formatNumber(NOI));
+                            $('#BNP').text(formatNumber(BNP));
+                            $('#LSP').text(formatNumber(LSP));
+    
+                            // Update overhead table
+                            var overheadTableBody = $('#overhead-table tbody');
+                            overheadTableBody.empty();
+                            response.overheads.forEach(function(overhead) {
+                                var row = '<tr>' +
+                                    '<td>' + overhead.description + '</td>' +
+                                    '<td>' + formatNumber(overhead.jumlah) + '</td>' +
+                                    '</tr>';
+                                overheadTableBody.append(row);
+                            });
+                        } else {
+                            $('#calculation-result').hide();
+                            alert('No data found for the selected order.');
+                        }
+                    },
+                    error: function(response) {
+                        console.log('Error:', response);
+                        alert('An error occurred while fetching the calculation data.');
+                    }
+                });
+            } else {
+                $('#calculation-result').hide();
+            }
+        });
+    
+        // Initialize DataTable
+        $('#overhead-table').DataTable();
     });
-
-    $('#calculateButton').click(function() {
-        // Ensure all values are numbers
-        var totalSales = parseFloat($('#displayTotalSales').val()) || 0;
-        var totalMaterialCost = parseFloat($('#displayTotalMaterialCost').val()) || 0;
-        var totalProcessingCost = parseFloat($('#displayTotalProcessingCost').val()) || 0;
-        var totalSubContractCost = parseFloat($('#displayTotalSubContractCost').val()) || 0;
-        var totalMachineCost = parseFloat($('#inputTotalMachineCost').val()) || 0;
-        var totalStandardPartCost = parseFloat($('#displayTotalStandardPartCost').val()) || 0;
-        var totalOverheadCost = parseFloat($('#displayTotalOverheadCost').val()) || 0;
-
-        var COGS = totalMaterialCost + totalProcessingCost + totalSubContractCost + totalMachineCost + totalStandardPartCost + totalOverheadCost;
-        var GPM = totalSales - COGS;
-        var OHorg = totalSales * 0.1;
-        var NOI = GPM - OHorg;
-        var BNP = totalSales * 0.02;
-        var LSP = NOI - BNP;
-
-        $('#COGS').text(formatNumber(COGS));
-        $('#GPM').text(formatNumber(GPM));
-        $('#OHorg').text(formatNumber(OHorg));
-        $('#NOI').text(formatNumber(NOI));
-        $('#BNP').text(formatNumber(BNP));
-        $('#LSP').text(formatNumber(LSP));
-    });
-
-    // Initialize DataTable
-    $('#overhead-table').DataTable();
-});
-
-// Helper function to format numbers with commas
-function formatNumber(num) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-</script>
-
-<script>
-    // Function to update the page title
-    function updateTitle(pageTitle) {
-        document.title = pageTitle;
+    
+    // Helper function to format numbers with commas
+    function formatNumber(num) {
+        return num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
-
-    // Call the function when the "Calculation" page is loaded
-    updateTitle('Calculation');
-</script>
-@endsection
+    </script>
+    
+    <script>
+        // Function to update the page title
+        function updateTitle(pageTitle) {
+            document.title = pageTitle;
+        }
+    
+        // Call the function when the "Calculation" page is loaded
+        updateTitle('Calculation');
+    </script>
+    @endsection
+    

@@ -24,6 +24,7 @@ class ProcessingAdd extends Model
         'date_wanted',
         'barcode_id',
         'mach_cost',
+        'labor_cost',
         'nop',
         'processing_id',
         'status'

@@ -27,6 +27,7 @@ class ItemAdd extends Model
         'issued_item',
         'ass_drawing',
         'drawing_no',
+        'material_cost',
     ];
 
     public function item()

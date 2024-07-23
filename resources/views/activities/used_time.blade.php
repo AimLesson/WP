@@ -43,9 +43,7 @@
                                         <label for="no_item" class="form-label">Item</label>
                                         <select name="no_item" id="no_item" class="form-control select2" style="width: 100%;" required>
                                             <option selected="selected" disabled>-- Select Item --</option>
-                                            @foreach ($items as $ia)
-                                                <option value="{{ $ia->no_item }}">{{ $ia->no_item }}</option>
-                                            @endforeach
+                                            <!-- Options will be populated here by JavaScript -->
                                         </select>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-custom">Filter</button>
@@ -134,6 +132,37 @@
         </section>
         <!-- /.content -->
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $('#order_number').on('change', function() {
+    var orderNumber = $(this).val();
+
+    // Clear the items select box
+    $('#no_item').empty();
+    $('#no_item').append('<option selected="selected" disabled>-- Select Item --</option>');
+
+    if (orderNumber) {
+        $.ajax({
+            url: '/items-by-order/' + orderNumber,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                console.log(data); // Debugging line
+                $.each(data, function(key, item) {
+                    $('#no_item').append('<option value="' + item.no_item +
+                        '">' + item.no_item + '</option>');
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error: ' + status + error);
+            }
+        });
+    }
+});
+
+</script>
 
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {

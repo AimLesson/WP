@@ -222,6 +222,35 @@
 <script src="../../plugins/select2/js/select2.full.min.js"></script>
 
 <script>
+    $(document).ready(function() {
+        $('#order_number').on('change', function() {
+            var orderNumber = $(this).val();
+
+            // Clear the items select box
+            $('#no_item').empty();
+            $('#no_item').append('<option selected="selected" disabled>-- Select Item --</option>');
+
+            if (orderNumber) {
+                $.ajax({
+                    url: '/items-by-order/' + orderNumber,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $.each(data, function(key, item) {
+                            $('#no_item').append('<option value="' + item.no_item +
+                                '">' + item.no_item + '</option>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error: ' + status + error);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<script>
     //fungsi menambah baris pada tabel dinamis
     function addRow() {
         var table = document.getElementById("itemsTable").getElementsByTagName('tbody')[0];

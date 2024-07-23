@@ -1030,12 +1030,12 @@ class ActivitiesController extends Controller
     public function createitem()
     {
         $material   = Material::get();
+        $standardParts = StandartpartAPI::where('kode_log', 'M')->get();
         $order = Order::where('order_status', '!=', 'Finished')->get();
-        return view('activities.createitem', compact('material', 'order'));
+        return view('activities.createitem', compact('material', 'order','standardParts'));
     }
     public function storeitem(Request $request)
     {
-
         $request->validate([
             'order_number'  => 'required',
             'so_number'     => 'required',
@@ -1043,9 +1043,10 @@ class ActivitiesController extends Controller
             'company_name'  => 'required',
             'dod'           => 'required',
         ]);
-
+    
         DB::beginTransaction();
         try {
+            Log::info('Starting to save item');
             $item = new Item;
             $item->order_number = $request->order_number;
             $item->so_number = $request->so_number;
@@ -1053,10 +1054,45 @@ class ActivitiesController extends Controller
             $item->company_name = $request->company_name;
             $item->dod = $request->dod;
             $item->save();
+    
+            Log::info('Item saved successfully', ['item' => $item]);
+    
             foreach ($request->item as $key => $items) {
+                // Logging to check the existence of array elements
+                Log::info('Processing item index', ['key' => $key]);
+                Log::info('Request data', [
+                    'dod_item' => $request->dod_item,
+                    'id_item' => $request->id_item,
+                    'no_item' => $request->no_item,
+                    'material' => $request->material,
+                    'weight' => $request->weight,
+                    'length' => $request->length,
+                    'width' => $request->width,
+                    'thickness' => $request->thickness,
+                    'ass_drawing' => $request->ass_drawing,
+                    'drawing_no' => $request->drawing_no,
+                    'nos' => $request->nos,
+                    'nob' => $request->nob,
+                    'issued_item' => $request->issued_item,
+                    'material_cost' => $request->material_cost,
+                ]);
+    
+                if (!isset($request->dod_item[$key]) || !isset($request->id_item[$key]) || !isset($request->no_item[$key]) ||
+                    !isset($request->material[$key]) || !isset($request->weight[$key]) || !isset($request->length[$key]) ||
+                    !isset($request->width[$key]) || !isset($request->thickness[$key]) || !isset($request->ass_drawing[$key]) ||
+                    !isset($request->drawing_no[$key]) || !isset($request->nos[$key]) || !isset($request->nob[$key]) ||
+                    !isset($request->issued_item[$key])) {
+                    throw new \Exception("Missing array index for key $key");
+                }
+    
+                if (!isset($request->material_cost[$key])) {
+                    Log::error('Material cost is missing for key', ['key' => $key]);
+                    throw new \Exception("Material cost is missing for key $key");
+                }
+    
                 $itemAdd = [
                     'item'        => $items,
-                    'dod_item'     => $request->dod_item[$key],
+                    'dod_item'    => $request->dod_item[$key],
                     'id_item'     => $request->id_item[$key],
                     'no_item'     => $request->no_item[$key],
                     'order_number' => $item->order_number,
@@ -1070,17 +1106,24 @@ class ActivitiesController extends Controller
                     'nos'         => $request->nos[$key],
                     'nob'         => $request->nob[$key],
                     'issued_item' => $request->issued_item[$key],
+                    'material_cost' => $request->material_cost[$key],
                 ];
+    
+                Log::info('Saving item addition', ['itemAdd' => $itemAdd]);
                 ItemAdd::create($itemAdd);
             }
-
+    
             DB::commit();
+            Log::info('Transaction committed successfully');
             return redirect()->route('activities.item')->with('success', 'Item Data Saved Successfully');
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Failed to save item', ['exception' => $e]);
             return redirect()->route('activities.createitem')->with('error', 'Failed to Save Item');
         }
     }
+    
+    
     public function edititem($order_number)
     {
         $order = Order::where('order_status', '!=', 'Finished')->get();
@@ -1219,6 +1262,7 @@ class ActivitiesController extends Controller
     
         return view('activities.processing', compact('processing'));
     }
+
     
     public function createprocessing()
     {
@@ -1230,16 +1274,56 @@ class ActivitiesController extends Controller
         return view('activities.createprocessing', compact('orders', 'material', 'machine', 'items'));
     }
 
+    public function getMachineCost($machineName)
+    {
+        $machine = Machine::where('machine_name', $machineName)->first();
+        if ($machine) {
+            $cost = $machine->mach_cost_per_hour;
+            Log::debug('Machine cost for ' . $machineName . ': ' . $cost);
+            return response()->json(['cost' => $cost]);
+        }
+        Log::debug('Machine not found for ' . $machineName);
+        return response()->json(['cost' => 0]);
+    }
+
+    public function getMachineOperation($machineName)
+    {
+        $machine = Machine::where('machine_name', $machineName)->first();
+        if ($machine) {
+            $pro = $machine->process;
+            Log::debug('Machine Operation for ' . $machineName . ': ' . $pro);
+            return response()->json(['pro' => $pro]);
+        }
+        Log::debug('Machine not found for ' . $machineName);
+        return response()->json(['pro' => 'operation not found']);
+    }
+
     public function getItemsByOrderNumber($orderNumber)
         {
             $items = ItemAdd::where('order_number', $orderNumber)->get();
             return response()->json($items);
         }
 
+        public function getMachineDetails(Request $request)
+    {
+        $machineName = $request->input('machine_name');
+        $machine = Machine::where('machine_name', $machineName)->first();
+
+        if ($machine) {
+            return response()->json([
+                'process' => $machine->process,
+                'mach_cost_per_hour' => $machine->mach_cost_per_hour,
+                'labor_cost' => $machine->labor_cost,
+            ]);
+        } else {
+            return response()->json(['error' => 'Machine not found'], 404);
+        }
+    }
+
     public function storeprocessing(Request $request)
     {
         Log::info('StoreProcess method called', ['request' => $request->all()]);
-
+    
         // Validation rules
         $validator = Validator::make($request->all(), [
             'order_number' => 'required',
@@ -1250,16 +1334,54 @@ class ActivitiesController extends Controller
             'est_time.*' => 'required|numeric|min:0',
             'dod.*' => 'required|date',
             'machine_cost.*' => 'required|numeric|min:0',
+            'labor_cost.*' => 'required|numeric|min:0',
             'total.*' => 'required|numeric|min:0',
         ]);
-
+    
+        Log::info('Validation rules applied');
+    
         // Check if validation fails
         if ($validator->fails()) {
+            Log::warning('Validation failed', ['errors' => $validator->errors()]);
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
+    
+        Log::info('Validation passed');
+    
+        // Ensure all arrays have the same length
+        $arrays = [
+            'nop' => $request->nop,
+            'machine_name' => $request->machine_name,
+            'operation' => $request->operation,
+            'est_time' => $request->est_time,
+            'dod' => $request->dod,
+            'machine_cost' => $request->machine_cost,
+            'labor_cost' => $request->labor_cost,
+            'total' => $request->total
+        ];
+        
+        $arrayLengths = array_map('count', $arrays);
+        if (count(array_unique($arrayLengths)) > 1) {
+            Log::error('Array lengths do not match', ['arrayLengths' => $arrayLengths]);
+            return redirect()->back()->withErrors('Array lengths do not match. Please ensure all input fields are correctly filled out.')->withInput();
+        }
+    
         // Iterate over each set of item details and create process entries
         foreach ($request->nop as $index => $nop) {
+            Log::info('Processing item', [
+                'index' => $index,
+                'order_number' => $request->order_number,
+                'item_number' => $request->no_item,
+                'nop' => $nop,
+                'machine' => $request->machine_name[$index],
+                'operation' => $request->operation[$index],
+                'estimated_time' => $request->est_time[$index],
+                'date_wanted' => $request->dod[$index],
+                'mach_cost' => $request->machine_cost[$index],
+                'labor_cost' => $request->labor_cost[$index],
+                'total' => $request->total[$index],
+            ]);
+    
             Processingadd::create([
                 'order_number' => $request->order_number,
                 'item_number' => $request->no_item,
@@ -1269,13 +1391,19 @@ class ActivitiesController extends Controller
                 'estimated_time' => $request->est_time[$index],
                 'date_wanted' => $request->dod[$index],
                 'mach_cost' => $request->machine_cost[$index],
+                'labor_cost' => $request->labor_cost[$index],
                 'total' => $request->total[$index],
             ]);
+    
+            Log::info('Processing item saved', ['index' => $index]);
         }
-
+    
         // Redirect with success message
+        Log::info('All items processed successfully');
         return redirect()->route('activities.processing')->with('success', 'Process(es) added successfully.');
     }
+    
+        
     public function editprocessing($id)
     {
         $processing = Processingadd::find($id);
@@ -1289,7 +1417,7 @@ class ActivitiesController extends Controller
         $items = ItemAdd::get();
         $item = ItemAdd::get();
 
-        return view('activities.editprocessing', compact('processing', 'orders', 'material', 'machine', 'items', 'item'));
+        return view('activities.editprocessing', compact('processing', 'order', 'material', 'machine', 'items', 'item'));
     }
     public function updateprocessing(Request $request, $id)
     {
@@ -1351,21 +1479,7 @@ class ActivitiesController extends Controller
         // Redirect with success message
         return redirect()->route('activities.processing')->with('success', 'Processing entry deleted successfully.');
     }
-    public function getMachineCost(Request $request)
-    {
-        $machineName = $request->input('machine_name');
-        $machine = Machine::where('machine_name', $machineName)->first();
 
-        if ($machine) {
-            return response()->json([
-                'machine_cost' => $machine->mach_cost_per_hour,
-            ]);
-        }
-
-        return response()->json([
-            'error' => 'Machine not found',
-        ], 404);
-    }
     public function getItemAddByOrderNo(Request $request)
     {
         $orderNumber = $request->input('order_number');
@@ -1424,8 +1538,9 @@ class ActivitiesController extends Controller
 
     public function storestandartpart(Request $request)
     {
+        // Log the initial request data
         Log::info('StoreStandartPart method called', ['request' => $request->all()]);
-
+    
         // Validation rules
         $validator = Validator::make($request->all(), [
             'order_number' => 'required',
@@ -1439,18 +1554,23 @@ class ActivitiesController extends Controller
             'info.*' => 'nullable|string|max:255',
             'item.*' => 'nullable|string|max:255',
         ]);
-
-        // Check if validation fails
+    
+        // Log validation result
         if ($validator->fails()) {
+            Log::error('Validation failed', ['errors' => $validator->errors()->all()]);
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
-        // Iterate over each set of item details and create sub_contract entries
+    
+        // Log successful validation
+        Log::info('Validation passed');
+    
+        // Iterate over each set of item details and create standart_part entries
         foreach ($request->date as $index => $date) {
-            standart_part::create([
+            // Log each iteration
+            Log::info('Creating standart_part entry', [
                 'order_number' => $request->order_number,
                 'item_no' => $request->no_item,
-                'item_name' => $request->item,
+                'item_name' => $request->item[$index] ?? null,
                 'date' => $date,
                 'part_name' => $request->part_name[$index],
                 'qty' => $request->qty[$index],
@@ -1459,11 +1579,48 @@ class ActivitiesController extends Controller
                 'total' => $request->total_price[$index],
                 'info' => $request->info[$index] ?? null,
             ]);
+    
+            try {
+                standart_part::create([
+                    'order_number' => $request->order_number,
+                    'item_no' => $request->no_item,
+                    'item_name' => $request->item[$index] ?? null,
+                    'date' => $date,
+                    'part_name' => $request->part_name[$index],
+                    'qty' => $request->qty[$index],
+                    'unit' => $request->unit[$index],
+                    'price' => $request->price_unit[$index],
+                    'total' => $request->total_price[$index],
+                    'info' => $request->info[$index] ?? null,
+                ]);
+            } catch (\Exception $e) {
+                // Log any exceptions that occur during the creation of entries
+                Log::error('Error creating standart_part entry', [
+                    'exception' => $e->getMessage(),
+                    'data' => [
+                        'order_number' => $request->order_number,
+                        'item_no' => $request->no_item,
+                        'item_name' => $request->item[$index] ?? null,
+                        'date' => $date,
+                        'part_name' => $request->part_name[$index],
+                        'qty' => $request->qty[$index],
+                        'unit' => $request->unit[$index],
+                        'price' => $request->price_unit[$index],
+                        'total' => $request->total_price[$index],
+                        'info' => $request->info[$index] ?? null,
+                    ]
+                ]);
+                return redirect()->back()->with('error', 'An error occurred while saving the data. Please try again.');
+            }
         }
-
+    
+        // Log successful insertion of all entries
+        Log::info('All standart_part entries added successfully');
+    
         // Redirect with success message
         return redirect()->route('activities.createstandartpart')->with('success', 'Standart Part(s) added successfully.');
     }
+    
 
     public function editstandartpart($id)
     {
@@ -1901,8 +2058,15 @@ class ActivitiesController extends Controller
     
     public function updateStatus(Request $request, $id)
     {
+        Log::info('Update status method called.', ['processing_add_id' => $id, 'action' => $request->action]);
+        
         $processingAdd = ProcessingAdd::find($id);
         $user = auth()->user();
+    
+        if (!$processingAdd) {
+            Log::error('ProcessingAdd not found.', ['processing_add_id' => $id]);
+            return redirect()->route('activities.used_time')->withErrors(['error' => 'ProcessingAdd not found.']);
+        }
     
         if ($request->action == 'start') {
             if ($processingAdd->status == 'pending') {
@@ -1922,21 +2086,28 @@ class ActivitiesController extends Controller
             $processingAdd->status = 'finished';
             $processingAdd->finished_at = now();
             $processingAdd->duration += now()->diffInSeconds($processingAdd->started_at);
+        } else {
+            Log::error('Invalid action provided.', ['action' => $request->action]);
+            return redirect()->route('activities.used_time')->withErrors(['error' => 'Invalid action.']);
         }
     
         $processingAdd->user_name = $user->name; // Storing the user's name
         $processingAdd->save();
+        Log::info('ProcessingAdd status updated.', ['processing_add_id' => $processingAdd->id, 'status' => $processingAdd->status, 'duration' => $processingAdd->duration]);
     
         // Update the order status based on the new processing statuses
-        $processingAdd->order->updateOrderStatus();
+        try {
+            $processingAdd->order->updateOrderStatus();
+            Log::info('Order status updated.', ['order_id' => $processingAdd->order->id]);
+        } catch (\Exception $e) {
+            Log::error('Error updating order status.', ['order_id' => $processingAdd->order->id, 'error' => $e->getMessage()]);
+            return redirect()->route('activities.used_time')->withErrors(['error' => 'Error updating order status.']);
+        }
     
         return redirect()->route('activities.used_time');
     }
     
     
-    
-    
-
     public function getCustomerData($companyName)
     {
         // Implement your logic to fetch customer data based on company name
@@ -1985,53 +2156,125 @@ class ActivitiesController extends Controller
     }    
 
 
-
     public function calculation()
     {
         $orders = Order::where('order_status', '!=', 'Finished')->pluck('order_number', 'id'); // Fetch orders with condition
         return view('activities.calculation', compact('orders'));
     }
     
+    private function convertDurationToHours($duration)
+    {
+        if (is_int($duration)) {
+            // Convert seconds to hours
+            return $duration / 3600;
+        } elseif (is_string($duration) && strpos($duration, ':') !== false) {
+            $timeParts = explode(':', $duration);
+            if (count($timeParts) !== 3) {
+                Log::error('Invalid duration format.', ['duration' => $duration]);
+                return 0; // Or handle the error appropriately
+            }
+            list($hours, $minutes, $seconds) = $timeParts;
+            return $hours + ($minutes / 60) + ($seconds / 3600);
+        } else {
+            Log::error('Invalid duration format.', ['duration' => $duration]);
+            return 0;
+        }
+    }
+    
+    
+    
 
     public function calculate(Request $request)
     {
+        Log::info('Calculate method called.');
+    
         $validatedData = $request->validate([
-            'order_id' => 'required|exists:order,id', // Ensure the table name matches your database schema
+            'order_id' => 'required|exists:order,id',
         ]);
     
-        // Fetch the Order model along with its related models
-        $order = Order::with(['items', 'processings', 'subContracts', 'salesOrder', 'standartParts', 'overheads'])
-            ->findOrFail($validatedData['order_id']);
+        Log::info('Request validated.', ['order_id' => $validatedData['order_id']]);
     
-        // Get the total amount from the related SalesOrder
-        $totalSales = $order->salesOrder->total_amount ?? 0; // Use 0 if salesOrder or total_amount is null
+        // Fetch the Order model along with its related models
+        try {
+            $order = Order::with(['items', 'processings', 'subContracts', 'salesOrder', 'standartParts', 'overheads'])
+                ->findOrFail($validatedData['order_id']);
+            Log::info('Order fetched successfully.', ['order_id' => $validatedData['order_id']]);
+        } catch (\Exception $e) {
+            Log::error('Order fetch failed.', ['order_id' => $validatedData['order_id'], 'error' => $e->getMessage()]);
+            return response()->json(['error' => 'Order not found'], 404);
+        }
     
         // Calculate totals based on related models
-        $totalMaterialCost = $order->items->sum('material_cost');
-        $totalProcessingCost = $order->processings->sum('mach_cost');
-        $totalSubContractCost = $order->subContracts->sum('total_price');
-        $totalStandardPartCost = $order->standartParts->sum('total');
-        $totalOverheadCost = $order->overheads->sum('jumlah');
+        try {
+            $totalSales = $order->salesOrder->total_amount ?? 0; // Use 0 if salesOrder or total_amount is null
+            Log::info('Total sales calculated.', ['total_sales' => $totalSales]);
+
+            $totalMaterialCost = $order->items->sum('material_cost');
+    
+            $totalMachineCost = $order->processings->sum(function ($processing) {
+                $machineCost = $processing->mach_cost * $this->convertDurationToHours($processing->duration);
+                Log::info('Machine cost calculated.', ['processing_id' => $processing->id, 'machine_cost' => $machineCost]);
+                return $machineCost;
+            });
+    
+            $totalLaborCost = $order->processings->sum(function ($processing) {
+                $laborCost = $processing->labor_cost * $this->convertDurationToHours($processing->duration);
+                Log::info('Labor cost calculated.', ['processing_id' => $processing->id, 'labor_cost' => $laborCost]);
+                return $laborCost;
+            });
+    
+            $totalSubContractCost = $order->subContracts->sum('total_price');
+            $totalStandardPartCost = $order->standartParts->sum('total');
+            $totalOverheadCost = $order->overheads->sum('jumlah');
+    
+            Log::info('Costs calculated.', [
+                'total_material_cost' => $totalMaterialCost,
+                'total_machine_cost' => $totalMachineCost,
+                'total_labor_cost' => $totalLaborCost,
+                'total_sub_contract_cost' => $totalSubContractCost,
+                'total_standard_part_cost' => $totalStandardPartCost,
+                'total_overhead_cost' => $totalOverheadCost,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error calculating costs.', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Error calculating costs'], 500);
+        }
     
         // Fetch overhead data based on the selected order ID
-        $overheads = $order->overheads->map(function($overhead) {
-            return $overhead->only(['description', 'keterangan', 'jumlah']);
-        });
+        try {
+            $overheads = $order->overheads->map(function($overhead) {
+                return $overhead->only(['description', 'keterangan', 'jumlah']);
+            });
+    
+            Log::info('Overhead data fetched.', ['overheads' => $overheads]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching overhead data.', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Error fetching overhead data'], 500);
+        }
     
         return response()->json([
-            'inputTotalSales' => number_format((float)$totalSales, 2),
-            'totalMaterialCost' => number_format((float)$totalMaterialCost, 2),
-            'totalProcessingCost' => number_format((float)$totalProcessingCost, 2),
-            'totalStandardPartCost' => number_format((float)$totalStandardPartCost, 2),
-            'totalSubContractCost' => number_format((float)$totalSubContractCost, 2),
-            'totalOverheadCost' => number_format((float)$totalOverheadCost, 2),
+            'totalSales' => $this->formatNumber($totalSales),
+            'totalMaterialCost' => $this->formatNumber($totalMaterialCost),
+            'totalMachineCost' => $this->formatNumber($totalMachineCost),
+            'totalLaborCost' => $this->formatNumber($totalLaborCost),
+            'totalStandardPartCost' => $this->formatNumber($totalStandardPartCost),
+            'totalSubContractCost' => $this->formatNumber($totalSubContractCost),
+            'totalOverheadCost' => $this->formatNumber($totalOverheadCost),
             'overheads' => $overheads
         ]);
     }
     
+    private function formatNumber($number)
+    {
+        return number_format((float)$number, 2);
+    }
     
-      
-
+    
+    
+    
+    
+    
+    
     public function delivery_orders_wh()
     {
         return view('activities.deliveryorderstowh');

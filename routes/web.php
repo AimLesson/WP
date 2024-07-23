@@ -307,7 +307,10 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('activities/processing/view/{order_number}', [ActivitiesController::class, 'viewprocessing']);
         Route::get('activities/processing/get-Order-data/{OrderNo}', [ActivitiesController::class, 'getOrderData']);
         Route::get('activities/processing/get-itemadd-by-orderno', [ActivitiesController::class, 'getItemAddByOrderNo'])->name('get.itemadd.byorderno');
-        Route::get('/getMachineCost', [ActivitiesController::class, 'getMachineCost']);
+        Route::get('/machine-cost/{machineName}', [ActivitiesController::class, 'getMachineCost']);
+        Route::get('/machine-operation/{machineName}', [ActivitiesController::class, 'getMachineOperation']);
+        Route::get('/machine-details', [ActivitiesController::class, 'getMachineDetails'])->name('machine.details');
+
 
         Route::get('/activities/standart_part', [ActivitiesController::class, 'standart_part'])->name('activities.standart_part');
         Route::get('/activities/overhead_manufacture', [ActivitiesController::class, 'overhead_manufacture'])->name('activities.overhead_manufacture');

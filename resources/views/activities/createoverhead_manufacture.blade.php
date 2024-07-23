@@ -109,7 +109,7 @@
                                         <th>No</th>
                                         <th>Refrensi</th>
                                         <th>Deskripsi</th>
-                                        <th>Jumlah</th>
+                                        <th>Biaya</th>
                                         <th>Keterangan</th>
                                         <th>Info</th>
                                         <th>Action</th>
@@ -200,12 +200,20 @@
             cell5.appendChild(element5);
 
             var cell6 = row.insertCell(5);
+            var element6 = document.createElement("input");
+            element6.type = "text";
+            element6.name = "keterangan[]";
+            element6.classList.add("form-control");
+            element6.required = true;
+            cell6.appendChild(element6);
+
+            var cell7 = row.insertCell(6);
             var element7 = document.createElement("textarea");
             element7.name = "info[]";
             element7.classList.add("form-control");
-            cell6.appendChild(element7);
+            cell7.appendChild(element7);
 
-            var cell7 = row.insertCell(7);
+            var cell8 = row.insertCell(7);
             var removeButton = document.createElement("button");
             removeButton.type = "button";
             removeButton.classList.add("btn", "btn-danger");
@@ -213,7 +221,7 @@
             removeButton.onclick = function() {
                 removeRow(this);
             };
-            cell7.appendChild(removeButton);
+            cell8.appendChild(removeButton);
         }
 
         function removeRow(button) {
