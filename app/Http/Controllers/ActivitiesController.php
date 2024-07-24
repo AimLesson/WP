@@ -19,6 +19,7 @@ use App\Models\OrderUnit;
 use App\Models\Quotation;
 use App\Models\Department;
 use App\Models\processing;
+use App\Models\WIP;
 use App\Models\SalesOrder;
 use App\Models\ProductType;
 use App\Models\QuotationAdd;
@@ -2028,30 +2029,46 @@ class ActivitiesController extends Controller
     }
     public function used_time(Request $request)
     {
+        // Log the incoming request parameters
+        Log::info('used_time request received', [
+            'order_number' => $request->order_number,
+            'item_number' => $request->item_number,
+        ]);
+    
         // Get orders with order_status not 'Finished'
         $orders = Order::where('order_status', '!=', 'Finished')->get();
+        Log::info('Orders retrieved', ['orders' => json_encode($orders)]);
+    
         $orderNumbers = $orders->pluck('order_number');
-        
+        Log::info('Order numbers', ['orderNumbers' => $orderNumbers->toArray()]);
+    
         // Get items where order_number is in the filtered orders
         $items = ItemAdd::whereIn('order_number', $orderNumbers)->get();
-        
+        Log::info('Items retrieved', ['items' => json_encode($items)]);
+    
         // Start the query for ProcessingAdd
         $query = ProcessingAdd::whereIn('order_number', $orderNumbers);
-        
+    
         // Filter by order_number if provided
         if ($request->filled('order_number')) {
             $query->where('order_number', $request->order_number);
+            Log::info('Filtering by order number', ['order_number' => $request->order_number]);
         }
-        
+    
         // Filter by item_number if provided and ensure item_number is in the filtered orders
         if ($request->filled('item_number')) {
             $query->where('item_number', $request->item_number);
+            Log::info('Filtering by item number', ['item_number' => $request->item_number]);
+        } else {
+            Log::info('No item number provided for filtering');
         }
-        
+    
         // Get the filtered used time data
         $usedtime = $query->get();
-        
+        Log::info('Used time data retrieved', ['usedtime' => json_encode($usedtime)]);
+    
         $user = auth()->user();
+        Log::info('Authenticated user', ['user' => json_encode($user)]);
     
         return view('activities.used_time', compact('usedtime', 'orders', 'items', 'user'));
     }
@@ -2194,7 +2211,6 @@ class ActivitiesController extends Controller
     
         Log::info('Request validated.', ['order_id' => $validatedData['order_id']]);
     
-        // Fetch the Order model along with its related models
         try {
             $order = Order::with(['items', 'processings', 'subContracts', 'salesOrder', 'standartParts', 'overheads'])
                 ->findOrFail($validatedData['order_id']);
@@ -2204,25 +2220,21 @@ class ActivitiesController extends Controller
             return response()->json(['error' => 'Order not found'], 404);
         }
     
-        // Calculate totals based on related models
         try {
-            $totalSales = $order->salesOrder->total_amount ?? 0; // Use 0 if salesOrder or total_amount is null
+            $totalSales = $order->salesOrder->total_amount ?? 0;
             Log::info('Total sales calculated.', ['total_sales' => $totalSales]);
-
-            $totalMaterialCost = $order->items->sum('material_cost');
     
+            $totalMaterialCost = $order->items->sum('material_cost');
             $totalMachineCost = $order->processings->sum(function ($processing) {
                 $machineCost = $processing->mach_cost * $this->convertDurationToHours($processing->duration);
                 Log::info('Machine cost calculated.', ['processing_id' => $processing->id, 'machine_cost' => $machineCost]);
                 return $machineCost;
             });
-    
             $totalLaborCost = $order->processings->sum(function ($processing) {
                 $laborCost = $processing->labor_cost * $this->convertDurationToHours($processing->duration);
                 Log::info('Labor cost calculated.', ['processing_id' => $processing->id, 'labor_cost' => $laborCost]);
                 return $laborCost;
             });
-    
             $totalSubContractCost = $order->subContracts->sum('total_price');
             $totalStandardPartCost = $order->standartParts->sum('total');
             $totalOverheadCost = $order->overheads->sum('jumlah');
@@ -2240,16 +2252,51 @@ class ActivitiesController extends Controller
             return response()->json(['error' => 'Error calculating costs'], 500);
         }
     
-        // Fetch overhead data based on the selected order ID
         try {
             $overheads = $order->overheads->map(function($overhead) {
                 return $overhead->only(['description', 'keterangan', 'jumlah']);
             });
-    
             Log::info('Overhead data fetched.', ['overheads' => $overheads]);
         } catch (\Exception $e) {
             Log::error('Error fetching overhead data.', ['error' => $e->getMessage()]);
             return response()->json(['error' => 'Error fetching overhead data'], 500);
+        }
+    
+        // Calculate additional values
+        $COGS = $totalMaterialCost + $totalMachineCost + $totalLaborCost + $totalSubContractCost + $totalStandardPartCost + $totalOverheadCost;
+        $GPM = $totalSales - $COGS;
+        $OHorg = $totalSales * 0.1;
+        $NOI = $GPM - $OHorg;
+        $BNP = $totalSales * 0.02;
+        $LSP = $NOI - $BNP;
+    
+        try {
+            $wipData = [
+                'order_id' => $order->id,
+                'order_number' => $order->order_number, // Assuming order_number is a field in the Order model
+                'total_sales' => $totalSales,
+                'total_material_cost' => $totalMaterialCost,
+                'total_labor_cost' => $totalLaborCost,
+                'total_machine_cost' => $totalMachineCost,
+                'total_standard_part_cost' => $totalStandardPartCost,
+                'total_sub_contract_cost' => $totalSubContractCost,
+                'total_overhead_cost' => $totalOverheadCost,
+                'cogs' => $COGS,
+                'gpm' => $GPM,
+                'oh_org' => $OHorg,
+                'noi' => $NOI,
+                'bnp' => $BNP,
+                'lsp' => $LSP
+            ];
+    
+            WIP::updateOrCreate(
+                ['order_id' => $order->id],
+                $wipData
+            );
+            Log::info('WIP data stored/updated successfully.', $wipData);
+        } catch (\Exception $e) {
+            Log::error('Error storing/updating WIP data.', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Error storing/updating WIP data'], 500);
         }
     
         return response()->json([
@@ -2264,9 +2311,42 @@ class ActivitiesController extends Controller
         ]);
     }
     
+
+    
+    
     private function formatNumber($number)
     {
         return number_format((float)$number, 2);
+    }
+
+    public function storecalculate(Request $request)
+    {
+        $orderId = $request->order_id;
+
+        // Assuming you have a method to get the calculation data for the order
+        $calculationData = $this->getCalculationData($orderId);
+
+        // Store or update the calculation data in the WIP model
+        $wip = WIP::updateOrCreate(
+            ['order_id' => $orderId],
+            [
+                'total_sales' => $calculationData['totalSales'],
+                'total_material_cost' => $calculationData['totalMaterialCost'],
+                'total_labor_cost' => $calculationData['totalLaborCost'],
+                'total_machine_cost' => $calculationData['totalMachineCost'],
+                'total_standard_part_cost' => $calculationData['totalStandardPartCost'],
+                'total_sub_contract_cost' => $calculationData['totalSubContractCost'],
+                'total_overhead_cost' => $calculationData['totalOverheadCost'],
+                'cogs' => $calculationData['COGS'],
+                'gpm' => $calculationData['GPM'],
+                'oh_org' => $calculationData['OHorg'],
+                'noi' => $calculationData['NOI'],
+                'bnp' => $calculationData['BNP'],
+                'lsp' => $calculationData['LSP']
+            ]
+        );
+
+        return response()->json($calculationData);
     }
     
     

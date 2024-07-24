@@ -39,22 +39,26 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Order No.</th>
-                                            <th>Customer</th>
-                                            <th>Order Date</th>
-                                            <th>No. SO</th>
-                                            <th>D O D</th>
-                                            <th>Product</th>
-                                            <th>Qty</th>
-                                            <th>Machine Cost</th>
+                                            <th>Total Sales Order</th>
+                                            <th>Total Material Cost</th>
+                                            <th>Total Labor Cost</th>
+                                            <th>Total Machine Cost</th>
+                                            <th>Total Standart Part Cost</th>
+                                            <th>Total Sub Contract Cost</th>
+                                            <th>Total Overhead Cost</th>
                                             <th>COGS</th>
-                                            <th>Finish Date</th>
-                                            <th>Labor Cost</th>
+                                            <th>Gross Profit Margin</th>
+                                            <th>OH Organisasi</th>
+                                            <th>Net Operating Income</th>
+                                            <th>Biaya Non Operational</th>
+                                            <th>Laba Sebelum Pajak</th>
+                                            <th>Last Update</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php
                                             // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $order = \App\Models\Standartpart_sheet::get();
+                                            $order = \App\Models\WIP::get();
 
                                             // perlu ganti model database
                                         @endphp
@@ -62,16 +66,20 @@
                                             <tr>
                                                 <td>{{ $m->id }}</td>
                                                 <td>{{ $m->order_number }}</td>
-                                                <td>{{ $m->customer }}</td>
-                                                <td>{{ $m->product }}</td>
-                                                <td>{{ $m->so_no }}</td>
-                                                <td>{{ $m->dod }}</td>
-                                                <td>{{ $m->no_product }}</td>
-                                                <td>{{ $m->item_no }}</td>
-                                                <td>{{ $m->item_name }}</td>
-                                                <td>{{ $m->part_no }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->qty }}</td>
+                                                <td>{{ $m->total_sales }}</td>
+                                                <td>{{ $m->total_material_cost }}</td>
+                                                <td>{{ $m->total_labor_cost }}</td>
+                                                <td>{{ $m->total_machine_cost }}</td>
+                                                <td>{{ $m->total_standard_part_cost }}</td>
+                                                <td>{{ $m->total_sub_contract_cost }}</td>
+                                                <td>{{ $m->total_overhead_cost }}</td>
+                                                <td>{{ $m->cogs }}</td>
+                                                <td>{{ $m->gpm }}</td>
+                                                <td>{{ $m->oh_org }}</td>
+                                                <td>{{ $m->noi }}</td>
+                                                <td>{{ $m->bnp }}</td>
+                                                <td>{{ $m->lsp }}</td>
+                                                <td>{{ $m->updated_at }}</td>
                                                 {{-- <td>{{$m->total_mach}}</td> --}}
                                             </tr>
                                             

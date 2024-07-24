@@ -2,31 +2,27 @@
 
 @section('content')
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <h1 class="m-0">Used Time</h1>
-                    </div><!-- /.col -->
+                    </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('activities') }}">Activities</a></li>
                             <li class="breadcrumb-item active">Used Time</li>
                         </ol>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- /.content-header -->
 
-        <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <!-- Filter Form -->
                         <div class="card">
                             <div class="card-body">
                                 <form action="{{ route('activities.used_time') }}" method="GET">
@@ -40,10 +36,9 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="no_item" class="form-label">Item</label>
-                                        <select name="no_item" id="no_item" class="form-control select2" style="width: 100%;" required>
+                                        <label for="item_number" class="form-label">Item</label>
+                                        <select name="item_number" id="item_number" class="form-control select2" style="width: 100%;" required>
                                             <option selected="selected" disabled>-- Select Item --</option>
-                                            <!-- Options will be populated here by JavaScript -->
                                         </select>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-custom">Filter</button>
@@ -55,7 +50,6 @@
                             <div class="card-header">
                                 <h3 class="card-title">Used Time Data</h3>
                             </div>
-                            <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
@@ -63,7 +57,7 @@
                                             <th>Order Number</th>
                                             <th>Item Number</th>
                                             <th>Date Wanted</th>
-                                            <th>Operator</th> <!-- Add this line -->
+                                            <th>Operator</th>
                                             <th>Machine</th>
                                             <th>Operation</th>
                                             <th>Estimated Time</th>
@@ -81,10 +75,10 @@
                                                 <td>{{ $ut->order_number }}</td>
                                                 <td>{{ $ut->item_number }}</td>
                                                 <td>{{ $ut->date_wanted }}</td>
-                                                <td>{{ $ut->user_name }}</td> <!-- Display the user name -->
+                                                <td>{{ $ut->user_name }}</td>
                                                 <td>{{ $ut->machine }}</td>
                                                 <td>{{ $ut->operation }}</td>
-                                                <td>{{ $ut->estimated_time }}</td>
+                                                <td>{{ gmdate('H:i:s', $ut->estimated_time * 3600) }}</td>
                                                 <td>
                                                     <span id="duration-{{ $ut->id }}">{{ gmdate('H:i:s', $ut->duration) }}</span>
                                                 </td>
@@ -122,26 +116,19 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <!-- /.card-body -->
                         </div>
-                        <!-- /.card -->
                     </div>
                 </div>
-                <!-- /.row (main row) -->
-            </div><!-- /.container-fluid -->
+            </div>
         </section>
-        <!-- /.content -->
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    $('#order_number').on('change', function() {
+    <script>
+        $('#order_number').on('change', function() {
     var orderNumber = $(this).val();
-
-    // Clear the items select box
-    $('#no_item').empty();
-    $('#no_item').append('<option selected="selected" disabled>-- Select Item --</option>');
+    $('#item_number').empty();
+    $('#item_number').append('<option selected="selected" disabled>-- Select Item --</option>');
 
     if (orderNumber) {
         $.ajax({
@@ -149,10 +136,9 @@
             type: 'GET',
             dataType: 'json',
             success: function(data) {
-                console.log(data); // Debugging line
+                console.log(data);
                 $.each(data, function(key, item) {
-                    $('#no_item').append('<option value="' + item.no_item +
-                        '">' + item.no_item + '</option>');
+                    $('#item_number').append('<option value="' + item.no_item + '">' + item.no_item + '</option>');
                 });
             },
             error: function(xhr, status, error) {
@@ -162,9 +148,7 @@
     }
 });
 
-</script>
 
-    <script>
         window.addEventListener('DOMContentLoaded', (event) => {
             var errorAlert = '{{ session('error') }}';
             if (errorAlert !== '') {
