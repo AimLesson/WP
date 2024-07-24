@@ -64,7 +64,7 @@
                                                 <td>{{ $m->tanggal }}</td>
                                                 <td>{{ $m->ref }}</td>
                                                 <td>{{ $m->description }}</td>
-                                                <td>{{ $m->jumlah }}</td>
+                                                <td>{{ formatRupiah($m->jumlah) }}</td>
                                                 <td>{{ $m->keterangan }}</td>
                                                 <td>{{ $m->info }}</td>
                                             </tr>

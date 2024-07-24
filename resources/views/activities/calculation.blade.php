@@ -41,69 +41,77 @@
 
                     <div id="calculation-result" style="display: none;">
                         <!-- Input Table for Debugging -->
-                        <div class="table-responsive rounded">
+                        <div class="table-responsive rounded table-smaller">
                             <table class="table table-bordered table-striped rounded">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">Category</th>
                                         <th scope="col">Amount</th>
+                                        <th scope="col">Percentage</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>Sales Order</td>
-                                        <td>
+                                        <td class="text-right">
                                             <input type="number" id="totalSales" class="form-control" hidden>
                                             <span id="displayTotalSales"></span>
                                         </td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>Material Cost</td>
-                                        <td>
+                                        <td class="text-right">
                                             <input type="number" id="totalMaterialCost" class="form-control" hidden>
                                             <span id="displayTotalMaterialCost"></span>
                                         </td>
+                                        <td id="materialCostPercentage" class="text-right"></td>
                                     </tr>
                                     <tr>
                                         <td>Labor Cost</td>
-                                        <td>
+                                        <td class="text-right">
                                             <input type="number" id="totalLaborCost" class="form-control" hidden>
-                                            <span id="displayTotalProcessingCost"></span>
+                                            <span id="displayTotalLaborCost"></span>
                                         </td>
+                                        <td id="laborCostPercentage" class="text-right"></td>
                                     </tr>
                                     <tr>
                                         <td>Machine Cost</td>
-                                        <td>
+                                        <td class="text-right">
                                             <input type="number" id="totalMachineCost" class="form-control" hidden>
                                             <span id="displayTotalMachineCost"></span>
                                         </td>
+                                        <td id="machineCostPercentage" class="text-right"></td>
                                     </tr>
                                     <tr>
                                         <td>Standard Part Cost</td>
-                                        <td>
+                                        <td class="text-right">
                                             <input type="number" id="totalStandardPartCost" class="form-control" hidden>
                                             <span id="displayTotalStandardPartCost"></span>
                                         </td>
+                                        <td id="standardPartCostPercentage" class="text-right"></td>
                                     </tr>
                                     <tr>
                                         <td>Sub-Contract Cost</td>
-                                        <td>
+                                        <td class="text-right">
                                             <input type="number" id="totalSubContractCost" class="form-control" hidden>
                                             <span id="displayTotalSubContractCost"></span>
                                         </td>
+                                        <td id="subContractCostPercentage" class="text-right"></td>
                                     </tr>
                                     <tr>
                                         <td>Overhead Manufacture Cost</td>
-                                        <td>
+                                        <td class="text-right">
                                             <input type="number" id="totalOverheadCost" class="form-control" hidden>
                                             <span id="displayTotalOverheadCost"></span>
                                         </td>
+                                        <td id="overheadCostPercentage" class="text-right"></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <div class="table-responsive rounded">
+                        <div class="table-responsive rounded table-smaller">
                             <table id="overhead-table" class="table table-bordered table-striped rounded">
                                 <thead class="thead-dark">
                                     <tr>
@@ -118,38 +126,45 @@
                         </div>
 
                         <!-- New Calculation Result Table -->
-                        <div class="table-responsive rounded mt-4">
+                        <div class="table-responsive rounded mt-4 table-smaller">
                             <table class="table table-bordered table-striped rounded">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">Category</th>
                                         <th scope="col">Amount</th>
+                                        <th scope="col">Percentage</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>COGS</td>
-                                        <td id="COGS"></td>
+                                        <td id="COGS" class="text-right"></td>
+                                        <td id="cogsPercentage" class="text-right"></td>
                                     </tr>
                                     <tr>
                                         <td>Gross Profit Margin</td>
-                                        <td id="GPM"></td>
+                                        <td id="GPM" class="text-right"></td>
+                                        <td id="gpmPercentage" class="text-right"></td>
                                     </tr>
                                     <tr>
                                         <td>OH Organisasi</td>
-                                        <td id="OHorg"></td>
+                                        <td id="OHorg" class="text-right"></td>
+                                        <td id="ohorgPercentage" class="text-right"></td>
                                     </tr>
                                     <tr>
                                         <td>Net Operating Income</td>
-                                        <td id="NOI"></td>
+                                        <td id="NOI" class="text-right"></td>
+                                        <td id="noiPercentage" class="text-right"></td>
                                     </tr>
                                     <tr>
                                         <td>Pend / Biaya non Oper</td>
-                                        <td id="BNP"></td>
+                                        <td id="BNP" class="text-right"></td>
+                                        <td id="bnpPercentage" class="text-right"></td>
                                     </tr>
                                     <tr>
                                         <td>Laba Sebelum pajak</td>
-                                        <td id="LSP"></td>
+                                        <td id="LSP" class="text-right"></td>
+                                        <td id="lspPercentage" class="text-right"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -193,24 +208,15 @@
                             $('#totalOverheadCost').val(response.totalOverheadCost);
     
                             // Format numbers for display
-                            $('#displayTotalSales').text(formatNumber(response.totalSales));
-                            $('#displayTotalMaterialCost').text(formatNumber(response.totalMaterialCost));
-                            $('#displayTotalProcessingCost').text(formatNumber(response.totalLaborCost)); // Corrected key
-                            $('#displayTotalMachineCost').text(formatNumber(response.totalMachineCost)); // Corrected key
-                            $('#displayTotalStandardPartCost').text(formatNumber(response.totalStandardPartCost));
-                            $('#displayTotalSubContractCost').text(formatNumber(response.totalSubContractCost));
-                            $('#displayTotalOverheadCost').text(formatNumber(response.totalOverheadCost));
+                            $('#displayTotalSales').text(formatRupiah(response.totalSales));
+                            $('#displayTotalMaterialCost').text(formatRupiah(response.totalMaterialCost));
+                            $('#displayTotalLaborCost').text(formatRupiah(response.totalLaborCost)); // Corrected key
+                            $('#displayTotalMachineCost').text(formatRupiah(response.totalMachineCost)); // Corrected key
+                            $('#displayTotalStandardPartCost').text(formatRupiah(response.totalStandardPartCost));
+                            $('#displayTotalSubContractCost').text(formatRupiah(response.totalSubContractCost));
+                            $('#displayTotalOverheadCost').text(formatRupiah(response.totalOverheadCost));
     
-                            // Debug: Log values for each step of the calculation
-                            console.log("Total Sales: " + response.totalSales);
-                            console.log("Total Material Cost: " + response.totalMaterialCost);
-                            console.log("Total Labor Cost: " + response.totalLaborCost);
-                            console.log("Total Machine Cost: " + response.totalMachineCost);
-                            console.log("Total Standard Part Cost: " + response.totalStandardPartCost);
-                            console.log("Total Sub Contract Cost: " + response.totalSubContractCost);
-                            console.log("Total Overhead Cost: " + response.totalOverheadCost);
-    
-                            // Remove commas and parse values
+                            // Parse float values from response
                             var totalSales = parseFloat(response.totalSales.replace(/,/g, '')) || 0;
                             var totalMaterialCost = parseFloat(response.totalMaterialCost.replace(/,/g, '')) || 0;
                             var totalMachineCost = parseFloat(response.totalMachineCost.replace(/,/g, '')) || 0;
@@ -219,6 +225,14 @@
                             var totalStandardPartCost = parseFloat(response.totalStandardPartCost.replace(/,/g, '')) || 0;
                             var totalOverheadCost = parseFloat(response.totalOverheadCost.replace(/,/g, '')) || 0;
     
+                            // Calculate percentages
+                            var materialCostPercentage = (totalMaterialCost / totalSales) * 100 || 0;
+                            var laborCostPercentage = (totalLaborCost / totalSales) * 100 || 0;
+                            var machineCostPercentage = (totalMachineCost / totalSales) * 100 || 0;
+                            var standardPartCostPercentage = (totalStandardPartCost / totalSales) * 100 || 0;
+                            var subContractCostPercentage = (totalSubContractCost / totalSales) * 100 || 0;
+                            var overheadCostPercentage = (totalOverheadCost / totalSales) * 100 || 0;
+
                             // Debug: Log parsed values
                             console.log("Parsed Total Sales: " + totalSales);
                             console.log("Parsed Total Material Cost: " + totalMaterialCost);
@@ -243,12 +257,20 @@
                             console.log("BNP: " + BNP);
                             console.log("LSP: " + LSP);
     
-                            $('#COGS').text(formatNumber(COGS));
-                            $('#GPM').text(formatNumber(GPM));
-                            $('#OHorg').text(formatNumber(OHorg));
-                            $('#NOI').text(formatNumber(NOI));
-                            $('#BNP').text(formatNumber(BNP));
-                            $('#LSP').text(formatNumber(LSP));
+                            $('#COGS').text(formatRupiah(COGS));
+                            $('#GPM').text(formatRupiah(GPM));
+                            $('#OHorg').text(formatRupiah(OHorg));
+                            $('#NOI').text(formatRupiah(NOI));
+                            $('#BNP').text(formatRupiah(BNP));
+                            $('#LSP').text(formatRupiah(LSP));
+
+                            // Update percentage columns
+                            $('#materialCostPercentage').text(materialCostPercentage.toFixed(2) + '%');
+                            $('#laborCostPercentage').text(laborCostPercentage.toFixed(2) + '%');
+                            $('#machineCostPercentage').text(machineCostPercentage.toFixed(2) + '%');
+                            $('#standardPartCostPercentage').text(standardPartCostPercentage.toFixed(2) + '%');
+                            $('#subContractCostPercentage').text(subContractCostPercentage.toFixed(2) + '%');
+                            $('#overheadCostPercentage').text(overheadCostPercentage.toFixed(2) + '%');
     
                             // Update overhead table
                             var overheadTableBody = $('#overhead-table tbody');
@@ -256,7 +278,7 @@
                             response.overheads.forEach(function(overhead) {
                                 var row = '<tr>' +
                                     '<td>' + overhead.description + '</td>' +
-                                    '<td>' + formatNumber(overhead.jumlah) + '</td>' +
+                                    '<td class="text-right">' + formatRupiah(overhead.jumlah) + '</td>' +
                                     '</tr>';
                                 overheadTableBody.append(row);
                             });
@@ -279,20 +301,17 @@
         $('#overhead-table').DataTable();
     });
     
-    // Helper function to format numbers with commas
-    function formatNumber(num) {
-        return num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    // Helper function to format numbers as Rupiah
+    function formatRupiah(num) {
+        return 'Rp. ' + num.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }).replace(/,/g, '.');
     }
-    </script>
+
+    // Helper function to update the page title
+    function updateTitle(pageTitle) {
+        document.title = pageTitle;
+    }
     
-    <script>
-        // Function to update the page title
-        function updateTitle(pageTitle) {
-            document.title = pageTitle;
-        }
-    
-        // Call the function when the "Calculation" page is loaded
-        updateTitle('Calculation');
-    </script>
-    @endsection
-    
+    // Call the function when the "Calculation" page is loaded
+    updateTitle('Calculation');
+</script>
+@endsection

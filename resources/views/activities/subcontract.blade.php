@@ -63,8 +63,8 @@
                                                 <td>{{ $m->description }}</td>
                                                 <td>{{ $m->qty }}</td>
                                                 <td>{{ $m->unit }}</td>
-                                                <td>{{ $m->price_unit }}</td>
-                                                <td>{{ $m->total_price }}</td>
+                                                <td>{{ formatRupiah($m->price_unit) }}</td>
+                                                <td>{{ formatRupiah($m->total_price) }}</td>
                                                 <td>{{ $m->info }}</td>
                                                 <td>
                                                     <a href="{{ route('activities.editsub_contract', $m->id) }}" class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>

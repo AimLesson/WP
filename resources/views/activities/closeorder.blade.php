@@ -59,7 +59,7 @@
                                                     <td>{{$o->product}}</td>
                                                     <td>{{$o->qty}}</td>
                                                     <td>{{$o->dod}}</td>
-                                                    <td >{{$o->sale_price}}</td>
+                                                    <td >{{formatRupiah($o->sale_price)}}</td>
                                                     <td>{{$o->order_status}}</td>
                                                     {{-- <td>
                                                         <a href="{{ route('activities.editorder', ['id' => $o->id]) }}"

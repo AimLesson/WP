@@ -66,19 +66,19 @@
                                             <tr>
                                                 <td>{{ $m->id }}</td>
                                                 <td>{{ $m->order_number }}</td>
-                                                <td>{{ $m->total_sales }}</td>
-                                                <td>{{ $m->total_material_cost }}</td>
-                                                <td>{{ $m->total_labor_cost }}</td>
-                                                <td>{{ $m->total_machine_cost }}</td>
-                                                <td>{{ $m->total_standard_part_cost }}</td>
-                                                <td>{{ $m->total_sub_contract_cost }}</td>
-                                                <td>{{ $m->total_overhead_cost }}</td>
-                                                <td>{{ $m->cogs }}</td>
-                                                <td>{{ $m->gpm }}</td>
-                                                <td>{{ $m->oh_org }}</td>
-                                                <td>{{ $m->noi }}</td>
-                                                <td>{{ $m->bnp }}</td>
-                                                <td>{{ $m->lsp }}</td>
+                                                <td>{{ formatRupiah($m->total_sales) }}</td>
+                                                <td>{{ formatRupiah($m->total_material_cost)}}</td>
+                                                <td>{{ formatRupiah($m->total_labor_cost) }}</td>
+                                                <td>{{ formatRupiah($m->total_machine_cost) }}</td>
+                                                <td>{{ formatRupiah($m->total_standard_part_cost) }}</td>
+                                                <td>{{ formatRupiah($m->total_sub_contract_cost) }}</td>
+                                                <td>{{ formatRupiah($m->total_overhead_cost) }}</td>
+                                                <td>{{ formatRupiah($m->cogs) }}</td>
+                                                <td>{{ formatRupiah($m->gpm) }}</td>
+                                                <td>{{ formatRupiah($m->oh_org) }}</td>
+                                                <td>{{ formatRupiah($m->noi) }}</td>
+                                                <td>{{ formatRupiah($m->bnp) }}</td>
+                                                <td>{{ formatRupiah($m->lsp) }}</td>
                                                 <td>{{ $m->updated_at }}</td>
                                                 {{-- <td>{{$m->total_mach}}</td> --}}
                                             </tr>

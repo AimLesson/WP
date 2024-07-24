@@ -59,7 +59,7 @@
                                                 <td>{{ $pr->machine }}</td>
                                                 <td>{{ $pr->operation }}</td>
                                                 <td>{{ $pr->estimated_time }}</td>
-                                                <td>{{ $pr->mach_cost }}</td>
+                                                <td>{{ formatRupiah($pr->mach_cost) }}</td>
                                                 <td>{{ $pr->created_at }}</td>
                                                 <td>
                                                     <a href="{{ route('activities.editprocessing',$pr->id) }}"
