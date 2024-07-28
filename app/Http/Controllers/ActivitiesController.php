@@ -32,6 +32,7 @@ use App\Models\StandartpartAPI;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Unique;
 
 class ActivitiesController extends Controller
 {
@@ -1382,8 +1383,11 @@ class ActivitiesController extends Controller
                 'labor_cost' => $request->labor_cost[$index],
                 'total' => $request->total[$index],
             ]);
+
+            $processing_id = uniqid();
     
             Processingadd::create([
+                'processing_id' => $processing_id,
                 'order_number' => $request->order_number,
                 'item_number' => $request->no_item,
                 'nop' => $nop,
@@ -1875,7 +1879,7 @@ class ActivitiesController extends Controller
         }
 
         // Redirect with success message
-        return redirect()->route('activities.createoverhead_manufacture')->with('success', 'Overhead Manufacture(s) added successfully.');
+        return redirect()->route('activities.overhead_manufacture')->with('success', 'Overhead Manufacture(s) added successfully.');
     }
 
     public function editoverhead_manufacture($id)
@@ -1886,7 +1890,7 @@ class ActivitiesController extends Controller
         }
 
         $order = Order::where('order_status', '!=', 'Finished')->get();
-        return view('activities.editoverhead_manufacture', compact('overhead', 'orders'));
+        return view('activities.editoverhead_manufacture', compact('overhead', 'order'));
     }
 
     public function updateoverhead_manufacture(Request $request, $id)
@@ -2193,12 +2197,10 @@ class ActivitiesController extends Controller
             list($hours, $minutes, $seconds) = $timeParts;
             return $hours + ($minutes / 60) + ($seconds / 3600);
         } else {
-            Log::error('Invalid duration format.', ['duration' => $duration]);
+            Log::error('Invalid duration format. done', ['duration' => $duration]);
             return 0;
         }
     }
-    
-    
     
 
     public function calculate(Request $request)
@@ -2310,9 +2312,6 @@ class ActivitiesController extends Controller
             'overheads' => $overheads
         ]);
     }
-    
-
-    
     
     private function formatNumber($number)
     {
