@@ -256,4 +256,11 @@
             });
         });
     </script>
+
+    <script>
+            // Helper function to format numbers as Rupiah
+    function formatRupiah(num) {
+        return 'Rp. ' + num.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }).replace(/,/g, '.');
+    }
+    </script>
 @endsection

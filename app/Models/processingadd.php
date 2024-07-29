@@ -36,22 +36,27 @@ class ProcessingAdd extends Model
     }
 
     public function processings()
-{
-    return $this->hasMany(ProcessingAdd::class, 'order_number', 'order_number');
-}
+    {
+        return $this->hasMany(ProcessingAdd::class, 'order_number', 'order_number');
+    }
 
-public function processingused()
-{
-    return $this->belongsTo(Processing::class, 'processing_id', 'id');
-}
+    public function processingused()
+    {
+        return $this->belongsTo(Processing::class, 'processing_id', 'id');
+    }
 
-public function processingsused()
-{
-    return $this->hasMany(ProcessingAdd::class, 'order_number', 'order_number');
-}
+    public function processingsused()
+    {
+        return $this->hasMany(ProcessingAdd::class, 'order_number', 'order_number');
+    }
 
-public function order()
-{
-    return $this->belongsTo(Order::class, 'order_number', 'order_number');
-}
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_number', 'order_number');
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(ItemAdd::class, 'item_number', 'id');
+    }
 }

@@ -41,8 +41,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Poppins:ital,wght@1,800&family=Courgette&family=Roboto:wght@900&family=Ubuntu:wght@700&display=swap"
         rel="stylesheet">
-    
-        
+
+
 
     <!-- Stylesheet DateTimePicker -->
     <link rel="stylesheet"
@@ -231,7 +231,7 @@
         cursor: not-allowed;
         }
 
-        
+
 
     </style>
 </head>
@@ -276,7 +276,7 @@
                     <a href="{{ route('report') }}" class="nav-link {{ Request::is('report') ? 'active' : '' }}">Report</a>
                 </li>
             </ul>
-        
+
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <!-- Messages Dropdown Menu -->
@@ -309,8 +309,8 @@
                 @csrf
             </form>
         </nav>
-        
-        
+
+
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
@@ -525,11 +525,11 @@
             },
             {
                 extend: 'excel',
-                className: 'btn-custom'  
+                className: 'btn-custom'
             },
             {
                 extend: 'colvis',
-                className: 'btn-custom'  
+                className: 'btn-custom'
             }
         ]
     }).buttons().container().appendTo('#machine_wrapper .col-md-6:eq(0)');
