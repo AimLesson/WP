@@ -46,12 +46,8 @@
                                         <div class="mt-4">
                                             <h3>Order Details</h3>
                                             <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
-                                            <p><strong>Issued:</strong> {{ $order->order_date }}</p>
-                                            <p><strong>Date Wanted:</strong> {{ $order->dod }}</p>
-                                            <p><strong>Number SO:</strong> {{ $order->so_number }}</p>
-                                            <p><strong>Customer:</strong> {{ $order->customer }}</p>
-                                            <p><strong>Product:</strong> {{ $order->product }}</p>
-                                            <p><strong>Number of Product:</strong> {{ $order->qty }}</p>
+                                            <p><strong>Customer Name:</strong> {{ $order->customer_name }}</p>
+                                            <p><strong>Order Date:</strong> {{ $order->order_date }}</p>
                                             <!-- Add more order details as needed -->
                                         </div>
                                     @endif
@@ -89,12 +85,34 @@
                                                     <td>{{ $item->item }}</td>
 
                                                     @php
-                                                        $processNames = $item->processingAdds->pluck('operation')->toArray();
+                                                        $processingAdds = $item->processingAdds;
+                                                        $processNames = $processingAdds->pluck('operation')->toArray();
+                                                        $statuses = $processingAdds->pluck('status')->toArray();
                                                     @endphp
 
                                                     <!-- Create a cell for each process, up to the max number of processes -->
                                                     @for ($i = 0; $i < $maxProcesses; $i++)
-                                                        <td>{{ $processNames[$i] ?? '-' }}</td>
+                                                        @php
+                                                            $processName = $processNames[$i] ?? '-';
+                                                            $status = $statuses[$i] ?? 'queue'; // Default to 'queue' if not set
+                                                            $statusClass = 'text-white'; // Default text color
+
+                                                            switch ($status) {
+                                                                case 'Started':
+                                                                    $statusClass = 'bg-success'; // Green background
+                                                                    break;
+                                                                case 'pending':
+                                                                    $statusClass = 'bg-warning'; // Yellow background
+                                                                    break;
+                                                                case 'finished':
+                                                                    $statusClass = 'bg-primary'; // Blue background
+                                                                    break;
+                                                                default:
+                                                                    $statusClass = 'bg-secondary'; // Grey background for 'queue'
+                                                                    break;
+                                                            }
+                                                        @endphp
+                                                        <td class="{{ $statusClass }}">{{ $processName }}</td>
                                                     @endfor
 
                                                     <td>{{ $item->processingAdds->first()->date_out ?? '-' }}</td>
@@ -103,6 +121,26 @@
                                         </tbody>
                                     </table>
                                 </div>
+
+                                <!-- Add CSS for status colors -->
+                                <style>
+                                    .bg-success {
+                                        background-color: #28a745 !important;
+                                    }
+                                    .bg-warning {
+                                        background-color: #ffc107 !important;
+                                    }
+                                    .bg-primary {
+                                        background-color: #007bff !important;
+                                    }
+                                    .bg-secondary {
+                                        background-color: #6c757d !important;
+                                    }
+                                    .text-white {
+                                        color: #ffffff !important;
+                                    }
+                                </style>
+
 
 
 
