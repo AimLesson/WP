@@ -1034,7 +1034,7 @@ class ActivitiesController extends Controller
         $material   = Material::get();
         $standardParts = StandartpartAPI::where('kode_log', 'M')->get();
         $order = Order::where('order_status', '!=', 'Finished')->get();
-        return view('activities.createitem', compact('material', 'order','standardParts'));
+        return view('activities.createitem', compact('material', 'order', 'standardParts'));
     }
     public function storeitem(Request $request)
     {
@@ -1079,11 +1079,13 @@ class ActivitiesController extends Controller
                     'material_cost' => $request->material_cost,
                 ]);
 
-                if (!isset($request->dod_item[$key]) || !isset($request->id_item[$key]) || !isset($request->no_item[$key]) ||
+                if (
+                    !isset($request->dod_item[$key]) || !isset($request->id_item[$key]) || !isset($request->no_item[$key]) ||
                     !isset($request->material[$key]) || !isset($request->weight[$key]) || !isset($request->length[$key]) ||
                     !isset($request->width[$key]) || !isset($request->thickness[$key]) || !isset($request->ass_drawing[$key]) ||
                     !isset($request->drawing_no[$key]) || !isset($request->nos[$key]) || !isset($request->nob[$key]) ||
-                    !isset($request->issued_item[$key])) {
+                    !isset($request->issued_item[$key])
+                ) {
                     throw new \Exception("Missing array index for key $key");
                 }
 
@@ -1301,12 +1303,12 @@ class ActivitiesController extends Controller
     }
 
     public function getItemsByOrderNumber($orderNumber)
-        {
-            $items = ItemAdd::where('order_number', $orderNumber)->get();
-            return response()->json($items);
-        }
+    {
+        $items = ItemAdd::where('order_number', $orderNumber)->get();
+        return response()->json($items);
+    }
 
-        public function getMachineDetails(Request $request)
+    public function getMachineDetails(Request $request)
     {
         $machineName = $request->input('machine_name');
         $machine = Machine::where('machine_name', $machineName)->first();
@@ -2211,57 +2213,79 @@ class ActivitiesController extends Controller
     {
         Log::info('Calculate method called.');
 
+        // Validate the incoming request
         $validatedData = $request->validate([
-            'order_id' => 'required|exists:order,id',
+            'order_id' => 'required|exists:order,id', // Correct table name
         ]);
 
         Log::info('Request validated.', ['order_id' => $validatedData['order_id']]);
 
+        // Fetch the order with related data
         $order = $this->fetchOrder($validatedData['order_id']);
 
         if (!$order) {
             return response()->json(['error' => 'Order not found'], 404);
         }
 
+        // Calculate costs for the current order
         $costs = $this->calculateCosts($order);
         if (!$costs) {
             return response()->json(['error' => 'Error calculating costs'], 500);
         }
 
+        // Calculate financial metrics based on costs
         $financialMetrics = $this->calculateFinancialMetrics($costs['totalSales'], $costs['totalCosts']);
+
+        // Store WIP data for the current order
         $this->storeWIPData($order, $costs, $financialMetrics);
 
-            // Retrieve the order_number from the Order model
+        // **New Addition:** Store WIP data for all orders
+        $this->storeWIPDataForAllOrders();
+
+        // Retrieve the order_number from the Order model
         $orderNumber = $order->order_number; // Ensure 'order_number' is the correct column name
 
         Log::info('Order number retrieved.', ['order_number' => $orderNumber]);
 
+        // Format the response data for current order
         $responseData = $this->formatResponseData($costs, $order);
 
-    // Filter processing data by order_id
+        // Filter processing data by order_number
         $processings = ProcessingAdd::where('order_number', $orderNumber)
-        ->with(['item', 'itemAdd'])
-        ->get(['item_number', 'machine', 'mach_cost', 'labor_cost', 'duration']);
+            ->with(['item', 'itemAdd'])
+            ->get(['item_number', 'machine', 'mach_cost', 'labor_cost', 'duration']);
 
         if ($processings->isEmpty()) {
             Log::info('No processing data found for the given order_number.', ['order_number' => $orderNumber]);
         } else {
             Log::info('Processing data fetched.', ['order_number' => $orderNumber, 'processings' => $processings]);
 
-            // Calculate mach_cost_real for each processing item
+            // Calculate mach_cost_real and labor_cost_real for each processing item
             foreach ($processings as $processing) {
-                $durationInHours = $this->convertDurationToHours($processing->duration);
-                Log::warning('Duration conversion failed.', ['duration' => $processing->duration]);
-                $processing->mach_cost_real = $durationInHours * $processing->mach_cost;
-                $processing->labor_cost_real = $durationInHours * $processing->labor_cost;
+                try {
+                    $durationInHours = $this->convertDurationToHours($processing->duration);
+                    $processing->mach_cost_real = $durationInHours * $processing->mach_cost;
+                    $processing->labor_cost_real = $durationInHours * $processing->labor_cost;
+
+                    Log::info('Real cost calculated for processing.', [
+                        'item_number' => $processing->item_number,
+                        'mach_cost_real' => $processing->mach_cost_real,
+                        'labor_cost_real' => $processing->labor_cost_real
+                    ]);
+                } catch (\Exception $e) {
+                    Log::warning('Duration conversion failed.', ['duration' => $processing->duration, 'error' => $e->getMessage()]);
+                    $processing->mach_cost_real = 0;
+                    $processing->labor_cost_real = 0;
+                }
             }
         }
         $responseData['processingData'] = $processings;
 
         Log::info('Response data prepared.', ['responseData' => $responseData]);
 
-        return response()->json($responseData);
+        return response()->json($responseData, 200); // Ensure status code 200 for success
     }
+
 
 
 
@@ -2319,7 +2343,6 @@ class ActivitiesController extends Controller
                 'machineProcessingDetails' => $machineCostResult['details'],
                 'laborProcessingDetails' => $laborCostResult['details']
             ];
-
         } catch (\Exception $e) {
             Log::error('Error calculating costs.', ['error' => $e->getMessage()]);
             return null;
@@ -2443,6 +2466,57 @@ class ActivitiesController extends Controller
         }
     }
 
+    // Store or update WIP data for all orders
+    private function storeWIPDataForAllOrders()
+    {
+        try {
+            // Fetch all orders that need to be updated. You can apply filters if needed.
+            $orders = Order::with(['items.processings', 'processings', 'subContracts', 'salesOrder', 'standartParts', 'overheads'])->get();
+
+            foreach ($orders as $order) {
+                // Calculate costs for each order
+                $costs = $this->calculateCosts($order);
+                if (!$costs) {
+                    Log::error('Error calculating costs for order.', ['order_id' => $order->id]);
+                    continue; // Skip to the next order if cost calculation fails
+                }
+
+                // Calculate financial metrics
+                $financialMetrics = $this->calculateFinancialMetrics($costs['totalSales'], $costs['totalCosts']);
+
+                // Prepare WIP data for each order
+                $wipData = [
+                    'order_id' => $order->id,
+                    'order_number' => $order->order_number,
+                    'total_sales' => $costs['totalSales'],
+                    'total_material_cost' => $costs['totalMaterialCost'],
+                    'total_labor_cost' => $costs['totalLaborCost'],
+                    'total_machine_cost' => $costs['totalMachineCost'],
+                    'total_standard_part_cost' => $costs['totalStandardPartCost'],
+                    'total_sub_contract_cost' => $costs['totalSubContractCost'],
+                    'total_overhead_cost' => $costs['totalOverheadCost'],
+                    'cogs' => $financialMetrics['COGS'],
+                    'gpm' => $financialMetrics['GPM'],
+                    'oh_org' => $financialMetrics['OHorg'],
+                    'noi' => $financialMetrics['NOI'],
+                    'bnp' => $financialMetrics['BNP'],
+                    'lsp' => $financialMetrics['LSP']
+                ];
+
+                // Update or create WIP data for each order
+                WIP::updateOrCreate(
+                    ['order_id' => $order->id],
+                    $wipData
+                );
+
+                Log::info('WIP data stored/updated successfully for order.', $wipData);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error storing/updating WIP data for all orders.', ['error' => $e->getMessage()]);
+            throw $e; // Re-throw exception for higher-level handling if necessary
+        }
+    }
+
     // Format response data
     private function formatResponseData($costs, $order)
     {
@@ -2451,7 +2525,7 @@ class ActivitiesController extends Controller
 
         $costData = $this->calculateProcessingCosts($processings, $costType);
         try {
-            $overheadsData = $order->overheads->map(function($overhead) {
+            $overheadsData = $order->overheads->map(function ($overhead) {
                 return $overhead->only(['description', 'keterangan', 'jumlah']);
             });
             Log::info('Overhead data fetched.', ['overheads' => $overheadsData]);
@@ -2491,7 +2565,18 @@ class ActivitiesController extends Controller
 
     private function formatNumber($number)
     {
-        return number_format((float)$number, 2);
+        return number_format((float)$number, 0);
+    }
+
+    public function calculateAllOrders(Request $request)
+    {
+        try {
+            $this->storeWIPDataForAllOrders();
+
+            return response()->json(['success' => 'WIP data updated for all orders'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to update WIP data for all orders'], 500);
+        }
     }
 
     public function storecalculate(Request $request)
@@ -2523,12 +2608,6 @@ class ActivitiesController extends Controller
 
         return response()->json($calculationData);
     }
-
-
-
-
-
-
 
     public function delivery_orders_wh()
     {
