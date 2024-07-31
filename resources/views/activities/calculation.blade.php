@@ -370,52 +370,52 @@
             }
 
             function updateProcessingDataTable(processingData) {
-                var columns = ['item_number','machine', 'mach_cost', 'mach_cost_real', 'labor_cost_real'];
-                var currencyColumns = ['mach_cost', 'mach_cost_real',
-                    'labor_cost_real'
-                ]; // Columns to format as currency
-                updateTable('#cost-table', processingData, columns, currencyColumns);
+    var columns = ['item_number', 'machine', 'mach_cost', 'mach_cost_real', 'labor_cost_real'];
+    var currencyColumns = ['mach_cost', 'mach_cost_real', 'labor_cost_real']; // Columns to format as currency
+    updateTable('#cost-table', processingData, columns, currencyColumns);
+}
+
+// Function to update HTML table with data
+function updateTable(tableId, data, columns, currencyColumns = []) {
+    // Find the table's tbody using the provided tableId
+    var tbody = document.querySelector(tableId + ' tbody');
+
+    // Clear the existing rows in the table body
+    tbody.innerHTML = '';
+
+    // Iterate over the data array and create table rows
+    data.forEach(item => {
+        // Create a new table row
+        var row = document.createElement('tr');
+
+        // Create cells for each column and append to the row
+        columns.forEach(column => {
+            var cell = document.createElement('td');
+
+            // Format the value as Rupiah if the column is in currencyColumns
+            if (currencyColumns.includes(column)) {
+                cell.textContent = formatRupiah(parseFloat(item[column])); // Ensuring the value is a number
+                cell.classList.add('text-right'); // Add the text-right class for currency columns
+            } else {
+                cell.textContent = item[column];
             }
 
-            // Assume updateTable is a function defined elsewhere to update the HTML table
-            // Function to update HTML table with data
-            function updateTable(tableId, data, columns, currencyColumns = []) {
-                // Find the table's tbody using the provided tableId
-                var tbody = document.querySelector(tableId + ' tbody');
+            row.appendChild(cell);
+        });
 
-                // Clear the existing rows in the table body
-                tbody.innerHTML = '';
+        // Append the row to the tbody
+        tbody.appendChild(row);
+    });
+}
 
-                // Iterate over the data array and create table rows
-                data.forEach(item => {
-                    // Create a new table row
-                    var row = document.createElement('tr');
 
-                    // Create cells for each column and append to the row
-                    columns.forEach(column => {
-                        var cell = document.createElement('td');
-
-                        // Format the value as Rupiah if the column is in currencyColumns
-                        if (currencyColumns.includes(column)) {
-                            cell.textContent = formatRupiah(item[column]);
-                        } else {
-                            cell.textContent = item[column];
-                        }
-
-                        row.appendChild(cell);
-                    });
-
-                    // Append the row to the tbody
-                    tbody.appendChild(row);
-                });
-            }
-            // Helper function to format numbers as Rupiah
-            function formatRupiah(num) {
-                return 'Rp. ' + num.toLocaleString(undefined, {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0
-                }).replace(/,/g, '.');
-            }
+// Helper function to format numbers as Rupiah
+function formatRupiah(num) {
+    return 'Rp. ' + num.toLocaleString(undefined, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).replace(/,/g, '.');
+}
 
             // Helper function to update the page title
             function updateTitle(pageTitle) {
