@@ -66,4 +66,6 @@ class ProcessingAdd extends Model
     {
         return $this->belongsTo(ItemAdd::class, 'item_number', 'no_item');
     }
+
+
 }

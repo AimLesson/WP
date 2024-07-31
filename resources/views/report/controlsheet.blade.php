@@ -29,63 +29,85 @@
                             <div class="card-header">
                                 <h3 class="card-title">Control Sheet</h3>
                             </div>
-                            
                             <!-- /.card-header -->
                             {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
-                            <div class="card-body">
-                                <table id="machine" class="table table-head-fixed text-nowrap">
-                                    {{-- <table id="machine" class="table table-bordered table-striped"> --}}
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Order No</th>
-                                            <th>Item No</th>
-                                            <th>SN.</th>
-                                            <th>Drawing NO.</th>
-                                            <th>NOS.</th>
-                                            <th>Nama Item</th>
-                                            <th>1</th>
-                                            <th>2</th>
-                                            <th>3</th>
-                                            <th>4</th>
-                                            <th>5</th>
-                                            <th>Date Out</th>
-                                            
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $order = \App\Models\order::get();
-                                        @endphp
-                                        @foreach ($order as $m)
+                                <div class="card-body">
+                                    <!-- Form to filter by order number -->
+                                    <form method="GET" action="{{ route('controlsheet') }}">
+                                        <div class="form-group">
+                                            <label for="order_number">Order Number:</label>
+                                            <input type="text" id="order_number" name="order_number" class="form-control" value="{{ old('order_number', $orderNumber) }}">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Filter</button>
+                                    </form>
+
+                                    @if ($order)
+                                        <!-- Display Order details -->
+                                        <div class="mt-4">
+                                            <h3>Order Details</h3>
+                                            <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
+                                            <p><strong>Issued:</strong> {{ $order->order_date }}</p>
+                                            <p><strong>Date Wanted:</strong> {{ $order->dod }}</p>
+                                            <p><strong>Number SO:</strong> {{ $order->so_number }}</p>
+                                            <p><strong>Customer:</strong> {{ $order->customer }}</p>
+                                            <p><strong>Product:</strong> {{ $order->product }}</p>
+                                            <p><strong>Number of Product:</strong> {{ $order->qty }}</p>
+                                            <!-- Add more order details as needed -->
+                                        </div>
+                                    @endif
+
+                                    <table id="machine" class="table table-head-fixed text-nowrap mt-4">
+                                        <thead>
                                             <tr>
-                                                <td>{{ $m->id }}</td>
-                                                <td>{{ $m->order_number }}</td>
-                                                <td>{{ $m->no_item }}</td>
-                                                <td>{{ $m->sn }}</td>{{-- nomor urut --}}
-                                                <td>{{ $m->cost_material }}</td>
-                                                <td>{{ $m->cost_std }}</td>
-                                                <td>{{ $m->cost_mach }}</td>
-                                                <td>{{ $m->cost_labor }}</td>
-                                                <td>{{ $m->cost_subcon }}</td>
-                                                <td>{{ $m->cost_ohm }}</td>
-                                                <td>{{ $m->amount }}</td>
-                                                <td>{{ $m->state }}</td>
-                                                <td>{{ $m->so_amount }}</td>
-                                                
-                                                {{-- <td>{{$m->total_mach}}</td> --}}
+                                                <th>Item Number</th>
+                                                <th>SN</th>
+                                                <th>Drawing Number</th>
+                                                <th>NOS.</th>
+                                                <th>Nama Item</th>
+                                                @php
+                                                    // Find the maximum number of processes for any item
+                                                    $maxProcesses = $items->map(function($item) {
+                                                        return $item->processingAdds->count();
+                                                    })->max();
+                                                @endphp
+
+                                                <!-- Create headers for each process column -->
+                                                @for ($i = 1; $i <= $maxProcesses; $i++)
+                                                    <th>Process {{ $i }}</th>
+                                                @endfor
+
+                                                <th>Date Out</th>
                                             </tr>
-                                                    </div>
-                                                    <!-- /.modal-content -->
-                                                </div>
-                                                <!-- /.modal-dialog -->
-                                            </div>
-                                            <!-- /.modal -->
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($items as $item)
+                                                <tr>
+                                                    <td>{{ $item->no_item }}</td>
+                                                    <td>-</td>
+                                                    <td>{{ $item->drawing_no }}</td>
+                                                    <td>{{ $item->nos }}</td>
+                                                    <td>{{ $item->item }}</td>
+
+                                                    @php
+                                                        $processNames = $item->processingAdds->pluck('operation')->toArray();
+                                                    @endphp
+
+                                                    <!-- Create a cell for each process, up to the max number of processes -->
+                                                    @for ($i = 0; $i < $maxProcesses; $i++)
+                                                        <td>{{ $processNames[$i] ?? '-' }}</td>
+                                                    @endfor
+
+                                                    <td>{{ $item->processingAdds->first()->date_out ?? '-' }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+
+
+
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->

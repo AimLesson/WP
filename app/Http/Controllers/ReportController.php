@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemAdd;
+use App\Models\ProcessingAdd;
 use Carbon\Carbon;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -16,10 +18,22 @@ class ReportController extends Controller
     {
         return view('report.order');
     }
-    public function controlsheet()
+    public function controlsheet(Request $request)
     {
-        return view('report.controlsheet');
+        // Get the order_number from the request
+        $orderNumber = $request->input('order_number');
+
+        // Fetch the order details
+    $order = Order::where('order_number', $orderNumber)->first();
+
+        // Fetch the items with the specified order_number and their related processing steps
+        $items = ItemAdd::with('processingAdds')
+            ->where('order_number', $orderNumber)
+            ->get();
+
+        return view('report.controlsheet', compact('items', 'orderNumber','order'));
     }
+
     public function productionsheet()
     {
         return view('report.productionsheet');

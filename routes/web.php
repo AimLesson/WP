@@ -241,7 +241,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('/table/rekaporderma', [TablesController::class, 'rekaporderma'])->name('tables.rekaporderma');
 
 
-    
+
         //activities - quotation
         Route::get('/activities', [ActivitiesController::class, 'activities'])->name('activities');
         Route::get('/activities/quotation', [ActivitiesController::class, 'quotationindex'])->name('activities.quotation');
@@ -327,7 +327,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('/activities/depreciation_cost', [ActivitiesController::class, 'depreciation_cost'])->name('activities.depreciation_cost');
         Route::get('/activities/used_time', [ActivitiesController::class, 'used_time'])->name('activities.used_time');
         Route::get('/activities/used_time_barcode', [ActivitiesController::class, 'used_time_barcode'])->name('activities.used_time_barcode');
-        Route::get('/activities/order_approval_ppic', [ActivitiesController::class, 'updateapproval_ppic'])->name('activities.order_approval_ppic');       
+        Route::get('/activities/order_approval_ppic', [ActivitiesController::class, 'updateapproval_ppic'])->name('activities.order_approval_ppic');
         Route::get('/activities/order_approval_log', [ActivitiesController::class, 'order_approval_log'])->name('activities.order_approval_log');
         Route::get('/activities/calculation', [ActivitiesController::class, 'calculation'])->name('activities.calculation');
         Route::get('/activities/delivery_orders_wh', [ActivitiesController::class, 'delivery_orders_wh'])->name('activities.delivery_orders_wh');
@@ -408,15 +408,17 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 
         //activities - Close Order
         Route::get('/activities/closeorder', [ActivitiesController::class, 'closeorder'])->name('activities.closeorder');
-      
 
-        
+
+
         //report
         Route::get('/report', [ReportController::class, 'report'])->name('report');
         //report-order
         Route::get('/report/order', [ReportController::class, 'order'])->name('report.order');
         //report-controlsheet
         Route::get('/report/controlsheet', [ReportController::class, 'controlsheet'])->name('report.controlsheet');
+        Route::get('/controlsheet', [ReportController::class, 'controlsheet'])->name('controlsheet');
+
         //report-productionsheet
         Route::get('/report/productionsheet', [ReportController::class, 'productionsheet'])->name('report.productionsheet');
         //report-inspectionsheet
