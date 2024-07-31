@@ -2252,9 +2252,8 @@ class ActivitiesController extends Controller
 
         // Filter processing data by order_number
         $processings = ProcessingAdd::where('order_number', $orderNumber)
-            ->with(['item', 'itemAdd'])
-            ->get(['item_number', 'machine', 'mach_cost', 'labor_cost', 'duration']);
-
+        ->with(['itemAdd'])
+        ->get(['item_number', 'machine', 'mach_cost', 'labor_cost', 'duration', 'finished_at', 'status']);
         if ($processings->isEmpty()) {
             Log::info('No processing data found for the given order_number.', ['order_number' => $orderNumber]);
         } else {

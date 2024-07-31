@@ -1,5 +1,10 @@
 @extends('activities.activities')
 @section('content')
+<style>
+    tbody tr {
+        height: 40px; /* Set the desired height for each row */
+    }
+</style>
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <div class="content-header">
@@ -38,157 +43,204 @@
                                 </select>
                             </div>
                         </form>
-
                         <div id="calculation-result" style="display: none;">
-                            <!-- Input Table for Debugging -->
-                            <div class="table-responsive rounded table-smaller">
-                                <table class="table table-bordered table-striped rounded">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th scope="col">Category</th>
-                                            <th scope="col">Amount</th>
-                                            <th scope="col">Percentage</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Sales Order</td>
-                                            <td class="text-right">
-                                                <input type="number" id="totalSales" class="form-control" hidden>
-                                                <span id="displayTotalSales"></span>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Material Cost</td>
-                                            <td class="text-right">
-                                                <input type="number" id="totalMaterialCost" class="form-control" hidden>
-                                                <span id="displayTotalMaterialCost"></span>
-                                            </td>
-                                            <td id="materialCostPercentage" class="text-right"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Labor Cost</td>
-                                            <td class="text-right">
-                                                <input type="number" id="totalLaborCost" class="form-control" hidden>
-                                                <span id="displayTotalLaborCost"></span>
-                                            </td>
-                                            <td id="laborCostPercentage" class="text-right"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Machine Cost</td>
-                                            <td class="text-right">
-                                                <input type="number" id="totalMachineCost" class="form-control" hidden>
-                                                <span id="displayTotalMachineCost"></span>
-                                            </td>
-                                            <td id="machineCostPercentage" class="text-right"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Standard Part Cost</td>
-                                            <td class="text-right">
-                                                <input type="number" id="totalStandardPartCost" class="form-control"
-                                                    hidden>
-                                                <span id="displayTotalStandardPartCost"></span>
-                                            </td>
-                                            <td id="standardPartCostPercentage" class="text-right"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Sub-Contract Cost</td>
-                                            <td class="text-right">
-                                                <input type="number" id="totalSubContractCost" class="form-control" hidden>
-                                                <span id="displayTotalSubContractCost"></span>
-                                            </td>
-                                            <td id="subContractCostPercentage" class="text-right"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Overhead Manufacture Cost</td>
-                                            <td class="text-right">
-                                                <input type="number" id="totalOverheadCost" class="form-control" hidden>
-                                                <span id="displayTotalOverheadCost"></span>
-                                            </td>
-                                            <td id="overheadCostPercentage" class="text-right"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Total Cost -->
+                                    <div class="table-responsive rounded table-smaller">
+                                        <table class="table table-bordered table-striped rounded">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th scope="col">Jenis</th>
+                                                    <th scope="col">Jumlah</th>
+                                                    <th scope="col">Presentase</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Sales Order</td>
+                                                    <td class="text-right">
+                                                        <input type="number" id="totalSales" class="form-control" hidden>
+                                                        <span id="displayTotalSales"></span>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Material Cost</td>
+                                                    <td class="text-right">
+                                                        <input type="number" id="totalMaterialCost" class="form-control"
+                                                            hidden>
+                                                        <span id="displayTotalMaterialCost"></span>
+                                                    </td>
+                                                    <td id="materialCostPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Labor Cost</td>
+                                                    <td class="text-right">
+                                                        <input type="number" id="totalLaborCost" class="form-control"
+                                                            hidden>
+                                                        <span id="displayTotalLaborCost"></span>
+                                                    </td>
+                                                    <td id="laborCostPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Machine Cost</td>
+                                                    <td class="text-right">
+                                                        <input type="number" id="totalMachineCost" class="form-control"
+                                                            hidden>
+                                                        <span id="displayTotalMachineCost"></span>
+                                                    </td>
+                                                    <td id="machineCostPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Standard Part Cost</td>
+                                                    <td class="text-right">
+                                                        <input type="number" id="totalStandardPartCost"
+                                                            class="form-control" hidden>
+                                                        <span id="displayTotalStandardPartCost"></span>
+                                                    </td>
+                                                    <td id="standardPartCostPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Sub-Contract Cost</td>
+                                                    <td class="text-right">
+                                                        <input type="number" id="totalSubContractCost" class="form-control"
+                                                            hidden>
+                                                        <span id="displayTotalSubContractCost"></span>
+                                                    </td>
+                                                    <td id="subContractCostPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Overhead Manufacture Cost</td>
+                                                    <td class="text-right">
+                                                        <input type="number" id="totalOverheadCost" class="form-control"
+                                                            hidden>
+                                                        <span id="displayTotalOverheadCost"></span>
+                                                    </td>
+                                                    <td id="overheadCostPercentage" class="text-right"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    {{-- Tabel Result --}}
+                                    <div class="table-responsive rounded table-smaller">
+                                        <table class="table table-bordered table-striped rounded">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th scope="col">Jenis</th>
+                                                    <th scope="col">Jumlah</th>
+                                                    <th scope="col">Presentase</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>COGS</td>
+                                                    <td id="COGS" class="text-right"></td>
+                                                    <td id="cogsPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Gross Profit Margin</td>
+                                                    <td id="GPM" class="text-right"></td>
+                                                    <td id="gpmPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>OH Organisasi</td>
+                                                    <td id="OHorg" class="text-right"></td>
+                                                    <td id="ohorgPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Net Operating Income</td>
+                                                    <td id="NOI" class="text-right"></td>
+                                                    <td id="noiPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pend / Biaya non Oper</td>
+                                                    <td id="BNP" class="text-right"></td>
+                                                    <td id="bnpPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Laba Sebelum pajak</td>
+                                                    <td id="LSP" class="text-right"></td>
+                                                    <td id="lspPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{-- Tabel Overhead --}}
+                                    <div class="table-responsive rounded table-smaller">
+                                        <table id="overheads-table" class="table table-bordered table-striped rounded">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th scope="col">Deskripsi Overhead Manufacture</th>
+                                                    <th scope="col">Biaya</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be dynamically inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    {{-- Tabel Detail Material Cost --}}
+                                    <div class="table-responsive rounded table-smaller">
+                                        <table id="material-table" class="table table-bordered table-striped rounded">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th scope="col">Item Name</th>
+                                                    <th scope="col">Drawing No</th>
+                                                    <th scope="col">Nama Material</th>
+                                                    <th scope="col">Jumlah</th>
+                                                    <th scope="col">Satuan</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be dynamically inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                    {{-- Tabel Detail Process Cost --}}
+                                    <div class="table-responsive rounded table-smaller">
+                                        <table id="costs-table" class="table table-bordered table-striped rounded overflow-scroll">
+                                            <thead class="thead-dark text-nowrap">
+                                                <tr colspan='9' class="">
+                                                    <h3 class="text-center mb-3 fw-bold">Detail Process Cost</h3>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="col">Item Name</th>
+                                                    <th scope="col">Item Number</th>
+                                                    <th scope="col">Machine Name</th>
+                                                    <th scope="col">Machine Cost (Est)</th>
+                                                    <th scope="col">Machine Cost (Real)</th>
+                                                    <th scope="col">Labor Cost</th>
+                                                    <th scope="col">Processing Cost</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Finished Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be dynamically inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
                             </div>
 
-                            <div class="table-responsive rounded table-smaller">
-                                <table id="overhead-table" class="table table-bordered table-striped rounded">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th scope="col">Deskripsi Overhead Manufacture</th>
-                                            <th scope="col">Biaya</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Data will be dynamically inserted here -->
-                                    </tbody>
-                                </table>
-                            </div>
 
-                            <div class="table-responsive rounded table-smaller">
-                                <table id="cost-table" class="table table-bordered table-striped rounded">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            {{-- <th scope="col">Item Name</th>
-                                            <th scope="col">Drawing No</th> --}}
-                                            <th scope="col">Item Number</th>
-                                            <th scope="col">Machine Name</th>
-                                            <th scope="col">Machine Cost (Est)</th>
-                                            <th scope="col">Machine Cost (Real)</th>
-                                            <th scope="col">Labor Cost</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Data will be dynamically inserted here -->
-                                    </tbody>
-                                </table>
-                            </div>
 
-                            <!-- New Calculation Result Table -->
-                            <div class="table-responsive rounded mt-4 table-smaller">
-                                <table class="table table-bordered table-striped rounded">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th scope="col">Category</th>
-                                            <th scope="col">Amount</th>
-                                            <th scope="col">Percentage</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>COGS</td>
-                                            <td id="COGS" class="text-right"></td>
-                                            <td id="cogsPercentage" class="text-right"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Gross Profit Margin</td>
-                                            <td id="GPM" class="text-right"></td>
-                                            <td id="gpmPercentage" class="text-right"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>OH Organisasi</td>
-                                            <td id="OHorg" class="text-right"></td>
-                                            <td id="ohorgPercentage" class="text-right"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Net Operating Income</td>
-                                            <td id="NOI" class="text-right"></td>
-                                            <td id="noiPercentage" class="text-right"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Pend / Biaya non Oper</td>
-                                            <td id="BNP" class="text-right"></td>
-                                            <td id="bnpPercentage" class="text-right"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Laba Sebelum pajak</td>
-                                            <td id="LSP" class="text-right"></td>
-                                            <td id="lspPercentage" class="text-right"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     </div>
 
@@ -342,12 +394,12 @@
             }
 
             function setPercentageValues(percentages) {
-                $('#materialCostPercentage').text(percentages.materialCostPercentage.toFixed(2) + '%');
-                $('#laborCostPercentage').text(percentages.laborCostPercentage.toFixed(2) + '%');
-                $('#machineCostPercentage').text(percentages.machineCostPercentage.toFixed(2) + '%');
-                $('#standardPartCostPercentage').text(percentages.standardPartCostPercentage.toFixed(2) + '%');
-                $('#subContractCostPercentage').text(percentages.subContractCostPercentage.toFixed(2) + '%');
-                $('#overheadCostPercentage').text(percentages.overheadCostPercentage.toFixed(2) + '%');
+                $('#materialCostPercentage').text(percentages.materialCostPercentage.toFixed(3) + '%');
+                $('#laborCostPercentage').text(percentages.laborCostPercentage.toFixed(3) + '%');
+                $('#machineCostPercentage').text(percentages.machineCostPercentage.toFixed(3) + '%');
+                $('#standardPartCostPercentage').text(percentages.standardPartCostPercentage.toFixed(3) + '%');
+                $('#subContractCostPercentage').text(percentages.subContractCostPercentage.toFixed(3) + '%');
+                $('#overheadCostPercentage').text(percentages.overheadCostPercentage.toFixed(3) + '%');
             }
 
             function updateTables(response) {
@@ -360,20 +412,43 @@
 
                 updateOverheadTable(response.overheads);
                 updateProcessingDataTable(response.processingData);
+                updateMaterialTable(response.processingData)
             }
 
 
             function updateOverheadTable(data) {
                 var columns = ['description', 'jumlah'];
                 var currencyColumns = ['jumlah']; // Columns that should be formatted as currency
-                updateTable('#overhead-table', data, columns, currencyColumns);
+                updateTable('#overheads-table', data, columns, currencyColumns);
             }
 
             function updateProcessingDataTable(processingData) {
-                var columns = ['item_number', 'machine', 'mach_cost', 'mach_cost_real', 'labor_cost_real'];
-                var currencyColumns = ['mach_cost', 'mach_cost_real',
-                'labor_cost_real']; // Columns to format as currency
-                updateTable('#cost-table', processingData, columns, currencyColumns);
+                // Define the columns we want to display, including nested properties
+                var columns = ['item_add.item', 'item_number', 'machine', 'mach_cost', 'mach_cost_real',
+                    'labor_cost_real', 'process_cost', 'status', 'finished_at'
+                ];
+
+                // Columns to format as currency
+                var currencyColumns = ['mach_cost', 'mach_cost_real', 'labor_cost_real', 'process_cost'];
+
+                // Calculate process_cost for each item
+                processingData.forEach(item => {
+                    const machCostReal = parseFloat(item.mach_cost_real) || 0;
+                    const laborCostReal = parseFloat(item.labor_cost_real) || 0;
+                    item.process_cost = machCostReal + laborCostReal; // Add process_cost property
+                });
+
+                updateTable('#costs-table', processingData, columns, currencyColumns);
+            }
+
+            var satuan = 'kg';
+
+            function updateMaterialTable(processingData) {
+                var columns = ['item_add.item', 'item_add.drawing_no', 'item_add.material', 'item_add.weight',
+                    satuan
+                ];
+                var currencyColumns = []; // If no currency formatting is needed for this table
+                updateTable('#material-table', processingData, columns, currencyColumns);
             }
 
             // Function to update HTML table with data
@@ -393,14 +468,24 @@
                     columns.forEach(column => {
                         var cell = document.createElement('td');
 
-                        // Format the value as Rupiah if the column is in currencyColumns
-                        if (currencyColumns.includes(column)) {
-                            cell.textContent = formatRupiah(parseFloat(item[
-                            column])); // Ensuring the value is a number
-                            cell.classList.add(
-                            'text-right'); // Add the text-right class for currency columns
+                        // Split the column to handle nested fields (e.g., 'item_add.drawing_no')
+                        var value = column.split('.').reduce((obj, key) => obj && obj[key], item);
+
+                        // Check if column is the 'weight' column and append unit
+                        if (column === 'item_add.weight' && value !== null && value !== undefined) {
+                            cell.textContent =
+                                `${value} ${satuan}`; // Append the unit 'kg' to weight
                         } else {
-                            cell.textContent = item[column];
+                            // Format the value as Rupiah if the column is in currencyColumns
+                            if (currencyColumns.includes(column)) {
+                                cell.textContent = formatRupiah(parseFloat(
+                                    value)); // Ensuring the value is a number
+                                cell.classList.add(
+                                    'text-right'); // Add the text-right class for currency columns
+                            } else {
+                                cell.textContent = value !== null && value !== undefined ? value :
+                                    '-';
+                            }
                         }
 
                         row.appendChild(cell);
@@ -427,6 +512,7 @@
             // Call the update functions with the example data
             updateOverheadTable(overheadData);
             updateProcessingDataTable(processingData);
+            updateMaterialTable(processingData);
             // Call the function when the "Calculation" page is loaded
             updateTitle('Calculation');
         });

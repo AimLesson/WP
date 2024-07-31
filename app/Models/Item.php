@@ -25,7 +25,7 @@ class Item extends Model
 
     public function processingAdds()
     {
-        return $this->hasMany(ProcessingAdd::class, 'item_number', 'item_number');
+        return $this->hasMany(ProcessingAdd::class, 'order_number', 'order_number');
     }
 
     public function order()
