@@ -130,7 +130,10 @@
                                 <table id="cost-table" class="table table-bordered table-striped rounded">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th scope="col">Machine Nama</th>
+                                            {{-- <th scope="col">Item Name</th>
+                                            <th scope="col">Drawing No</th> --}}
+                                            <th scope="col">Item Number</th>
+                                            <th scope="col">Machine Name</th>
                                             <th scope="col">Machine Cost (Est)</th>
                                             <th scope="col">Machine Cost (Real)</th>
                                             <th scope="col">Labor Cost</th>
@@ -367,9 +370,9 @@
             }
 
             function updateProcessingDataTable(processingData) {
-                var columns = ['machine', 'mach_cost', 'mach_cost_real', 'labor_cost'];
+                var columns = ['item_number','machine', 'mach_cost', 'mach_cost_real', 'labor_cost_real'];
                 var currencyColumns = ['mach_cost', 'mach_cost_real',
-                    'labor_cost'
+                    'labor_cost_real'
                 ]; // Columns to format as currency
                 updateTable('#cost-table', processingData, columns, currencyColumns);
             }

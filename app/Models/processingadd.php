@@ -55,8 +55,15 @@ class ProcessingAdd extends Model
         return $this->belongsTo(Order::class, 'order_number', 'order_number');
     }
 
+    // Define relationship to Item model using different key names
     public function item()
     {
-        return $this->belongsTo(ItemAdd::class, 'item_number', 'id');
+        return $this->belongsTo(Item::class, 'item_number', 'id');
+    }
+
+    // Define relationship to ItemAdd model
+    public function itemAdd()
+    {
+        return $this->belongsTo(ItemAdd::class, 'item_number', 'no_item');
     }
 }

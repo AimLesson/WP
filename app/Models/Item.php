@@ -23,6 +23,11 @@ class Item extends Model
         return $this->hasMany(ItemAdd::class, 'order_number', 'order_number');
     }
 
+    public function processingAdds()
+    {
+        return $this->hasMany(ProcessingAdd::class, 'item_number', 'item_number');
+    }
+
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_number', 'order_number');

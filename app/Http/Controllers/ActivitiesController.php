@@ -2238,9 +2238,10 @@ class ActivitiesController extends Controller
 
         $responseData = $this->formatResponseData($costs, $order);
 
-        // Filter processing data by order_id
+    // Filter processing data by order_id
         $processings = ProcessingAdd::where('order_number', $orderNumber)
-        ->get(['machine', 'mach_cost', 'labor_cost','duration']);
+        ->with(['item', 'itemAdd'])
+        ->get(['item_number', 'machine', 'mach_cost', 'labor_cost', 'duration']);
 
         if ($processings->isEmpty()) {
             Log::info('No processing data found for the given order_number.', ['order_number' => $orderNumber]);
@@ -2252,6 +2253,7 @@ class ActivitiesController extends Controller
                 $durationInHours = $this->convertDurationToHours($processing->duration);
                 Log::warning('Duration conversion failed.', ['duration' => $processing->duration]);
                 $processing->mach_cost_real = $durationInHours * $processing->mach_cost;
+                $processing->labor_cost_real = $durationInHours * $processing->labor_cost;
             }
         }
         $responseData['processingData'] = $processings;
