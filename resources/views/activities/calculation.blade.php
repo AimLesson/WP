@@ -348,46 +348,64 @@
             }
 
             function updateTables(response) {
-    // Log the entire response object to inspect its structure
-    console.log('Response:', response);
+                // Log the entire response object to inspect its structure
+                console.log('Response:', response);
 
-    // Log specific parts of the response to see their values
-    console.log('Overheads:', response.overheads);
-    console.log('Cost Details:', response.processingCosts.details);
-    console.log('Total Cost:', response.processingCosts.totalCost);
+                // Log specific parts of the response to see their values
+                console.log('Overheads:', response.overheads);
+                console.log('Processing Data:', response.processingData);
 
-    // Update overhead table
-    updateOverheadTable(response.overheads);
+                updateOverheadTable(response.overheads);
+                updateProcessingDataTable(response.processingData);
+            }
 
-    // Update cost table
-    updateCostTable(response.processingCosts.details);
-}
 
-function updateOverheadTable(data) {
-    var columns = ['description', 'jumlah'];
-    updateTable('#overhead-table', data, columns);
-}
+            function updateOverheadTable(data) {
+                var columns = ['description', 'jumlah'];
+                var currencyColumns = ['jumlah']; // Columns that should be formatted as currency
+                updateTable('#overhead-table', data, columns, currencyColumns);
+            }
 
-function updateCostTable(data) {
-    var columns = ['machine_name', 'estimated_cost', 'cost','labor_cost'];
-    updateTable('#cost-table', data, columns);
-}
+            function updateProcessingDataTable(processingData) {
+                var columns = ['machine', 'mach_cost', 'mach_cost_real', 'labor_cost'];
+                var currencyColumns = ['mach_cost', 'mach_cost_real',
+                    'labor_cost'
+                ]; // Columns to format as currency
+                updateTable('#cost-table', processingData, columns, currencyColumns);
+            }
 
-function updateTable(tableSelector, data, columns) {
-    var tableBody = $(tableSelector + ' tbody');
-    tableBody.empty();
-    data.forEach(function(item) {
-        var row = '<tr>';
-        columns.forEach(function(column) {
-            row += '<td>' + (column === 'jumlah' || column === 'estimated_cost' || column === 'cost'
-                    ? formatRupiah(item[column])
-                    : item[column]) +
-                   '</td>';
-        });
-        row += '</tr>';
-        tableBody.append(row);
-    });
-}
+            // Assume updateTable is a function defined elsewhere to update the HTML table
+            // Function to update HTML table with data
+            function updateTable(tableId, data, columns, currencyColumns = []) {
+                // Find the table's tbody using the provided tableId
+                var tbody = document.querySelector(tableId + ' tbody');
+
+                // Clear the existing rows in the table body
+                tbody.innerHTML = '';
+
+                // Iterate over the data array and create table rows
+                data.forEach(item => {
+                    // Create a new table row
+                    var row = document.createElement('tr');
+
+                    // Create cells for each column and append to the row
+                    columns.forEach(column => {
+                        var cell = document.createElement('td');
+
+                        // Format the value as Rupiah if the column is in currencyColumns
+                        if (currencyColumns.includes(column)) {
+                            cell.textContent = formatRupiah(item[column]);
+                        } else {
+                            cell.textContent = item[column];
+                        }
+
+                        row.appendChild(cell);
+                    });
+
+                    // Append the row to the tbody
+                    tbody.appendChild(row);
+                });
+            }
             // Helper function to format numbers as Rupiah
             function formatRupiah(num) {
                 return 'Rp. ' + num.toLocaleString(undefined, {
@@ -400,7 +418,9 @@ function updateTable(tableSelector, data, columns) {
             function updateTitle(pageTitle) {
                 document.title = pageTitle;
             }
-
+            // Call the update functions with the example data
+            updateOverheadTable(overheadData);
+            updateProcessingDataTable(processingData);
             // Call the function when the "Calculation" page is loaded
             updateTitle('Calculation');
         });

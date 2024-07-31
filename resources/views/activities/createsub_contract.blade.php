@@ -178,6 +178,7 @@
                             <thead>
                                 <tr>
                                     <th>Date of Delivery</th>
+                                    <th>Vendor</th>
                                     <th>Description Produk</th>
                                     <th>Quantity</th>
                                     <th>Unit</th>
@@ -190,6 +191,7 @@
                             <tbody>
                                 <tr>
                                     <td><input type="date" class="form-control" name="dod[]" required></td>
+                                    <td><input type="text" class="form-control" name="vendor[]" required></td>
                                     <td><input type="text" class="form-control" name="description[]" required></td>
                                     <td><input type="number" class="form-control qty" name="qty[]" min="1" required></td>
                                     <td><input type="text" class="form-control" name="unit[]" required></td>
@@ -268,35 +270,33 @@
         var cell2 = row.insertCell(1);
         var element2 = document.createElement("input");
         element2.type = "text";
-        element2.name = "description[]";
+        element2.name = "vendor[]";
         element2.classList.add("form-control");
         element2.required = true;
         cell2.appendChild(element2);
 
         var cell3 = row.insertCell(2);
         var element3 = document.createElement("input");
-        element3.type = "number";
-        element3.name = "qty[]";
-        element3.min = "1";
-        element3.classList.add("form-control", "qty");
+        element3.type = "text";
+        element3.name = "description[]";
+        element3.classList.add("form-control");
         element3.required = true;
         cell3.appendChild(element3);
 
         var cell4 = row.insertCell(3);
         var element4 = document.createElement("input");
-        element4.type = "text";
-        element4.name = "unit[]";
-        element4.classList.add("form-control");
+        element4.type = "number";
+        element4.name = "qty[]";
+        element4.min = "1";
+        element4.classList.add("form-control", "qty");
         element4.required = true;
         cell4.appendChild(element4);
 
         var cell5 = row.insertCell(4);
         var element5 = document.createElement("input");
-        element5.type = "number";
-        element5.step = "0.01";
-        element5.name = "price_unit[]";
-        element5.min = "0";
-        element5.classList.add("form-control", "price_unit");
+        element5.type = "text";
+        element5.name = "unit[]";
+        element5.classList.add("form-control");
         element5.required = true;
         cell5.appendChild(element5);
 
@@ -304,20 +304,30 @@
         var element6 = document.createElement("input");
         element6.type = "number";
         element6.step = "0.01";
-        element6.name = "total_price[]";
+        element6.name = "price_unit[]";
         element6.min = "0";
-        element6.classList.add("form-control", "total_price");
+        element6.classList.add("form-control", "price_unit");
         element6.required = true;
-        element6.readOnly = true;
         cell6.appendChild(element6);
 
         var cell7 = row.insertCell(6);
-        var element7 = document.createElement("textarea");
-        element7.name = "info[]";
-        element7.classList.add("form-control");
+        var element7 = document.createElement("input");
+        element7.type = "number";
+        element7.step = "0.01";
+        element7.name = "total_price[]";
+        element7.min = "0";
+        element7.classList.add("form-control", "total_price");
+        element7.required = true;
+        element7.readOnly = true;
         cell7.appendChild(element7);
 
         var cell8 = row.insertCell(7);
+        var element8 = document.createElement("textarea");
+        element8.name = "info[]";
+        element8.classList.add("form-control");
+        cell8.appendChild(element8);
+
+        var cell9 = row.insertCell(8);
         var removeButton = document.createElement("button");
         removeButton.type = "button";
         removeButton.classList.add("btn", "btn-danger");
@@ -325,7 +335,7 @@
         removeButton.onclick = function() {
             removeRow(this);
         };
-        cell8.appendChild(removeButton);
+        cell9.appendChild(removeButton);
     }
 
     function removeRow(button) {

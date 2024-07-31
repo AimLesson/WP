@@ -1725,6 +1725,7 @@ class ActivitiesController extends Controller
             'order_number' => 'required',
             'no_item' => 'required',
             'dod.*' => 'required|date',
+            'vendor.*' => 'required|string|max:255',
             'description.*' => 'required|string|max:255',
             'qty.*' => 'required|integer|min:1',
             'unit.*' => 'required|string|max:255',
@@ -1744,6 +1745,7 @@ class ActivitiesController extends Controller
                 'order_number' => $request->order_number,
                 'item_no' => $request->no_item,
                 'dod' => $dod,
+                'vendor' => $request->vendor[$index],
                 'description' => $request->description[$index],
                 'qty' => $request->qty[$index],
                 'unit' => $request->unit[$index],
@@ -1779,6 +1781,7 @@ class ActivitiesController extends Controller
             'order_number' => 'required',
             'no_item' => 'required',
             'dod' => 'required|date',
+            'vendor.*' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'qty' => 'required|integer|min:1',
             'unit' => 'required|string|max:255',
@@ -1803,6 +1806,7 @@ class ActivitiesController extends Controller
             'order_number' => $request->order_number,
             'item_no' => $request->no_item,
             'dod' => $request->dod,
+            'vendor' => $request->vendor,
             'description' => $request->description,
             'qty' => $request->qty,
             'unit' => $request->unit,
@@ -2227,18 +2231,37 @@ class ActivitiesController extends Controller
         $financialMetrics = $this->calculateFinancialMetrics($costs['totalSales'], $costs['totalCosts']);
         $this->storeWIPData($order, $costs, $financialMetrics);
 
+            // Retrieve the order_number from the Order model
+        $orderNumber = $order->order_number; // Ensure 'order_number' is the correct column name
+
+        Log::info('Order number retrieved.', ['order_number' => $orderNumber]);
+
         $responseData = $this->formatResponseData($costs, $order);
 
-        // Include additional data for the response
-        $processings = ProcessingAdd::all();
-        $costType = 'mach_cost';
-        $costData = $this->calculateProcessingCosts($processings, $costType);
+        // Filter processing data by order_id
+        $processings = ProcessingAdd::where('order_number', $orderNumber)
+        ->get(['machine', 'mach_cost', 'labor_cost','duration']);
 
-        // Merge costData into responseData
-        $responseData['processingCosts'] = $costData;
+        if ($processings->isEmpty()) {
+            Log::info('No processing data found for the given order_number.', ['order_number' => $orderNumber]);
+        } else {
+            Log::info('Processing data fetched.', ['order_number' => $orderNumber, 'processings' => $processings]);
+
+            // Calculate mach_cost_real for each processing item
+            foreach ($processings as $processing) {
+                $durationInHours = $this->convertDurationToHours($processing->duration);
+                Log::warning('Duration conversion failed.', ['duration' => $processing->duration]);
+                $processing->mach_cost_real = $durationInHours * $processing->mach_cost;
+            }
+        }
+        $responseData['processingData'] = $processings;
+
+        Log::info('Response data prepared.', ['responseData' => $responseData]);
 
         return response()->json($responseData);
     }
+
+
 
 
     // Fetch order with related data

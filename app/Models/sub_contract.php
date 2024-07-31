@@ -20,6 +20,7 @@ class sub_contract extends Model
         'price_unit',
         'total_price',
         'info',
+        'vendor'
     ];
 
     public $timestamps =false;
