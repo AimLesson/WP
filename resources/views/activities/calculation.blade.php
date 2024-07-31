@@ -45,7 +45,7 @@
                         </form>
                         <div id="calculation-result" style="display: none;">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <!-- Total Cost -->
                                     <div class="table-responsive rounded table-smaller">
                                         <table class="table table-bordered table-striped rounded">
@@ -124,75 +124,6 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    {{-- Tabel Result --}}
-                                    <div class="table-responsive rounded table-smaller">
-                                        <table class="table table-bordered table-striped rounded">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th scope="col">Jenis</th>
-                                                    <th scope="col">Jumlah</th>
-                                                    <th scope="col">Presentase</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>COGS</td>
-                                                    <td id="COGS" class="text-right"></td>
-                                                    <td id="cogsPercentage" class="text-right"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Gross Profit Margin</td>
-                                                    <td id="GPM" class="text-right"></td>
-                                                    <td id="gpmPercentage" class="text-right"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>OH Organisasi</td>
-                                                    <td id="OHorg" class="text-right"></td>
-                                                    <td id="ohorgPercentage" class="text-right"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Net Operating Income</td>
-                                                    <td id="NOI" class="text-right"></td>
-                                                    <td id="noiPercentage" class="text-right"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pend / Biaya non Oper</td>
-                                                    <td id="BNP" class="text-right"></td>
-                                                    <td id="bnpPercentage" class="text-right"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Laba Sebelum pajak</td>
-                                                    <td id="LSP" class="text-right"></td>
-                                                    <td id="lspPercentage" class="text-right"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    {{-- Tabel Overhead --}}
-                                    <div class="table-responsive rounded table-smaller">
-                                        <table id="overheads-table" class="table table-bordered table-striped rounded">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th scope="col">Deskripsi Overhead Manufacture</th>
-                                                    <th scope="col">Biaya</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <!-- Data will be dynamically inserted here -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
                                     {{-- Tabel Detail Material Cost --}}
                                     <div class="table-responsive rounded table-smaller">
                                         <table id="material-table" class="table table-bordered table-striped rounded">
@@ -211,6 +142,73 @@
                                         </table>
                                     </div>
                                 </div>
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    {{-- Tabel Overhead --}}
+                                    <div class="table-responsive rounded table-smaller">
+                                        <table id="overheads-table" class="table table-bordered table-striped rounded">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th scope="col">Deskripsi Overhead Manufacture</th>
+                                                    <th scope="col">Biaya</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be dynamically inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                        {{-- Tabel Result --}}
+                                        <div class="table-responsive rounded table-smaller">
+                                            <table class="table table-bordered table-striped rounded">
+                                                <thead class="thead-dark">
+                                                    <tr>
+                                                        <th scope="col">Jenis</th>
+                                                        <th scope="col">Jumlah</th>
+                                                        <th scope="col">Presentase</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>COGS</td>
+                                                        <td id="COGS" class="text-right"></td>
+                                                        <td id="cogsPercentage" class="text-right"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Gross Profit Margin</td>
+                                                        <td id="GPM" class="text-right"></td>
+                                                        <td id="gpmPercentage" class="text-right"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>OH Organisasi</td>
+                                                        <td id="OHorg" class="text-right"></td>
+                                                        <td id="ohorgPercentage" class="text-right"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Net Operating Income</td>
+                                                        <td id="NOI" class="text-right"></td>
+                                                        <td id="noiPercentage" class="text-right"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Pend / Biaya non Oper</td>
+                                                        <td id="BNP" class="text-right"></td>
+                                                        <td id="bnpPercentage" class="text-right"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Laba Sebelum pajak</td>
+                                                        <td id="LSP" class="text-right"></td>
+                                                        <td id="lspPercentage" class="text-right"></td>
+                                                    </tr>
+                                                    <tr>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                </div>
+                                
                             </div>
                             <div class="row">
                                     {{-- Tabel Detail Process Cost --}}

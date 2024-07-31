@@ -38,7 +38,7 @@
                                             <label for="order_number">Order Number:</label>
                                             <input type="text" id="order_number" name="order_number" class="form-control" value="{{ old('order_number', $orderNumber) }}">
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Filter</button>
+                                        <button type="submit" class="btn btn-primary btn-custom">Filter</button>
                                     </form>
 
                                     @if ($order)
