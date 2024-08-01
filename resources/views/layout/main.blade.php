@@ -238,7 +238,6 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-
         <!-- Preloader -->
         {{-- <div id="preloader" class="preloader flex-column justify-content-center align-items-center">
             <img class="" src="{{ asset('lte/dist/img/ATMILogo1.png') }}" alt="ATMILogo1" height="200"
@@ -415,6 +414,7 @@
     <!-- JavaScript DateTimePicker -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
+    
     <script>
         $(document).ready(function() {
             $('#purchasedate, #year').datepicker({
