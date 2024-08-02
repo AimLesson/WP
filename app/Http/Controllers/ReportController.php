@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ItemAdd;
-use App\Models\ProcessingAdd;
 use Carbon\Carbon;
 use App\Models\Order;
+use App\Models\ItemAdd;
 use Illuminate\Http\Request;
+use App\Models\ProcessingAdd;
+use Illuminate\Support\Facades\Log;
 
 class ReportController extends Controller
 {
@@ -24,19 +25,63 @@ class ReportController extends Controller
         $orderNumber = $request->input('order_number');
 
         // Fetch the order details
-    $order = Order::where('order_number', $orderNumber)->first();
+        $order = Order::where('order_number', $orderNumber)->first();
 
         // Fetch the items with the specified order_number and their related processing steps
         $items = ItemAdd::with('processingAdds')
             ->where('order_number', $orderNumber)
             ->get();
 
-        return view('report.controlsheet', compact('items', 'orderNumber','order'));
+        return view('report.controlsheet', compact('items', 'orderNumber', 'order'));
     }
 
-    public function productionsheet()
+    public function getItemsByOrder($orderNumber)
     {
-        return view('report.productionsheet');
+        $items = ItemAdd::where('order_number', $orderNumber)->get();
+        return response()->json($items);
+    }
+
+    public function productionsheet(Request $request)
+    {
+        // Log the incoming request parameters
+        Log::info('used_time request received', [
+            'order_number' => $request->order_number,
+            'item_number' => $request->item_number,
+        ]);
+
+        // Get orders with order_status not 'Finished'
+        $orders = Order::where('order_status', '!=', 'Finished')->get();
+        Log::info('Orders retrieved', ['orders' => json_encode($orders)]);
+
+        $orderNumbers = $orders->pluck('order_number');
+        Log::info('Order numbers', ['orderNumbers' => $orderNumbers->toArray()]);
+
+        // Get items where order_number is in the filtered orders
+        $items = ItemAdd::whereIn('order_number', $orderNumbers)->get();
+        Log::info('Items retrieved', ['items' => json_encode($items)]);
+
+        // Start the query for ProcessingAdd
+        $query = ProcessingAdd::whereIn('order_number', $orderNumbers);
+
+        // Filter by order_number if provided
+        if ($request->filled('order_number')) {
+            $query->where('order_number', $request->order_number);
+            Log::info('Filtering by order number', ['order_number' => $request->order_number]);
+        }
+
+        // Filter by item_number if provided and ensure item_number is in the filtered orders
+        if ($request->filled('item_number')) {
+            $query->where('item_number', $request->item_number);
+            Log::info('Filtering by item number', ['item_number' => $request->item_number]);
+        } else {
+            Log::info('No item number provided for filtering');
+        }
+
+        // Get the filtered used time data
+        $usedtime = $query->get();
+        Log::info('Used time data retrieved', ['usedtime' => json_encode($usedtime)]);
+
+        return view('report.productionsheet', compact('usedtime','orders','items'));
     }
     public function inspectionsheet()
     {

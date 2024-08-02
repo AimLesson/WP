@@ -28,7 +28,8 @@
                                 <form action="{{ route('activities.used_time') }}" method="GET">
                                     <div class="form-group">
                                         <label for="order_number" class="form-label">Order</label>
-                                        <select name="order_number" id="order_number" class="form-control select2" style="width: 100%;" required>
+                                        <select name="order_number" id="order_number" class="form-control select2"
+                                            style="width: 100%;" required>
                                             <option selected="selected" disabled>-- Select Order --</option>
                                             @foreach ($orders as $o)
                                                 <option value="{{ $o->order_number }}">{{ $o->order_number }}</option>
@@ -37,7 +38,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="item_number" class="form-label">Item</label>
-                                        <select name="item_number" id="item_number" class="form-control select2" style="width: 100%;" required>
+                                        <select name="item_number" id="item_number" class="form-control select2"
+                                            style="width: 100%;" required>
                                             <option selected="selected" disabled>-- Select Item --</option>
                                         </select>
                                     </div>
@@ -45,7 +47,7 @@
                                 </form>
                             </div>
                         </div>
-                    
+
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Used Time Data</h3>
@@ -80,7 +82,8 @@
                                                 <td>{{ $ut->operation }}</td>
                                                 <td>{{ gmdate('H:i:s', $ut->estimated_time * 3600) }}</td>
                                                 <td>
-                                                    <span id="duration-{{ $ut->id }}">{{ gmdate('H:i:s', $ut->duration) }}</span>
+                                                    <span
+                                                        id="duration-{{ $ut->id }}">{{ gmdate('H:i:s', $ut->duration) }}</span>
                                                 </td>
                                                 <td>{{ $ut->pending_at }}</td>
                                                 <td>{{ $ut->started_at }}</td>
@@ -88,24 +91,30 @@
                                                 <td>{{ ucfirst($ut->status) }}</td>
                                                 <td>
                                                     <div class="button-container">
-                                                        <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
+                                                        <form action="{{ route('activities.update_status', $ut->id) }}"
+                                                            method="POST">
                                                             @csrf
                                                             <input type="hidden" name="action" value="start">
-                                                            <input type="hidden" name="user_name" value="{{ $user->name }}">
+                                                            <input type="hidden" name="user_name"
+                                                                value="{{ $user->name }}">
                                                             <button type="submit" class="btn btn-success btn-start"
-                                                                {{ $ut->status != 'pending' && $ut->status != 'queue' || $ut->status == 'finished' ? 'disabled' : '' }}>Start</button>
+                                                                {{ ($ut->status != 'pending' && $ut->status != 'queue') || $ut->status == 'finished' ? 'disabled' : '' }}>Start</button>
                                                         </form>
-                                                        <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
+                                                        <form action="{{ route('activities.update_status', $ut->id) }}"
+                                                            method="POST">
                                                             @csrf
                                                             <input type="hidden" name="action" value="pending">
-                                                            <input type="hidden" name="user_name" value="{{ $user->name }}">
+                                                            <input type="hidden" name="user_name"
+                                                                value="{{ $user->name }}">
                                                             <button type="submit" class="btn btn-warning btn-reset"
                                                                 {{ $ut->status == 'pending' || $ut->status == 'finished' || $ut->status == 'queue' ? 'disabled' : '' }}>Pending</button>
                                                         </form>
-                                                        <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
+                                                        <form action="{{ route('activities.update_status', $ut->id) }}"
+                                                            method="POST">
                                                             @csrf
                                                             <input type="hidden" name="action" value="finish">
-                                                            <input type="hidden" name="user_name" value="{{ $user->name }}">
+                                                            <input type="hidden" name="user_name"
+                                                                value="{{ $user->name }}">
                                                             <button type="submit" class="btn btn-danger btn-remove"
                                                                 {{ $ut->status == 'finished' || $ut->status == 'queue' ? 'disabled' : '' }}>Finish</button>
                                                         </form>
@@ -126,27 +135,28 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $('#order_number').on('change', function() {
-    var orderNumber = $(this).val();
-    $('#item_number').empty();
-    $('#item_number').append('<option selected="selected" disabled>-- Select Item --</option>');
+            var orderNumber = $(this).val();
+            $('#item_number').empty();
+            $('#item_number').append('<option selected="selected" disabled>-- Select Item --</option>');
 
-    if (orderNumber) {
-        $.ajax({
-            url: '/items-by-order/' + orderNumber,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                console.log(data);
-                $.each(data, function(key, item) {
-                    $('#item_number').append('<option value="' + item.no_item + '">' + item.no_item + '</option>');
+            if (orderNumber) {
+                $.ajax({
+                    url: '/items-by-order/' + orderNumber,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        $.each(data, function(key, item) {
+                            $('#item_number').append('<option value="' + item.no_item + '">' +
+                                item.no_item + '</option>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error: ' + status + error);
+                    }
                 });
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX Error: ' + status + error);
             }
         });
-    }
-});
 
 
         window.addEventListener('DOMContentLoaded', (event) => {
