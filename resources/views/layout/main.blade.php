@@ -142,6 +142,19 @@
             /* Warna teks menjadi hitam atau sesuai kebutuhan */
         }
 
+        .custom-dropdown-toggle:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        /* Custom spacing for navbar items on smaller screens */
+        @media (max-width: 575.98px) {
+            .navbar-nav .nav-item {
+                margin-bottom: 10px; /* Adjust the value as needed */
+            }
+        }
+
+
         .btn-custom {
         background-color: #337EFF; /* Change this to your desired background color */
         color: white; /* Change this to your desired text color */
@@ -248,33 +261,35 @@
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand-lg navbar-white navbar-light">
             <!-- Left navbar links -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
+            <ul class="navbar-nav flex-column flex-sm-row">
+                <li class="nav-item order-1 order-sm-1">
                     <a id="menuIcon" class="nav-link" data-widget="pushmenu" href="#" role="button">
                         <i id="menuIcon" class="fas fa-bars"></i>
                     </a>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
+                <li class="nav-item order-2 order-sm-2">
                     <a href="{{ route('dashboard') }}" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">Dashboard</a>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
+                <li class="nav-item order-4 order-sm-3">
                     <a href="{{ route('file') }}" class="nav-link {{ Request::is('file') ? 'active' : '' }}">File</a>
                 </li>
                 @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
-                <li class="nav-item d-none d-sm-inline-block">
+                <li class="nav-item order-5 order-sm-4">
                     <a href="{{ route('setup') }}" class="nav-link {{ Request::is('setup') ? 'active' : '' }}">Setup</a>
                 </li>
                 @endif
-                <li class="nav-item d-none d-sm-inline-block">
+                <li class="nav-item order-3 order-sm-5">
                     <a href="{{ route('tables') }}" class="nav-link {{ Request::is('tables') ? 'active' : '' }}">Table</a>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
+                <li class="nav-item order-6 order-sm-6">
                     <a href="{{ route('activities') }}" class="nav-link {{ Request::is('activities') ? 'active' : '' }}">Activities</a>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
+                <li class="nav-item order-7 order-sm-7">
                     <a href="{{ route('report') }}" class="nav-link {{ Request::is('report') ? 'active' : '' }}">Report</a>
                 </li>
             </ul>
+            
+            
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
@@ -285,9 +300,9 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link custom-dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-bars"></i>
-                    </a>
+                    </a>                    
                     <div class="dropdown-menu dropdown-menu-right">
                         <a href="{{ route('dashboard') }}" class="dropdown-item {{ Request::is('dashboard') ? 'active' : '' }}">Dashboard</a>
                         <a href="{{ route('file') }}" class="dropdown-item {{ Request::is('file') ? 'active' : '' }}">File</a>

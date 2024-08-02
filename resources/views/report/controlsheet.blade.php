@@ -143,6 +143,15 @@
                             .text-white {
                                 color: #ffffff !important;
                             }
+
+                            @media print {
+                            table.dataTable {
+                                background-color: #007bff; /* Background color for the table */
+                            }
+                            table.dataTable td, table.dataTable th {
+                                background-color: #007bff; /* Background color for table cells */
+                            }
+                            }
                         </style>
                     </div>
                 </div>
@@ -152,26 +161,28 @@
     <!-- /.content -->
 </div>
 
-<!-- Include jQuery and DataTables JS -->
+<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- DataTables -->
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<!-- DataTables Buttons -->
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.colVis.min.js"></script>
 
-<!-- Include DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<!-- DataTables Buttons CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
+
 
 <script>
     $(document).ready(function() {
         $("#controlsheet").DataTable({
-            "responsive": false,
-            "lengthChange": false,
-            "autoWidth": false,
-            "scrollX": true,
-            "buttons": [
+            responsive: false,
+            lengthChange: false,
+            autoWidth: false,
+            scrollX: true,
+            buttons: [
                 {
                     extend: 'print',
                     className: 'btn-custom',
@@ -184,48 +195,97 @@
                             .prepend(
                                 `
                                 <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #000;">
-                            <div>
-                                <p><strong>PT ATMI SOLO</strong></p>
-                                <p>St. Michael Surakarta</p>
-                            </div>
-                            <div>
-                                <p>` + formattedDateTime + `</p>
-                            </div>
-                        </div>
-                        <div style="margin-top: 20px;">
-                            <table style="width: 100%; border-collapse: collapse;">
-                                <tr>
-                                    <td style="border: 1px solid #000; padding: 5px;"><strong>ORDER NUMBER</strong></td>
-                                    <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->order_number : '' }}</td>
-                                    <td style="border: 1px solid #000; padding: 5px;"><strong>ASSEMBLY DRAWING</strong></td>
-                                    <td style="border: 1px solid #000; padding: 5px;"></td>
-                                </tr>
-                                <tr>
-                                    <td style="border: 1px solid #000; padding: 5px;"><strong>ISSUED</strong></td>
-                                    <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->order_date : '' }}</td>
-                                    <td style="border: 1px solid #000; padding: 5px;"><strong>CUSTOMER</strong></td>
-                                    <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->customer : '' }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="border: 1px solid #000; padding: 5px;"><strong>DATE WANTED</strong></td>
-                                    <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->dod : '' }}</td>
-                                    <td style="border: 1px solid #000; padding: 5px;"><strong>PRODUCT</strong></td>
-                                    <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->product : '' }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="border: 1px solid #000; padding: 5px;"><strong>No SO</strong></td>
-                                    <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->so_number : '' }}</td>
-                                    <td style="border: 1px solid #000; padding: 5px;"><strong>NO OF PRODUCTS</strong></td>
-                                    <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->qty : '' }}</td>
-                                </tr>
-                            </table>
-                        </div>
+                                    <div>
+                                        <p><strong>PT ATMI SOLO</strong></p>
+                                        <p>St. Michael Surakarta</p>
+                                    </div>
+                                    <div>
+                                        <p>` + formattedDateTime + `</p>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 20px;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>ORDER NUMBER</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->order_number : '' }}</td>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>ASSEMBLY DRAWING</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>ISSUED</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->order_date : '' }}</td>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>CUSTOMER</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->customer : '' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>DATE WANTED</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->dod : '' }}</td>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>PRODUCT</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->product : '' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>No SO</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->so_number : '' }}</td>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>NO OF PRODUCTS</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->qty : '' }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
                                 `
                             );
 
+                        // Add table styles
                         $(win.document.body).find('table')
-                            .addClass('compact')
-                            .css('font-size', 'inherit');
+                            .addClass('table table-bordered')
+                            .css('font-size', 'inherit')
+                            .css('width', '100%')
+                            .css('border-collapse', 'collapse');
+
+                        $(win.document.body).find('th, td')
+                            .css('border', '1px solid #000')
+                            .css('padding', '8px')
+                            .css('text-align', 'left');
+
+                        $(win.document.body).find('th')
+                            .css('background-color', '#28a745')
+                            .css('color', '#000');
+
+                        // Specific status styles
+                        $(win.document.body).find('td.bg-success')
+                            .css('background-color', '#28a745')
+                            .css('color', '#ffffff');
+                        $(win.document.body).find('td.bg-warning')
+                            .css('background-color', '#ffc107')
+                            .css('color', '#ffffff');
+                        $(win.document.body).find('td.bg-primary')
+                            .css('background-color', '#007bff')
+                            .css('color', '#ffffff');
+                        $(win.document.body).find('td.bg-secondary')
+                            .css('background-color', '#6c757d')
+                            .css('color', '#ffffff');
+
+                        // Add print-specific styles
+                        var printStyles = `
+                            <style>
+                                .bg-success {
+                                    background-color: #28a745 !important;
+                                    color: #ffffff !important;
+                                }
+                                .bg-warning {
+                                    background-color: #ffc107 !important;
+                                    color: #ffffff !important;
+                                }
+                                .bg-primary {
+                                    background-color: #007bff !important;
+                                    color: #ffffff !important;
+                                }
+                                .bg-secondary {
+                                    background-color: #6c757d !important;
+                                    color: #ffffff !important;
+                                }
+                            </style>
+                        `;
+                        $(win.document.head).append(printStyles);
                     }
                 },
                 {
@@ -239,13 +299,13 @@
             ]
         }).buttons().container().appendTo('#controlsheet_wrapper .col-md-6:eq(0)');
 
-        // Fungsi untuk mengubah judul berdasarkan halaman
-        function updateTitle(pageTitle) {
-            document.title = pageTitle;
-        }
+    // Update title
+    function updateTitle(pageTitle) {
+        document.title = pageTitle;
+    }
 
-        // Panggil fungsi ini saat halaman "Control Sheet" dimuat
-        updateTitle('Control Sheet');
-    });
+    updateTitle('Control Sheet');
+});
+
 </script>
 @endsection
