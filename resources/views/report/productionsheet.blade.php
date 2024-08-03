@@ -55,6 +55,7 @@
                             <table id="machine" class="table table-head-fixed text-nowrap mt-4">
                                 <thead>
                                     <tr>
+                                        <th>QR Code</th>
                                         <th>Cost Palace</th>
                                         <th>Finish Date</th>
                                         <th>Operation</th>
@@ -66,11 +67,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @php
-                                    $process = \App\Models\processingAdd::get();
-                                    @endphp
-                                    @foreach ($process as $m)
+                                    @foreach ($usedtime as $m)
                                     <tr>
+                                        <td>
+                                            @if($m->barcode_id)
+                                                {!! QrCode::size(100)->generate($m->barcode_id) !!}
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
                                         <td>{{ $m->machine }}</td>
                                         <td>{{ $m->date_wanted }}</td>
                                         <td>{{ $m->operation }}</td>
@@ -95,6 +100,9 @@
     <!-- /.content -->
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
 <script>
     $('#order_number').on('change', function () {
         var orderNumber = $(this).val();
@@ -107,12 +115,17 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    $.each(data, function (key, item) {
-                        $('#item_number').append('<option value="' + item.no_item + '">' + item.no_item + '</option>');
-                    });
+                    console.log(data);  // Debug: Log the data to see the response
+                    if (data.length > 0) {
+                        $.each(data, function (key, item) {
+                            $('#item_number').append('<option value="' + item.no_item + '">' + item.no_item + '</option>');
+                        });
+                    } else {
+                        $('#item_number').append('<option disabled>No items found</option>');
+                    }
                 },
                 error: function (xhr, status, error) {
-                    console.error('AJAX Error: ' + status + error);
+                    console.error('AJAX Error: ' + status + ' ' + error);  // Debug: Log the error details
                 }
             });
         }
@@ -124,4 +137,5 @@
 
     updateTitle('Production Sheet');
 </script>
+
 @endsection

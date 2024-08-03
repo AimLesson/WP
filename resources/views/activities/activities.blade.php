@@ -246,6 +246,8 @@
     </script>
     <!-- Tambahkan jQuery (pastikan untuk menyesuaikan versi yang sesuai) -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+
 
     <script>
         // Gunakan jQuery untuk menambahkan kelas 'active' pada klik menu

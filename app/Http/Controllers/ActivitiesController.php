@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\WIP;
 use App\Models\Item;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\WPLink;
 use GuzzleHttp\Client;
 use App\Models\ItemAdd;
 use App\Models\Machine;
@@ -19,7 +21,6 @@ use App\Models\OrderUnit;
 use App\Models\Quotation;
 use App\Models\Department;
 use App\Models\processing;
-use App\Models\WIP;
 use App\Models\SalesOrder;
 use App\Models\ProductType;
 use App\Models\QuotationAdd;
@@ -31,8 +32,8 @@ use App\Models\standart_part;
 use App\Models\StandartpartAPI;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Unique;
+use Illuminate\Support\Facades\Validator;
 
 class ActivitiesController extends Controller
 {
@@ -1387,6 +1388,7 @@ class ActivitiesController extends Controller
             ]);
 
             $processing_id = uniqid();
+            $barcode_id = $this->generateBarcodeId($request->order_number, $index);
 
             Processingadd::create([
                 'processing_id' => $processing_id,
@@ -1400,14 +1402,29 @@ class ActivitiesController extends Controller
                 'mach_cost' => $request->machine_cost[$index],
                 'labor_cost' => $request->labor_cost[$index],
                 'total' => $request->total[$index],
+                'barcode_id' => $barcode_id
             ]);
 
-            Log::info('Processing item saved', ['index' => $index]);
+            Log::info('Processing item saved', ['index' => $index, 'barcode_id' => $barcode_id]);
         }
 
         // Redirect with success message
         Log::info('All items processed successfully');
         return redirect()->route('activities.processing')->with('success', 'Process(es) added successfully.');
+    }
+
+    /**
+     * Generate a structured barcode ID.
+     *
+     * @param string $orderNumber
+     * @param int $index
+     * @return string
+     */
+    private function generateBarcodeId($orderNumber, $index)
+    {
+        $date = date('Ymd');
+        $uniqueId = strtoupper(uniqid());
+        return "{$orderNumber}-{$date}-{$index}-{$uniqueId}";
     }
 
 
@@ -2252,8 +2269,8 @@ class ActivitiesController extends Controller
 
         // Filter processing data by order_number
         $processings = ProcessingAdd::where('order_number', $orderNumber)
-        ->with(['itemAdd'])
-        ->get(['item_number', 'machine', 'mach_cost', 'labor_cost', 'duration', 'finished_at', 'status']);
+            ->with(['itemAdd', 'WPLink'])
+            ->get(['item_number', 'machine', 'mach_cost', 'labor_cost', 'duration', 'finished_at', 'status']);
         if ($processings->isEmpty()) {
             Log::info('No processing data found for the given order_number.', ['order_number' => $orderNumber]);
         } else {
@@ -2280,13 +2297,19 @@ class ActivitiesController extends Controller
         }
         $responseData['processingData'] = $processings;
 
+        $material = WPLink::where('order_number', $orderNumber)->get();
+        if ($material->isEmpty()) {
+            Log::info('No material data found for the given order_number.', ['order_number' => $orderNumber]);
+        } else {
+            Log::info('Material data fetched.', ['order_number' => $orderNumber, 'materials' => $material]);
+        }
+
+        $responseData['material'] = $material;
+
         Log::info('Response data prepared.', ['responseData' => $responseData]);
 
         return response()->json($responseData, 200); // Ensure status code 200 for success
     }
-
-
-
 
 
     // Fetch order with related data
@@ -2301,6 +2324,24 @@ class ActivitiesController extends Controller
         }
     }
 
+    private function fetchWPLinkCosts($orderNumber, $jenis)
+    {
+        try {
+            Log::info('Fetching WPLink costs.', ['order_number' => $orderNumber, 'jenis' => $jenis]);
+
+            $total = WPLink::where('order_number', $orderNumber)
+                ->where('jenis', $jenis)
+                ->sum('harga');
+
+            Log::info('WPLink costs fetched.', ['order_number' => $orderNumber, 'jenis' => $jenis, 'harga' => $total]);
+
+            return $total;
+        } catch (\Exception $e) {
+            Log::error('WPLink fetch failed.', ['order_number' => $orderNumber, 'jenis' => $jenis, 'error' => $e->getMessage()]);
+            return 0;
+        }
+    }
+
     // Calculate costs
     private function calculateCosts($order)
     {
@@ -2308,13 +2349,13 @@ class ActivitiesController extends Controller
             $totalSales = $order->salesOrder->total_amount ?? 0;
             Log::info('Total sales calculated.', ['total_sales' => $totalSales]);
 
-            $totalMaterialCost = $order->items->sum('material_cost');
+            $totalMaterialCost = $this->fetchWPLinkCosts($order->order_number, 'material');
+            $totalStandardPartCost = $this->fetchWPLinkCosts($order->order_number, 'parts');
             $machineCostResult = $this->calculateProcessingCosts($order->processings, 'mach_cost');
             $laborCostResult = $this->calculateProcessingCosts($order->processings, 'labor_cost');
             $totalMachineCost = $machineCostResult['totalCost'];
             $totalLaborCost = $laborCostResult['totalCost'];
             $totalSubContractCost = $order->subContracts->sum('total_price');
-            $totalStandardPartCost = $order->standartParts->sum('total');
             $totalOverheadCost = $order->overheads->sum('jumlah');
 
             Log::info('Costs calculated.', [

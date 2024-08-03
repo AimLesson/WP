@@ -69,7 +69,7 @@ class ReportController extends Controller
             Log::info('Filtering by order number', ['order_number' => $request->order_number]);
         }
 
-        // Filter by item_number if provided and ensure item_number is in the filtered orders
+        // Filter by item_number if provided
         if ($request->filled('item_number')) {
             $query->where('item_number', $request->item_number);
             Log::info('Filtering by item number', ['item_number' => $request->item_number]);
@@ -81,7 +81,7 @@ class ReportController extends Controller
         $usedtime = $query->get();
         Log::info('Used time data retrieved', ['usedtime' => json_encode($usedtime)]);
 
-        return view('report.productionsheet', compact('usedtime','orders','items'));
+        return view('report.productionsheet', compact('usedtime', 'orders', 'items'));
     }
     public function inspectionsheet()
     {

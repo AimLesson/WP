@@ -45,6 +45,7 @@
                                             <th>Operation</th>
                                             <th>Estimated Time</th>
                                             <th>Total Process</th>
+                                            <th>QR Code</th>
                                             <th>Created At</th>
                                             <th>Action</th>
                                         </tr>
@@ -52,7 +53,7 @@
                                     <tbody>
                                         @foreach ($processing as $pr)
                                             <tr>
-                                                <td >{{ $pr->id }}</td>
+                                                <td>{{ $pr->id }}</td>
                                                 <td><a href="#">{{ $pr->order_number }}</a></td>
                                                 <td>{{ $pr->item_number }}</td>
                                                 <td>{{ $pr->date_wanted }}</td>
@@ -60,6 +61,13 @@
                                                 <td>{{ $pr->operation }}</td>
                                                 <td>{{ $pr->estimated_time }}</td>
                                                 <td>{{ formatRupiah($pr->mach_cost) }}</td>
+                                                <td>
+                                                    @if($pr->barcode_id)
+                                                        {!! QrCode::size(100)->generate($pr->barcode_id) !!}
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </td>
                                                 <td>{{ $pr->created_at }}</td>
                                                 <td>
                                                     <a href="{{ route('activities.editprocessing',$pr->id) }}"
@@ -125,14 +133,13 @@
                 Swal.fire({
                     icon: 'error',
                     title: errorAlert,
-                    position: 'top-end', // Mengubah posisi ke tengah
-                    showConfirmButton: false, // Menampilkan tombol OK
+                    position: 'top-end',
+                    showConfirmButton: false,
                     timer: 5000,
                     toast: true,
                 });
             }
 
-            // Menampilkan pesan keberhasilan dari sesi menggunakan SweetAlert
             var successAlert = '{{ session('success') }}';
             if (successAlert !== '') {
                 Swal.fire({
@@ -145,7 +152,6 @@
                 });
             }
 
-            // Fungsi untuk mengonversi angka ke format rupiah
             function formatRupiah(angka) {
                 var number_string = angka.toString();
                 var split = number_string.split(',');
@@ -162,31 +168,22 @@
                 return 'Rp ' + rupiah;
             }
 
-            // Mengambil elemen HTML yang menampilkan total_amount di dalam tabel
             var totalAmountElements = document.querySelectorAll('.totalamount');
 
-            // Iterasi melalui setiap elemen dan mengonversi nilainya ke format rupiah
             totalAmountElements.forEach(function(totalAmountElement) {
                 var totalAmount = totalAmountElement.textContent.trim();
                 var formattedTotalAmount = formatRupiah(totalAmount);
                 totalAmountElement.textContent = formattedTotalAmount;
             });
 
-            // Mengambil nilai total_amount dan tax
             var totalAmount = totalAmountElement.textContent.trim();
-
-            // Mengonversi nilai total_amount dan tax ke format rupiah
             var formattedTotalAmount = formatRupiah(totalAmount);
-
-            // Menetapkan nilai yang sudah dikonversi ke elemen HTML
             totalAmountElement.textContent = formattedTotalAmount;
 
-            // Fungsi untuk mengubah judul berdasarkan halaman
             function updateTitle(pageTitle) {
                 document.title = pageTitle;
             }
 
-            // Panggil fungsi ini saat halaman "barcode" dimuat
             updateTitle('Items');
         });
     </script>

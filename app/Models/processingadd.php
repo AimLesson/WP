@@ -67,5 +67,9 @@ class ProcessingAdd extends Model
         return $this->belongsTo(ItemAdd::class, 'item_number', 'no_item');
     }
 
+    public function WPLink()
+    {
+        return $this->belongsTo(WPLink::class, 'item_number', 'no_item');
+    }
 
 }

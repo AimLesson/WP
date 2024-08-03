@@ -296,6 +296,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 
         Route::get('/items-by-order/{orderNumber}', [ActivitiesController::class,'getItemsByOrderNumber']);
         Route::get('/items-by-orders/{orderNumber}', [ReportController::class,'getItemsByOrderNumber']);
+        Route::get('/items-by-orders/{orderNumber}', [ReportController::class, 'getItemsByOrder']);
 
 
         //activities - processing

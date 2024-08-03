@@ -1,10 +1,11 @@
 @extends('activities.activities')
 @section('content')
-<style>
-    tbody tr {
-        height: 40px; /* Set the desired height for each row */
-    }
-</style>
+    <style>
+        tbody tr {
+            height: 40px;
+            /* Set the desired height for each row */
+        }
+    </style>
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <div class="content-header">
@@ -129,11 +130,12 @@
                                         <table id="material-table" class="table table-bordered table-striped rounded">
                                             <thead class="thead-dark">
                                                 <tr>
-                                                    <th scope="col">Item Name</th>
-                                                    <th scope="col">Drawing No</th>
-                                                    <th scope="col">Nama Material</th>
+                                                    <th scope="col">Tanggal</th>
+                                                    <th scope="col">Nama Barang</th>
                                                     <th scope="col">Jumlah</th>
                                                     <th scope="col">Satuan</th>
+                                                    <th scope="col">Harga</th>
+                                                    <th scope="col">Barcode ID</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -142,7 +144,7 @@
                                         </table>
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <div class="row">
                                 <div class="col-md-5">
@@ -160,81 +162,82 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    
-                                        {{-- Tabel Result --}}
-                                        <div class="table-responsive rounded table-smaller">
-                                            <table class="table table-bordered table-striped rounded">
-                                                <thead class="thead-dark">
-                                                    <tr>
-                                                        <th scope="col">Jenis</th>
-                                                        <th scope="col">Jumlah</th>
-                                                        <th scope="col">Presentase</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>COGS</td>
-                                                        <td id="COGS" class="text-right"></td>
-                                                        <td id="cogsPercentage" class="text-right"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Gross Profit Margin</td>
-                                                        <td id="GPM" class="text-right"></td>
-                                                        <td id="gpmPercentage" class="text-right"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>OH Organisasi</td>
-                                                        <td id="OHorg" class="text-right"></td>
-                                                        <td id="ohorgPercentage" class="text-right"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Net Operating Income</td>
-                                                        <td id="NOI" class="text-right"></td>
-                                                        <td id="noiPercentage" class="text-right"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Pend / Biaya non Oper</td>
-                                                        <td id="BNP" class="text-right"></td>
-                                                        <td id="bnpPercentage" class="text-right"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Laba Sebelum pajak</td>
-                                                        <td id="LSP" class="text-right"></td>
-                                                        <td id="lspPercentage" class="text-right"></td>
-                                                    </tr>
-                                                    <tr>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                </div>
-                                
-                            </div>
-                            <div class="row">
-                                    {{-- Tabel Detail Process Cost --}}
+
+                                    {{-- Tabel Result --}}
                                     <div class="table-responsive rounded table-smaller">
-                                        <table id="costs-table" class="table table-bordered table-striped rounded overflow-scroll">
-                                            <thead class="thead-dark text-nowrap">
-                                                <tr colspan='9' class="">
-                                                    <h3 class="text-center mb-3 fw-bold">Detail Process Cost</h3>
-                                                </tr>
+                                        <table class="table table-bordered table-striped rounded">
+                                            <thead class="thead-dark">
                                                 <tr>
-                                                    <th scope="col">Item Name</th>
-                                                    <th scope="col">Item Number</th>
-                                                    <th scope="col">Machine Name</th>
-                                                    <th scope="col">Machine Cost (Est)</th>
-                                                    <th scope="col">Machine Cost (Real)</th>
-                                                    <th scope="col">Labor Cost</th>
-                                                    <th scope="col">Processing Cost</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col">Finished Date</th>
+                                                    <th scope="col">Jenis</th>
+                                                    <th scope="col">Jumlah</th>
+                                                    <th scope="col">Presentase</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <!-- Data will be dynamically inserted here -->
+                                                <tr>
+                                                    <td>COGS</td>
+                                                    <td id="COGS" class="text-right"></td>
+                                                    <td id="cogsPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Gross Profit Margin</td>
+                                                    <td id="GPM" class="text-right"></td>
+                                                    <td id="gpmPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>OH Organisasi</td>
+                                                    <td id="OHorg" class="text-right"></td>
+                                                    <td id="ohorgPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Net Operating Income</td>
+                                                    <td id="NOI" class="text-right"></td>
+                                                    <td id="noiPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pend / Biaya non Oper</td>
+                                                    <td id="BNP" class="text-right"></td>
+                                                    <td id="bnpPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Laba Sebelum pajak</td>
+                                                    <td id="LSP" class="text-right"></td>
+                                                    <td id="lspPercentage" class="text-right"></td>
+                                                </tr>
+                                                <tr>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                {{-- Tabel Detail Process Cost --}}
+                                <div class="table-responsive rounded table-smaller">
+                                    <table id="costs-table"
+                                        class="table table-bordered table-striped rounded overflow-scroll">
+                                        <thead class="thead-dark text-nowrap">
+                                            <tr colspan='9' class="">
+                                                <h3 class="text-center mb-3 fw-bold">Detail Process Cost</h3>
+                                            </tr>
+                                            <tr>
+                                                <th scope="col">Item Name</th>
+                                                <th scope="col">Item Number</th>
+                                                <th scope="col">Machine Name</th>
+                                                <th scope="col">Machine Cost (Est)</th>
+                                                <th scope="col">Machine Cost (Real)</th>
+                                                <th scope="col">Labor Cost</th>
+                                                <th scope="col">Processing Cost</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Finished Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Data will be dynamically inserted here -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
 
@@ -245,6 +248,7 @@
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
                     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
                 </div>
                 <!-- /.row (main row) -->
             </div><!-- /.container-fluid -->
@@ -407,10 +411,12 @@
                 // Log specific parts of the response to see their values
                 console.log('Overheads:', response.overheads);
                 console.log('Processing Data:', response.processingData);
+                console.log('Material Data:', response.material);
+
 
                 updateOverheadTable(response.overheads);
                 updateProcessingDataTable(response.processingData);
-                updateMaterialTable(response.processingData)
+                updateMaterialTable(response.material)
             }
 
 
@@ -439,14 +445,33 @@
                 updateTable('#costs-table', processingData, columns, currencyColumns);
             }
 
-            var satuan = 'kg';
-
-            function updateMaterialTable(processingData) {
-                var columns = ['item_add.item', 'item_add.drawing_no', 'item_add.material', 'item_add.weight',
-                    satuan
-                ];
+            function updateMaterialTable(material) {
+                var columns = ['created_at', 'material', 'jumlah', 'satuan', 'harga', 'barcode_id'];
                 var currencyColumns = []; // If no currency formatting is needed for this table
-                updateTable('#material-table', processingData, columns, currencyColumns);
+                updateTable('#material-table', material, columns, currencyColumns);
+            }
+
+            function formatDate(dateString) {
+                if (!dateString) return '-';
+                const date = new Date(dateString);
+                const options = {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                };
+                return new Intl.DateTimeFormat('en-GB', options).format(date);
+            }
+
+            // Function to generate QR code
+            function generateQRCode(value, cell) {
+                if (!value) return;
+                var qrDiv = document.createElement('div');
+                new QRCode(qrDiv, {
+                    text: value,
+                    width: 64,
+                    height: 64
+                });
+                cell.appendChild(qrDiv);
             }
 
             // Function to update HTML table with data
@@ -469,17 +494,23 @@
                         // Split the column to handle nested fields (e.g., 'item_add.drawing_no')
                         var value = column.split('.').reduce((obj, key) => obj && obj[key], item);
 
-                        // Check if column is the 'weight' column and append unit
-                        if (column === 'item_add.weight' && value !== null && value !== undefined) {
+                        // Format the created_at and finished_at fields
+                        if (column === 'created_at' || column === 'finished_at') {
+                            cell.textContent = formatDate(value);
+                        } else if (column === 'barcode_id') {
+                            generateQRCode(value, cell);
+                        } else if (column === 'item_add.weight' && value !== null && value !==
+                            undefined) {
+                            // Check if column is the 'weight' column and append unit
                             cell.textContent =
-                                `${value} ${satuan}`; // Append the unit 'kg' to weight
+                            `${value} ${satuan}`; // Append the unit 'kg' to weight
                         } else {
                             // Format the value as Rupiah if the column is in currencyColumns
                             if (currencyColumns.includes(column)) {
                                 cell.textContent = formatRupiah(parseFloat(
-                                    value)); // Ensuring the value is a number
+                                value)); // Ensuring the value is a number
                                 cell.classList.add(
-                                    'text-right'); // Add the text-right class for currency columns
+                                'text-right'); // Add the text-right class for currency columns
                             } else {
                                 cell.textContent = value !== null && value !== undefined ? value :
                                     '-';
@@ -493,6 +524,8 @@
                     tbody.appendChild(row);
                 });
             }
+
+
 
 
             // Helper function to format numbers as Rupiah

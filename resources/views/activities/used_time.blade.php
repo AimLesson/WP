@@ -44,7 +44,10 @@
                                         </select>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                                    <button type="button" class="btn btn-secondary btn-custom" id="scan-qr-btn">Scan QR
+                                        Code</button>
                                 </form>
+                                <div id="reader" style="width: 100%; display: none;"></div>
                             </div>
                         </div>
 
@@ -53,11 +56,12 @@
                                 <h3 class="card-title">Used Time Data</h3>
                             </div>
                             <div class="card-body">
-                                <table id="customer" class="table table-head-fixed text-nowrap">
+                                <table class="table table-head-fixed text-nowrap ">
                                     <thead>
                                         <tr>
                                             <th>Order Number</th>
                                             <th>Item Number</th>
+                                            <th>QR ID</th>
                                             <th>Date Wanted</th>
                                             <th>Operator</th>
                                             <th>Machine</th>
@@ -76,13 +80,13 @@
                                             <tr>
                                                 <td>{{ $ut->order_number }}</td>
                                                 <td>{{ $ut->item_number }}</td>
+                                                <td>{{ $ut->barcode_id }}</td>
                                                 <td>{{ $ut->date_wanted }}</td>
                                                 <td>{{ $ut->user_name }}</td>
                                                 <td>{{ $ut->machine }}</td>
                                                 <td>{{ $ut->operation }}</td>
                                                 <td>{{ gmdate('H:i:s', $ut->estimated_time * 3600) }}</td>
-                                                <td>
-                                                    <span
+                                                <td><span
                                                         id="duration-{{ $ut->id }}">{{ gmdate('H:i:s', $ut->duration) }}</span>
                                                 </td>
                                                 <td>{{ $ut->pending_at }}</td>
@@ -133,6 +137,8 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $('#order_number').on('change', function() {
             var orderNumber = $(this).val();
@@ -157,6 +163,52 @@
                 });
             }
         });
+
+        $('#scan-qr-btn').on('click', function() {
+            $('#reader').show();
+            console.log("QR scan button clicked. Initializing Html5Qrcode...");
+            const html5QrCode = new Html5Qrcode("reader");
+            const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+                console.log(`Code matched = ${decodedText}`, decodedResult);
+                $('#reader').hide();
+                console.log("Stopping Html5Qrcode...");
+                html5QrCode.stop().then((ignore) => {
+                    console.log("Html5Qrcode stopped successfully.");
+                    console.log(`Scanned QR Code Value: ${decodedText}`);
+                    filterTableByQrCode(decodedText);
+                }).catch((err) => {
+                    console.error("Error stopping Html5Qrcode:", err);
+                });
+            };
+
+            const config = {
+                fps: 10,
+                qrbox: {
+                    width: 250,
+                    height: 250
+                }
+            };
+            html5QrCode.start({
+                    facingMode: "environment"
+                }, config, qrCodeSuccessCallback)
+                .catch((err) => {
+                    console.error("Error starting Html5Qrcode:", err);
+                });
+        });
+
+        function filterTableByQrCode(barcode_id) {
+            console.log(`Filtering table for barcode ID: ${barcode_id}`);
+            $('tbody tr').each(function() {
+                var cells = $(this).find('td');
+                var rowBarcodeId = cells.eq(2).text().trim(); // Adjusted index to 2
+                console.log(`Row barcode ID: ${rowBarcodeId}`);
+                if (rowBarcodeId === barcode_id) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
 
 
         window.addEventListener('DOMContentLoaded', (event) => {
