@@ -56,12 +56,12 @@
                                 <h3 class="card-title">Used Time Data</h3>
                             </div>
                             <div class="card-body">
-                                <table class="table table-head-fixed text-nowrap ">
+                                <table id='customer' class="table table-head-fixed text-nowrap ">
                                     <thead>
                                         <tr>
                                             <th>Order Number</th>
                                             <th>Item Number</th>
-                                            <th>QR ID</th>
+                                            <th style="display: none;">QR ID</th>
                                             <th>Date Wanted</th>
                                             <th>Operator</th>
                                             <th>Machine</th>
@@ -80,7 +80,7 @@
                                             <tr>
                                                 <td>{{ $ut->order_number }}</td>
                                                 <td>{{ $ut->item_number }}</td>
-                                                <td>{{ $ut->barcode_id }}</td>
+                                                <td style="display: none;">{{ $ut->barcode_id }}</td>
                                                 <td>{{ $ut->date_wanted }}</td>
                                                 <td>{{ $ut->user_name }}</td>
                                                 <td>{{ $ut->machine }}</td>

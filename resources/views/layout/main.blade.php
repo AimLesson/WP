@@ -288,8 +288,8 @@
                     <a href="{{ route('report') }}" class="nav-link {{ Request::is('report') ? 'active' : '' }}">Report</a>
                 </li>
             </ul>
-            
-            
+
+
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
@@ -302,7 +302,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link custom-dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-bars"></i>
-                    </a>                    
+                    </a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a href="{{ route('dashboard') }}" class="dropdown-item {{ Request::is('dashboard') ? 'active' : '' }}">Dashboard</a>
                         <a href="{{ route('file') }}" class="dropdown-item {{ Request::is('file') ? 'active' : '' }}">File</a>
@@ -429,7 +429,7 @@
     <!-- JavaScript DateTimePicker -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
-    
+
     <script>
         $(document).ready(function() {
             $('#purchasedate, #year').datepicker({
@@ -610,6 +610,7 @@
                 "lengthChange": false,
                 "autoWidth": false,
                 "scrollX": true,
+                "paging": false,
             }).container().appendTo(
                 '#customer_wrapper .col-md-6:eq(0), #sotarget_wrapper .col-md-6:eq(0)');
         });
