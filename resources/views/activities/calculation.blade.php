@@ -143,6 +143,8 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    
+
                                 </div>
 
                             </div>
@@ -447,7 +449,7 @@
 
             function updateMaterialTable(material) {
                 var columns = ['created_at', 'material', 'jumlah', 'satuan', 'harga', 'barcode_id'];
-                var currencyColumns = []; // If no currency formatting is needed for this table
+                var currencyColumns = ['harga']; // If no currency formatting is needed for this table
                 updateTable('#material-table', material, columns, currencyColumns);
             }
 

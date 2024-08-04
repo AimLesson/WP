@@ -52,7 +52,7 @@
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-custom">Filter</button>
                             </form>
-                            <table id="machine" class="table table-head-fixed text-nowrap mt-4">
+                            <table id="productionsheet" class="table table-head-fixed text-nowrap mt-4">
                                 <thead>
                                     <tr>
                                         <th>QR Code</th>
@@ -71,7 +71,7 @@
                                     <tr>
                                         <td>
                                             @if($m->barcode_id)
-                                                {!! QrCode::size(100)->generate($m->barcode_id) !!}
+                                                {!! QrCode::size(50)->generate($m->barcode_id) !!}
                                             @else
                                                 N/A
                                             @endif
@@ -100,42 +100,112 @@
     <!-- /.content -->
 </div>
 
+<!-- Include DataTables CSS and JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 
 <script>
-    $('#order_number').on('change', function () {
-        var orderNumber = $(this).val();
-        $('#item_number').empty();
-        $('#item_number').append('<option selected="selected" disabled>-- Select Item --</option>');
+    $(document).ready(function() {
+    $('#productionsheet').DataTable({
+        "responsive": false,
+        "lengthChange": false,
+        "autoWidth": false,
+        "scrollX": true,
+        "buttons": [
+            {
+                extend: 'print',
+                className: 'btn-custom',
+                customize: function (win) {
+                    
+                    // Add custom header and company info
+                    $(win.document.body)
+                        .css('font-size', '10pt')
+                        .prepend(
+                            `
+                                <div class="header print-only" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                                    <div class="logo-kiri" style="display: flex; align-items: center;">
+                                        <img src="{{ asset('lte/dist/img/ptatmisolo.png') }}" alt="Logo PT. ATMI Solo" class="logo" style="height: 100px;">
+                                    </div>
+                                    <div class="company-info" style="text-align: center; flex-grow: 1; margin-left: 20px;">
+                                        <b>PT. ATMI SOLO</b>
+                                        <p>Jl. Adisucipto / Jl. Mojo No. 1 Karangasem, Laweyan, Surakarta 57145<br>
+                                            Phone: +62 271 714466 - Fax: +62 271 714390<br>
+                                            PO BOX 215 Surakarta 57145, Jawa Tengah, Indonesia<br>
+                                            Email: marketing@atmi.co.id - Website: http://www.atmi.co.id</p>
+                                    </div>
+                                    <div class="logo-kanan" style="display: flex; align-items: center;">
+                                        <img src="{{ asset('lte/dist/img/atmipro.png') }}" alt="Logo ATMI Pro" class="logo" style="height: 100px; margin-left: 10px;">
+                                        <img src="{{ asset('lte/dist/img/truv.jpg') }}" alt="Logo ISO" class="logo" style="height: 100px; margin-left: 10px;">
+                                    </div>
+                                </div>
+                                <br>
+                            `
+                        );
 
-        if (orderNumber) {
-            $.ajax({
-                url: '/items-by-orders/' + orderNumber,
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data);  // Debug: Log the data to see the response
-                    if (data.length > 0) {
-                        $.each(data, function (key, item) {
-                            $('#item_number').append('<option value="' + item.no_item + '">' + item.no_item + '</option>');
-                        });
-                    } else {
-                        $('#item_number').append('<option disabled>No items found</option>');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('AJAX Error: ' + status + ' ' + error);  // Debug: Log the error details
+                    // Clone the table content including QR codes
+                    var table = $('#productionsheet').clone(true, true);
+                    // Remove any unwanted elements like buttons from the cloned table
+                    table.find('button').remove();
+                    
+                    // Append the cloned table to the print document body
+                    $(win.document.body).append(table);
+
+                    // Style the table in the print view
+                    $(win.document.body).find('table')
+                        .addClass('compact')
+                        .css('font-size', 'inherit');
                 }
-            });
+            },
+            {
+                extend: 'excel',
+                className: 'btn-custom'
+            },
+            {
+                extend: 'colvis',
+                className: 'btn-custom'
+            }
+        ]
+    }).buttons().container().appendTo('#productionsheet_wrapper .col-md-6:eq(0)');
+
+        $('#order_number').on('change', function () {
+            var orderNumber = $(this).val();
+            $('#item_number').empty();
+            $('#item_number').append('<option selected="selected" disabled>-- Select Item --</option>');
+
+            if (orderNumber) {
+                $.ajax({
+                    url: '/items-by-orders/' + orderNumber,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);  // Debug: Log the data to see the response
+                        if (data.length > 0) {
+                            $.each(data, function (key, item) {
+                                $('#item_number').append('<option value="' + item.no_item + '">' + item.no_item + '</option>');
+                            });
+                        } else {
+                            $('#item_number').append('<option disabled>No items found</option>');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX Error: ' + status + ' ' + error);  // Debug: Log the error details
+                    }
+                });
+            }
+        });
+
+        function updateTitle(pageTitle) {
+            document.title = pageTitle;
         }
+
+        updateTitle('Production Sheet');
     });
-
-    function updateTitle(pageTitle) {
-        document.title = pageTitle;
-    }
-
-    updateTitle('Production Sheet');
 </script>
 
 @endsection

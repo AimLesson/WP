@@ -38,6 +38,7 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
+                                            <th>QR Code</th>
                                             <th>Order Number</th>
                                             <th>Item Number</th>
                                             <th>Date Wanted</th>
@@ -45,7 +46,6 @@
                                             <th>Operation</th>
                                             <th>Estimated Time</th>
                                             <th>Total Process</th>
-                                            <th>QR Code</th>
                                             <th>Created At</th>
                                             <th>Action</th>
                                         </tr>
@@ -54,13 +54,6 @@
                                         @foreach ($processing as $pr)
                                             <tr>
                                                 <td>{{ $pr->id }}</td>
-                                                <td><a href="#">{{ $pr->order_number }}</a></td>
-                                                <td>{{ $pr->item_number }}</td>
-                                                <td>{{ $pr->date_wanted }}</td>
-                                                <td>{{ $pr->machine }}</td>
-                                                <td>{{ $pr->operation }}</td>
-                                                <td>{{ $pr->estimated_time }}</td>
-                                                <td>{{ formatRupiah($pr->mach_cost) }}</td>
                                                 <td>
                                                     @if($pr->barcode_id)
                                                         {!! QrCode::size(100)->generate($pr->barcode_id) !!}
@@ -68,6 +61,13 @@
                                                         N/A
                                                     @endif
                                                 </td>
+                                                <td><a href="#">{{ $pr->order_number }}</a></td>
+                                                <td>{{ $pr->item_number }}</td>
+                                                <td>{{ $pr->date_wanted }}</td>
+                                                <td>{{ $pr->machine }}</td>
+                                                <td>{{ $pr->operation }}</td>
+                                                <td>{{ $pr->estimated_time }}</td>
+                                                <td>{{ formatRupiah($pr->mach_cost) }}</td>
                                                 <td>{{ $pr->created_at }}</td>
                                                 <td>
                                                     <a href="{{ route('activities.editprocessing',$pr->id) }}"
