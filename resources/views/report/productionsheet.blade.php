@@ -143,13 +143,12 @@
                 extend: 'print',
                 className: 'btn-custom',
                 customize: function (win) {
-
                     var currentDateTime = new Date();
                     var formattedDateTime = currentDateTime.toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' });
                     
                     // Add custom header and company info
                     $(win.document.body)
-                        .css('font-size', '20pt')
+                        .css('font-size', '10pt')
                         .prepend(
                             `
                                 <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #000;">
@@ -192,35 +191,7 @@
                             `
                         );
 
-<<<<<<< Updated upstream
-                        // Add table styles
-                        $(win.document.body).find('table')
-                            .addClass('table table-bordered')
-                            .css('font-size', 'inherit')
-                            .css('width', '100%')
-                            .css('border-collapse', 'collapse');
-
-                        $(win.document.body).find('th, td')
-                            .css('border', '1px solid #000')
-                            .css('padding', '8px')
-                            .css('text-align', 'left');
-
-                        $(win.document.body).find('th')
-                            .css('background-color', '#28a745')
-                            .css('color', '#000');
-
-                    // Clone the table content including QR codes
-                    var table = $('#productionsheet').clone(true, true);
-                    // Remove any unwanted elements like buttons from the cloned table
-                    table.find('button').remove();
-
-                    // Append the cloned table to the print document body
-                    $(win.document.body).append(table);
-
-                    // Style the table in the print view
-=======
                     // Add table styles
->>>>>>> Stashed changes
                     $(win.document.body).find('table')
                         .addClass('table table-bordered')
                         .css('font-size', 'inherit')
