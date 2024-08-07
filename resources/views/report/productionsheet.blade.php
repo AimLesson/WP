@@ -146,6 +146,7 @@
 
                     var currentDateTime = new Date();
                     var formattedDateTime = currentDateTime.toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' });
+                    
                     // Add custom header and company info
                     $(win.document.body)
                         .css('font-size', '20pt')
@@ -163,27 +164,27 @@
                                 <div style="margin-top: 20px;">
                                     <table style="width: 100%; border-collapse: collapse;">
                                         <tr>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>ORDER NUMBER</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>ORDER NUMBER</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->order_number : '' }}</td>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>ASSEMBLY DRAWING</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>ASSEMBLY DRAWING</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;"></td>
                                         </tr>
                                         <tr>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>ISSUED</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>ISSUED</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->order_date : '' }}</td>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>CUSTOMER</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>CUSTOMER</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->customer : '' }}</td>
                                         </tr>
                                         <tr>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>DATE WANTED</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>DATE WANTED</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->dod : '' }}</td>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>PRODUCT</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>PRODUCT</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->product : '' }}</td>
                                         </tr>
                                         <tr>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>No SO</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>No SO</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->so_number : '' }}</td>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>NO OF PRODUCTS</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>NO OF PRODUCTS</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->qty : '' }}</td>
                                         </tr>
                                     </table>
@@ -191,6 +192,7 @@
                             `
                         );
 
+<<<<<<< Updated upstream
                         // Add table styles
                         $(win.document.body).find('table')
                             .addClass('table table-bordered')
@@ -216,9 +218,35 @@
                     $(win.document.body).append(table);
 
                     // Style the table in the print view
+=======
+                    // Add table styles
+>>>>>>> Stashed changes
                     $(win.document.body).find('table')
-                        .addClass('compact')
-                        .css('font-size', 'inherit');
+                        .addClass('table table-bordered')
+                        .css('font-size', 'inherit')
+                        .css('width', '100%')
+                        .css('border-collapse', 'collapse');
+
+                    $(win.document.body).find('th, td')
+                        .css('border', '1px solid #000')
+                        .css('padding', '8px')
+                        .css('text-align', 'left');
+
+                    $(win.document.body).find('th')
+                        .css('color', '#000');
+
+                    // Remove any unwanted elements like buttons from the original table
+                    $('#productionsheet button').remove();
+
+                    // Ensure SVG QR codes are properly included in the print document
+                    var svgElements = $('#productionsheet').find('svg');
+                    svgElements.each(function() {
+                        var svg = $(this).clone();
+                        $(win.document.body).find('td').eq($(this).closest('td').index()).html(svg);
+                    });
+
+                    // Append the table content to the print document body
+                    $(win.document.body).append($('#productionsheet').html());
                 }
             },
             {
