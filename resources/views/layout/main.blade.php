@@ -579,12 +579,6 @@
                 "autoWidth": false,
                 "buttons": ["excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#barcode_wrapper .col-md-6:eq(0)');
-            $("#productionsheet").DataTable({
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": ["excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#productionsheet_wrapper .col-md-6:eq(0)');
             $("#ordertype").DataTable({
                 "responsive": true,
                 "lengthChange": false,

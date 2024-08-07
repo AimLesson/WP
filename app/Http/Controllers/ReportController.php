@@ -49,6 +49,12 @@ class ReportController extends Controller
             'item_number' => $request->item_number,
         ]);
 
+        // Get the order_number from the request
+        $orderNumber = $request->input('order_number');
+
+        // Fetch the order details
+        $order = Order::where('order_number', $orderNumber)->first();
+
         // Get orders with order_status not 'Finished'
         $orders = Order::where('order_status', '!=', 'Finished')->get();
         Log::info('Orders retrieved', ['orders' => json_encode($orders)]);
@@ -81,7 +87,7 @@ class ReportController extends Controller
         $usedtime = $query->get();
         Log::info('Used time data retrieved', ['usedtime' => json_encode($usedtime)]);
 
-        return view('report.productionsheet', compact('usedtime', 'orders', 'items'));
+        return view('report.productionsheet', compact('usedtime', 'orders', 'items','orderNumber', 'order'));
     }
     public function inspectionsheet()
     {

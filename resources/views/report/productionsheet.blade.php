@@ -52,6 +52,23 @@
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-custom">Filter</button>
                             </form>
+
+                            @if ($order)
+                                <!-- Display Order details -->
+                                <div class="mt-4">
+                                    <h3>Order Details</h3>
+                                    <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
+                                    <p><strong>Issued:</strong> {{ $order->order_date }}</p>
+                                    <p><strong>Date Wanted:</strong> {{ $order->dod }}</p>
+                                    <p><strong>Number SO:</strong> {{ $order->so_number }}</p>
+                                    <p><strong>Customer:</strong> {{ $order->customer }}</p>
+                                    <p><strong>Product:</strong> {{ $order->product }}</p>
+                                    <p><strong>Number of Product:</strong> {{ $order->qty }}</p>
+                                    <p><strong>Customer Name:</strong> {{ $order->customer_name }}</p>
+                                    <p><strong>Order Date:</strong> {{ $order->order_date }}</p>
+                                </div>
+                            @endif
+
                             <table id="productionsheet" class="table table-head-fixed text-nowrap mt-4">
                                 <thead>
                                     <tr>
