@@ -35,10 +35,17 @@
                             <form method="GET" action="{{ route('controlsheet') }}">
                                 <div class="form-group">
                                     <label for="order_number">Order Number:</label>
-                                    <input type="text" id="order_number" name="order_number" class="form-control" value="{{ old('order_number', $orderNumber) }}">
+                                    <select id="order_number" name="order_number" class="form-control">
+                                        @foreach($orders as $order)
+                                            <option value="{{ $order->order_number }}" {{ old('order_number', $orderNumber) == $order->order_number ? 'selected' : '' }}>
+                                                {{ $order->order_number }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-custom">Filter</button>
                             </form>
+
 
                             @if ($order)
                                 <!-- Display Order details -->

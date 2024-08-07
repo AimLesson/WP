@@ -46,7 +46,7 @@
                                     <tbody>
                                         @php
                                             // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $work_unit = \App\Models\workunit::get();
+                                            $work_unit = \App\Models\WorkUnit::get();
                                         @endphp
                                         @foreach ($work_unit as $w)
                                             <tr>

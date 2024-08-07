@@ -50,7 +50,7 @@
                                     <tbody>
                                         @php
                                             // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $department = \App\Models\department::get();
+                                            $department = \App\Models\Department::get();
                                         @endphp
                                         @foreach ($department as $d)
                                             <tr>

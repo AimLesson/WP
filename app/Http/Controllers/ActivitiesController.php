@@ -26,7 +26,7 @@ use App\Models\ProductType;
 use App\Models\QuotationAdd;
 use App\Models\sub_contract;
 use Illuminate\Http\Request;
-use App\Models\processingadd;
+use App\Models\ProcessingAdd;
 use App\Models\SalesOrderAdd;
 use App\Models\standart_part;
 use App\Models\StandartpartAPI;
@@ -1238,7 +1238,7 @@ class ActivitiesController extends Controller
     public function getItemData(Request $request)
     {
         $noItem = $request->query('no_item');
-        $item = itemadd::where('no_item', $noItem)->first();
+        $item = ItemAdd::where('no_item', $noItem)->first();
 
         if ($item) {
             return response()->json([
@@ -1263,7 +1263,7 @@ class ActivitiesController extends Controller
         $orderNumbers = Order::where('order_status', '!=', 'Finished')->pluck('order_number');
 
         // Filter processings based on the order numbers
-        $processing = processingadd::whereIn('order_number', $orderNumbers)->get();
+        $processing = ProcessingAdd::whereIn('order_number', $orderNumbers)->get();
 
         return view('activities.processing', compact('processing'));
     }
@@ -1390,7 +1390,7 @@ class ActivitiesController extends Controller
             $processing_id = uniqid();
             $barcode_id = $this->generateBarcodeId($request->order_number, $index);
 
-            Processingadd::create([
+            ProcessingAdd::create([
                 'processing_id' => $processing_id,
                 'order_number' => $request->order_number,
                 'item_number' => $request->no_item,
@@ -1430,7 +1430,7 @@ class ActivitiesController extends Controller
 
     public function editprocessing($id)
     {
-        $processing = Processingadd::find($id);
+        $processing = ProcessingAdd::find($id);
         if (!$processing) {
             return redirect()->route('activities.processing')->with('error', 'Processing entry not found.');
         }
@@ -1466,7 +1466,7 @@ class ActivitiesController extends Controller
         }
 
         // Find the processing entry
-        $processing = Processingadd::find($id);
+        $processing = ProcessingAdd::find($id);
         if (!$processing) {
             return redirect()->route('activities.processing')->with('error', 'Processing entry not found.');
         }
@@ -1490,7 +1490,7 @@ class ActivitiesController extends Controller
     public function deleteprocessing($id)
     {
         // Find the processing entry by its ID
-        $processing = Processingadd::find($id);
+        $processing = ProcessingAdd::find($id);
 
         // Check if the entry exists
         if (!$processing) {
@@ -1556,7 +1556,7 @@ class ActivitiesController extends Controller
     {
         $orders = Order::where('order_status', '!=', 'Finished')->get();
         $items = ItemAdd::get();
-        $standardParts = StandartpartAPI::get();
+        $standardParts = StandartpartAPI::where('kode_log', 'SP')->get();
         return view('activities.createstandartpart', compact('standardParts', 'orders', 'items'));
     }
 

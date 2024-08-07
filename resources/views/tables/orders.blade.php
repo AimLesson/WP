@@ -8,7 +8,7 @@
                     <div class="col-sm-6">
                         <h1 class="m-0">Orders</h1>
                     </div><!-- /.col -->
-                    <div class="col-sm-6">  
+                    <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('tables') }}">Tables</a></li>
@@ -29,7 +29,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">Order </h3>
                             </div>
-                            
+
                             <!-- /.card-header -->
                             {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
                             <div class="card-body">
@@ -67,7 +67,7 @@
                                     <tbody>
                                         @php
                                             // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $order = \App\Models\order::get();
+                                            $order = \App\Models\Order::get();
                                         @endphp
                                         @foreach ($order as $m)
                                             <tr>
@@ -113,7 +113,7 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <p>Are you sure delete Order 
+                                                            <p>Are you sure delete Order
                                                                 <b>{{ $m->id_machine }} - {{ $m->machine_name }} -
                                                                     {{ $m->machine_type }}?</b>
                                                             </p>
@@ -150,7 +150,7 @@
         </section>
         <!-- /.content -->
 
-       
+
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
@@ -159,19 +159,19 @@
                             <div class="container text-center">
                                 <div class="row align-items-start">
                                   <div class="col-2 ">
-                                    <a href="{{ route('tables.orders') }}">Items</a> 
+                                    <a href="{{ route('tables.orders') }}">Items</a>
                                   </div>
                                   <div class="col">
-                                   <a href="{{ route('tables.ordersmaterial') }}">Material</a> 
+                                   <a href="{{ route('tables.ordersmaterial') }}">Material</a>
                                   </div>
                                   <div class="col">
-                                    <a href="{{route('tables.ordersstandartpart')}}">Standart Part</a> 
+                                    <a href="{{route('tables.ordersstandartpart')}}">Standart Part</a>
                                    </div>
                                   <div class="col">
-                                    <a href="{{route('tables.orderssubcontr')}}">Sub Contr</a> 
+                                    <a href="{{route('tables.orderssubcontr')}}">Sub Contr</a>
                                   </div>
                                   <div class="col">
-                                    <a href="{{route('tables.ordersopd')}}">OPD(OHM)</a> 
+                                    <a href="{{route('tables.ordersopd')}}">OPD(OHM)</a>
                                   </div>
                                 </div>
                               </div>
@@ -243,7 +243,7 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <p>Are you sure delete Order 
+                                                            <p>Are you sure delete Order
                                                                 <b>{{ $m->id_machine }} - {{ $m->machine_name }} -
                                                                     {{ $m->machine_type }}?</b>
                                                             </p>

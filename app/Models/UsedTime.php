@@ -14,6 +14,6 @@ class UsedTime extends Model
 
     public function processing()
     {
-        return $this->belongsTo(Processingadd::class);
+        return $this->belongsTo(ProcessingAdd::class);
     }
 }

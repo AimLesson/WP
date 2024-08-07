@@ -88,7 +88,7 @@
                                     <tr>
                                         <td>
                                             @if($m->barcode_id)
-                                                {!! QrCode::size(50)->generate($m->barcode_id) !!}
+                                                {!! QrCode::size(100)->generate($m->barcode_id) !!}
                                             @else
                                                 N/A
                                             @endif
@@ -139,11 +139,15 @@
                 extend: 'print',
                 className: 'btn-custom',
                 customize: function (win) {
+<<<<<<< Updated upstream
                     var currentDateTime = new Date();
                     var formattedDateTime = currentDateTime.toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' });
+=======
+
+>>>>>>> Stashed changes
                     // Add custom header and company info
                     $(win.document.body)
-                        .css('font-size', '10pt')
+                        .css('font-size', '20pt')
                         .prepend(
                             `
                                 <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #000;">
@@ -206,7 +210,7 @@
                     var table = $('#productionsheet').clone(true, true);
                     // Remove any unwanted elements like buttons from the cloned table
                     table.find('button').remove();
-                    
+
                     // Append the cloned table to the print document body
                     $(win.document.body).append(table);
 

@@ -25,14 +25,14 @@ class ReportController extends Controller
         $orderNumber = $request->input('order_number');
 
         // Fetch the order details
-        $order = Order::where('order_number', $orderNumber)->first();
+        $orders = Order::where('order_status', '!=', 'finished')->get();
 
         // Fetch the items with the specified order_number and their related processing steps
         $items = ItemAdd::with('processingAdds')
             ->where('order_number', $orderNumber)
             ->get();
 
-        return view('report.controlsheet', compact('items', 'orderNumber', 'order'));
+        return view('report.controlsheet', compact('items', 'orderNumber', 'orders'));
     }
 
     public function getItemsByOrder($orderNumber)

@@ -67,7 +67,7 @@
                                         <tbody>
                                             @php
                                                 // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                                $order = \App\Models\order::get();
+                                                $order = \App\Models\Order::get();
                                             @endphp
                                             @foreach ($order as $m)
                                                 <tr>
@@ -101,7 +101,7 @@
                                                     <td>{{ $m->catalog_number }}</td>
                                                     <td>{{ $m->material_cost }}</td>
                                                     <td>{{ $m->dod_adj }}</td>
-    
+
                                                     {{-- <td>{{$m->total_mach}}</td> --}}
                                                 </tr>
                                                 <div class="modal fade" id="modal-hapus{{ $m->id }}">
@@ -115,7 +115,7 @@
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <p>Are you sure delete Order 
+                                                                <p>Are you sure delete Order
                                                                     <b>{{ $m->id_machine }} - {{ $m->machine_name }} -
                                                                         {{ $m->machine_type }}?</b>
                                                                 </p>

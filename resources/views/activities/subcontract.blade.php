@@ -52,7 +52,7 @@
                                     </thead>
                                     <tbody>
                                         @php
-                                            $data = \App\Models\Sub_Contract::get();
+                                            $data = \App\Models\sub_contract::get();
                                         @endphp
                                         @foreach ($data as $m)
                                             <tr>

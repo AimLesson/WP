@@ -49,7 +49,7 @@
                                     <tbody>
                                         @php
                                             // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $standart_part = \App\Models\standart_part::get();
+                                            $standart_part = \App\Models\Standart_part::get();
                                         @endphp
                                         @foreach ($standart_part as $m)
                                             <tr>
@@ -61,7 +61,7 @@
                                                 <td>{{ $m->total }}</td>
                                                 <td>{{ $m->no_bom }}</td>
                                                 <td>{{ $m->info }}</td>
-                                                
+
                                                 {{-- <td>{{$m->total_mach}}</td> --}}
                                             </tr>
                                                         </div>
@@ -81,7 +81,7 @@
                 </div>
                 <!-- /.row (main row) -->
             </div><!-- /.container-fluid -->
-        </section> 
+        </section>
                                 </table>
                             </div>
                             <!-- /.card-body -->

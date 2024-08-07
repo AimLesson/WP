@@ -39,7 +39,7 @@ class Order extends Model
 
     public function items()
     {
-        return $this->hasMany(Itemadd::class, 'order_number', 'order_number');
+        return $this->hasMany(ItemAdd::class, 'order_number', 'order_number');
     }
 
     public function processings()

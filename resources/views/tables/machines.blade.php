@@ -69,7 +69,7 @@
                                     <tbody>
                                         @php
                                             // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $machine = \App\Models\machine::get();
+                                            $machine = \App\Models\Machine::get();
                                         @endphp
                                         @foreach ($machine as $m)
                                             <tr>
@@ -117,7 +117,7 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <p>Are you sure delete Machine 
+                                                            <p>Are you sure delete Machine
                                                                 <b>{{ $m->id_machine }} - {{ $m->machine_name }} -
                                                                     {{ $m->machine_type }}?</b>
                                                             </p>

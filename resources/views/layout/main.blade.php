@@ -579,6 +579,15 @@
                 "autoWidth": false,
                 "buttons": ["excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#barcode_wrapper .col-md-6:eq(0)');
+<<<<<<< Updated upstream
+=======
+            $("#productionsheets").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#productionsheet_wrapper .col-md-6:eq(0)');
+>>>>>>> Stashed changes
             $("#ordertype").DataTable({
                 "responsive": true,
                 "lengthChange": false,
