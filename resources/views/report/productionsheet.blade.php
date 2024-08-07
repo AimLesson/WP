@@ -130,40 +130,77 @@
 <script>
     $(document).ready(function() {
     $('#productionsheet').DataTable({
-        "responsive": false,
-        "lengthChange": false,
-        "autoWidth": false,
-        "scrollX": true,
-        "buttons": [
+        responsive: false,
+        lengthChange: false,
+        autoWidth: false,
+        scrollX: true,
+        buttons: [
             {
                 extend: 'print',
                 className: 'btn-custom',
                 customize: function (win) {
-                    
+                    var currentDateTime = new Date();
+                    var formattedDateTime = currentDateTime.toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' });
                     // Add custom header and company info
                     $(win.document.body)
                         .css('font-size', '10pt')
                         .prepend(
                             `
-                                <div class="header print-only" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-                                    <div class="logo-kiri" style="display: flex; align-items: center;">
-                                        <img src="{{ asset('lte/dist/img/ptatmisolo.png') }}" alt="Logo PT. ATMI Solo" class="logo" style="height: 100px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #000;">
+                                    <div>
+                                        <p><strong>PT ATMI SOLO</strong></p>
+                                        <p>St. Michael Surakarta</p>
                                     </div>
-                                    <div class="company-info" style="text-align: center; flex-grow: 1; margin-left: 20px;">
-                                        <b>PT. ATMI SOLO</b>
-                                        <p>Jl. Adisucipto / Jl. Mojo No. 1 Karangasem, Laweyan, Surakarta 57145<br>
-                                            Phone: +62 271 714466 - Fax: +62 271 714390<br>
-                                            PO BOX 215 Surakarta 57145, Jawa Tengah, Indonesia<br>
-                                            Email: marketing@atmi.co.id - Website: http://www.atmi.co.id</p>
-                                    </div>
-                                    <div class="logo-kanan" style="display: flex; align-items: center;">
-                                        <img src="{{ asset('lte/dist/img/atmipro.png') }}" alt="Logo ATMI Pro" class="logo" style="height: 100px; margin-left: 10px;">
-                                        <img src="{{ asset('lte/dist/img/truv.jpg') }}" alt="Logo ISO" class="logo" style="height: 100px; margin-left: 10px;">
+                                    <div>
+                                        <p>` + formattedDateTime + `</p>
                                     </div>
                                 </div>
-                                <br>
+                                <div style="margin-top: 20px;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>ORDER NUMBER</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->order_number : '' }}</td>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>ASSEMBLY DRAWING</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>ISSUED</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->order_date : '' }}</td>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>CUSTOMER</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->customer : '' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>DATE WANTED</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->dod : '' }}</td>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>PRODUCT</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->product : '' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>No SO</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->so_number : '' }}</td>
+                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>NO OF PRODUCTS</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->qty : '' }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
                             `
                         );
+
+                        // Add table styles
+                        $(win.document.body).find('table')
+                            .addClass('table table-bordered')
+                            .css('font-size', 'inherit')
+                            .css('width', '100%')
+                            .css('border-collapse', 'collapse');
+
+                        $(win.document.body).find('th, td')
+                            .css('border', '1px solid #000')
+                            .css('padding', '8px')
+                            .css('text-align', 'left');
+
+                        $(win.document.body).find('th')
+                            .css('background-color', '#28a745')
+                            .css('color', '#000');
 
                     // Clone the table content including QR codes
                     var table = $('#productionsheet').clone(true, true);
