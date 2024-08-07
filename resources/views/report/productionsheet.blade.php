@@ -132,7 +132,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 
 <script>
-    $(document).ready(function() {
+   $(document).ready(function() {
     $('#productionsheet').DataTable({
         responsive: false,
         lengthChange: false,
@@ -206,18 +206,13 @@
                     $(win.document.body).find('th')
                         .css('color', '#000');
 
-                    // Remove any unwanted elements like buttons from the original table
-                    $('#productionsheet button').remove();
-
-                    // Ensure SVG QR codes are properly included in the print document
-                    var svgElements = $('#productionsheet').find('svg');
-                    svgElements.each(function() {
-                        var svg = $(this).clone();
-                        $(win.document.body).find('td').eq($(this).closest('td').index()).html(svg);
-                    });
-
                     // Append the table content to the print document body
-                    $(win.document.body).append($('#productionsheet').html());
+                    $(win.document.body).append(
+                        $('#productionsheet')
+                            .clone()
+                            .css('visibility', 'visible')
+                            .show()
+                    );
                 }
             },
             {

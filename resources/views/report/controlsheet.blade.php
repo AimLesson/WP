@@ -227,27 +227,27 @@
                                 <div style="margin-top: 20px;">
                                     <table style="width: 100%; border-collapse: collapse;">
                                         <tr>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>ORDER NUMBER</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>ORDER NUMBER</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->order_number : '' }}</td>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>ASSEMBLY DRAWING</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>ASSEMBLY DRAWING</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;"></td>
                                         </tr>
                                         <tr>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>ISSUED</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>ISSUED</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->order_date : '' }}</td>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>CUSTOMER</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>CUSTOMER</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->customer : '' }}</td>
                                         </tr>
                                         <tr>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>DATE WANTED</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>DATE WANTED</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->dod : '' }}</td>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>PRODUCT</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>PRODUCT</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->product : '' }}</td>
                                         </tr>
                                         <tr>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>No SO</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>No SO</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->so_number : '' }}</td>
-                                            <td style="border: 1px solid #000; padding: 5px; background-color: #d9edf7;"><strong>NO OF PRODUCTS</strong></td>
+                                            <td style="border: 1px solid #000; padding: 5px;"><strong>NO OF PRODUCTS</strong></td>
                                             <td style="border: 1px solid #000; padding: 5px;">: {{ $order ? $order->qty : '' }}</td>
                                         </tr>
                                     </table>
