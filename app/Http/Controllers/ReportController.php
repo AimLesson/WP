@@ -21,19 +21,23 @@ class ReportController extends Controller
     }
     public function controlsheet(Request $request)
     {
+        // Fetch all orders with status not 'finished'
+        $orders = Order::where('order_status', '!=', 'finished')->get();
+
         // Get the order_number from the request
         $orderNumber = $request->input('order_number');
 
-        // Fetch the order details
-        $orders = Order::where('order_status', '!=', 'finished')->get();
+        // Fetch the selected order details
+        $order = Order::where('order_number', $orderNumber)->first();
 
         // Fetch the items with the specified order_number and their related processing steps
         $items = ItemAdd::with('processingAdds')
             ->where('order_number', $orderNumber)
             ->get();
 
-        return view('report.controlsheet', compact('items', 'orderNumber', 'orders'));
+        return view('report.controlsheet', compact('items', 'orderNumber', 'orders', 'order'));
     }
+
 
     public function getItemsByOrder($orderNumber)
     {
@@ -87,7 +91,7 @@ class ReportController extends Controller
         $usedtime = $query->get();
         Log::info('Used time data retrieved', ['usedtime' => json_encode($usedtime)]);
 
-        return view('report.productionsheet', compact('usedtime', 'orders', 'items','orderNumber', 'order'));
+        return view('report.productionsheet', compact('usedtime', 'orders', 'items', 'orderNumber', 'order'));
     }
     public function inspectionsheet()
     {

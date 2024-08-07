@@ -52,22 +52,26 @@
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-custom">Filter</button>
                             </form>
-
-                            @if ($order)
-                                <!-- Display Order details -->
-                                <div class="mt-4">
-                                    <h3>Order Details</h3>
-                                    <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
-                                    <p><strong>Issued:</strong> {{ $order->order_date }}</p>
-                                    <p><strong>Date Wanted:</strong> {{ $order->dod }}</p>
-                                    <p><strong>Number SO:</strong> {{ $order->so_number }}</p>
-                                    <p><strong>Customer:</strong> {{ $order->customer }}</p>
-                                    <p><strong>Product:</strong> {{ $order->product }}</p>
-                                    <p><strong>Number of Product:</strong> {{ $order->qty }}</p>
-                                    <p><strong>Customer Name:</strong> {{ $order->customer_name }}</p>
-                                    <p><strong>Order Date:</strong> {{ $order->order_date }}</p>
-                                </div>
-                            @endif
+                            <div class="card p-3 m-3">
+                                @if ($order)
+                                    <!-- Display Order details -->
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
+                                            <p><strong>Issued:</strong> {{ $order->order_date }}</p>
+                                            <p><strong>Date Wanted:</strong> {{ $order->dod }}</p>
+                                            <p><strong>Number SO:</strong> {{ $order->so_number }}</p>
+                                            <p><strong>Customer:</strong> {{ $order->customer }}</p>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <p><strong>Product:</strong> {{ $order->product }}</p>
+                                            <p><strong>Number of Product:</strong> {{ $order->qty }}</p>
+                                            <p><strong>Customer Name:</strong> {{ $order->customer_name }}</p>
+                                            <p><strong>Order Date:</strong> {{ $order->order_date }}</p>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
 
                             <table id="productionsheet" class="table table-head-fixed text-nowrap mt-4">
                                 <thead>
@@ -139,12 +143,9 @@
                 extend: 'print',
                 className: 'btn-custom',
                 customize: function (win) {
-<<<<<<< Updated upstream
+
                     var currentDateTime = new Date();
                     var formattedDateTime = currentDateTime.toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' });
-=======
-
->>>>>>> Stashed changes
                     // Add custom header and company info
                     $(win.document.body)
                         .css('font-size', '20pt')
