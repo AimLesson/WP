@@ -92,7 +92,9 @@
                                     <tr>
                                         <td>
                                             @if($m->barcode_id)
+                                            <div class="qr-code" data-barcode="{{ $m->barcode_id }}">
                                                 {!! QrCode::size(100)->generate($m->barcode_id) !!}
+                                            </div>
                                             @else
                                                 N/A
                                             @endif
@@ -144,8 +146,8 @@
                 className: 'btn-custom',
                 customize: function (win) {
                     var currentDateTime = new Date();
-                    var formattedDateTime = currentDateTime.toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' });
-                    
+                var formattedDateTime = currentDateTime.toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' });
+
                     // Add custom header and company info
                     $(win.document.body)
                         .css('font-size', '10pt')
@@ -206,13 +208,15 @@
                     $(win.document.body).find('th')
                         .css('color', '#000');
 
-                    // Append the table content to the print document body
-                    $(win.document.body).append(
-                        $('#productionsheet')
-                            .clone()
-                            .css('visibility', 'visible')
-                            .show()
-                    );
+                         // Remove any unwanted elements like buttons from the original table
+                    $('#productionsheet button').remove();
+
+                    // Ensure SVG QR codes are properly included in the print document
+                    var svgElements = $('#productionsheet').find('svg');
+                    svgElements.each(function() {
+                        var svg = $(this).clone();
+                        $(win.document.body).find('th').eq($(this).closest('td').index()).html(svg);
+                    });  
                 }
             },
             {
