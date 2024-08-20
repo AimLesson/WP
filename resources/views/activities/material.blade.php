@@ -49,7 +49,7 @@
                                     <tbody>
                                         @foreach ($material as $m)
                                             <tr>
-                                                <td>{{$loop->iteration}}</td>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $m->id_material }}</td>
                                                 <td>{{ $m->material }}</td>
                                                 <td>{{ $m->length }} mm</td>
@@ -88,7 +88,8 @@
                                                                 @method('DELETE')
                                                                 <button type="button" class="btn btn-default"
                                                                     data-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn btn-danger btn-remove">Delete</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-danger btn-remove">Delete</button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -104,6 +105,48 @@
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Standart Part (StockBar)</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <table id="customer" class="table table-head-fixed text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Order Number</th>
+                                            <th scope="col">Item Number</th>
+                                            <th scope="col">Tanggal</th>
+                                            <th scope="col">Nama Barang</th>
+                                            <th scope="col">Jumlah</th>
+                                            <th scope="col">satuan</th>
+                                            <th scope="col">Harga</th>
+                                            <th scope="col">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $standart_part = \App\Models\WPLink::where('jenis', 'materials')->get();
+                                        @endphp
+                                        @foreach ($standart_part as $m)
+                                            <tr>
+                                                <td>{{ $m->order_number }}</td>
+                                                <td>{{ $m->no_item }}</td>
+                                                <td>{{ $m->created_at }}</td>
+                                                <td>{{ $m->material }}</td>
+                                                <td>{{ $m->jumlah }}</td>
+                                                <td>{{ $m->satuan }}</td>
+                                                <td>{{ formatRupiah($m->harga) }}</td>
+                                                <td>{{ formatRupiah($m->total) }}</td>
+                                            </tr>
+                                            <!-- /.modal -->
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
                     </div>
                 </div>
                 <!-- /.row (main row) -->

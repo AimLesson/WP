@@ -2306,6 +2306,16 @@ class ActivitiesController extends Controller
 
         $responseData['material'] = $material;
 
+        $subcon = sub_contract::where('order_number', $orderNumber)->get();
+        if ($material->isEmpty()) {
+            Log::info('No SubContract data found for the given order_number.', ['order_number' => $orderNumber]);
+        } else {
+            Log::info('SubContract data fetched.', ['order_number' => $orderNumber, 'subcons' => $subcon]);
+        }
+
+        $responseData['subcon'] = $subcon;
+
+
         Log::info('Response data prepared.', ['responseData' => $responseData]);
 
         return response()->json($responseData, 200); // Ensure status code 200 for success
@@ -2331,7 +2341,7 @@ class ActivitiesController extends Controller
 
             $total = WPLink::where('order_number', $orderNumber)
                 ->where('jenis', $jenis)
-                ->sum('harga');
+                ->sum('total');
 
             Log::info('WPLink costs fetched.', ['order_number' => $orderNumber, 'jenis' => $jenis, 'harga' => $total]);
 
@@ -2349,7 +2359,7 @@ class ActivitiesController extends Controller
             $totalSales = $order->salesOrder->total_amount ?? 0;
             Log::info('Total sales calculated.', ['total_sales' => $totalSales]);
 
-            $totalMaterialCost = $this->fetchWPLinkCosts($order->order_number, 'material');
+            $totalMaterialCost = $this->fetchWPLinkCosts($order->order_number, 'materials');
             $totalStandardPartCost = $this->fetchWPLinkCosts($order->order_number, 'parts');
             $machineCostResult = $this->calculateProcessingCosts($order->processings, 'mach_cost');
             $laborCostResult = $this->calculateProcessingCosts($order->processings, 'labor_cost');

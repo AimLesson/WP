@@ -46,8 +46,8 @@
                         </form>
                         <div id="calculation-result" style="display: none;">
                             <div class="row">
-                                <div class="col-md-5">
-                                    <!-- Total Cost -->
+                                <div class="col-md-6">
+                                    <!-- Total Cost Table -->
                                     <div class="table-responsive rounded table-smaller">
                                         <table class="table table-bordered table-striped rounded">
                                             <thead class="thead-dark">
@@ -61,12 +61,12 @@
                                                 <tr>
                                                     <td>Sales Order</td>
                                                     <td class="text-right">
-                                                        <input type="number" id="totalSales" class="form-control" hidden>
+                                                        <input type="number" id="totalsales" class="form-control" hidden>
                                                         <span id="displayTotalSales"></span>
                                                     </td>
-                                                    <td></td>
+                                                    <td class="text-right">-</td>
                                                 </tr>
-                                                <tr>
+                                                <tr data-toggle="modal" data-target="#materialCostModal">
                                                     <td>Material Cost</td>
                                                     <td class="text-right">
                                                         <input type="number" id="totalMaterialCost" class="form-control"
@@ -75,7 +75,7 @@
                                                     </td>
                                                     <td id="materialCostPercentage" class="text-right"></td>
                                                 </tr>
-                                                <tr>
+                                                <tr data-toggle="modal" data-target="#laborCostModal">
                                                     <td>Labor Cost</td>
                                                     <td class="text-right">
                                                         <input type="number" id="totalLaborCost" class="form-control"
@@ -84,7 +84,7 @@
                                                     </td>
                                                     <td id="laborCostPercentage" class="text-right"></td>
                                                 </tr>
-                                                <tr>
+                                                <tr data-toggle="modal" data-target="#machineCostModal">
                                                     <td>Machine Cost</td>
                                                     <td class="text-right">
                                                         <input type="number" id="totalMachineCost" class="form-control"
@@ -93,7 +93,7 @@
                                                     </td>
                                                     <td id="machineCostPercentage" class="text-right"></td>
                                                 </tr>
-                                                <tr>
+                                                <tr data-toggle="modal" data-target="#standardPartCostModal">
                                                     <td>Standard Part Cost</td>
                                                     <td class="text-right">
                                                         <input type="number" id="totalStandardPartCost"
@@ -102,7 +102,7 @@
                                                     </td>
                                                     <td id="standardPartCostPercentage" class="text-right"></td>
                                                 </tr>
-                                                <tr>
+                                                <tr data-toggle="modal" data-target="#subconCostModal">
                                                     <td>Sub-Contract Cost</td>
                                                     <td class="text-right">
                                                         <input type="number" id="totalSubContractCost" class="form-control"
@@ -111,7 +111,7 @@
                                                     </td>
                                                     <td id="subContractCostPercentage" class="text-right"></td>
                                                 </tr>
-                                                <tr>
+                                                <tr data-toggle="modal" data-target="#overheadCostModal">
                                                     <td>Overhead Manufacture Cost</td>
                                                     <td class="text-right">
                                                         <input type="number" id="totalOverheadCost" class="form-control"
@@ -124,47 +124,8 @@
                                         </table>
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
-                                    {{-- Tabel Detail Material Cost --}}
-                                    <div class="table-responsive rounded table-smaller">
-                                        <table id="material-table" class="table table-bordered table-striped rounded">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th scope="col">Tanggal</th>
-                                                    <th scope="col">Nama Barang</th>
-                                                    <th scope="col">Jumlah</th>
-                                                    <th scope="col">Satuan</th>
-                                                    <th scope="col">Harga</th>
-                                                    <th scope="col">Barcode ID</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <!-- Data will be dynamically inserted here -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    
-
-                                </div>
-
-                            </div>
-                            <div class="row">
-                                <div class="col-md-5">
-                                    {{-- Tabel Overhead --}}
-                                    <div class="table-responsive rounded table-smaller">
-                                        <table id="overheads-table" class="table table-bordered table-striped rounded">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th scope="col">Deskripsi Overhead Manufacture</th>
-                                                    <th scope="col">Biaya</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <!-- Data will be dynamically inserted here -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-
                                     {{-- Tabel Result --}}
                                     <div class="table-responsive rounded table-smaller">
                                         <table class="table table-bordered table-striped rounded">
@@ -212,40 +173,243 @@
                                         </table>
                                     </div>
                                 </div>
-
                             </div>
-                            <div class="row">
-                                {{-- Tabel Detail Process Cost --}}
-                                <div class="table-responsive rounded table-smaller">
-                                    <table id="costs-table"
-                                        class="table table-bordered table-striped rounded overflow-scroll">
-                                        <thead class="thead-dark text-nowrap">
-                                            <tr colspan='9' class="">
-                                                <h3 class="text-center mb-3 fw-bold">Detail Process Cost</h3>
-                                            </tr>
-                                            <tr>
-                                                <th scope="col">Item Name</th>
-                                                <th scope="col">Item Number</th>
-                                                <th scope="col">Machine Name</th>
-                                                <th scope="col">Machine Cost (Est)</th>
-                                                <th scope="col">Machine Cost (Real)</th>
-                                                <th scope="col">Labor Cost</th>
-                                                <th scope="col">Processing Cost</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col">Finished Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- Data will be dynamically inserted here -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-
-
                         </div>
                     </div>
+
+                    <!-- Modals -->
+                    <!-- Material Cost Modal -->
+                    <div class="modal fade" id="materialCostModal" tabindex="-1"
+                        aria-labelledby="materialCostModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="materialCostModalLabel">Material Cost Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                    <!-- Print Button -->
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="printTable('material-table', 'Material Cost Details')">Print</button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Material Cost Table -->
+                                    <div class="table-responsive rounded table-smaller">
+                                        <table id="material-table" class="table table-bordered table-striped rounded">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th scope="col">Tanggal</th>
+                                                    <th scope="col">Nama Barang</th>
+                                                    <th scope="col">Jumlah</th>
+                                                    <th scope="col">Jenis</th>
+                                                    <th scope="col">Satuan</th>
+                                                    <th scope="col">Harga</th>
+                                                    <th scope="col">Total</th>
+                                                    <th scope="col">Barcode ID</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data dynamically inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Standard Part Cost Modal -->
+                    <div class="modal fade" id="standardPartCostModal" tabindex="-1"
+                        aria-labelledby="standardPartCostModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="standardPartCostModalLabel">Standard Part Cost Details
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                    <!-- Print Button -->
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="printTable('standard-part-table', 'Standart Part Details')">Print</button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Standard Part Cost Table -->
+                                    <div class="table-responsive rounded table-smaller">
+                                        <table id="standard-part-table"
+                                            class="table table-bordered table-striped rounded">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th scope="col">Tanggal</th>
+                                                    <th scope="col">Nama Barang</th>
+                                                    <th scope="col">Jumlah</th>
+                                                    <th scope="col">Jenis</th>
+                                                    <th scope="col">Satuan</th>
+                                                    <th scope="col">Harga</th>
+                                                    <th scope="col">Total</th>
+                                                    <th scope="col">Barcode ID</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data dynamically inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Labor Cost Modal -->
+                    <div class="modal fade" id="laborCostModal" tabindex="-1" aria-labelledby="laborCostModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="laborCostModalLabel">Labor Cost Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                    <!-- Print Button -->
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="printTable('labor-costs-table','Labor Cost Details')">Print</button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Labor Cost Table -->
+                                    <div class="table-responsive rounded table-smaller">
+                                        <table id="labor-costs-table" class="table table-bordered table-striped rounded">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th scope="col">Item</th>
+                                                    <th scope="col">Item Number</th>
+                                                    <th scope="col">Machine</th>
+                                                    <th scope="col">Labor Cost Real</th>
+                                                    <th scope="col">Process Cost</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Finished At</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data dynamically inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Machine Cost Modal -->
+                    <div class="modal fade" id="machineCostModal" tabindex="-1" aria-labelledby="machineCostModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="machineCostModalLabel">Machine Cost Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                    <!-- Print Button -->
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="printTable('machine-costs-table', 'Machine Cost Details')">Print</button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Machine Cost Table -->
+                                    <div class="table-responsive rounded table-smaller">
+                                        <table id="machine-costs-table"
+                                            class="table table-bordered table-striped rounded">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th scope="col">Item</th>
+                                                    <th scope="col">Item Number</th>
+                                                    <th scope="col">Machine</th>
+                                                    <th scope="col">Est. Machine Cost</th>
+                                                    <th scope="col">Machine Cost Real</th>
+                                                    <th scope="col">Process Cost</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Finished At</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data dynamically inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overhead Manufacture Cost Modal -->
+                    <div class="modal fade" id="overheadCostModal" tabindex="-1"
+                        aria-labelledby="overheadCostModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="overheadCostModalLabel">Overhead Manufacture Cost Details
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                    <!-- Print Button -->
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="printTable('overheads-table', 'Overhead Manufacture Details')">Print</button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Overhead Cost Table -->
+                                    <div class="table-responsive rounded table-smaller">
+                                        <table id="overheads-table" class="table table-bordered table-striped rounded">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th scope="col">Deskripsi Overhead Manufacture</th>
+                                                    <th scope="col">Biaya</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data dynamically inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SubCOn Cost Modal -->
+                    <div class="modal fade" id="subconCostModal" tabindex="-1"
+                        aria-labelledby="subconCostModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="subconCostModalLabel">Sub-Contract Cost Details
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                    <!-- Print Button -->
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="printTable('subcon-table', 'Sub-Contract Details')">Print</button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Subcon Cost Table -->
+                                    <div class="table-responsive rounded table-smaller">
+                                        <table id="subcon-table" class="table table-bordered table-striped rounded">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th scope="col">Nomor Item</th>
+                                                    <th scope="col">Vendor</th>
+                                                    <th scope="col">Deskripsi</th>
+                                                    <th scope="col">Jumlah</th>
+                                                    <th scope="col">Satuan</th>
+                                                    <th scope="col">Harga</th>
+                                                    <th scope="col">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data dynamically inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
 
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
@@ -407,50 +571,75 @@
             }
 
             function updateTables(response) {
-                // Log the entire response object to inspect its structure
                 console.log('Response:', response);
-
-                // Log specific parts of the response to see their values
                 console.log('Overheads:', response.overheads);
                 console.log('Processing Data:', response.processingData);
                 console.log('Material Data:', response.material);
-
+                console.log('Sub Contract Data:', response.subcon);
 
                 updateOverheadTable(response.overheads);
-                updateProcessingDataTable(response.processingData);
-                updateMaterialTable(response.material)
+                updateSubConTable(response.subcon);
+                updateLaborTable(response.processingData);
+                updateMachineTable(response.processingData);
+
+                const processingData = response.processingData;
+                // Separate Material Data into Material and Standard Part
+                const materialData = response.material.filter(item => item.jenis === 'materials');
+                const partData = response.material.filter(item => item.jenis === 'parts');
+
+                updateMaterialTable(materialData);
+                updateStandardPartTable(partData);
             }
 
 
             function updateOverheadTable(data) {
                 var columns = ['description', 'jumlah'];
-                var currencyColumns = ['jumlah']; // Columns that should be formatted as currency
+                var currencyColumns = ['jumlah'];
                 updateTable('#overheads-table', data, columns, currencyColumns);
             }
 
-            function updateProcessingDataTable(processingData) {
-                // Define the columns we want to display, including nested properties
-                var columns = ['item_add.item', 'item_number', 'machine', 'mach_cost', 'mach_cost_real',
-                    'labor_cost_real', 'process_cost', 'status', 'finished_at'
-                ];
-
-                // Columns to format as currency
-                var currencyColumns = ['mach_cost', 'mach_cost_real', 'labor_cost_real', 'process_cost'];
-
-                // Calculate process_cost for each item
-                processingData.forEach(item => {
-                    const machCostReal = parseFloat(item.mach_cost_real) || 0;
-                    const laborCostReal = parseFloat(item.labor_cost_real) || 0;
-                    item.process_cost = machCostReal + laborCostReal; // Add process_cost property
-                });
-
-                updateTable('#costs-table', processingData, columns, currencyColumns);
+            function updateSubConTable(subcon) {
+                var columns = ['item_no', 'vendor', 'description', 'qty', 'unit', 'price_unit', 'total_price'];
+                var currencyColumns = ['price_unit', 'total_price'];
+                updateTable('#subcon-table', subcon, columns, currencyColumns);
             }
 
-            function updateMaterialTable(material) {
-                var columns = ['created_at', 'material', 'jumlah', 'satuan', 'harga', 'barcode_id'];
-                var currencyColumns = ['harga']; // If no currency formatting is needed for this table
-                updateTable('#material-table', material, columns, currencyColumns);
+            function updateLaborTable(processingData) {
+                processingData.forEach(function(row) {
+                    row.process_cost = row.labor_cost_real + (row.mach_cost_real ||
+                        0); // mach_cost_real might not exist in this context
+                });
+
+                var columns = ['item_add.item', 'item_number', 'machine', 'labor_cost_real', 'process_cost',
+                    'status', 'finished_at'
+                ];
+                var currencyColumns = ['labor_cost_real', 'process_cost'];
+                updateTable('#labor-costs-table', processingData, columns, currencyColumns);
+            }
+
+            function updateMachineTable(processingData) {
+                processingData.forEach(function(row) {
+                    row.process_cost = row.labor_cost_real + row.mach_cost_real;
+                });
+
+                var columns = ['item_add.item', 'item_number', 'machine', 'mach_cost', 'mach_cost_real',
+                    'process_cost', 'status', 'finished_at'
+                ];
+                var currencyColumns = ['mach_cost', 'mach_cost_real', 'process_cost'];
+                updateTable('#machine-costs-table', processingData, columns, currencyColumns);
+            }
+
+
+            function updateMaterialTable(materialData) {
+                var columns = ['created_at', 'material', 'jumlah', 'jenis', 'satuan','harga', 'total', 'barcode_id'];
+                var currencyColumns = ['total','harga'];
+                updateTable('#material-table', materialData, columns, currencyColumns);
+            }
+
+            function updateStandardPartTable(partData) {
+                var columns = ['created_at', 'material', 'jumlah', 'jenis', 'satuan','harga', 'total', 'barcode_id'];
+                var currencyColumns = ['total','harga'];
+                updateTable('#standard-part-table', partData, columns, currencyColumns);
             }
 
             function formatDate(dateString) {
@@ -476,58 +665,36 @@
                 cell.appendChild(qrDiv);
             }
 
-            // Function to update HTML table with data
             function updateTable(tableId, data, columns, currencyColumns = []) {
-                // Find the table's tbody using the provided tableId
                 var tbody = document.querySelector(tableId + ' tbody');
-
-                // Clear the existing rows in the table body
                 tbody.innerHTML = '';
 
-                // Iterate over the data array and create table rows
                 data.forEach(item => {
-                    // Create a new table row
                     var row = document.createElement('tr');
 
-                    // Create cells for each column and append to the row
                     columns.forEach(column => {
                         var cell = document.createElement('td');
-
-                        // Split the column to handle nested fields (e.g., 'item_add.drawing_no')
                         var value = column.split('.').reduce((obj, key) => obj && obj[key], item);
 
-                        // Format the created_at and finished_at fields
                         if (column === 'created_at' || column === 'finished_at') {
                             cell.textContent = formatDate(value);
                         } else if (column === 'barcode_id') {
                             generateQRCode(value, cell);
-                        } else if (column === 'item_add.weight' && value !== null && value !==
-                            undefined) {
-                            // Check if column is the 'weight' column and append unit
-                            cell.textContent =
-                            `${value} ${satuan}`; // Append the unit 'kg' to weight
                         } else {
-                            // Format the value as Rupiah if the column is in currencyColumns
                             if (currencyColumns.includes(column)) {
-                                cell.textContent = formatRupiah(parseFloat(
-                                value)); // Ensuring the value is a number
-                                cell.classList.add(
-                                'text-right'); // Add the text-right class for currency columns
+                                cell.textContent = formatRupiah(parseFloat(value));
+                                cell.classList.add('text-right');
                             } else {
                                 cell.textContent = value !== null && value !== undefined ? value :
                                     '-';
                             }
                         }
-
                         row.appendChild(cell);
                     });
 
-                    // Append the row to the tbody
                     tbody.appendChild(row);
                 });
             }
-
-
 
 
             // Helper function to format numbers as Rupiah
@@ -549,5 +716,46 @@
             // Call the function when the "Calculation" page is loaded
             updateTitle('Calculation');
         });
+    </script>
+
+    <script>
+        function printTable(tableId, tableName) {
+            var table = document.getElementById(tableId).outerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = `
+        <html>
+        <head>
+            <title>${tableName}</title>
+            <style>
+                /* Styling for print */
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    padding: 8px;
+                    text-align: left;
+                    border: 1px solid #ddd;
+                }
+                th {
+                    background-color: #f2f2f2;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h1 class="text-center mb-3"><strong>${tableName}</strong></h1>
+            ${table}
+        </body>
+        </html>
+    `;
+
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
     </script>
 @endsection
