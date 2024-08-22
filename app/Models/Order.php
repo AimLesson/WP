@@ -58,14 +58,14 @@ class Order extends Model
     }
 
     public function standartParts()
-{
-    return $this->hasMany(standart_part::class, 'order_number', 'order_number');
-}
+    {
+        return $this->hasMany(standart_part::class, 'order_number', 'order_number');
+    }
 
-public function overheads()
-{
-    return $this->hasMany(overhead::class, 'order_number', 'order_number');
-}
+    public function overheads()
+    {
+        return $this->hasMany(overhead::class, 'order_number', 'order_number');
+    }
 
     public function scopeFinished($query)
     {
@@ -75,6 +75,15 @@ public function overheads()
     public function scopeNotFinished($query)
     {
         return $query->where('order_status', '!=', 'Finished');
+    }
+    public function scopeDelivered($query)
+    {
+        return $query->where('order_status', 'Delivered');
+    }
+
+    public function scopenotDelivered($query)
+    {
+        return $query->where('order_status','!=', 'Delivered');
     }
 
     public function updateOrderStatus()
@@ -97,7 +106,7 @@ public function overheads()
                 } elseif ($allStatuses->contains('queue')) {
                     $this->order_status = 'queue';
                 } elseif ($allStatuses->contains('finished')) {
-                    $this->order_status = 'Process Finished';
+                    $this->order_status = 'Finished';
                 }
             }
         }

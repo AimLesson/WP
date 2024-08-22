@@ -26,4 +26,9 @@ class WIP extends Model
         'bnp',
         'lsp'
     ];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_number', 'order_number');
+    }
 }

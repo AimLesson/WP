@@ -6,9 +6,9 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Close Orders</h1>
+                        <h1 class="m-0">Finished Process</h1>
                     </div><!-- /.col -->
-                    <div class="col-sm-6">  
+                    <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('activities') }}">Activities</a></li>
@@ -29,7 +29,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">Close Order </h3>
                             </div>
-                            
+
                             <!-- /.card-header -->
                             {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
                                 <div class="card-body">
@@ -45,7 +45,7 @@
                                                 <th>QTY</th>
                                                 <th>DOD</th>
                                                 <th>Sale Price</th>
-                                                <th>State</th>  
+                                                <th>State</th>
                                             </tr>
                                         </thead>
                                         <tbody>

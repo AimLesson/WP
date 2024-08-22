@@ -29,7 +29,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">WIP Process</h3>
                             </div>
-                            
+
                             <!-- /.card-header -->
                             {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
                             <div class="card-body">
@@ -57,17 +57,18 @@
                                     </thead>
                                     <tbody>
                                         @php
-                                            // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $order = \App\Models\WIP::get();
-
-                                            // perlu ganti model database
+                                            // Query to fetch WIP data where the associated order status is not "Finished"
+                                            $order = \App\Models\WIP::whereHas('order', function ($query) {
+                                                $query->notFinished();
+                                                $query->notDelivered();
+                                            })->get();
                                         @endphp
                                         @foreach ($order as $m)
                                             <tr>
                                                 <td>{{ $m->id }}</td>
                                                 <td>{{ $m->order_number }}</td>
                                                 <td>{{ formatRupiah($m->total_sales) }}</td>
-                                                <td>{{ formatRupiah($m->total_material_cost)}}</td>
+                                                <td>{{ formatRupiah($m->total_material_cost) }}</td>
                                                 <td>{{ formatRupiah($m->total_labor_cost) }}</td>
                                                 <td>{{ formatRupiah($m->total_machine_cost) }}</td>
                                                 <td>{{ formatRupiah($m->total_standard_part_cost) }}</td>
@@ -82,7 +83,7 @@
                                                 <td>{{ $m->updated_at }}</td>
                                                 {{-- <td>{{$m->total_mach}}</td> --}}
                                             </tr>
-                                            
+
                                             <!-- /.modal -->
                                         @endforeach
                                     </tbody>

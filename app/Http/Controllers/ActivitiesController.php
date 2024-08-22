@@ -2725,9 +2725,104 @@ class ActivitiesController extends Controller
     {
         return view('activities.updategroupunit');
     }
+    public function updateStatusOrder(Request $request)
+    {
+        Log::info('Received request to update order status', [
+            'id' => $request->id,
+            'type' => $request->type,
+            'value' => $request->value,
+            'description' => $request->description
+        ]);
+
+        try {
+            // Validate the request
+            Log::info('Starting validation');
+            $request->validate([
+                'id' => 'required|exists:order,id',
+                'type' => 'required|string|in:produksi,marketing,surat_jalan',
+                'value' => 'required|string', // Adjusting validation to expect a string
+                'description' => 'nullable|string|max:255',
+            ]);
+            Log::info('Validation passed');
+
+            // Find the order
+            $order = Order::find($request->id);
+            if (!$order) {
+                Log::warning('Order not found', ['id' => $request->id]);
+                return response()->json(['success' => false, 'message' => 'Order not found']);
+            }
+
+            Log::info('Order found', [
+                'order_id' => $order->id,
+                'current_status' => [
+                    'produksi_status' => $order->produksi_status,
+                    'marketing_status' => $order->marketing_status,
+                    'surat_jalan_status' => $order->surat_jalan_status,
+                ]
+            ]);
+
+            // Update the specific status based on the type
+            switch ($request->type) {
+                case 'produksi':
+                    $order->produksi_status = $request->value;
+                    $order->produksi_description = $request->description;
+                    Log::info('Produksi status updated', [
+                        'produksi_status' => $request->value,
+                        'produksi_description' => $request->description,
+                    ]);
+                    break;
+
+                case 'marketing':
+                    $order->marketing_status = $request->value;
+                    $order->marketing_description = $request->description;
+                    Log::info('Marketing status updated', [
+                        'marketing_status' => $request->value,
+                        'marketing_description' => $request->description,
+                    ]);
+                    break;
+
+                case 'surat_jalan':
+                    $order->surat_jalan_status = $request->value;
+                    $order->surat_jalan_description = $request->description;
+                    Log::info('Surat Jalan status updated', [
+                        'surat_jalan_status' => $request->value,
+                        'surat_jalan_description' => $request->description,
+                    ]);
+                    break;
+            }
+
+            // Check if all statuses are "Disetujui"
+            if (
+                $order->produksi_status === 'Disetujui' &&
+                $order->marketing_status === 'Disetujui' &&
+                $order->surat_jalan_status === 'Disetujui'
+            ) {
+                $order->order_status = 'Delivered';
+                Log::info('Order status set to Delivered', ['order_id' => $order->id]);
+            }
+
+            // Save the order and log the result
+            if ($order->save()) {
+                Log::info('Order status updated successfully', ['order_id' => $order->id]);
+                return response()->json(['success' => true, 'message' => 'Status updated successfully']);
+            } else {
+                Log::error('Failed to update order status', ['order_id' => $order->id]);
+                return response()->json(['success' => false, 'message' => 'Failed to update status']);
+            }
+        } catch (\Exception $e) {
+            Log::error('Exception occurred while updating order status', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+            ]);
+            return response()->json(['success' => false, 'message' => 'An error occurred']);
+        }
+    }
+
+
     public function delivery_process()
     {
-        return view('activities.deliveryprocess');
+        $order = Order::finished()->get();
+        return view('activities.deliveryprocess', compact('order'));
     }
     public function real_hpp()
     {

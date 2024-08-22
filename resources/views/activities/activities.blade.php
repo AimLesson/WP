@@ -152,7 +152,7 @@
                 <a href="{{ route('activities.closeorder') }}" class="nav-link">
                     <i class="nav-icon fas fa-clipboard-list"></i>
                     <p>
-                        Finished Order
+                        Finished Process
                     </p>
                 </a>
             </li>
@@ -172,14 +172,14 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('activities/delivery_orders_wh') ? 'active' : '' }}">
+            {{-- <li class="nav-item {{ request()->is('activities/delivery_orders_wh') ? 'active' : '' }}">
                 <a href="{{route('activities.delivery_orders_wh')}}" class="nav-link">
                     <i class="nav-icon fas fa-warehouse"></i>
                     <p>
                         Delivery Orders to (WH)
                     </p>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item {{ request()->is('activities/copy_order') ? 'active' : '' }}">
                 <a href="{{route('activities.copy_order')}}" class="nav-link">
                     <i class="nav-icon fas fa-copy"></i>

@@ -29,69 +29,65 @@
                             <div class="card-header">
                                 <h3 class="card-title">Delivered</h3>
                             </div>
-                            
+
                             <!-- /.card-header -->
                             {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
-                            <div class="card-body">
-                                <table id="machine" class="table table-head-fixed text-nowrap">
-                                    {{-- <table id="machine" class="table table-bordered table-striped"> --}}
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Order No</th>
-                                            <th>Customer</th>
-                                            <th>Product Name</th>
-                                            <th>Cost Material</th>
-                                            <th>Cost Std. Part</th>
-                                            <th>Cost Mach.</th>
-                                            <th>Cost Labor</th>
-                                            <th>Cost Subcon</th>
-                                            <th>Cost OHM</th>
-                                            <th>Amount</th>
-                                            <th>SO Amount</th>
-                                            <th>State</th>
-                                            <th>Date Order</th>
-                                            <th>Date Finish</th>
-                                            <th>Date Delivery</th>
-                                            <th>Date By</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $order = \App\Models\Delivered::get();
-                                        @endphp
-                                        @foreach ($order as $m)
+                                <div class="card-body">
+                                    <table id="machine" class="table table-head-fixed text-nowrap">
+                                        {{-- <table id="machine" class="table table-bordered table-striped"> --}}
+                                        <thead>
                                             <tr>
-                                                <td>{{ $m->id }}</td>
-                                                <td>{{ $m->order_number }}</td>
-                                                <td>{{ $m->customer }}</td>
-                                                <td>{{ $m->product }}</td>
-                                                <td>{{ $m->cost_material }}</td>
-                                                <td>{{ $m->cost_std }}</td>
-                                                <td>{{ $m->cost_mach }}</td>
-                                                <td>{{ $m->cost_labor }}</td>
-                                                <td>{{ $m->cost_subcon }}</td>
-                                                <td>{{ $m->cost_ohm }}</td>
-                                                <td>{{ $m->amount }}</td>
-                                                <td>{{ $m->state }}</td>
-                                                <td>{{ $m->so_amount }}</td>
-                                                <td>{{ $m->date_order }}</td>
-                                                <td>{{ $m->date_finish }}</td>
-                                                <td>{{ $m->date_delivery }}</td>
-                                                <td>{{ $m->date_by }}</td>
-                                                {{-- <td>{{$m->total_mach}}</td> --}}
+                                                <th>No</th>
+                                                <th>Order No.</th>
+                                                <th>Total Sales Order</th>
+                                                <th>Total Material Cost</th>
+                                                <th>Total Labor Cost</th>
+                                                <th>Total Machine Cost</th>
+                                                <th>Total Standart Part Cost</th>
+                                                <th>Total Sub Contract Cost</th>
+                                                <th>Total Overhead Cost</th>
+                                                <th>COGS</th>
+                                                <th>Gross Profit Margin</th>
+                                                <th>OH Organisasi</th>
+                                                <th>Net Operating Income</th>
+                                                <th>Biaya Non Operational</th>
+                                                <th>Laba Sebelum Pajak</th>
+                                                <th>Last Update</th>
                                             </tr>
-                                                    </div>
-                                                    <!-- /.modal-content -->
-                                                </div>
-                                                <!-- /.modal-dialog -->
-                                            </div>
-                                            <!-- /.modal -->
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                // Query to fetch WIP data where the associated order status is not "Finished"
+                                                $order = \App\Models\WIP::whereHas('order', function ($query) {
+                                                    $query->delivered();
+                                                })->get();
+                                            @endphp
+                                            @foreach ($order as $m)
+                                                <tr>
+                                                    <td>{{ $m->id }}</td>
+                                                    <td>{{ $m->order_number }}</td>
+                                                    <td>{{ formatRupiah($m->total_sales) }}</td>
+                                                    <td>{{ formatRupiah($m->total_material_cost) }}</td>
+                                                    <td>{{ formatRupiah($m->total_labor_cost) }}</td>
+                                                    <td>{{ formatRupiah($m->total_machine_cost) }}</td>
+                                                    <td>{{ formatRupiah($m->total_standard_part_cost) }}</td>
+                                                    <td>{{ formatRupiah($m->total_sub_contract_cost) }}</td>
+                                                    <td>{{ formatRupiah($m->total_overhead_cost) }}</td>
+                                                    <td>{{ formatRupiah($m->cogs) }}</td>
+                                                    <td>{{ formatRupiah($m->gpm) }}</td>
+                                                    <td>{{ formatRupiah($m->oh_org) }}</td>
+                                                    <td>{{ formatRupiah($m->noi) }}</td>
+                                                    <td>{{ formatRupiah($m->bnp) }}</td>
+                                                    <td>{{ formatRupiah($m->lsp) }}</td>
+                                                    <td>{{ $m->updated_at }}</td>
+                                                    {{-- <td>{{$m->total_mach}}</td> --}}
+                                                </tr>
+
+                                                <!-- /.modal -->
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
