@@ -63,7 +63,7 @@ class SetupController extends Controller
             $request->all(),
             [
                 'plant'                 => 'required',
-                'id_machine'            => 'required',
+                'id_machine'            => 'required|unique:machine,id_machine',
                 'machine_name'          => 'required',
                 'machine_type'          => 'required',
                 'group_name'            => 'required',

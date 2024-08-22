@@ -1033,7 +1033,7 @@ class ActivitiesController extends Controller
     public function createitem()
     {
         $material   = Material::get();
-        $standardParts = StandartpartAPI::where('kode_log', 'M')->get();
+        $standardParts = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])->get();
         $order = Order::where('order_status', '!=', 'Finished')->get();
         return view('activities.createitem', compact('material', 'order', 'standardParts'));
     }
@@ -1556,7 +1556,11 @@ class ActivitiesController extends Controller
     {
         $orders = Order::where('order_status', '!=', 'Finished')->get();
         $items = ItemAdd::get();
-        $standardParts = StandartpartAPI::where('kode_log', 'SP')->get();
+        $standardParts = StandartpartAPI::whereIn('kd_akun', [
+            '131210', '131220', '131240', '135110', '135120', '135220',
+            '136100', '136200', '136310', '136320', '136400',
+            '514110', '514210', '523422', '524120', '524220'
+        ])->get();
         return view('activities.createstandartpart', compact('standardParts', 'orders', 'items'));
     }
 

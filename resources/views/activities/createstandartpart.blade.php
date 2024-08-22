@@ -187,48 +187,43 @@
                             <div class="form-group">
                                 <button type="button" class="btn btn-primary" onclick="addRow()">Add Row</button>
                             </div>
-                            <table class="table table-bordered" id="itemsTable">
-                                <thead>
-                                    <tr>
-                                        <th>Part No</th>
-                                        <th>Part Name</th>
-                                        <th>Quantity</th>
-                                        <th>Unit</th>
-                                        <th>Price per Unit</th>
-                                        <th>Total Price</th>
-                                        <th>Additional Info</th>
-                                        <th>Date</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <select name="no_barcode[]" class="form-control"
-                                                onchange="fetchPartData(this)" required>
-                                                <option value="">-- Select Part --</option>
-                                                @foreach ($standardParts as $o)
-                                                    <option value="{{ $o->no_barcode }}">{{ $o->no_barcode }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td><input type="text" class="form-control" name="part_name[]" required readonly></td>
-                                        <td><input type="number" class="form-control qty" name="qty[]" min="1"
-                                                required></td>
-                                        <td><input type="text" class="form-control" name="unit[]" required readonly></td>
-                                        <td><input type="number" class="form-control price_unit" step="0.01"
-                                                name="price_unit[]" min="0" required readonly></td>
-                                        <td><input type="number" class="form-control total_price" step="0.01"
-                                                name="total_price[]" min="0" required readonly></td>
-                                        <td>
-                                            <textarea class="form-control" name="info[]"></textarea>
-                                        </td>
-                                        <td><input type="date" class="form-control" name="date[]" required></td>
-                                        <td><button type="button" class="btn btn-danger btn-remove"
-                                                onclick="removeRow(this)">Remove</button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div style="overflow-x: auto;">
+                                <table class="table table-bordered" id="itemsTable" style="white-space: nowrap;">
+                                    <thead>
+                                        <tr>
+                                            <th>Part Name</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Price per Unit</th>
+                                            <th>Total Price</th>
+                                            <th>Additional Info</th>
+                                            <th>Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <select name="no_barcode[]" class="form-control" onchange="fetchPartData(this)" required>
+                                                    <option value="">-- Select Part --</option>
+                                                    @foreach ($standardParts as $o)
+                                                        <option value="{{ $o->no_barcode }}">{{ $o->nama_barang }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td><input type="number" class="form-control text-nowrap qty" name="qty[]" min="1" required></td>
+                                            <td><input type="text" class="form-control text-nowrap" name="unit[]" required readonly></td>
+                                            <td><input type="number" class="form-control text-nowrap price_unit" step="0.01" name="price_unit[]" min="0" required readonly></td>
+                                            <td><input type="number" class="form-control text-nowrap total_price" step="0.01" name="total_price[]" min="0" required readonly></td>
+                                            <td><textarea class="form-control" name="info[]"></textarea></td>
+                                            <td><input type="date" class="form-control text-nowrap" name="date[]" required></td>
+                                            <td><button type="button" class="btn btn-danger btn-remove" onclick="removeRow(this)">Remove</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
 
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success btn-custom">Submit</button>
@@ -283,18 +278,16 @@
         function fetchPartData(element) {
             var no_barcode = element.value;
             var row = $(element).closest('tr');
-    
+
             $.ajax({
                 url: '/standartpart/' + no_barcode,
                 type: 'GET',
                 success: function(data) {
                     if (data) {
-                        row.find('input[name="part_name[]"]').val(data.nama_barang);
                         row.find('input[name="unit[]"]').val(data.satuan);
                         row.find('input[name="price_unit[]"]').val(data.harga);
                         row.find('input[name="total_price[]"]').val(data.total);
                         row.find('textarea[name="info[]"]').val(data.keterangan);
-                        // Map other fields as necessary
                     }
                 },
                 error: function() {
@@ -309,56 +302,51 @@
                 }
             });
         }
-    
+
         function addRow() {
             var table = document.getElementById("itemsTable").getElementsByTagName('tbody')[0];
             var rowCount = table.rows.length;
             var row = table.insertRow(rowCount);
-    
+
             var cell1 = row.insertCell(0);
             var element1 = document.createElement("select");
             element1.name = "no_barcode[]";
             element1.classList.add("form-control");
             element1.required = true;
-            element1.onchange = function() { fetchPartData(this); };
+            element1.onchange = function() {
+                fetchPartData(this);
+            };
             cell1.appendChild(element1);
-    
+
             // Populate options dynamically
             @foreach ($standardParts as $o)
                 var option = document.createElement("option");
                 option.value = "{{ $o->no_barcode }}";
-                option.text = "{{ $o->no_barcode }}";
+                option.text = "{{ $o->nama_barang }}";
                 element1.appendChild(option);
             @endforeach
-    
+
+            // Remove the part_name input creation here
+
             var cell2 = row.insertCell(1);
-            var element2 = document.createElement("input");
-            element2.type = "text";
-            element2.name = "part_name[]";
-            element2.classList.add("form-control");
-            element2.required = true;
-            element2.readOnly = true;
-            cell2.appendChild(element2);
-    
-            var cell3 = row.insertCell(2);
             var element3 = document.createElement("input");
             element3.type = "number";
             element3.name = "qty[]";
             element3.min = "1";
             element3.classList.add("form-control", "qty");
             element3.required = true;
-            cell3.appendChild(element3);
-    
-            var cell4 = row.insertCell(3);
+            cell2.appendChild(element3);
+
+            var cell3 = row.insertCell(2);
             var element4 = document.createElement("input");
             element4.type = "text";
             element4.name = "unit[]";
             element4.classList.add("form-control");
             element4.required = true;
             element4.readOnly = true;
-            cell4.appendChild(element4);
-    
-            var cell5 = row.insertCell(4);
+            cell3.appendChild(element4);
+
+            var cell4 = row.insertCell(3);
             var element5 = document.createElement("input");
             element5.type = "number";
             element5.step = "0.01";
@@ -367,9 +355,9 @@
             element5.classList.add("form-control", "price_unit");
             element5.required = true;
             element5.readOnly = true;
-            cell5.appendChild(element5);
-    
-            var cell6 = row.insertCell(5);
+            cell4.appendChild(element5);
+
+            var cell5 = row.insertCell(4);
             var element6 = document.createElement("input");
             element6.type = "number";
             element6.step = "0.01";
@@ -378,36 +366,39 @@
             element6.classList.add("form-control", "total_price");
             element6.required = true;
             element6.readOnly = true;
-            cell6.appendChild(element6);
-    
-            var cell7 = row.insertCell(6);
+            cell5.appendChild(element6);
+
+            var cell6 = row.insertCell(5);
             var element7 = document.createElement("textarea");
             element7.name = "info[]";
             element7.classList.add("form-control");
-            cell7.appendChild(element7);
+            cell6.appendChild(element7);
+
+            var cell7 = row.insertCell(6);
+            var element8 = document.createElement("input");
+            element8.type = "date";
+            element8.name = "date[]";
+            element8.classList.add("form-control");
+            element8.required = true;
+            cell7.appendChild(element8);
 
             var cell8 = row.insertCell(7);
-            var element1 = document.createElement("input");
-            element1.type = "date";
-            element1.name = "date[]";
-            element1.classList.add("form-control");
-            element1.required = true;
-            cell8.appendChild(element1);
-    
-            var cell9 = row.insertCell(8);
             var removeButton = document.createElement("button");
             removeButton.type = "button";
             removeButton.classList.add("btn", "btn-danger");
             removeButton.innerHTML = "Remove";
-            removeButton.onclick = function() { removeRow(this); };
-            cell9.appendChild(removeButton);
+            removeButton.onclick = function() {
+                removeRow(this);
+            };
+            cell8.appendChild(removeButton);
         }
-    
+
+
         function removeRow(button) {
             var row = button.parentNode.parentNode;
             row.parentNode.removeChild(row);
         }
-    
+
         function updateTotalPrice() {
             $('#itemsTable tbody tr').each(function() {
                 var qty = $(this).find('.qty').val();
@@ -416,11 +407,11 @@
                 $(this).find('.total_price').val(total);
             });
         }
-    
+
         $(document).on('input', '.qty, .price_unit', function() {
             updateTotalPrice();
         });
-    
+
         $(document).ready(function() {
             var errorAlert = '{{ session('error') }}';
             if (errorAlert) {
@@ -433,7 +424,7 @@
                     toast: true,
                 });
             }
-    
+
             var successAlert = '{{ session('success') }}';
             if (successAlert) {
                 Swal.fire({
@@ -445,33 +436,33 @@
                     toast: true,
                 });
             }
-    
+
             function updateTitle(pageTitle) {
                 document.title = pageTitle;
             }
-    
+
             $('#order_number').change(function() {
                 var selectedOrderNumber = $(this).val();
                 var orders = @json($orders);
-    
+
                 var selectedOrder = orders.find(function(order) {
                     return order.order_number === selectedOrderNumber;
                 });
-    
+
                 $('#so_number').val(selectedOrder ? selectedOrder.so_number : '');
                 $('#product').val(selectedOrder ? selectedOrder.product : '');
                 $('#company_name').val(selectedOrder ? selectedOrder.customer : '');
                 $('#dod').val(selectedOrder ? selectedOrder.dod : '');
             });
-    
+
             $('#no_item').change(function() {
                 var selectedItemNumber = $(this).val();
                 var items = @json($items);
-    
+
                 var selectedItem = items.find(function(item) {
                     return item.no_item === selectedItemNumber;
                 });
-    
+
                 $('#dod_item').val(selectedItem ? selectedItem.dod_item : '');
                 $('#material').val(selectedItem ? selectedItem.material : '');
                 $('#item').val(selectedItem ? selectedItem.item : '');
@@ -479,9 +470,8 @@
                 $('#nos').val(selectedItem ? selectedItem.nos : '');
                 $('#issued_item').val(selectedItem ? selectedItem.issued_item : '');
             });
-    
+
             updateTitle('Add BOM');
         });
     </script>
-    
 @endsection

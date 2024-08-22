@@ -362,7 +362,7 @@
                                             <div class="form-group">
                                                 <label for="InputMachinePrice">Machine Price (Rp)</label>
                                                 <input type="text" name="machine_price" class="form-control"
-                                                    id="InputMachinePrice" placeholder="Input Machine Price" required>
+                                                    id="InputMachinePrice" placeholder="Input Machine Price" required readonly>
                                             </div>
                                             <div class="form-group">
                                                 <label for="InputTotalMach">Total Mach</label>
@@ -813,7 +813,7 @@
                 if (!isNaN(purchasePrice) && !isNaN(bankInterestPercent) && !isNaN(machHour) && !isNaN(
                         daysPerYear) && bankInterestPercent >= 0) {
                     // Hitung bank interest berdasarkan rumus yang diberikan
-                    var bankInterest = ((purchasePrice * bankInterestPercent) / (2 * (machHour * daysPerYear)));                        
+                    var bankInterest = ((purchasePrice * bankInterestPercent) / (2 * (machHour * daysPerYear)));
 
                     // Tampilkan hasil perhitungan pada input Bank Interest dalam format Rupiah tanpa desimal .00
                     document.getElementById('InputBankInterest').value = formatRupiah(bankInterest.toFixed(0));
@@ -946,7 +946,7 @@
                 if (!isNaN(maintenanceFactor) && !isNaN(purchasePrice) && !isNaN(machHour) && !isNaN(
                         daysPerYear) && maintenanceFactor >= 0) {
                     // Hitung maintenance cost berdasarkan rumus yang diberikan
-                    var maintenanceCost = ((maintenanceFactor/100) * purchasePrice) / (machHour * daysPerYear);
+                    var maintenanceCost = ((maintenanceFactor / 100) * purchasePrice) / (machHour * daysPerYear);
 
                     // Tampilkan hasil perhitungan pada input Maintenance Cost dalam format Rupiah tanpa desimal .00
                     document.getElementById('InputMaintenanceCost').value = formatRupiah(maintenanceCost.toFixed(
@@ -1009,7 +1009,8 @@
                 if (!isNaN(depreciationCost) && !isNaN(bankInterest) && !isNaN(areaCost) && !isNaN(
                         electricalCost) && !isNaN(maintenanceCost)) {
                     // Hitung machCostPerHour sesuai dengan rumus yang diberikan
-                    var machCostPerHour = depreciationCost + bankInterest + areaCost + electricalCost + maintenanceCost;
+                    var machCostPerHour = depreciationCost + bankInterest + areaCost + electricalCost +
+                        maintenanceCost;
 
                     // Tampilkan hasil perhitungan pada input Mach. Cost per Hour dalam format Rupiah tanpa desimal .00
                     machCostPerHourInput.value = formatRupiah(machCostPerHour.toFixed(0));
@@ -1066,10 +1067,10 @@
         // Fungsi untuk mengatur nilai input "group_id" berdasarkan pilihan "group_name"
         function setGroupId() {
             var selectedGroup = $('#InputGroupName').val();
-    
+
             // Lakukan pencarian nilai "group_id" berdasarkan "group_name" dalam data planJoin
             var matchingPlan = {!! json_encode($planJoin) !!}.find(plan => plan.group === selectedGroup);
-    
+
             // Jika ditemukan, set nilai "group_id" sesuai dengan data yang cocok
             if (matchingPlan) {
                 $('#InputGroupID').val(matchingPlan.group_id);
@@ -1078,19 +1079,19 @@
                 $('#InputGroupID').val('');
             }
         }
-    
+
         // Event listener untuk perubahan pada dropdown "group_name"
         $('#InputGroupName').on('change', function() {
             setGroupId();
         });
-    
+
         // Event listener untuk perubahan pada input "group_id"
         $('#InputGroupID').on('input', function() {
             var inputGroupId = $(this).val();
-            
+
             // Lakukan pencarian nilai "group_name" berdasarkan "group_id" dalam data planJoin
             var matchingPlan = {!! json_encode($planJoin) !!}.find(plan => plan.group_id === inputGroupId);
-    
+
             // Jika ditemukan, set nilai "group_name" sesuai dengan data yang cocok
             if (matchingPlan) {
                 $('#InputGroupName').val(matchingPlan.group).trigger('change');
@@ -1099,13 +1100,13 @@
                 $('#InputGroupName').val('').trigger('change');
             }
         });
-    
+
         // Panggil fungsi saat halaman dimuat untuk menetapkan nilai awal
         $(document).ready(function() {
             setGroupId();
         });
     </script>
-    
+
     <script>
         // Menggunakan jQuery untuk menangani perubahan pada dropdown "Plan"
         $('#select-plant').change(function() {
@@ -1127,5 +1128,15 @@
 
         // Menggunakan Select2 untuk memberikan fungsionalitas dropdown yang lebih baik
         $('.select2').select2();
+    </script>
+
+    <script>
+        // Listen for changes in the Purchase Price input
+        document.getElementById('InputPurchasePrice').addEventListener('input', function() {
+            // Get the value of the Purchase Price input
+            var purchasePrice = this.value;
+            // Set the value of the Machine Price input to be the same as the Purchase Price
+            document.getElementById('InputMachinePrice').value = purchasePrice;
+        });
     </script>
 @endsection
