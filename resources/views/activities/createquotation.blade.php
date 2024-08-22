@@ -280,8 +280,8 @@
                                                         <thead>
                                                             <tr>
                                                                 <th style="width: 20px" class="fixed-column">No</th>
-                                                                <th class="col-sm-2">Item</th>
-                                                                <th class="col-md-6">Item Description</th>
+                                                                <th class="col-sm-2">No Katalog</th>
+                                                                <th class="col-md-6">Nama Katalog</th>
                                                                 <th style="width:80px;">Qty</th>
                                                                 <th style="width:80px;">Unit</th>
                                                                 <th style="width:100px;">Unit Price</th>
@@ -293,11 +293,18 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class="row-index text-center fixed-column">1</td>
-                                                                <td><input class="form-control" style="min-width:120px"
-                                                                        type="text" id="item" name="item[]">
+                                                                <td>
+                                                                    <select class="form-control" name="unit[]" id="item" style="width:100px" onchange="updateItemDesc(this)">
+                                                                        <option selected="selected" required disabled></option>
+                                                                        @foreach ($no_katalog as $u)
+                                                                            <option value="{{ $u->no_katalog }}" data-name="{{ $u->nama_katalog }}">
+                                                                                {{ $u->no_katalog }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
                                                                 </td>
-                                                                <td><input class="form-control"style="min-width:200px"
-                                                                        type="text" id="item_desc" name="item_desc[]">
+                                                                <td>
+                                                                    <input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]">
                                                                 </td>
                                                                 <td><input class="form-control qty" style="width:80px"
                                                                         type="number" id="qty" name="qty[]">
@@ -743,6 +750,24 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!-- Select2 -->
     <script src="../../plugins/select2/js/select2.full.min.js"></script>
+    {{-- no katalog --}}
+    <script>
+        function updateItemDesc(selectElement) {
+            // Get the selected option
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            
+            // Get the data-name attribute (name_katalog) from the selected option
+            var nameKatalog = selectedOption.getAttribute('data-name');
+            
+            // Find the corresponding item_desc input field
+            var inputDesc = selectElement.closest('td').nextElementSibling.querySelector('input[name="item_desc[]"]');
+            
+            // Set the value of the input field to the name_katalog
+            inputDesc.value = nameKatalog || ''; // Set to empty string if name_katalog is not available
+        }
+    </script>
+    
+
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
             var errorAlert = '{{ session('error') }}';
