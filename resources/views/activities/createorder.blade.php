@@ -121,7 +121,7 @@
                                             <div class="form-group">
                                                 <label for="reff_number" class="form-label">Reff Number</label>
                                                 <input type="text" name="reff_number" class="form-control"
-                                                    id="reff_number" placeholder="Reff Number">
+                                                    id="reff_number" placeholder="Reff Number" value="-">
                                                 @error('reff_number')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -270,7 +270,7 @@
                                             <div class="form-group">
                                                 <label for="material" class="form-label">Material</label>
                                                 <input type="text" name="material" class="form-control"
-                                                    id="material" placeholder="Input Material">
+                                                    id="material" placeholder="Input Material" value="-">
                                                 @error('material')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror

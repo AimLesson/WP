@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WIP;
 use App\Models\Item;
 use App\Models\Unit;
+use App\Models\NoKatalog;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\WPLink;
@@ -68,8 +69,9 @@ class ActivitiesController extends Controller
         $customers = Customer::get();
         $tax_type = TaxType::get();
         $unit = Unit::get();
+        $no_katalog = NoKatalog::get();
         $user = User::get();
-        return view('activities.createquotation', compact('user', 'unit', 'tax_type', 'customers'));
+        return view('activities.createquotation', compact('user', 'unit', 'tax_type', 'customers','no_katalog'));
     }
     public function storequotation(Request $request)
     {
