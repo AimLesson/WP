@@ -67,7 +67,7 @@
                                                     </option>
                                                     @php
                                                         // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                                        $plan = \App\Models\plan::get();
+                                                        $plan = \App\Models\Plan::get();
                                                     @endphp
                                                     @foreach ($plan as $singlePlan)
                                                         <option value="{{ $singlePlan->plan_name }}">
@@ -176,7 +176,7 @@
                                                     </option>
                                                     @php
                                                         // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                                        $machine_state = \App\Models\machinestate::get();
+                                                        $machine_state = \App\Models\MachineState::get();
                                                     @endphp
                                                     @foreach ($machine_state as $singleState)
                                                         <option value="{{ $singleState->state }}">
@@ -214,7 +214,7 @@
                                             <!-- Bagian Bawah - Bagian Pertama (Horizontal) -->
                                             <!-- Elemen untuk Purchase Date, Purchase Price, Depreciation Age, Used Age, Mach. Hour, dan Days per Year -->
                                             <div class="form-group">
-                                                <label>Purchase Date</label>
+                                                <label>1. Purchase Date</label>
                                                 <div class="input-group date" id="purchasedate"
                                                     data-target-input="nearest">
                                                     <input type="text" name="purchase_date"
@@ -227,13 +227,13 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="InputPurchasePrice">Purchase Price (Rp)</label>
+                                                <label for="InputPurchasePrice">2. Purchase Price (Rp)</label>
                                                 <input type="text" name="purchase_price" class="form-control"
                                                     id="InputPurchasePrice" placeholder="Input Purchase Price (Rp)"
                                                     required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="InputDepreciationAge">Depreciation Age</label>
+                                                <label for="InputDepreciationAge">3. Depreciation Age</label>
                                                 <div class="row">
                                                     <div class="col-md-9">
                                                         <input type="text" name="depreciation_age"
@@ -246,7 +246,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="InputUsedAge">Used Age</label>
+                                                <label for="InputUsedAge">4. Used Age</label>
                                                 <div class="row">
                                                     <div class="col-md-9">
                                                         <input type="text" name="used_age" class="form-control"
@@ -258,7 +258,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="InputMachHour">Mach. Hour</label>
+                                                <label for="InputMachHour">5. Mach. Hour</label>
                                                 <div class="row">
                                                     <div class="col-md-9">
                                                         <input type="text" name="mach_hour" class="form-control"
@@ -281,7 +281,7 @@
                                             <!-- Bagian Bawah - Bagian Kedua (Horizontal) -->
                                             <!-- Elemen untuk Bank Interest Percent, Floor Area, Maintenance Factor, dan Maintenance Cost/Year -->
                                             <div class="form-group">
-                                                <label for="InputBankInterestPercent">Bank Interest Percent</label>
+                                                <label for="InputBankInterestPercent">6. Bank Interest Percent</label>
                                                 <div class="row">
                                                     <div class="col-md-9">
                                                         <input type="text" name="bank_interest_percent"
@@ -294,7 +294,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="InputFloorArea">Floor Area</label>
+                                                <label for="InputFloorArea">7. Floor Area</label>
                                                 <div class="row">
                                                     <div class="col-md-9">
                                                         <input type="text" name="floor_area" class="form-control"
@@ -306,7 +306,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="InputMaintenanceFactor">Maintenance Factor</label>
+                                                <label for="InputMaintenanceFactor">8. Maintenance Factor</label>
                                                 <div class="row">
                                                     <div class="col-md-9">
                                                         <input type="text" name="maintenance_factor"
@@ -331,12 +331,12 @@
                                             <!-- Bagian Bawah - Bagian Ketiga (Horizontal) -->
                                             <!-- Elemen untuk Floor Price, Power Consumption, Electric Price/kWh, Labor Cost, dan Machine Price -->
                                             <div class="form-group">
-                                                <label for="InputFloorPrice">Floor Price (Rp/M²/Year)</label>
+                                                <label for="InputFloorPrice">9. Floor Price (Rp/M²/Year)</label>
                                                 <input type="text" name="floor_price" class="form-control"
                                                     id="InputFloorPrice" placeholder="Input Floor Price" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="InputPowerConsumption">Power Consumption</label>
+                                                <label for="InputPowerConsumption">10. Power Consumption</label>
                                                 <div class="row">
                                                     <div class="col-md-9">
                                                         <input type="text" name="power_consumption"
@@ -349,13 +349,13 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="InputElectricPrice">Electric Price/kWh (Rp)</label>
+                                                <label for="InputElectricPrice">11. Electric Price/kWh (Rp)</label>
                                                 <input type="text" name="electric_price" class="form-control"
                                                     id="InputElectricPrice" placeholder="Input Electric Price/kWh"
                                                     required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="InputLaborCost">Labor Cost (Rp)</label>
+                                                <label for="InputLaborCost">12. Labor Cost (Rp)</label>
                                                 <input type="text" name="labor_cost" class="form-control"
                                                     id="InputLaborCost" placeholder="Input Labor Cost" required>
                                             </div>
