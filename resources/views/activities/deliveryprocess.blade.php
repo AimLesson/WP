@@ -119,7 +119,7 @@
                         <div class="mb-3">
                             <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary btn-custom">Save changes</button>
                     </form>
                 </div>
             </div>

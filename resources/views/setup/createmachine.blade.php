@@ -81,6 +81,9 @@
                                                 <label for="InputIDMachine">ID</label>
                                                 <input type="text" name="id_machine" class="form-control"
                                                     id="InputIDMachine" placeholder="Input ID" required>
+                                                @error('id_machine`')
+                                                    <small class="text-danger">{{ $message }}</small>
+                                                @enderror
                                             </div>
                                             <div class="form-group">
                                                 <label for="InputMachine">Machine</label>
@@ -362,7 +365,8 @@
                                             <div class="form-group">
                                                 <label for="InputMachinePrice">Machine Price (Rp)</label>
                                                 <input type="text" name="machine_price" class="form-control"
-                                                    id="InputMachinePrice" placeholder="Input Machine Price" required readonly>
+                                                    id="InputMachinePrice" placeholder="Input Machine Price" required
+                                                    readonly>
                                             </div>
                                             <div class="form-group">
                                                 <label for="InputTotalMach">Total Mach</label>
@@ -1138,5 +1142,39 @@
             // Set the value of the Machine Price input to be the same as the Purchase Price
             document.getElementById('InputMachinePrice').value = purchasePrice;
         });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Menampilkan pesan kesalahan dari sesi menggunakan SweetAlert
+        var errorAlert = '{{ session('error') }}';
+        if (errorAlert !== '') {
+            Swal.fire({
+                icon: 'error',
+                title: errorAlert,
+                position: 'center', // Mengubah posisi ke tengah
+                showConfirmButton: true, // Menampilkan tombol OK
+                toast: false,
+            });
+        }
+
+        // Menampilkan pesan keberhasilan dari sesi menggunakan SweetAlert
+        var successAlert = '{{ session('success') }}';
+        if (successAlert !== '') {
+            Swal.fire({
+                icon: 'success',
+                text: successAlert,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                toast: true,
+            });
+        }
+        // Fungsi untuk mengubah judul berdasarkan halaman
+        function updateTitle(pageTitle) {
+            document.title = pageTitle;
+        }
+
+        updateTitle('Machine');
     </script>
 @endsection

@@ -101,7 +101,7 @@ class SetupController extends Controller
         );
 
         if ($validator->fails()) {
-            return redirect()->route('setup.machine')->withErrors($validator)->withInput();
+            return redirect()->route('setup.createmachine')->with('error', 'ID Machine Tidak Boleh Sama');
         }
 
         $machine = new Machine();
