@@ -286,10 +286,10 @@
                                                         <thead>
                                                             <tr>
                                                                 <th style="width: 20px" class="fixed-column">No</th>
-                                                                <th class="col-sm-2">Item</th>
+                                                                <th class="col-sm-2">No Katalog</th>
                                                                 <th class="col-md-6">Item Description</th>
-                                                                <th style="width:80px;">Qty</th>
                                                                 <th style="width:100px;">Unit Price</th>
+                                                                <th style="width:80px;">Qty</th>
                                                                 <th style="width:80px;">Unit</th>
                                                                 <th style="width:80px;">Disc (%)</th>
                                                                 <th>Amount</th>
@@ -304,24 +304,30 @@
                                                                     <td hidden class="ids">{{ $item->id }}</td>
                                                                     <td class="row-index text-center fixed-column">
                                                                         {{ ++$key }}</td>
-                                                                    <td><input class="form-control"
-                                                                            style="min-width:120px" type="text"
-                                                                            id="item" name="item[]"
-                                                                            value="{{ $item->item }}">
-                                                                    </td>
-                                                                    <td><input class="form-control"style="min-width:200px"
-                                                                            type="text" id="item_desc"
-                                                                            name="item_desc[]"
-                                                                            value="{{ $item->item_desc }}">
-                                                                    </td>
+                                                                        <td>
+                                                                            <select class="form-control" name="item[]" id="item" style="width:100px" onchange="updateItemDesc(this)">
+                                                                                <option selected="selected" required disabled></option>
+                                                                                @foreach ($no_katalog as $u)
+                                                                                    <option value="{{ $u->no_katalog }}" 
+                                                                                        data-name="{{ $u->nama_katalog }}" 
+                                                                                        data-price="{{ $u->price }}" 
+                                                                                        {{ $u->no_katalog == $item->item ? 'selected' : '' }}>
+                                                                                        {{ $u->no_katalog }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </td>
+                                                                        <td>
+                                                                            <input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]" value="{{ $item->item_desc }}">
+                                                                        </td>
+                                                                        <td>
+                                                                            <input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]" value="{{ $item->unit_price }}">
+                                                                        </td>
+                                                                        
                                                                     <td><input class="form-control qty" style="width:80px"
                                                                             type="number" id="qty" name="qty[]"
                                                                             value="{{ $item->qty }}">
                                                                     </td>
-                                                                    <td><input class="form-control unit_price"
-                                                                            style="width:120px" type="text"
-                                                                            id="unit_price" name="unit_price[]"
-                                                                            value="{{ $item->unit_price }}"></td>
                                                                     <td><select class="form-control" name="unit[]"
                                                                             id="unit" style="width:100px">
                                                                             <option selected="selected" required disabled
@@ -821,6 +827,35 @@
     </div>
     <!-- Pastikan Anda telah menyertakan SweetAlert di proyek Anda -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- No katalog --}}
+
+    <script>
+        function updateItemDesc(selectElement) {
+            // Get the selected option
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            
+            // Get the data-name and data-price attributes from the selected option
+            var nameKatalog = selectedOption.getAttribute('data-name');
+            var price = selectedOption.getAttribute('data-price');
+            
+            // Find the corresponding item_desc and price input fields
+            var inputDesc = selectElement.closest('td').nextElementSibling.querySelector('input[name="item_desc[]"]');
+            var inputPrice = selectElement.closest('td').nextElementSibling.nextElementSibling.querySelector('input[name="unit_price[]"]');
+            
+            // Set the value of the input fields to the name_katalog and price
+            inputDesc.value = nameKatalog || ''; // Set to empty string if name_katalog is not available
+            inputPrice.value = price || ''; // Set to empty string if price is not available
+        }
+        
+        // Automatically update the item_desc and unit_price fields on page load for pre-selected items
+        document.querySelectorAll('select[name="item[]"]').forEach(function(selectElement) {
+            if (selectElement.value) {
+                updateItemDesc(selectElement);
+            }
+        });
+    </script>
+    
+
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
             var errorAlert = '{{ session('error') }}';
@@ -924,10 +959,26 @@
                 $("#quotationadd-table tbody").append(`
                 <tr id="R${rowCount + 1}">
                     <td class="row-index text-center fixed-column"><p> ${rowCount + 1}</p></td>
-                    <td><input class="form-control" style="min-width:120px" type="text" id="item" name="item[]"></td>
-                    <td><input class="form-control"style="min-width:200px" type="text" id="item_desc" name="item_desc[]"></td>
+                    <td>
+                                                                            <select class="form-control" name="item[]" id="item" style="width:100px" onchange="updateItemDesc(this)">
+                                                                                <option selected="selected" required disabled></option>
+                                                                                @foreach ($no_katalog as $u)
+                                                                                    <option value="{{ $u->no_katalog }}" 
+                                                                                        data-name="{{ $u->nama_katalog }}" 
+                                                                                        data-price="{{ $u->price }}" 
+                                                                                        {{ $u->no_katalog == $item->item ? 'selected' : '' }}>
+                                                                                        {{ $u->no_katalog }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </td>
+                                                                        <td>
+                                                                            <input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]" value="{{ $item->item_desc }}">
+                                                                        </td>
+                                                                        <td>
+                                                                            <input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]" value="{{ $item->unit_price }}">
+                                                                        </td>
                     <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]"></td>
-                    <td><input class="form-control unit_price" style="width:120px" type="text" id="unit_price" name="unit_price[]"></td>
                     <td><select class="form-control" name="unit[]"
                                                                         id="unit" style="width:100px">
                                                                         <option selected="selected" required disabled
@@ -1166,4 +1217,5 @@
             // });
         });
     </script>
+
 @endsection

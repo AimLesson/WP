@@ -215,6 +215,7 @@ class ActivitiesController extends Controller
         $customers = Customer::get();
         $tax_type = TaxType::get();
         $unit = Unit::get();
+        $no_katalog = NoKatalog::get();
         $user = User::get();
         $quotation     = DB::table('quotation')->where('quotation_no', $quotation_no)->first();
         $quotationJoin = DB::table('quotation')
@@ -223,7 +224,7 @@ class ActivitiesController extends Controller
             ->where('quotationadd.quotation_no', $quotation_no)
             ->get();
 
-        return view('activities.editquotation', compact('quotation', 'quotationJoin', 'user', 'unit', 'tax_type', 'customers'));
+        return view('activities.editquotation', compact('quotation', 'quotationJoin', 'user', 'unit', 'tax_type', 'customers', 'no_katalog'));
     }
     public function deletequotationadd(Request $request)
     {
@@ -545,6 +546,7 @@ class ActivitiesController extends Controller
     {
         $kbli = Kblicode::get();
         $unit = Unit::get();
+        $no_katalog = NoKatalog::get();
         $tax_type = TaxType::get();
         $user = User::get();
         $producttype = ProductType::get();

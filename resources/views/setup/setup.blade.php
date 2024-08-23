@@ -99,6 +99,14 @@
                     </p>
                 </a>
             </li>
+            <li class="nav-item {{ request()->is('setup/katalog') ? 'active' : '' }}">
+                <a href="{{route('setup.katalog')}}" class="nav-link">
+                    <i class="nav-icon fas fa-puzzle-piece"></i>
+                    <p>
+                        Katalog
+                    </p>
+                </a>
+            </li>
           <!--<li class="nav-item {{ request()->is('setup/sotarget')||request()->is('setup/sotarget/add')||(request()->is('setup/sotarget/edit/*')&&request()->route('id')==$sotarget->id) ? 'active' : '' }}">
                 <a href="{{ route('setup.sotarget') }}" class="nav-link">
                     <i class="nav-icon fas fa-check-square"></i>
@@ -131,7 +139,7 @@
                     </p>
                 </a>
             </li> -->
-            <li class="nav-item ">
+            {{-- <li class="nav-item ">
                 <a href="" class="nav-link">
                     <i class="nav-icon fas fa-print"></i>
                     <p>
@@ -147,7 +155,7 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
             @if (Auth::user()->role == 'superadmin')
             <li class="nav-item {{ request()->is('setup/companyinfo') ? 'active' : '' }}">
                 <a href="{{ route('setup.companyinfo') }}" class="nav-link">

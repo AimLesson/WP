@@ -19,6 +19,7 @@ use App\Models\SoTarget;
 use App\Models\TaxType;
 use App\Models\WorkUnit;
 use App\Models\Material;
+use App\Models\NoKatalog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -1600,6 +1601,89 @@ class SetupController extends Controller
 
         $material->delete();
         return redirect()->route('setup.material')->with('success', 'Material delete successfully');
+    }
+
+
+
+    //setup - Katalog
+    public function katalog()
+    {
+        $no_katalog = NoKatalog::get();
+
+        return view('setup.katalog', compact('no_katalog'));
+    }
+    public function createkatalog()
+    {
+        return view('setup.createkatalog');
+    }
+
+    public function storekatalog(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'no_katalog' => 'required',
+                'nama_katalog'      => 'required',
+                'price'        => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return redirect()->route('setup.createkatalog')->with('error', 'Failed');
+        }
+
+        $no_katalog = new NoKatalog();
+        $no_katalog->no_katalog   = $request->input('no_katalog');
+        $no_katalog->nama_katalog     =   $request->input('nama_katalog');
+        $no_katalog->price       =   $request->input('price');
+        $no_katalog->save();
+
+        return redirect()->route('setup.katalog')->with('success', 'Katalog data saved successfully');
+    }
+
+    public function editkatalog(Request $request, $id)
+    {
+        $no_katalog = NoKatalog::find($id);
+        if (!$no_katalog) {
+            return redirect()->route('setup.katalog')->with('error', 'Katalog not found');
+        }
+        return view('setup.editkatalog', compact('no_katalog'));
+    }
+
+    public function updatekatalog(Request $request, $id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'no_katalog' => 'required',
+                'nama_katalog'      => 'required',
+                'price'        => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return redirect()->route('setup.editkatalog', ['id' => $id])->withErrors($validator)->withInput();
+        }
+        $no_katalog = NoKatalog::find($id);
+        if (!$no_katalog) {
+            return redirect()->route('setup.katalog')->with('error', 'Katalog Not found');
+        }
+
+        $no_katalog->no_katalog = $request->input('no_katalog');
+        $no_katalog->nama_katalog = $request->input('nama_katalog');
+        $no_katalog->price = $request->input('price');
+        $no_katalog->save();
+        return redirect()->route('setup.katalog')->with('success', 'Katalog updated successfully');
+    }
+
+    public function deletekatalog($id)
+    {
+        $no_katalog = NoKatalog::find($id);
+        if (!$no_katalog) {
+            return redirect()->route('setup.katalog')->with('error', 'Katalog not found');
+        }
+
+        $no_katalog->delete();
+        return redirect()->route('setup.katalog')->with('success', 'Katalog delete successfully');
     }
 
     //end_setup

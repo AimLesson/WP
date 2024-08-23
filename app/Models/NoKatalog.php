@@ -21,5 +21,6 @@ class NoKatalog extends Model
     protected $fillable = [
         'no_katalog',
         'nama_katalog',
+        'price',
     ];
 }
