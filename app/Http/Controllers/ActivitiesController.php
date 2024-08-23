@@ -383,6 +383,7 @@ class ActivitiesController extends Controller
     {
         $kbli = Kblicode::get();
         $unit = Unit::get();
+        $no_katalog = NoKatalog::get();
         $tax_type = TaxType::get();
         $user = User::get();
         $producttype = ProductType::get();
