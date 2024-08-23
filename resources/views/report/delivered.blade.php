@@ -33,26 +33,24 @@
                             <!-- /.card-header -->
                             {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
                                 <div class="card-body">
-                                    <table id="machine" class="table table-head-fixed text-nowrap">
+                                    <table id="machine" class="table table-head-fixed text-nowrap table-bordered">
                                         {{-- <table id="machine" class="table table-bordered table-striped"> --}}
                                         <thead>
                                             <tr>
-                                                <th>No</th>
-                                                <th>Order No.</th>
-                                                <th>Total Sales Order</th>
-                                                <th>Total Material Cost</th>
-                                                <th>Total Labor Cost</th>
-                                                <th>Total Machine Cost</th>
-                                                <th>Total Standart Part Cost</th>
-                                                <th>Total Sub Contract Cost</th>
-                                                <th>Total Overhead Cost</th>
-                                                <th>COGS</th>
-                                                <th>Gross Profit Margin</th>
-                                                <th>OH Organisasi</th>
-                                                <th>Net Operating Income</th>
-                                                <th>Biaya Non Operational</th>
-                                                <th>Laba Sebelum Pajak</th>
-                                                <th>Last Update</th>
+                                                <th rowspan="2" class="text-center align-middle">ID</th>
+                                                <th rowspan="2" class="text-center align-middle">Order No.</th>
+                                                <th colspan="6" class="text-center align-middle">Total Cost</th>
+                                                <th rowspan="2" class="text-center align-middle">WIP</th>
+                                                <th rowspan="2" class="text-center align-middle">Total Sales Order</th>
+                                                <th rowspan="2" class="text-center align-middle">Last Update</th>
+                                            </tr>
+                                            <tr>
+                                                <th> Material Cost</th>
+                                                <th> Labor Cost</th>
+                                                <th> Machine Cost</th>
+                                                <th> Standart Part Cost</th>
+                                                <th> Sub Contract Cost</th>
+                                                <th> Overhead Cost</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -66,7 +64,6 @@
                                                 <tr>
                                                     <td>{{ $m->id }}</td>
                                                     <td>{{ $m->order_number }}</td>
-                                                    <td>{{ formatRupiah($m->total_sales) }}</td>
                                                     <td>{{ formatRupiah($m->total_material_cost) }}</td>
                                                     <td>{{ formatRupiah($m->total_labor_cost) }}</td>
                                                     <td>{{ formatRupiah($m->total_machine_cost) }}</td>
@@ -74,11 +71,7 @@
                                                     <td>{{ formatRupiah($m->total_sub_contract_cost) }}</td>
                                                     <td>{{ formatRupiah($m->total_overhead_cost) }}</td>
                                                     <td>{{ formatRupiah($m->cogs) }}</td>
-                                                    <td>{{ formatRupiah($m->gpm) }}</td>
-                                                    <td>{{ formatRupiah($m->oh_org) }}</td>
-                                                    <td>{{ formatRupiah($m->noi) }}</td>
-                                                    <td>{{ formatRupiah($m->bnp) }}</td>
-                                                    <td>{{ formatRupiah($m->lsp) }}</td>
+                                                    <td>{{ formatRupiah($m->total_sales) }}</td>
                                                     <td>{{ $m->updated_at }}</td>
                                                     {{-- <td>{{$m->total_mach}}</td> --}}
                                                 </tr>
