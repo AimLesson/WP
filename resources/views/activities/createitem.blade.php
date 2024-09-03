@@ -195,7 +195,7 @@
                                                         </td>
                                                         <td><input class="form-control massa" style="width:100px"
                                                                 type="number" id="massa1" name="massa[]"
-                                                                step="0.01" value="0"></td>
+                                                                step="0.001" value="0"></td>
                                                         <td><input class="form-control" style="min-width:80px"
                                                                 type="text" id="nos1" name="nos[]"></td>
                                                         <td><input class="form-control" style="min-width:80px"
@@ -209,13 +209,13 @@
                                                                 type="text" id="drawing_no1" name="drawing_no[]"></td>
                                                         <td><input class="form-control length" style="min-width:100px"
                                                                 type="number" id="length1" name="length[]"
-                                                                step="0.01" value="0"></td>
+                                                                step="0.001" value="0"></td>
                                                         <td><input class="form-control width" style="min-width:80px"
                                                                 type="number" id="width1" name="width[]"
-                                                                step="0.01" value="0"></td>
+                                                                step="0.001" value="0"></td>
                                                         <td><input class="form-control thickness" style="min-width:80px"
                                                                 type="number" id="thickness1" name="thickness[]"
-                                                                step="0.01" value="0"></td>
+                                                                step="0.001" value="0"></td>
                                                         <td><input class="form-control weight" style="width:100px"
                                                                 type="number" id="weight1" name="weight[]" step="0.01"
                                                                 value="0" readonly></td>

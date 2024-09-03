@@ -63,12 +63,7 @@
                                                 <label>Plant</label>
                                                 <select class="form-control select2" name="plant" id="select-plant"
                                                     style="width: 100%;">
-                                                    <option selected="selected" disabled selected>-- Select a Plant --
-                                                    </option>
-                                                    @php
-                                                        // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                                        $plan = \App\Models\Plan::get();
-                                                    @endphp
+                                                    <option selected="selected" disabled>-- Select a Plant --</option>
                                                     @foreach ($plan as $singlePlan)
                                                         <option value="{{ $singlePlan->plan_name }}">
                                                             {{ $singlePlan->plan_name }}
@@ -80,11 +75,13 @@
                                             <div class="form-group">
                                                 <label for="InputIDMachine">ID</label>
                                                 <input type="text" name="id_machine" class="form-control"
-                                                    id="InputIDMachine" placeholder="Input ID" required>
-                                                @error('id_machine`')
+                                                    id="InputIDMachine" placeholder="Input ID" value="001" required
+                                                    readonly>
+                                                @error('id_machine')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="InputMachine">Machine</label>
                                                 <input type="text" name="machine_name" class="form-control"
@@ -1144,6 +1141,33 @@
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the input elements
+            const depreciationAgeInput = document.getElementById('InputDepreciationAge');
+            const usedAgeInput = document.getElementById('InputUsedAge');
+            const depreciationCostInput = document.getElementById('InputDepreciationCost');
+
+            // Add event listeners to check the condition when values change
+            depreciationAgeInput.addEventListener('input', calculateDepreciationCost);
+            usedAgeInput.addEventListener('input', calculateDepreciationCost);
+
+            function calculateDepreciationCost() {
+                const depreciationAge = parseFloat(depreciationAgeInput.value) || 0;
+                const usedAge = parseFloat(usedAgeInput.value) || 0;
+
+                // Check the condition: if Used Age > Depreciation Age
+                if (usedAge > depreciationAge) {
+                    depreciationCostInput.value = 0;
+                } else {
+                    // If needed, you can set this value to something else when the condition is not met.
+                    depreciationCostInput.value = ''; // or set a calculated value here if appropriate
+                }
+            }
+        });
+    </script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Menampilkan pesan kesalahan dari sesi menggunakan SweetAlert
@@ -1176,5 +1200,39 @@
         }
 
         updateTitle('Machine');
+    </script>
+
+    <!-- JavaScript to Handle Plant Selection -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const plantSelect = document.getElementById('select-plant');
+            const idMachineInput = document.getElementById('InputIDMachine');
+            const nextIdMachines = @json($nextIdMachines); // Passing PHP array to JavaScript
+
+            // Log the entire nextIdMachines object to check if it's correctly populated
+            console.log("Next ID Machines:", nextIdMachines);
+
+            plantSelect.addEventListener('change', function() {
+                const selectedPlant = this.value;
+
+                // Log the selected plant
+                console.log("Selected Plant:", selectedPlant);
+
+                // Check if the selected plant has a corresponding next ID
+                if (nextIdMachines[selectedPlant]) {
+                    const nextId = nextIdMachines[selectedPlant];
+
+                    // Log the next ID that will be set
+                    console.log(`Next ID for ${selectedPlant}:`, nextId);
+
+                    idMachineInput.value = nextId; // Set input to the next ID
+                } else {
+                    // Log if the selected plant is not found in the nextIdMachines object
+                    console.log(`No next ID found for ${selectedPlant}. Defaulting to 001.`);
+
+                    idMachineInput.value = selectedPlant + '001'; // Fallback value: Selected plant prefix + '001'
+                }
+            });
+        });
     </script>
 @endsection

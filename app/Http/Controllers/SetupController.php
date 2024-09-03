@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use League\CommonMark\Node\Query\OrExpr;
+use Illuminate\Support\Facades\Log; // For logging
 
 class SetupController extends Controller
 {
@@ -49,14 +50,64 @@ class SetupController extends Controller
 
     public function createmachine()
     {
-        $plan       = DB::table('plan')->get();
-        $planJoin   = DB::table('plan')
+        // Fetch plan data
+        $plan = DB::table('plan')->get();
+        $planJoin = DB::table('plan')
             ->join('planadd', 'plan.plan_name', '=', 'planadd.plan_name')
             ->select('plan.*', 'planadd.*')
             ->get();
 
-        return view('setup.createmachine', compact('plan', 'planJoin'));
+        // Initialize the plants array with default sequence numbers
+        $plants = [
+            'MDC' => 0,
+            'SUPPORT' => 0,
+            'EDU' => 0,
+            'WF' => 0,
+            'STP' => 0,
+            'MA' => 0,
+            'FNC' => 0
+        ];
+
+        // Fetch the last sequence numbers for each plant from the machine table
+        $machines = DB::table('machine')
+            ->select(DB::raw('plant, MAX(id_machine) as last_id_machine'))
+            ->groupBy('plant')
+            ->get();
+
+        $nextIdMachines = [];
+
+        // Update the plants array with the last sequence number from the database
+        foreach ($machines as $machine) {
+            // Extract the sequence number from the last_id_machine (assuming format 'PLANTnnn')
+            preg_match('/(\d+)$/', $machine->last_id_machine, $matches);
+            $lastSequence = isset($matches[1]) ? (int)$matches[1] : 0;
+
+            // Calculate the next ID by incrementing the last sequence
+            $nextSequence = str_pad($lastSequence + 1, 3, '0', STR_PAD_LEFT);
+
+            // Update the nextIdMachines array
+            if (array_key_exists($machine->plant, $plants)) {
+                $nextIdMachines[$machine->plant] = "{$machine->plant}{$nextSequence}";
+
+                // Log the highest id_machine for each plant
+                Log::info("Highest ID for plant {$machine->plant}: {$machine->last_id_machine}");
+            }
+        }
+
+        // If no machines were found, default to '001' for each plant
+        foreach ($plants as $plant => $value) {
+            if (!isset($nextIdMachines[$plant])) {
+                $nextIdMachines[$plant] = "{$plant}001";
+            }
+        }
+
+        // Log the next ID Machines array to confirm correct values
+        Log::info('Next ID Machines:', $nextIdMachines);
+
+        // Pass data to the view
+        return view('setup.createmachine', compact('plan', 'planJoin', 'plants', 'nextIdMachines'));
     }
+
 
     public function storemachine(Request $request)
     {
