@@ -991,47 +991,61 @@
 
             // Fungsi untuk mengatur tampilan dan select berdasarkan status checkbox
             function toggleQuotationInput() {
-            var checkbox = document.getElementById('so_internal');
-            var inputText = document.getElementById('so_internal_text');
-            var selectQuotation = document.getElementById('quotation_no');
+    var checkbox = document.getElementById('so_internal');
+    var inputText = document.getElementById('so_internal_text');
+    var selectQuotation = document.getElementById('quotation_no');
 
-            if (checkbox.checked) {
-                // Show the manual input and hide the select dropdown
-                inputText.style.display = 'block';
-                selectQuotation.style.display = 'none';
-                selectQuotation.value = ''; // Clear the selected value in the dropdown
-            } else {
-                // Show the select dropdown and hide the manual input
-                inputText.style.display = 'none';
-                selectQuotation.style.display = 'block';
-                inputText.value = ''; // Clear the manual input value
-            }
-        }
+    if (checkbox.checked) {
+        // Show the manual input and hide the select dropdown
+        inputText.style.display = 'block';
+        selectQuotation.style.display = 'none';
+        selectQuotation.value = ''; // Clear the selected value in the dropdown
 
-            // Menambahkan event listener untuk memanggil fungsi saat checkbox berubah
-            document.getElementById('so_internal').addEventListener('change', toggleCompanyInput);
+        // Clear all populated fields
+        document.getElementById('company_name').value = '';
+        document.getElementById('name').value = '';
+        document.getElementById('date').value = '';
+        document.getElementById('address').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('tax_address').value = '';
+        document.getElementById('npwp').value = '';
+        document.getElementById('fax').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('description').value = '';
+    } else {
+        // Show the select dropdown and hide the manual input
+        inputText.style.display = 'none';
+        selectQuotation.style.display = 'block';
+        inputText.value = ''; // Clear the manual input value
+    }
+}
 
-            document.getElementById('so_internal_text').addEventListener('change', function() {
-                var selectedCompany = this.value; // Mendapatkan nilai perusahaan yang dipilih
+// Add event listener for checkbox change
+document.getElementById('so_internal').addEventListener('change', toggleQuotationInput);
 
-                // Menggunakan data dari customers yang sudah ada untuk mengisi kolom-kolom lainnya
-                var customers = <?php echo json_encode($quotation); ?>; // Mengonversi data PHP ke JSON
-                var selectedCustomer = quotation.find(function(q) {
-                    return customer.company === selectedCompany;
-                });
 
-                // Memasukkan nilai ke dalam kolom-kolom lainnya
-                document.getElementById('name').value = selectedCustomer ? selectedCustomer.name : '';
-                document.getElementById('npwp').value = selectedCustomer ? selectedCustomer.npwp : '';
-                document.getElementById('phone').value = selectedCustomer ? selectedCustomer.phone : '';
-                document.getElementById('address').value = selectedCustomer ? selectedCustomer.address : '';
-                document.getElementById('tax_address').value = selectedCustomer ? selectedCustomer
-                    .tax_address : '';
-                document.getElementById('fax').value = selectedCustomer ? selectedCustomer.fax : '';
-                document.getElementById('email').value = selectedCustomer ? selectedCustomer.email : '';
-                document.getElementById('shipping_address').value = selectedCustomer ? selectedCustomer
-                    .shipment : '';
-            });
+document.getElementById('quotation_no').addEventListener('change', function() {
+    var selectedQuotationNo = this.value; // Get the selected quotation number
+
+    // Use existing data from quotations to fill in other fields
+    var quotations = <?php echo json_encode($quotation); ?>; // Convert PHP data to JSON
+    var selectedQuotation = quotations.find(function(q) {
+        return q.quotation_no === selectedQuotationNo;
+    });
+
+    // Populate other fields
+    document.getElementById('company_name').value = selectedQuotation ? selectedQuotation.company_name : '';
+    document.getElementById('name').value = selectedQuotation ? selectedQuotation.name : '';
+    document.getElementById('date').value = selectedQuotation ? selectedQuotation.date : '';
+    document.getElementById('address').value = selectedQuotation ? selectedQuotation.address : '';
+    document.getElementById('phone').value = selectedQuotation ? selectedQuotation.phone : '';
+    document.getElementById('tax_address').value = selectedQuotation ? selectedQuotation.tax_address : '';
+    document.getElementById('npwp').value = selectedQuotation ? selectedQuotation.npwp : '';
+    document.getElementById('fax').value = selectedQuotation ? selectedQuotation.fax : '';
+    document.getElementById('email').value = selectedQuotation ? selectedQuotation.email : '';
+    document.getElementById('description').value = selectedQuotation ? selectedQuotation.description : '';
+});
+
             // Ambil elemen input
             var qtyInput = document.getElementById('qty');
 
