@@ -67,19 +67,25 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="quotation_no" class="form-label">Quotation No.</label>
-                                                <select name="quotation_no" id="quotation_no"
-                                                    onchange="fetchQuotationData()" class="form-control select2"
-                                                    style="width: 100%;" required>
+                                                <input style="margin-left: 10px; margin-top:7px" class="form-check-input" type="checkbox" id="so_internal" name="so_internal" onchange="toggleQuotationInput()">
+                                                <label style="margin-left: 35px; font-weight:500" for="so_internal" class="form-label">New</label>
+                                            
+                                                <!-- Manual Input Field -->
+                                                <input type="text" name="quotation_manual" class="form-control" style="display: none" id="so_internal_text" placeholder="Internal">
+                                            
+                                                <!-- Dropdown Select -->
+                                                <select name="quotation_no" id="quotation_no" onchange="fetchQuotationData()" class="form-control select2" style="width: 100%;" required>
                                                     <option selected="selected" disabled>-- Select Quotation ---</option>
                                                     @foreach ($quotation as $q)
-                                                        <option value="{{ $q->quotation_no }}">
-                                                            {{ $q->quotation_no }}</option>
+                                                        <option value="{{ $q->quotation_no }}">{{ $q->quotation_no }}</option>
                                                     @endforeach
                                                 </select>
+                                            
                                                 @error('quotation_no')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+                                            
                                             <div class="form-group">
                                                 <label for="po_number" class="form-label">PO No.</label>
                                                 <input type="text" name="po_number" class="form-control" id="po_number"
@@ -312,8 +318,8 @@
                                                         <thead>
                                                             <tr>
                                                                 <th style="width: 20px" class="fixed-column">No</th>
-                                                                <th class="col-sm-2">Item</th>
-                                                                <th class="col-md-6">Item Description</th>
+                                                                <th class="col-sm-2">No Katalog</th>
+                                                                <th class="col-md-6">Nama Katalog</th>
                                                                 <th style="width:80px;">Qty</th>
                                                                 <th style="width:80px;">Unit</th>
                                                                 <th style="width:100px;">Unit Price</th>
@@ -861,22 +867,35 @@
                             <td><input class="form-control unit_price" style="width:120px" type="text" id="unit_price" name="unit_price[]" value="${formatCurrency(itemData.unit_price)}"></td>
                             <td><input class="form-control disc"style="min-width:80px"type="text" id="disc" name="disc[]" value="${itemData.disc}"></td>
                             <td><input class="form-control total" style="width:150px" type="text" id="amount" name="amount[]" value="${formatCurrency(itemData.amount)}" readonly></td>
-                            <td><select class="form-control select2" name="product_type[]" id="product_type" style="min-width:210px">
-                                    <option selected="selected" required disabled>-- Select Product Type --</option>
-                                        @foreach ($producttype as $pt)
-                                            <option value="{{ $pt->product_name }}" required>{{ $pt->product_name }}</option>
-                                        @endforeach
-                                </select>
-                            </td>
-                            <td><input class="form-control" style="min-width:120px" type="text" id="order_no" name="order_no[]" required></td>
-                            <td><input class="form-control"style="min-width:200px" type="text" id="spec" name="spec[]" required></td>
-                            <td><select class="form-control select2" name="kbli[]" id="kbli" style="min-width:150px" required>
-                                    <option selected="selected" required disabled>-- Select KBLI --</option>
-                                            @foreach ($kbli as $k)
-                                                <option value="{{ $k->kbli_code }}" required>{{ $k->kbli_code }} - {{ $k->description }}</option>
-                                            @endforeach
-                                </select>
-                            </td>
+                            <td><select class="form-control select2"
+                                                                        name="product_type[]" id="product_type"
+                                                                        style="min-width:210px">
+                                                                        <option selected="selected" required disabled>--
+                                                                            Select Product Type --</option>
+                                                                        @foreach ($producttype as $pt)
+                                                                            <option value="{{ $pt->product_name }}">
+                                                                                {{ $pt->product_name }}</option>
+                                                                        @endforeach
+                                                                    </select></td>
+                                                                <td><input class="form-control" style="min-width:120px"
+                                                                        type="text" id="order_no" name="order_no[]"
+                                                                        required>
+                                                                </td>
+                                                                <td><input class="form-control"style="min-width:200px"
+                                                                        type="text" id="spec" name="spec[]"
+                                                                        required>
+                                                                </td>
+                                                                <td><select class="form-control select2" name="kbli[]"
+                                                                        id="kbli" style="min-width:150px">
+                                                                        <option selected="selected" required disabled>--
+                                                                            Select KBLI --</option>
+                                                                        @foreach ($kbli as $k)
+                                                                            <option value="{{ $k->kbli_code }}">
+                                                                                {{ $k->kbli_code }} -
+                                                                                {{ $k->description }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
                             <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Delete Product">
                                 <i class="fa fa-trash"></i></a>
                             </td>
@@ -970,6 +989,49 @@
             // Panggil fungsi ini saat halaman dimuat
             updateTitle('Add Sales Order');
 
+            // Fungsi untuk mengatur tampilan dan select berdasarkan status checkbox
+            function toggleQuotationInput() {
+            var checkbox = document.getElementById('so_internal');
+            var inputText = document.getElementById('so_internal_text');
+            var selectQuotation = document.getElementById('quotation_no');
+
+            if (checkbox.checked) {
+                // Show the manual input and hide the select dropdown
+                inputText.style.display = 'block';
+                selectQuotation.style.display = 'none';
+                selectQuotation.value = ''; // Clear the selected value in the dropdown
+            } else {
+                // Show the select dropdown and hide the manual input
+                inputText.style.display = 'none';
+                selectQuotation.style.display = 'block';
+                inputText.value = ''; // Clear the manual input value
+            }
+        }
+
+            // Menambahkan event listener untuk memanggil fungsi saat checkbox berubah
+            document.getElementById('so_internal').addEventListener('change', toggleCompanyInput);
+
+            document.getElementById('so_internal_text').addEventListener('change', function() {
+                var selectedCompany = this.value; // Mendapatkan nilai perusahaan yang dipilih
+
+                // Menggunakan data dari customers yang sudah ada untuk mengisi kolom-kolom lainnya
+                var customers = <?php echo json_encode($quotation); ?>; // Mengonversi data PHP ke JSON
+                var selectedCustomer = quotation.find(function(q) {
+                    return customer.company === selectedCompany;
+                });
+
+                // Memasukkan nilai ke dalam kolom-kolom lainnya
+                document.getElementById('name').value = selectedCustomer ? selectedCustomer.name : '';
+                document.getElementById('npwp').value = selectedCustomer ? selectedCustomer.npwp : '';
+                document.getElementById('phone').value = selectedCustomer ? selectedCustomer.phone : '';
+                document.getElementById('address').value = selectedCustomer ? selectedCustomer.address : '';
+                document.getElementById('tax_address').value = selectedCustomer ? selectedCustomer
+                    .tax_address : '';
+                document.getElementById('fax').value = selectedCustomer ? selectedCustomer.fax : '';
+                document.getElementById('email').value = selectedCustomer ? selectedCustomer.email : '';
+                document.getElementById('shipping_address').value = selectedCustomer ? selectedCustomer
+                    .shipment : '';
+            });
             // Ambil elemen input
             var qtyInput = document.getElementById('qty');
 
@@ -1046,6 +1108,35 @@
                         <td><input class="form-control unit_price" style="width:120px" type="text" id="unit_price" name="unit_price[]"></td>
                         <td><input class="form-control disc"style="min-width:80px" type="text" id="disc" name="disc[]" value="0"></td>
                         <td><input class="form-control total" style="width:150px" type="text" id="amount" name="amount[]" value="0" readonly></td>
+                        <td><select class="form-control select2"
+                                                                        name="product_type[]" id="product_type"
+                                                                        style="min-width:210px">
+                                                                        <option selected="selected" required disabled>--
+                                                                            Select Product Type --</option>
+                                                                        @foreach ($producttype as $pt)
+                                                                            <option value="{{ $pt->product_name }}">
+                                                                                {{ $pt->product_name }}</option>
+                                                                        @endforeach
+                                                                    </select></td>
+                                                                <td><input class="form-control" style="min-width:120px"
+                                                                        type="text" id="order_no" name="order_no[]"
+                                                                        required>
+                                                                </td>
+                                                                <td><input class="form-control"style="min-width:200px"
+                                                                        type="text" id="spec" name="spec[]"
+                                                                        required>
+                                                                </td>
+                                                                <td><select class="form-control select2" name="kbli[]"
+                                                                        id="kbli" style="min-width:150px">
+                                                                        <option selected="selected" required disabled>--
+                                                                            Select KBLI --</option>
+                                                                        @foreach ($kbli as $k)
+                                                                            <option value="{{ $k->kbli_code }}">
+                                                                                {{ $k->kbli_code }} -
+                                                                                {{ $k->description }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
                         <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash"></i></a></td>
                     </tr>`);
             });
@@ -1148,27 +1239,26 @@
 
             $("#soadd-table tbody").on("change keyup", ".unit_price, .qty, .disc, .dp", function() {
                 var row = $(this).closest("tr");
-                var unit_price_raw = row.find(".unit_price").val().replace(/\D/g, '');
+                var unit_price_raw = row.find(".unit_price").val().replace(/\D/g,
+                    ''); // Menghilangkan karakter selain angka
                 var unit_price = parseFloat(unit_price_raw) || 0;
                 var qty = parseFloat(row.find(".qty").val()) || 0;
                 var total_sementara = unit_price * qty;
 
+                // Mengambil nilai disc dan memastikan berada dalam rentang 0-100
                 var disc = parseFloat(row.find(".disc").val()) || 0;
                 disc = Math.min(100, Math.max(0, disc));
 
-                var dp_percent = parseFloat(row.find(".dp_percent").val().replace(/\D/g, '')) ||
-                0; // Ganti .dp dengan .dp_percent
-                dp_percent = Math.min(100, Math.max(0, dp_percent));
-
-                var dp = (dp_percent / 100) * total_amount; // Menghitung nilai dp berdasarkan persentase
                 var discount_product = (disc / 100) * total_sementara;
-                var amount = total_sementara - discount_product;
+                var amount = total_sementara - discount_product; // Menggunakan discount_product
+
+                // Pastikan amount tidak NaN
                 amount = isNaN(amount) ? 0 : amount;
 
-                row.find(".disc").val(disc);
+                // Menetapkan nilai pada elemen HTML dengan format rupiah
+                row.find(".disc").val(disc); // Menetapkan nilai disc setelah diperiksa
                 row.find(".unit_price").val(formatRupiahHelper(unit_price));
                 row.find(".total").val(formatRupiahHelper(amount));
-                row.find(".dp").val(formatRupiahHelper(dp)); // Menggunakan dp yang dihitung
                 calc_total();
             });
 

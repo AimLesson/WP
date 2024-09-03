@@ -390,7 +390,7 @@ class ActivitiesController extends Controller
         $order_unit = OrderUnit::get();
         $quotation  = Quotation::get();
 
-        return view('activities.createso', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation'));
+        return view('activities.createso', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation', 'no_katalog'));
     }
     public function getQuotationData($quotation_no)
     {
@@ -560,7 +560,7 @@ class ActivitiesController extends Controller
             ->where('soadd.so_number', $so_number)
             ->get();
 
-        return view('activities.editsalesorder', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation', 'salesorder', 'salesorderJoin'));
+        return view('activities.editsalesorder', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation', 'salesorder', 'salesorderJoin', 'no_katalog'));
     }
     public function deletesoadd(Request $request)
     {

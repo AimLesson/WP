@@ -936,22 +936,35 @@
                             <td><input class="form-control unit_price" style="width:120px" type="text" id="unit_price" name="unit_price[]" value="${formatCurrency(itemData.unit_price)}"></td>
                             <td><input class="form-control disc"style="min-width:80px"type="text" id="disc" name="disc[]" value="${itemData.disc}"></td>
                             <td><input class="form-control total" style="width:150px" type="text" id="amount" name="amount[]" value="${formatCurrency(itemData.amount)}" readonly></td>
-                            <td><select class="form-control select2" name="product_type[]" id="product_type" style="min-width:210px">
-                                    <option selected="selected" required disabled>-- Select Product Type --</option>
-                                        @foreach ($producttype as $pt)
-                                            <option value="{{ $pt->product_name }}">{{ $pt->product_name }}</option>
-                                        @endforeach
-                                </select>
-                            </td>
-                            <td><input class="form-control" style="min-width:120px" type="text" id="order_no" name="order_no[]"></td>
-                            <td><input class="form-control"style="min-width:200px" type="text" id="spec" name="spec[]"></td>
-                            <td><select class="form-control select2" name="kbli[]" id="kbli" style="min-width:150px">
-                                    <option selected="selected" required disabled>-- Select KBLI --</option>
-                                            @foreach ($kbli as $k)
-                                                <option value="{{ $k->kbli_code }}">{{ $k->kbli_code }} - {{ $k->description }}</option>
-                                            @endforeach
-                                </select>
-                            </td>
+                            <td><select class="form-control select2"
+                                                                        name="product_type[]" id="product_type"
+                                                                        style="min-width:210px">
+                                                                        <option selected="selected" required disabled>--
+                                                                            Select Product Type --</option>
+                                                                        @foreach ($producttype as $pt)
+                                                                            <option value="{{ $pt->product_name }}">
+                                                                                {{ $pt->product_name }}</option>
+                                                                        @endforeach
+                                                                    </select></td>
+                                                                <td><input class="form-control" style="min-width:120px"
+                                                                        type="text" id="order_no" name="order_no[]"
+                                                                        required>
+                                                                </td>
+                                                                <td><input class="form-control"style="min-width:200px"
+                                                                        type="text" id="spec" name="spec[]"
+                                                                        required>
+                                                                </td>
+                                                                <td><select class="form-control select2" name="kbli[]"
+                                                                        id="kbli" style="min-width:150px">
+                                                                        <option selected="selected" required disabled>--
+                                                                            Select KBLI --</option>
+                                                                        @foreach ($kbli as $k)
+                                                                            <option value="{{ $k->kbli_code }}">
+                                                                                {{ $k->kbli_code }} -
+                                                                                {{ $k->description }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
                             <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Delete Product">
                                 <i class="fa fa-trash"></i></a>
                             </td>
@@ -1129,6 +1142,35 @@
                                                                     </select></td>
                     <td><input class="form-control disc"style="min-width:80px" type="text" id="disc" name="disc[]" value="0"></td>
                     <td><input class="form-control total" style="width:150px" type="text" id="amount" name="amount[]" value="0" readonly></td>
+                    <td><select class="form-control select2"
+                                                                        name="product_type[]" id="product_type"
+                                                                        style="min-width:210px">
+                                                                        <option selected="selected" required disabled>--
+                                                                            Select Product Type --</option>
+                                                                        @foreach ($producttype as $pt)
+                                                                            <option value="{{ $pt->product_name }}">
+                                                                                {{ $pt->product_name }}</option>
+                                                                        @endforeach
+                                                                    </select></td>
+                                                                <td><input class="form-control" style="min-width:120px"
+                                                                        type="text" id="order_no" name="order_no[]"
+                                                                        required>
+                                                                </td>
+                                                                <td><input class="form-control"style="min-width:200px"
+                                                                        type="text" id="spec" name="spec[]"
+                                                                        required>
+                                                                </td>
+                                                                <td><select class="form-control select2" name="kbli[]"
+                                                                        id="kbli" style="min-width:150px">
+                                                                        <option selected="selected" required disabled>--
+                                                                            Select KBLI --</option>
+                                                                        @foreach ($kbli as $k)
+                                                                            <option value="{{ $k->kbli_code }}">
+                                                                                {{ $k->kbli_code }} -
+                                                                                {{ $k->description }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
                     <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash"></i></a></td>
                 </tr>`);
             });
