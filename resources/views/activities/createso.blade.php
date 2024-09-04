@@ -1000,6 +1000,7 @@
         inputText.style.display = 'block';
         selectQuotation.style.display = 'none';
         selectQuotation.value = ''; // Clear the selected value in the dropdown
+        selectQuotation.removeAttribute('required'); // Remove required attribute
 
         // Clear all populated fields
         document.getElementById('company_name').value = '';
@@ -1012,10 +1013,16 @@
         document.getElementById('fax').value = '';
         document.getElementById('email').value = '';
         document.getElementById('description').value = '';
+
+        // Clear all rows from the dynamic table
+        var tableBody = document.querySelector("#quotationadd-table tbody");
+        tableBody.innerHTML = ""; // Remove all rows
+        rowIdx = 0; // Reset row index counter
     } else {
         // Show the select dropdown and hide the manual input
         inputText.style.display = 'none';
         selectQuotation.style.display = 'block';
+        selectQuotation.setAttribute('required', 'required'); // Add required attribute back
         inputText.value = ''; // Clear the manual input value
     }
 }
@@ -1023,7 +1030,7 @@
 // Add event listener for checkbox change
 document.getElementById('so_internal').addEventListener('change', toggleQuotationInput);
 
-
+// Quotation dropdown change listener
 document.getElementById('quotation_no').addEventListener('change', function() {
     var selectedQuotationNo = this.value; // Get the selected quotation number
 
@@ -1045,6 +1052,7 @@ document.getElementById('quotation_no').addEventListener('change', function() {
     document.getElementById('email').value = selectedQuotation ? selectedQuotation.email : '';
     document.getElementById('description').value = selectedQuotation ? selectedQuotation.description : '';
 });
+
 
             // Ambil elemen input
             var qtyInput = document.getElementById('qty');
