@@ -71,7 +71,7 @@ class ActivitiesController extends Controller
         $unit = Unit::get();
         $no_katalog = NoKatalog::get();
         $user = User::get();
-        return view('activities.createquotation', compact('user', 'unit', 'tax_type', 'customers','no_katalog'));
+        return view('activities.createquotation', compact('user', 'unit', 'tax_type', 'customers', 'no_katalog'));
     }
     public function storequotation(Request $request)
     {
@@ -407,152 +407,152 @@ class ActivitiesController extends Controller
         return response()->json($result);
     }
     public function storeso(Request $request)
-{
-    // Begin logging the input data for debugging
-    Log::info('Store SO request data: ', $request->all());
+    {
+        // Begin logging the input data for debugging
+        Log::info('Store SO request data: ', $request->all());
 
-    // Validate the input
-    $request->validate([
-        'so_number'         => 'required|unique:salesorder,so_number',
-        'quotation_no'      => ['required_if:so_internal,false'], // Quotation No is only required if 'so_internal' is false (checkbox not checked)
-        'po_number'         => 'required',
-        'company_name'      => 'required',
-        'name'              => 'required',
-        'address'           => 'required',
-        'phone'             => 'required',
-        'order_unit'        => 'required',
-        'sow_no'            => 'required',
-        'tax_address'       => 'required',
-        'npwp'              => 'nullable',
-        'fax'               => 'required',
-        'confirmation'      => 'required',
-        'type'              => 'required',
-        'sample'            => 'required',
-        'ass_type'          => 'required',
-        'qc_statement'      => 'required',
-        'packing_type'      => 'required',
-        'ptp'               => 'required',
-        'dod'               => 'required|date',
-        'shipping_address'  => 'required',
-        'date'              => 'required|date',
-        'top'               => 'required',
-        'net_days'          => 'required',
-        'fob'               => 'required',
-        'ship_date'         => 'required|date',
-        'salesman'          => 'required',
-        'dp'                => 'required',
-        'dp_percent'        => 'required',
-        'file'              => 'nullable',
-        'subtotal'          => 'required',
-        'discount'          => 'required',
-        'tax'               => 'required',
-        'freight'           => 'required',
-        'total_amount'      => 'required',
-        'discount_percent'  => 'required',
-        'tax_type'          => 'required',
-        'description'       => 'required',
-    ]);
-
-    DB::beginTransaction();
-    try {
-        // Create the Sales Order
-        $salesorder = new SalesOrder;
-        $salesorder->so_number         = $request->so_number;
-        $salesorder->quotation_no      = $request->input('quotation_no', null); // If no quotation_no, set to null
-        $salesorder->company_name      = $request->company_name;
-        $salesorder->name              = $request->name;
-        $salesorder->address           = $request->address;
-        $salesorder->phone             = $request->phone;
-        $salesorder->order_unit        = $request->order_unit;
-        $salesorder->sow_no            = $request->sow_no;
-        $salesorder->tax_address       = $request->tax_address;
-        $salesorder->email             = $request->email;
-        $salesorder->npwp              = $request->npwp;
-        $salesorder->fax               = $request->fax;
-        $salesorder->confirmation      = $request->confirmation;
-        $salesorder->type              = $request->type;
-        $salesorder->sample            = $request->sample;
-        $salesorder->ass_type          = $request->ass_type;
-        $salesorder->qc_statement      = $request->qc_statement;
-        $salesorder->packing_type      = $request->packing_type;
-        $salesorder->ptp               = $request->ptp;
-        $salesorder->dod               = $request->dod;
-        $salesorder->shipping_address  = $request->shipping_address;
-        $salesorder->date              = $request->date;
-        $salesorder->top               = $request->top;
-        $salesorder->net_days          = $request->net_days;
-        $salesorder->fob               = $request->fob;
-        $salesorder->ship_date         = $request->ship_date;
-        $salesorder->po_number         = $request->po_number;
-        $salesorder->salesman          = $request->salesman;
-        $salesorder->dp                = $request->dp;
-        $salesorder->dp_percent        = $request->dp_percent;
-
-        // Handle the money inputs
-        $subtotal = str_replace(['Rp', '.', ','], '', $request->input('subtotal'));
-        $salesorder->subtotal = $subtotal;
-
-        $discount = str_replace(['Rp', '.', ','], '', $request->input('discount'));
-        $salesorder->discount = $discount;
-
-        $tax = str_replace(['Rp', '.', ','], '', $request->input('tax'));
-        $salesorder->tax = $tax;
-
-        $freight = str_replace(['Rp', '.', ','], '', $request->input('freight'));
-        $salesorder->freight = $freight;
-
-        $totalAmount = str_replace(['Rp', '.', ','], '', $request->input('total_amount'));
-        $salesorder->total_amount = $totalAmount;
-
-        $salesorder->discount_percent  = $request->discount_percent;
-        $salesorder->tax_type          = $request->tax_type;
-        $salesorder->description       = $request->description;
-
-        // Handle file upload
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $fileName = $file->getClientOriginalName();
-            $file->storeAs('public/lte/dist/so', $fileName);
-            $salesorder->file = $fileName;
-        }
-
-        $salesorder->save();
-
-        // Log successful creation of the Sales Order
-        Log::info('Sales Order created successfully: ', ['so_number' => $salesorder->so_number]);
-
-        // Save the additional items in SalesOrderAdd
-        foreach ($request->item as $key => $items) {
-            $soAdd['item'] = $items;
-            $soAdd['so_number'] = $salesorder->so_number;
-            $soAdd['item_desc'] = $request->item_desc[$key];
-            $soAdd['qty'] = $request->qty[$key];
-            $soAdd['unit'] = $request->unit[$key];
-            $soAdd['unit_price'] = str_replace(['Rp', ',', '.'], '', $request->input('unit_price')[$key]);
-            $soAdd['disc'] = $request->disc[$key];
-            $soAdd['amount'] = str_replace(['Rp', ',', '.'], '', $request->input('amount')[$key]);
-            $soAdd['product_type'] = $request->product_type[$key];
-            $soAdd['order_no'] = $request->order_no[$key];
-            $soAdd['spec'] = $request->spec[$key];
-            $soAdd['kbli'] = $request->kbli[$key];
-
-            SalesOrderAdd::create($soAdd);
-        }
-
-        DB::commit();
-
-        return redirect()->route('activities.salesorder')->with('success', 'Sales Order added successfully');
-    } catch (\Exception $e) {
-        DB::rollback();
-        
-        // Log the error with detailed input data for debugging
-        Log::error('Failed to create Sales Order: ' . $e->getMessage(), [
-            'input_data' => $request->all()
+        // Validate the input
+        $request->validate([
+            'so_number'         => 'required|unique:salesorder,so_number',
+            'quotation_no'      => ['required_if:so_internal,false'], // Quotation No is only required if 'so_internal' is false (checkbox not checked)
+            'po_number'         => 'required',
+            'company_name'      => 'required',
+            'name'              => 'required',
+            'address'           => 'required',
+            'phone'             => 'required',
+            'order_unit'        => 'required',
+            'sow_no'            => 'required',
+            'tax_address'       => 'required',
+            'npwp'              => 'nullable',
+            'fax'               => 'required',
+            'confirmation'      => 'required',
+            'type'              => 'required',
+            'sample'            => 'required',
+            'ass_type'          => 'required',
+            'qc_statement'      => 'required',
+            'packing_type'      => 'required',
+            'ptp'               => 'required',
+            'dod'               => 'required|date',
+            'shipping_address'  => 'required',
+            'date'              => 'required|date',
+            'top'               => 'required',
+            'net_days'          => 'required',
+            'fob'               => 'required',
+            'ship_date'         => 'required|date',
+            'salesman'          => 'required',
+            'dp'                => 'required',
+            'dp_percent'        => 'required',
+            'file'              => 'nullable',
+            'subtotal'          => 'required',
+            'discount'          => 'required',
+            'tax'               => 'required',
+            'freight'           => 'required',
+            'total_amount'      => 'required',
+            'discount_percent'  => 'required',
+            'tax_type'          => 'required',
+            'description'       => 'required',
         ]);
 
-        return redirect()->route('activities.createso')->with('error', 'Failed to add Sales Order. Please try again!');
+        DB::beginTransaction();
+        try {
+            // Create the Sales Order
+            $salesorder = new SalesOrder;
+            $salesorder->so_number         = $request->so_number;
+            $salesorder->quotation_no      = $request->input('quotation_no', null); // If no quotation_no, set to null
+            $salesorder->company_name      = $request->company_name;
+            $salesorder->name              = $request->name;
+            $salesorder->address           = $request->address;
+            $salesorder->phone             = $request->phone;
+            $salesorder->order_unit        = $request->order_unit;
+            $salesorder->sow_no            = $request->sow_no;
+            $salesorder->tax_address       = $request->tax_address;
+            $salesorder->email             = $request->email;
+            $salesorder->npwp              = $request->npwp;
+            $salesorder->fax               = $request->fax;
+            $salesorder->confirmation      = $request->confirmation;
+            $salesorder->type              = $request->type;
+            $salesorder->sample            = $request->sample;
+            $salesorder->ass_type          = $request->ass_type;
+            $salesorder->qc_statement      = $request->qc_statement;
+            $salesorder->packing_type      = $request->packing_type;
+            $salesorder->ptp               = $request->ptp;
+            $salesorder->dod               = $request->dod;
+            $salesorder->shipping_address  = $request->shipping_address;
+            $salesorder->date              = $request->date;
+            $salesorder->top               = $request->top;
+            $salesorder->net_days          = $request->net_days;
+            $salesorder->fob               = $request->fob;
+            $salesorder->ship_date         = $request->ship_date;
+            $salesorder->po_number         = $request->po_number;
+            $salesorder->salesman          = $request->salesman;
+            $salesorder->dp                = $request->dp;
+            $salesorder->dp_percent        = $request->dp_percent;
+
+            // Handle the money inputs
+            $subtotal = str_replace(['Rp', '.', ','], '', $request->input('subtotal'));
+            $salesorder->subtotal = $subtotal;
+
+            $discount = str_replace(['Rp', '.', ','], '', $request->input('discount'));
+            $salesorder->discount = $discount;
+
+            $tax = str_replace(['Rp', '.', ','], '', $request->input('tax'));
+            $salesorder->tax = $tax;
+
+            $freight = str_replace(['Rp', '.', ','], '', $request->input('freight'));
+            $salesorder->freight = $freight;
+
+            $totalAmount = str_replace(['Rp', '.', ','], '', $request->input('total_amount'));
+            $salesorder->total_amount = $totalAmount;
+
+            $salesorder->discount_percent  = $request->discount_percent;
+            $salesorder->tax_type          = $request->tax_type;
+            $salesorder->description       = $request->description;
+
+            // Handle file upload
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $fileName = $file->getClientOriginalName();
+                $file->storeAs('public/lte/dist/so', $fileName);
+                $salesorder->file = $fileName;
+            }
+
+            $salesorder->save();
+
+            // Log successful creation of the Sales Order
+            Log::info('Sales Order created successfully: ', ['so_number' => $salesorder->so_number]);
+
+            // Save the additional items in SalesOrderAdd
+            foreach ($request->item as $key => $items) {
+                $soAdd['item'] = $items;
+                $soAdd['so_number'] = $salesorder->so_number;
+                $soAdd['item_desc'] = $request->item_desc[$key];
+                $soAdd['qty'] = $request->qty[$key];
+                $soAdd['unit'] = $request->unit[$key];
+                $soAdd['unit_price'] = str_replace(['Rp', ',', '.'], '', $request->input('unit_price')[$key]);
+                $soAdd['disc'] = $request->disc[$key];
+                $soAdd['amount'] = str_replace(['Rp', ',', '.'], '', $request->input('amount')[$key]);
+                $soAdd['product_type'] = $request->product_type[$key];
+                $soAdd['order_no'] = $request->order_no[$key];
+                $soAdd['spec'] = $request->spec[$key];
+                $soAdd['kbli'] = $request->kbli[$key];
+
+                SalesOrderAdd::create($soAdd);
+            }
+
+            DB::commit();
+
+            return redirect()->route('activities.salesorder')->with('success', 'Sales Order added successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            // Log the error with detailed input data for debugging
+            Log::error('Failed to create Sales Order: ' . $e->getMessage(), [
+                'input_data' => $request->all()
+            ]);
+
+            return redirect()->route('activities.createso')->with('error', 'Failed to add Sales Order. Please try again!');
+        }
     }
-}
 
     public function editsalesorder($so_number)
     {

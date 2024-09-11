@@ -204,27 +204,37 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <select name="no_barcode[]" class="form-control" onchange="fetchPartData(this)" required>
+                                                <select name="no_barcode[]" class="form-control"
+                                                    onchange="fetchPartData(this)" required>
                                                     <option value="">-- Select Part --</option>
                                                     @foreach ($standardParts as $o)
-                                                        <option value="{{ $o->no_barcode }}">{{ $o->nama_barang }}</option>
+                                                        <option value="{{ $o->no_barcode }}">{{ $o->nama_barang }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <td><input type="number" class="form-control text-nowrap qty" name="qty[]" min="1" required></td>
-                                            <td><input type="text" class="form-control text-nowrap" name="unit[]" required readonly></td>
-                                            <td><input type="number" class="form-control text-nowrap price_unit" step="0.01" name="price_unit[]" min="0" required readonly></td>
-                                            <td><input type="number" class="form-control text-nowrap total_price" step="0.01" name="total_price[]" min="0" required readonly></td>
-                                            <td><textarea class="form-control" name="info[]"></textarea></td>
-                                            <td><input type="date" class="form-control text-nowrap" name="date[]" required></td>
-                                            <td><button type="button" class="btn btn-danger btn-remove" onclick="removeRow(this)">Remove</button></td>
+                                            <td><input type="number" class="form-control text-nowrap qty" name="qty[]"
+                                                    min="1" required></td>
+                                            <td><input type="text" class="form-control text-nowrap" name="unit[]"
+                                                    required readonly></td>
+                                            <td><input type="number" class="form-control text-nowrap price_unit"
+                                                    step="0.01" name="price_unit[]" min="0" required readonly>
+                                            </td>
+                                            <td><input type="number" class="form-control text-nowrap total_price"
+                                                    step="0.01" name="total_price[]" min="0" required readonly>
+                                            </td>
+                                            <td>
+                                                <textarea class="form-control" name="info[]"></textarea>
+                                            </td>
+                                            <td><input type="date" class="form-control text-nowrap" name="date[]"
+                                                    required></td>
+                                            <input type="hidden" name="part_name[]" class="part_name" value="">
+                                            <td><button type="button" class="btn btn-danger btn-remove"
+                                                    onclick="removeRow(this)">Remove</button></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-
-
-
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success btn-custom">Submit</button>
                             </div>
@@ -288,6 +298,7 @@
                         row.find('input[name="price_unit[]"]').val(data.harga);
                         row.find('input[name="total_price[]"]').val(data.total);
                         row.find('textarea[name="info[]"]').val(data.keterangan);
+                        row.find('input[name="part_name[]"]').val(data.nama_barang);
                     }
                 },
                 error: function() {
@@ -391,6 +402,13 @@
                 removeRow(this);
             };
             cell8.appendChild(removeButton);
+
+            // Add the hidden part_name input field
+            var hiddenPartName = document.createElement("input");
+            hiddenPartName.type = "hidden";
+            hiddenPartName.name = "part_name[]";
+            hiddenPartName.classList.add("part_name");
+            row.appendChild(hiddenPartName);
         }
 
 
@@ -471,7 +489,7 @@
                 $('#issued_item').val(selectedItem ? selectedItem.issued_item : '');
             });
 
-            updateTitle('Add BOM');
+            updateTitle('Standart Part');
         });
     </script>
 @endsection
