@@ -541,6 +541,11 @@
                     var startDate = new Date('1970-01-01T' + startTime);
                     var finishDate = new Date('1970-01-01T' + finishTime);
 
+                    // Jika waktu selesai lebih kecil dari waktu mulai, tambahkan 24 jam ke waktu selesai
+                    if (finishDate < startDate) {
+                        finishDate.setTime(finishDate.getTime() + (24 * 60 * 60 * 1000)); // Tambah 24 jam
+                    }
+
                     // Menghitung selisih waktu dalam milidetik
                     var timeDiff = finishDate - startDate;
 
@@ -550,10 +555,11 @@
                     // Mengisi nilai "hour/day" pada input Mach. Hour
                     machHourInputHDP.value = hours + ' hour/day';
 
-                    // // Isi otomatis nilai "Mach.. Hour" menggunakan hasil dari "Mach. Hour"
+                    // Isi otomatis nilai "Mach. Hour" menggunakan hasil dari "Mach. Hour"
                     machHourInput.value = hours;
                 }
             }
+
 
             // Data group ID dan nama sesuai yang diberikan
             var seqData = {
@@ -1230,7 +1236,8 @@
                     // Log if the selected plant is not found in the nextIdMachines object
                     console.log(`No next ID found for ${selectedPlant}. Defaulting to 001.`);
 
-                    idMachineInput.value = selectedPlant + '001'; // Fallback value: Selected plant prefix + '001'
+                    idMachineInput.value = selectedPlant +
+                    '001'; // Fallback value: Selected plant prefix + '001'
                 }
             });
         });
