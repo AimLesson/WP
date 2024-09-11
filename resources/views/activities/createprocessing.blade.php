@@ -212,47 +212,54 @@
                                 <div class="form-group">
                                     <button type="button" class="btn btn-primary" onclick="addRow()">Add Row</button>
                                 </div>
-                                <table class="table table-bordered" id="itemsTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Number of Pieces</th>
-                                            <th>Machine</th>
-                                            <th>Operation</th>
-                                            <th>Estimated Time (Hours)</th>
-                                            <th>Date Wanted</th>
-                                            <th>Machine Cost/Hour</th>
-                                            <th>Labor Cost/Hour</th>
-                                            <th>Est.Total Machine Cost</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <td><input type="number" class="form-control" name="nop[]" required></td>
-                                        <td>
-                                            <select name="machine_name[]" id="machine_name" class="form-control select2"
-                                                style="width: 100%;" required>
-                                                <option selected="selected" disabled>-- Select Machine --</option>
-                                                @foreach ($machine as $o)
-                                                    <option value="{{ $o->machine_name }}">{{ $o->machine_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td><input type="text" class="form-control operation" name="operation[]"
-                                                id="process" readonly required></td>
-                                        <td><input type="number" class="form-control est_time" name="est_time[]"
-                                                required></td>
-                                        <td><input type="date" class="form-control" name="dod[]" required></td>
-                                        <td><input type="number" class="form-control machine_cost" name="machine_cost[]"
-                                                id="mach_cost_per_hour" readonly required></td>
-                                        <td><input type="number" class="form-control labor_cost" name="labor_cost[]"
-                                                id="labor_cost" readonly required></td>
-                                        <td><input type="number" class="form-control total" name="total[]" required
-                                                readonly></td>
-                                        <td><button type="button" class="btn btn-danger"
-                                                onclick="removeRow(this)">Remove</button></td>
-                                    </tbody>
-                                </table>
+                                <div class="card p-3">
+                                    <div style="overflow-x: auto;">
+                                        <table class="table table-bordered whitespace-nowrap" id="itemsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Number of Pieces</th>
+                                                    <th>Machine</th>
+                                                    <th>Operation</th>
+                                                    <th>Estimated Time (Hours)</th>
+                                                    <th>Date Wanted</th>
+                                                    <th>Machine Cost/Hour</th>
+                                                    <th>Labor Cost/Hour</th>
+                                                    <th>Est.Total Machine Cost</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <td><input type="number" class="form-control" name="nop[]" required>
+                                                </td>
+                                                <td>
+                                                    <select name="machine_name[]" id="machine_name"
+                                                        class="form-control select2" style="width: 200px;" required>
+                                                        <option selected="selected" disabled>-- Select Machine --</option>
+                                                        @foreach ($machine as $o)
+                                                            <option value="{{ $o->machine_name }}">{{ $o->machine_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td><input type="text" class="form-control operation"
+                                                        name="operation[]" id="process" style="width: 200px" readonly required></td>
+                                                <td><input type="number" class="form-control est_time" name="est_time[]"
+                                                        step="0.1" placeholder="0.5 = 1/2 Jam" required></td>
+                                                <td><input type="date" class="form-control" name="dod[]" required>
+                                                </td>
+                                                <td><input type="number" class="form-control machine_cost"
+                                                        name="machine_cost[]" id="mach_cost_per_hour" readonly required>
+                                                </td>
+                                                <td><input type="number" class="form-control labor_cost"
+                                                        name="labor_cost[]" id="labor_cost" readonly required></td>
+                                                <td><input type="number" class="form-control total" name="total[]"
+                                                        required readonly></td>
+                                                <td><button type="button" class="btn btn-danger"
+                                                        onclick="removeRow(this)">Remove</button></td>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-success btn-custom">Submit</button>
                                 </div>
@@ -347,7 +354,7 @@
                     </select>
                 </td>
                 <td><input type="text" class="form-control" name="operation[]" readonly required></td>
-                <td><input type="number" class="form-control" name="est_time[]" required></td>
+                <td><input type="number" class="form-control" name="est_time[]" step="0.1" required></td>
                 <td><input type="date" class="form-control" name="dod[]" required></td>
                 <td><input type="number" class="form-control machine_cost" name="machine_cost[]" id="mach_cost_per_hour" readonly required></td>
                 <td><input type="number" class="form-control labor_cost" name="labor_cost[]" id="labor_cost" readonly required></td>
@@ -397,35 +404,35 @@
         }
 
         document.getElementById('machine_name').addEventListener('change', function() {
-    var selectedMachineName = this.value;
+            var selectedMachineName = this.value;
 
-    fetch(`/machine-details?machine_name=${selectedMachineName}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert(data.error);
-            } else {
-                document.getElementById('process').value = data.process;
-                
-                // Ensure the mach_cost_per_hour value is valid
-                let machCost = data.mach_cost_per_hour.toString().trim();
-                if (!isNaN(machCost) && machCost <= 9999999999) {
-                    document.getElementById('mach_cost_per_hour').value = machCost;
-                } else {
-                    console.error('mach_cost_per_hour value is invalid or out of range:', machCost);
-                }
+            fetch(`/machine-details?machine_name=${selectedMachineName}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        document.getElementById('process').value = data.process;
 
-                // Ensure the labor_cost value is valid
-                let laborCost = data.labor_cost.toString().trim();
-                if (!isNaN(laborCost) && laborCost <= 9999999999) {
-                    document.getElementById('labor_cost').value = laborCost;
-                } else {
-                    console.error('labor_cost value is invalid or out of range:', laborCost);
-                }
-            }
-        })
-        .catch(error => console.error('Error:', error));
-});
+                        // Ensure the mach_cost_per_hour value is valid
+                        let machCost = data.mach_cost_per_hour.toString().trim();
+                        if (!isNaN(machCost) && machCost <= 9999999999) {
+                            document.getElementById('mach_cost_per_hour').value = machCost;
+                        } else {
+                            console.error('mach_cost_per_hour value is invalid or out of range:', machCost);
+                        }
+
+                        // Ensure the labor_cost value is valid
+                        let laborCost = data.labor_cost.toString().trim();
+                        if (!isNaN(laborCost) && laborCost <= 9999999999) {
+                            document.getElementById('labor_cost').value = laborCost;
+                        } else {
+                            console.error('labor_cost value is invalid or out of range:', laborCost);
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
 
 
         function updateTotalPrice() {
