@@ -2246,6 +2246,50 @@ class ActivitiesController extends Controller
         return view('activities.closeorder', compact('order'));
     }
 
+    public function updateStatusClosed(Request $request, $id)
+    {
+        Log::info('Received request to update order status', [
+            'order_id' => $id,
+            'request_data' => $request->all(),
+        ]);
+
+        // Validate the request
+        try {
+            $request->validate([
+                'order_status' => 'required|in:pending,started,finished',
+            ]);
+            Log::info('Validation passed', ['order_id' => $id]);
+        } catch (\Exception $e) {
+            Log::error('Validation failed', [
+                'order_id' => $id,
+                'error_message' => $e->getMessage()
+            ]);
+            return response()->json(['success' => false, 'message' => 'Validation failed.'], 400); // Return 400 for validation error
+        }
+
+        try {
+            // Find the order and update the status
+            $order = Order::findOrFail($id);
+            $newStatus = $request->input('order_status');
+            $order->order_status = $newStatus;
+            $order->save();
+
+            Log::info('Order status updated', [
+                'order_id' => $order->id,
+                'new_status' => $newStatus,
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Order status updated successfully.'], 200); // Return 200 for success
+        } catch (\Exception $e) {
+            Log::error('Error updating order status', [
+                'order_id' => $id,
+                'error_message' => $e->getMessage(),
+            ]);
+            return response()->json(['success' => false, 'message' => 'Failed to update order status.'], 500); // Return 500 for server error
+        }
+    }
+
+
 
     public function calculation()
     {
@@ -2520,6 +2564,10 @@ class ActivitiesController extends Controller
     // Calculate financial metrics
     private function calculateFinancialMetrics($totalSales, $totalCosts)
     {
+
+        $totalSales = (float)$totalSales; // Cast to float
+        $totalCosts = (float)$totalCosts; // Cast to float
+
         $COGS = $totalCosts;
         $GPM = $totalSales - $COGS;
         $OHorg = $totalSales * 0.1;

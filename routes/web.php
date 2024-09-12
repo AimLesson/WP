@@ -419,7 +419,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 
         //activities - Close Order
         Route::get('/activities/closeorder', [ActivitiesController::class, 'closeorder'])->name('activities.closeorder');
-
+        Route::put('/activities/update-status-closed/{id}', [ActivitiesController::class, 'updateStatusClosed'])->name('activities.updateStatusClosed');
         Route::post('/update-status', [ActivitiesController::class, 'updateStatusOrder'])->name('update-status');
 
 

@@ -83,7 +83,7 @@ class Order extends Model
 
     public function scopenotDelivered($query)
     {
-        return $query->where('order_status','!=', 'Delivered');
+        return $query->where('order_status', '!=', 'Delivered');
     }
 
     public function updateOrderStatus()
@@ -105,7 +105,8 @@ class Order extends Model
                     $this->order_status = 'pending';
                 } elseif ($allStatuses->contains('queue')) {
                     $this->order_status = 'queue';
-                } elseif ($allStatuses->contains('finished')) {
+                } elseif ($allStatuses->count() === 1 && $allStatuses->first() === 'finished') {
+                    // Ensure all processings are finished
                     $this->order_status = 'Finished';
                 }
             }

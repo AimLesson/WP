@@ -32,71 +32,74 @@
 
                             <!-- /.card-header -->
                             {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
-                                <div class="card-body">
-                                    <table id="customer" class="table table-head-fixed text-nowrap">
-                                        <thead>
+                            <div class="card-body">
+                                <table id="customer" class="table table-head-fixed text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Order No.</th>
+                                            <th>Customer</th>
+                                            <th>Date Order</th>
+                                            <th>SO No.</th>
+                                            <th>Product</th>
+                                            <th>QTY</th>
+                                            <th>DOD</th>
+                                            <th>Sale Price</th>
+                                            <th>State</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($order as $o)
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Order No.</th>
-                                                <th>Customer</th>
-                                                <th>Date Order</th>
-                                                <th>SO No.</th>
-                                                <th>Product</th>
-                                                <th>QTY</th>
-                                                <th>DOD</th>
-                                                <th>Sale Price</th>
-                                                <th>State</th>
+                                                <td>{{ $o->id }}</td>
+                                                <td><a
+                                                        href="{{ url('activities/order/view/' . $o->order_number) }}">{{ $o->order_number }}</a>
+                                                </td>
+                                                <td>{{ $o->customer }}</td>
+                                                <td>{{ $o->order_date }}</td>
+                                                <td>{{ $o->so_number }}</td>
+                                                <td>{{ $o->product }}</td>
+                                                <td>{{ $o->qty }}</td>
+                                                <td>{{ $o->dod }}</td>
+                                                <td>{{ formatRupiah($o->sale_price) }}</td>
+                                                <td>
+                                                    <form action="{{ route('activities.updateStatusClosed', $o->id) }}" method="POST" class="order-status-form">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <select name="order_status" class="form-control" data-order-id="{{ $o->id }}">
+                                                            <option value="finished" {{ $o->order_status == 'finished' ? 'selected' : '' }}>Finished</option>
+                                                            <option value="pending" {{ $o->order_status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                                            <option value="started" {{ $o->order_status == 'started' ? 'selected' : '' }}>Started</option>
+                                                        </select>
+                                                    </form>
+                                                </td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($order as $o)
-                                                <tr>
-                                                    <td >{{ $o->id }}</td>
-                                                    <td ><a href="{{ url('activities/order/view/' . $o->order_number) }}">{{ $o->order_number }}</a></td>
-                                                    <td>{{ $o->customer }}</td>
-                                                    <td>{{ $o->order_date }}</td>
-                                                    <td>{{$o->so_number}}</td>
-                                                    <td>{{$o->product}}</td>
-                                                    <td>{{$o->qty}}</td>
-                                                    <td>{{$o->dod}}</td>
-                                                    <td >{{formatRupiah($o->sale_price)}}</td>
-                                                    <td>{{$o->order_status}}</td>
-                                                    {{-- <td>
-                                                        <a href="{{ route('activities.editorder', ['id' => $o->id]) }}"
-                                                            class="btn-xs btn-warning"><i class="fas fa-pen"></i>
-                                                            Edit</a>
-                                                        <a href="{{ route('activities.deleteorder', ['id' => $o->id]) }}"
-                                                            data-toggle="modal" data-target="#modal-hapus{{ $o->id }}"
-                                                            class="btn-xs btn-danger"><i class="fas fa-trash-alt"></i>
-                                                            Delete</a>
-                                                    </td> --}}
-                                                </tr>
-                                                <div class="modal fade" id="modal-hapus{{ $o->id }}">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h4 class="modal-title">Confirm Delete Quotation</h4>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p>Are you sure to delete
-                                                                    <b>{{ $o->order_number }}?</b>
-                                                                </p>
-                                                            </div>
-                                                            <div class="modal-footer justify-content-between">
-                                                                <form
-                                                                    action="{{ route('activities.deleteorder', ['id' => $o->id]) }}"
-                                                                    method="POST">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="button" class="btn btn-default"
-                                                                        data-dismiss="modal">Cancel</button>
-                                                                    <button type="submit"
-                                                                        class="btn btn-danger btn-remove">Delete</button>
-                                                                </form>
+                                            <div class="modal fade" id="modal-hapus{{ $o->id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Confirm Delete Quotation</h4>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Are you sure to delete
+                                                                <b>{{ $o->order_number }}?</b>
+                                                            </p>
+                                                        </div>
+                                                        <div class="modal-footer justify-content-between">
+                                                            <form
+                                                                action="{{ route('activities.deleteorder', ['id' => $o->id]) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="button" class="btn btn-default"
+                                                                    data-dismiss="modal">Cancel</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-danger btn-remove">Delete</button>
+                                                            </form>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
@@ -121,70 +124,68 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        window.addEventListener('DOMContentLoaded', (event) => {
-            var errorAlert = '{{ session('error') }}';
-            if (errorAlert !== '') {
-                Swal.fire({
-                    icon: 'error',
-                    title: errorAlert,
-                    position: 'top-end', // Mengubah posisi ke tengah
-                    showConfirmButton: false, // Menampilkan tombol OK
-                    timer: 5000,
-                    toast: true,
+        document.addEventListener('DOMContentLoaded', function () {
+            const statusDropdowns = document.querySelectorAll('select[name="order_status"]');
+
+            statusDropdowns.forEach(function (dropdown) {
+                dropdown.addEventListener('change', function () {
+                    const newStatus = this.value;
+                    const orderId = this.getAttribute('data-order-id');
+
+                    // Send the AJAX request to update the order status
+                    fetch(`/activities/update-status-closed/${orderId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ order_status: newStatus })
+                    })
+                    .then(response => {
+                        // Check if the response is OK (HTTP status 200)
+                        if (response.ok) {
+                            return response.json(); // Parse the JSON response
+                        }
+                        throw new Error('Network response was not ok');
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            // Show success notification
+                            Swal.fire({
+                                icon: 'success',
+                                text: data.message,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                toast: true,
+                            });
+                        } else {
+                            // Show error notification
+                            Swal.fire({
+                                icon: 'error',
+                                text: data.message,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                toast: true,
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        // Handle any other errors (e.g., network issues)
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            text: 'An error occurred while updating the order status!',
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            toast: true,
+                        });
+                    });
                 });
-            }
-
-            // Menampilkan pesan keberhasilan dari sesi menggunakan SweetAlert
-            var successAlert = '{{ session('success') }}';
-            if (successAlert !== '') {
-                Swal.fire({
-                    icon: 'success',
-                    text: successAlert,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 5000,
-                    toast: true,
-                });
-            }
-
-            // Fungsi untuk mengubah nilai ke dalam format mata uang (IDR)
-            function formatCurrency(value) {
-                // Gunakan toLocaleString() dengan opsi currency untuk format IDR
-                var formattedValue = parseFloat(value).toLocaleString('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR'
-                });
-
-                return formattedValue;
-            }
-
-            // Mengambil elemen HTML yang menampilkan total_amount di dalam tabel
-            var salePriceElements = document.querySelectorAll('.sale_price');
-
-            // Iterasi melalui setiap elemen dan mengonversi nilainya ke format rupiah
-            salePriceElements.forEach(function(salePriceElement) {
-                var salePrice = salePriceElement.textContent.trim();
-                var formattedSalePrice = formatCurrency(salePrice);
-                salePriceElement.textContent = formattedSalePrice;
             });
-
-            // Mengambil nilai total_amount dan tax
-            var salePrice = salePriceElement.textContent.trim();
-
-            // Mengonversi nilai total_amount dan tax ke format rupiah
-            var formattedSalePrice = formatCurrency(salePrice);
-
-            // Menetapkan nilai yang sudah dikonversi ke elemen HTML
-            salePriceElement.textContent = formattedSalePrice;
-
-
-            // Fungsi untuk mengubah judul berdasarkan halaman
-            function updateTitle(pageTitle) {
-                document.title = pageTitle;
-            }
-
-            // Panggil fungsi ini saat halaman "barcode" dimuat
-            updateTitle('Order');
         });
     </script>
+
 @endsection
