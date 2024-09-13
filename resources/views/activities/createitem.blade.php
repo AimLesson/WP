@@ -145,7 +145,7 @@
                                                         <th class="col-sm-2">Date Wanted</th>
                                                         <th class="col-md-6">Material</th>
                                                         <th class="col-md-6">Shape</th>
-                                                        <th style="width:80px">Massa(kg/mm³)</th>
+                                                        <th style="width:80px">Massa(kg/m³)</th>
                                                         <th style="width:80px">NOS</th>
                                                         <th style="width:80px">NOB</th>
                                                         <th class="col-sm-2">Issued</th>
@@ -191,8 +191,18 @@
                                                                 </option>
                                                                 <option value="square">Persegi</option>
                                                                 <option value="circle">Lingkaran</option>
+                                                                <option value="sheet_metal_non_ss">Sheet Metal Non-SS
+                                                                </option>
+                                                                <option value="square_block_non_ss">Square Block Non-SS
+                                                                </option>
+                                                                <option value="square_pipe_non_ss">Square Pipe Non-SS
+                                                                </option>
+                                                                <option value="sheet_metal_ss">Sheet Metal SS</option>
+                                                                <option value="square_block_ss">Square Block SS</option>
+                                                                <option value="square_pipe_ss">Square Pipe SS</option>
                                                             </select>
                                                         </td>
+
                                                         <td><input class="form-control massa" style="width:100px"
                                                                 type="number" id="massa1" name="massa[]"
                                                                 step="0.001" value="0"></td>
@@ -204,7 +214,8 @@
                                                                 type="date" id="issued_item1" name="issued_item[]">
                                                         </td>
                                                         <td><input class="form-control" style="min-width:200px"
-                                                                type="text" id="ass_drawing1" name="ass_drawing[]"></td>
+                                                                type="text" id="ass_drawing1" name="ass_drawing[]">
+                                                        </td>
                                                         <td><input class="form-control" style="min-width:200px"
                                                                 type="text" id="drawing_no1" name="drawing_no[]"></td>
                                                         <td><input class="form-control length" style="min-width:100px"
@@ -217,12 +228,13 @@
                                                                 type="number" id="thickness1" name="thickness[]"
                                                                 step="0.001" value="0"></td>
                                                         <td><input class="form-control weight" style="width:100px"
-                                                                type="number" id="weight1" name="weight[]" step="0.01"
-                                                                value="0" readonly></td>
+                                                                type="number" id="weight1" name="weight[]"
+                                                                step="0.01" value="0" readonly></td>
                                                         <td><input class="form-control material-cost" style="width:100px"
-                                                                type="number" id="material_cost" name="material_cost[]" step="0.01"
-                                                                value="0" readonly></td>
-                                                        <td><button class="btn btn-danger btn-remove remove" type="button">Remove</button></td>
+                                                                type="number" id="material_cost" name="material_cost[]"
+                                                                step="0.01" value="0" readonly></td>
+                                                        <td><button class="btn btn-danger btn-remove remove"
+                                                                type="button">Remove</button></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -232,124 +244,152 @@
                                 <input type="hidden" id="materialPrices" value='@json($standardParts)'>
                                 <div class="row">
                                     <div class="card-footer" style="width: 100%;">
-                                        <button type="submit" class="btn btn-primary float-right btn-custom">Save</button>
+                                        <button type="submit"
+                                            class="btn btn-primary float-right btn-custom">Save</button>
                                     </div>
                                 </div>
                 </form>
             </div>
         </section>
     </div>
- <!-- Pastikan Anda telah menyertakan SweetAlert di proyek Anda -->
- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- Pastikan Anda telah menyertakan SweetAlert di proyek Anda -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
+        document.getElementById('order_number').addEventListener('change', function() {
+            var selectedOrder = this.value; // Mendapatkan nilai perusahaan yang dipilih
 
-document.getElementById('order_number').addEventListener('change', function() {
-                var selectedOrder = this.value; // Mendapatkan nilai perusahaan yang dipilih
-
-                // Menggunakan data dari customers yang sudah ada untuk mengisi kolom-kolom lainnya
-                var order = <?php echo json_encode($order); ?>; // Mengonversi data PHP ke JSON
-                var selectedOrder = order.find(function(order) {
-                    return order.order_number === selectedOrder;
-                });
-
-                // Memasukkan nilai ke dalam kolom-kolom lainnya
-                document.getElementById('so_number').value = selectedOrder ? selectedOrder.so_number :
-                    '';
-                document.getElementById('product').value = selectedOrder ? selectedOrder.product :
-                    '';
-                document.getElementById('company_name').value = selectedOrder ? selectedOrder.customer :
-                    '';
-                document.getElementById('dod').value = selectedOrder ? selectedOrder.dod :
-                    '';
-
+            // Menggunakan data dari customers yang sudah ada untuk mengisi kolom-kolom lainnya
+            var order = <?php echo json_encode($order); ?>; // Mengonversi data PHP ke JSON
+            var selectedOrder = order.find(function(order) {
+                return order.order_number === selectedOrder;
             });
-            var errorAlert = '{{ session('error') }}';
-            if (errorAlert !== '') {
-                Swal.fire({
-                    icon: 'error',
-                    title: errorAlert,
-                    position: 'top-end', // Mengubah posisi ke tengah
-                    showConfirmButton: false, // Menampilkan tombol OK
-                    timer: 5000,
-                    toast: true,
-                });
-            }
 
-            // Menampilkan pesan keberhasilan dari sesi menggunakan SweetAlert
-            var successAlert = '{{ session('success') }}';
-            if (successAlert !== '') {
-                Swal.fire({
-                    icon: 'success',
-                    text: successAlert,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 5000,
-                    toast: true,
-                });
-            }
+            // Memasukkan nilai ke dalam kolom-kolom lainnya
+            document.getElementById('so_number').value = selectedOrder ? selectedOrder.so_number :
+                '';
+            document.getElementById('product').value = selectedOrder ? selectedOrder.product :
+                '';
+            document.getElementById('company_name').value = selectedOrder ? selectedOrder.customer :
+                '';
+            document.getElementById('dod').value = selectedOrder ? selectedOrder.dod :
+                '';
 
-            // Fungsi untuk mengubah judul berdasarkan halaman
-            function updateTitle(pageTitle) {
-                document.title = pageTitle;
-            }
+        });
+        var errorAlert = '{{ session('error') }}';
+        if (errorAlert !== '') {
+            Swal.fire({
+                icon: 'error',
+                title: errorAlert,
+                position: 'top-end', // Mengubah posisi ke tengah
+                showConfirmButton: false, // Menampilkan tombol OK
+                timer: 5000,
+                toast: true,
+            });
+        }
 
-            // Panggil fungsi ini saat halaman dimuat
-            updateTitle('Add Items');
+        // Menampilkan pesan keberhasilan dari sesi menggunakan SweetAlert
+        var successAlert = '{{ session('success') }}';
+        if (successAlert !== '') {
+            Swal.fire({
+                icon: 'success',
+                text: successAlert,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                toast: true,
+            });
+        }
 
+        // Fungsi untuk mengubah judul berdasarkan halaman
+        function updateTitle(pageTitle) {
+            document.title = pageTitle;
+        }
+
+        // Panggil fungsi ini saat halaman dimuat
+        updateTitle('Add Items');
     </script>
 
     <script>
-    $(document).ready(function () {
-        let rowIdx = 1;
+        $(document).ready(function() {
+            let rowIdx = 1;
 
-        // Function to get material price based on selected material
-        function getMaterialPrice(material) {
-            const materialPrices = JSON.parse($('#materialPrices').val());
-            const selectedMaterial = materialPrices.find(m => m.nama_barang === material);
-            return selectedMaterial ? parseFloat(selectedMaterial.harga) : 0;
-        }
-
-        function calculateWeight(row) {
-            const shape = $(row).find('.shape').val();
-            const massa = parseFloat($(row).find('.massa').val());
-            const length = parseFloat($(row).find('.length').val());
-            const width = parseFloat($(row).find('.width').val());
-            const thickness = parseFloat($(row).find('.thickness').val());
-            let weight = 0;
-
-            if (shape === 'square') {
-                weight = massa * length * width * thickness;
-            } else if (shape === 'circle') {
-                const radius = width / 2;
-                const volume = Math.PI * radius * radius * thickness;
-                weight = massa * volume;
+            // Function to get material price based on selected material
+            function getMaterialPrice(material) {
+                const materialPrices = JSON.parse($('#materialPrices').val());
+                const selectedMaterial = materialPrices.find(m => m.nama_barang === material);
+                return selectedMaterial ? parseFloat(selectedMaterial.harga) : 0;
             }
 
-            $(row).find('.weight').val(weight.toFixed(2));
-            return weight;
-        }
+            function calculateWeight(row) {
+                const shape = $(row).find('.shape').val();
+                let massa = parseFloat($(row).find('.massa').val());
+                const length = parseFloat($(row).find('.length').val());
+                const width = parseFloat($(row).find('.width').val());
+                const thickness = parseFloat($(row).find('.thickness').val());
+                let weight = 0;
 
-        function calculateMaterialCost(row) {
-            const weight = calculateWeight(row);
-            const material = $(row).find('.material').val();
-            const materialPrice = getMaterialPrice(material);
-            const materialCost = weight * materialPrice;
+                // Automatically set massa based on shape selection
+                if (shape.includes('non_ss')) {
+                    massa = 7.85; // Non-stainless steel
+                } else if (shape.includes('ss')) {
+                    massa = 7.99; // Stainless steel
+                }
 
-            $(row).find('.material-cost').val(materialCost.toFixed(2));
-        }
+                // Update the massa field automatically
+                $(row).find('.massa').val(massa.toFixed(2));
 
-        function addListeners(row) {
-            $(row).find('.shape, .massa, .length, .width, .thickness, .material').on('input change', function () {
-                calculateMaterialCost(row);
+                // Convert mm³ to m³ and use kg/m³ for density (since weight is in kg)
+                const materialDensity = massa / 1000000;
+
+                // Calculate weight based on shape
+                if (shape === 'square') {
+                    weight = materialDensity * length * width * thickness;
+                } else if (shape === 'circle') {
+                    const radius = width / 2;
+                    const volume = Math.PI * radius * radius * thickness;
+                    weight = materialDensity * volume;
+                } else if (shape === 'sheet_metal_non_ss' || shape === 'square_block_non_ss' || shape ===
+                    'sheet_metal_ss' || shape === 'square_block_ss') {
+                    weight = materialDensity * length * width * thickness;
+                } else if (shape === 'square_pipe_non_ss' || shape === 'square_pipe_ss') {
+                    // You might want to revise this formula for pipes depending on their cross-section.
+                    weight = length; // Assuming this is a placeholder for now
+                }
+
+                $(row).find('.weight').val(weight.toFixed(5));
+                return weight;
+            }
+
+
+            // Event listener to auto-fill massa based on selected shape
+            $(document).on('change', '.shape', function() {
+                const row = $(this).closest('tr');
+                calculateWeight(row);
             });
-        }
 
-        addListeners($('#soadd-table tbody tr'));
 
-        $('#addBtn').click(function () {
-            rowIdx++;
-            const newRow = `
+            function calculateMaterialCost(row) {
+                const weight = calculateWeight(row);
+                const material = $(row).find('.material').val();
+                const materialPrice = getMaterialPrice(material);
+                const materialCost = weight * materialPrice;
+
+                $(row).find('.material-cost').val(materialCost.toFixed(2));
+            }
+
+            function addListeners(row) {
+                $(row).find('.shape, .massa, .length, .width, .thickness, .material').on('input change',
+                    function() {
+                        calculateMaterialCost(row);
+                    });
+            }
+
+            addListeners($('#soadd-table tbody tr'));
+
+            $('#addBtn').click(function() {
+                rowIdx++;
+                const newRow = `
                 <tr>
                     <td><input class="row-index form-control" style="width:50px" type="text" id="id_item${rowIdx}" name="id_item[]" value="${rowIdx}"></td>
                     <td><input class="form-control" style="min-width:120px" type="text" id="no_item${rowIdx}" name="no_item[]"></td>
@@ -384,15 +424,14 @@ document.getElementById('order_number').addEventListener('change', function() {
                     <td><button class="btn btn-danger btn-remove remove" type="button">Remove</button></td>
                 </tr>`;
 
-            $('#soadd-table tbody').append(newRow);
-            addListeners($('#soadd-table tbody tr').last());
-        });
+                $('#soadd-table tbody').append(newRow);
+                addListeners($('#soadd-table tbody tr').last());
+            });
 
-        $('#soadd-table').on('click', '.remove', function () {
-            $(this).closest('tr').remove();
-            rowIdx--;
+            $('#soadd-table').on('click', '.remove', function() {
+                $(this).closest('tr').remove();
+                rowIdx--;
+            });
         });
-    });
-</script>
-
+    </script>
 @endsection
