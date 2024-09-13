@@ -536,29 +536,84 @@
                 var startTime = timeStartInput.value;
                 var finishTime = timeFinishInput.value;
 
+                console.log("Start Time:", startTime);
+                console.log("Finish Time:", finishTime);
+
                 if (startTime && finishTime) {
-                    // Parsing jam mulai dan jam selesai ke objek Date
+                    // Parsing start and finish times to Date objects
                     var startDate = new Date('1970-01-01T' + startTime);
                     var finishDate = new Date('1970-01-01T' + finishTime);
 
-                    // Jika waktu selesai lebih kecil dari waktu mulai, tambahkan 24 jam ke waktu selesai
+                    console.log("Parsed Start Date:", startDate);
+                    console.log("Parsed Finish Date:", finishDate);
+
+                    // If finish time is smaller than start time, add 24 hours
                     if (finishDate < startDate) {
-                        finishDate.setTime(finishDate.getTime() + (24 * 60 * 60 * 1000)); // Tambah 24 jam
+                        finishDate.setTime(finishDate.getTime() + (24 * 60 * 60 * 1000)); // Add 24 hours
+                        console.log("Adjusted Finish Date (added 24h):", finishDate);
                     }
 
-                    // Menghitung selisih waktu dalam milidetik
-                    var timeDiff = finishDate - startDate;
+                    var totalHours = 0;
 
-                    // Menghitung jam
-                    var hours = Math.floor(timeDiff / (1000 * 60 * 60));
+                    // Shift 1 (08:00 - 17:00) with 1-hour break (12:00 - 13:00)
+                    var shift1Start = new Date('1970-01-01T08:00');
+                    var shift1End = new Date('1970-01-01T17:00');
+                    var shift1BreakStart = new Date('1970-01-01T12:00');
+                    var shift1BreakEnd = new Date('1970-01-01T13:00');
 
-                    // Mengisi nilai "hour/day" pada input Mach. Hour
-                    machHourInputHDP.value = hours + ' hour/day';
+                    // Shift 2 (17:00 - 01:00) with 1-hour break (20:00 - 21:00)
+                    var shift2Start = new Date('1970-01-01T17:00');
+                    var shift2End = new Date('1970-01-02T01:00');
+                    var shift2BreakStart = new Date('1970-01-01T20:00');
+                    var shift2BreakEnd = new Date('1970-01-01T21:00');
 
-                    // Isi otomatis nilai "Mach. Hour" menggunakan hasil dari "Mach. Hour"
-                    machHourInput.value = hours;
+                    // Case 1: If work starts and ends within Shift 1
+                    if (startDate >= shift1Start && finishDate <= shift1End) {
+                        console.log("Inside Shift 1");
+                        totalHours = (finishDate - startDate) / (1000 * 60 * 60); // Calculate hours
+                        if (startDate < shift1BreakEnd && finishDate > shift1BreakStart) {
+                            totalHours -= 1; // Subtract 1-hour break
+                        }
+                    }
+                    // Case 2: If work starts and ends within Shift 2
+                    else if (startDate >= shift2Start && finishDate <= shift2End) {
+                        console.log("Inside Shift 2");
+                        totalHours = (finishDate - startDate) / (1000 * 60 * 60); // Calculate hours
+                        if (startDate < shift2BreakEnd && finishDate > shift2BreakStart) {
+                            totalHours -= 1; // Subtract 1-hour break
+                        }
+                    }
+                    // Case 3: If work spans across both Shift 1 and Shift 2
+                    else if (startDate >= shift1Start && finishDate <= shift2End) {
+                        console.log("Spanning across Shift 1 and Shift 2");
+
+                        // Hours worked in Shift 1
+                        if (startDate < shift1End) {
+                            totalHours += (shift1End - startDate) / (1000 * 60 * 60);
+                            if (startDate < shift1BreakEnd) {
+                                totalHours -= 1; // Subtract Shift 1 break
+                            }
+                        }
+
+                        // Hours worked in Shift 2
+                        if (finishDate > shift2Start) {
+                            totalHours += (finishDate - shift2Start) / (1000 * 60 * 60);
+                            if (finishDate > shift2BreakStart) {
+                                totalHours -= 1; // Subtract Shift 2 break
+                            }
+                        }
+                    }
+
+                    console.log("Total Hours:", totalHours);
+
+                    // Set value of Mach. Hour fields
+                    machHourInputHDP.value = totalHours + ' hour/day';
+                    machHourInput.value = totalHours;
                 }
             }
+
+
+
 
 
             // Data group ID dan nama sesuai yang diberikan
@@ -1237,7 +1292,7 @@
                     console.log(`No next ID found for ${selectedPlant}. Defaulting to 001.`);
 
                     idMachineInput.value = selectedPlant +
-                    '001'; // Fallback value: Selected plant prefix + '001'
+                        '001'; // Fallback value: Selected plant prefix + '001'
                 }
             });
         });

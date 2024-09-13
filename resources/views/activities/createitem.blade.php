@@ -189,8 +189,8 @@
                                                                 id="shape1" name="shape[]">
                                                                 <option selected="selected" required disabled>--Shape--
                                                                 </option>
-                                                                <option value="square">Persegi</option>
-                                                                <option value="circle">Lingkaran</option>
+                                                                {{-- <option value="square">Persegi</option>
+                                                                <option value="circle">Lingkaran</option> --}}
                                                                 <option value="sheet_metal_non_ss">Sheet Metal Non-SS
                                                                 </option>
                                                                 <option value="square_block_non_ss">Square Block Non-SS
@@ -408,6 +408,13 @@
                             <option selected="selected" required disabled>--Shape--</option>
                             <option value="square">Persegi</option>
                             <option value="circle">Lingkaran</option>
+                            <option value="sheet_metal_non_ss">Sheet Metal Non-SS</option>
+                            <option value="square_block_non_ss">Square Block Non-SS</option>
+                            <option value="square_pipe_non_ss">Square Pipe Non-SS</option>
+                            <option value="sheet_metal_ss">Sheet Metal SS</option>
+                            option value="square_block_ss">Square Block SS</option>
+                            <option value="square_pipe_ss">Square Pipe SS</option>
+
                         </select>
                     </td>
                     <td><input class="form-control massa" style="width:100px" type="number" id="massa${rowIdx}" name="massa[]" step="0.01" value="0"></td>
