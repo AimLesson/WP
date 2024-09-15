@@ -24,7 +24,8 @@ class WIP extends Model
         'oh_org',
         'noi',
         'bnp',
-        'lsp'
+        'lsp',
+        'wip_date'
     ];
 
     public function order()

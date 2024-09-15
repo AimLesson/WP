@@ -558,43 +558,42 @@ class ActivitiesController extends Controller
     {
         try {
             Log::info('Entered editsalesorder method', ['so_number' => $so_number]);
-    
+
             $kbli = Kblicode::get();
             Log::info('Fetched Kblicode');
-    
+
             $unit = Unit::get();
             Log::info('Fetched Unit');
-    
+
             $no_katalog = NoKatalog::get();
             Log::info('Fetched NoKatalog');
-    
+
             $tax_type = TaxType::get();
             Log::info('Fetched TaxType');
-    
+
             $user = User::get();
             Log::info('Fetched User');
-    
+
             $producttype = ProductType::get();
             Log::info('Fetched ProductType');
-    
+
             $order_unit = OrderUnit::get();
             Log::info('Fetched OrderUnit');
-    
+
             $quotation = Quotation::get();
             Log::info('Fetched Quotation');
-    
+
             $salesorder = DB::table('salesorder')->where('so_number', $so_number)->first();
             Log::info('Fetched SalesOrder', ['salesorder' => $salesorder]);
-    
+
             $salesorderJoin = DB::table('salesorder')
                 ->join('soadd', 'salesorder.so_number', '=', 'soadd.so_number')
                 ->select('salesorder.*', 'soadd.*')
                 ->where('soadd.so_number', $so_number)
                 ->get();
             Log::info('Fetched SalesOrderJoin', ['salesorderJoin' => $salesorderJoin]);
-    
+
             return view('activities.editsalesorder', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation', 'salesorder', 'salesorderJoin', 'no_katalog'));
-    
         } catch (\Exception $e) {
             Log::error('Error in editsalesorder method', ['message' => $e->getMessage()]);
             return redirect()->back()->withErrors('An error occurred while processing the sales order.');
@@ -2579,6 +2578,7 @@ class ActivitiesController extends Controller
     }
 
     // Store or update WIP data
+    // Store or update WIP data
     private function storeWIPData($order, $costs, $financialMetrics)
     {
         try {
@@ -2597,7 +2597,8 @@ class ActivitiesController extends Controller
                 'oh_org' => $financialMetrics['OHorg'],
                 'noi' => $financialMetrics['NOI'],
                 'bnp' => $financialMetrics['BNP'],
-                'lsp' => $financialMetrics['LSP']
+                'lsp' => $financialMetrics['LSP'],
+                'wip_date' => now() // Add current date
             ];
 
             WIP::updateOrCreate(
@@ -2610,6 +2611,7 @@ class ActivitiesController extends Controller
             throw $e; // Re-throw exception for higher-level handling if necessary
         }
     }
+
 
     // Store or update WIP data for all orders
     private function storeWIPDataForAllOrders()
@@ -2645,7 +2647,8 @@ class ActivitiesController extends Controller
                     'oh_org' => $financialMetrics['OHorg'],
                     'noi' => $financialMetrics['NOI'],
                     'bnp' => $financialMetrics['BNP'],
-                    'lsp' => $financialMetrics['LSP']
+                    'lsp' => $financialMetrics['LSP'],
+                    'wip_date' => now() // Add current date
                 ];
 
                 // Update or create WIP data for each order
@@ -2661,6 +2664,7 @@ class ActivitiesController extends Controller
             throw $e; // Re-throw exception for higher-level handling if necessary
         }
     }
+
 
     // Format response data
     private function formatResponseData($costs, $order)
