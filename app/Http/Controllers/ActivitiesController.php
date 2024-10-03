@@ -6,6 +6,7 @@ use App\Models\WIP;
 use App\Models\Item;
 use App\Models\Unit;
 use App\Models\NoKatalog;
+use App\Models\Salesman;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\WPLink;

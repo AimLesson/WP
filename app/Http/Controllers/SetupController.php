@@ -2,29 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CompanyInfo;
-use App\Models\Department;
-use App\Models\Kblicode;
-use App\Models\Machine;
-use App\Models\MachineState;
-use App\Models\OrderUnit;
-use App\Models\Unit;
 use App\Models\Plan;
-use App\Models\PlanAdd;
+use App\Models\Unit;
 use App\Models\User;
-use App\Models\Production_Sheet;
-use App\Models\ProductType;
+use App\Models\Machine;
+use App\Models\PlanAdd;
+use App\Models\TaxType;
+use App\Models\Kblicode;
+use App\Models\Material;
+use App\Models\Salesman;
 use App\Models\Shipping;
 use App\Models\SoTarget;
-use App\Models\TaxType;
 use App\Models\WorkUnit;
-use App\Models\Material;
 use App\Models\NoKatalog;
+use App\Models\OrderUnit;
+use App\Models\Department;
+use App\Models\CompanyInfo;
+use App\Models\ProductType;
+use App\Models\MachineState;
 use Illuminate\Http\Request;
+use App\Models\Production_Sheet;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use League\CommonMark\Node\Query\OrExpr;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log; // For logging
 
 class SetupController extends Controller
@@ -1735,6 +1736,84 @@ class SetupController extends Controller
 
         $no_katalog->delete();
         return redirect()->route('setup.katalog')->with('success', 'Katalog delete successfully');
+    }
+
+    
+    //setup - Salesman
+    public function salesman()
+    {
+        $salesman = Salesman::get();
+
+        return view('setup.salesman', compact('salesman'));
+    }
+    public function createsalesman()
+    {
+        return view('setup.createsalesman');
+    }
+
+    public function storesalesman(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'salesman' => 'required',
+                'unit'      => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return redirect()->route('setup.createsalesman')->with('error', 'Failed');
+        }
+
+        $salesman = new Salesman();
+        $salesman->salesman   = $request->input('salesman');
+        $salesman->unit     =   $request->input('unit');
+        $salesman->save();
+
+        return redirect()->route('setup.salesman')->with('success', 'Salesman data saved successfully');
+    }
+
+    public function editsalesman(Request $request, $id)
+    {
+        $salesman = Salesman::find($id);
+        if (!$salesman) {
+            return redirect()->route('setup.salesman')->with('error', 'Salesman not found');
+        }
+        return view('setup.editsalesman', compact('salesman'));
+    }
+
+    public function updatesalesman(Request $request, $id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'salesman' => 'required',
+                'unit'      => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return redirect()->route('setup.editsalesman', ['id' => $id])->withErrors($validator)->withInput();
+        }
+        $salesman = Salesman::find($id);
+        if (!$salesman) {
+            return redirect()->route('setup.salesman')->with('error', 'Salesman Not found');
+        }
+
+        $salesman->salesman = $request->input('salesman');
+        $salesman->unit = $request->input('unit');
+        $salesman->save();
+        return redirect()->route('setup.salesman')->with('success', 'Salesman updated successfully');
+    }
+
+    public function deletesalesman($id)
+    {
+        $salesman = Salesman::find($id);
+        if (!$salesman) {
+            return redirect()->route('setup.salesman')->with('error', 'Salesman not found');
+        }
+
+        $salesman->delete();
+        return redirect()->route('setup.salesman')->with('success', 'Salesman delete successfully');
     }
 
     //end_setup

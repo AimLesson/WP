@@ -101,9 +101,17 @@
             </li>
             <li class="nav-item {{ request()->is('setup/katalog') ? 'active' : '' }}">
                 <a href="{{route('setup.katalog')}}" class="nav-link">
-                    <i class="nav-icon fas fa-puzzle-piece"></i>
+                    <i class="nav-icon fas fas fa-print"></i>
                     <p>
                         Katalog
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item {{ request()->is('setup/salesman') ? 'active' : '' }}">
+                <a href="{{route('setup.salesman')}}" class="nav-link">
+                    <i class="nav-icon fas fa-money-check"></i>
+                    <p>
+                        Salesman
                     </p>
                 </a>
             </li>

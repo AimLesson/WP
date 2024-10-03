@@ -608,20 +608,16 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="salesman" class="form-label">Salesman</label>
-                                                <select class="form-control select2" name="salesman" id="salesman"
-                                                    style="width: 100%;">
-                                                    <option selected="selected" required disabled selected>--
-                                                        Select
-                                                        Salesman --
-                                                    </option>
+                                                <input list="salesman-options" class="form-control" name="salesman" id="salesman" style="width: 100%;" required>
+                                                <datalist id="salesman-options">
+                                                    <option disabled selected>-- Select Salesman --</option>
                                                     @foreach ($user as $u)
                                                         @if ($u->unit === 'MA')
-                                                            <option value="{{ $u->name }}">
-                                                                {{ $u->name }}
-                                                            </option>
+                                                            <option value="{{ $u->name }}">{{ $u->name }}</option>
                                                         @endif
                                                     @endforeach
-                                                </select>
+                                                </datalist>
+
                                                 @error('salesman')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
