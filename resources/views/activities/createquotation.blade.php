@@ -159,7 +159,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="email" class="form-label">Email</label>
-                                                <input type="email" name="email" class="form-control" id="email"
+                                                <input type="text" name="email" class="form-control" id="email"
                                                     placeholder=" Email">
                                                 @error('email')
                                                     <small class="text-danger">{{ $message }}</small>
@@ -294,14 +294,14 @@
                                                             <tr>
                                                                 <td class="row-index text-center fixed-column">1</td>
                                                                 <td>
-                                                                    <select class="form-control" name="item[]" id="item" style="width:100px" onchange="updateItemDesc(this)">
-                                                                        <option selected="selected" required disabled></option>
+                                                                    <input list="katalog-options" class="form-control" name="item[]" id="item" style="width:100px" oninput="updateItemDesc(this)">
+                                                                    <datalist id="katalog-options">
                                                                         @foreach ($no_katalog as $u)
                                                                             <option value="{{ $u->no_katalog }}" data-name="{{ $u->nama_katalog }}" data-price="{{ $u->price }}">
                                                                                 {{ $u->no_katalog }}
                                                                             </option>
                                                                         @endforeach
-                                                                    </select>
+                                                                    </datalist>
                                                                 </td>
                                                                 <td>
                                                                     <input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]">
@@ -752,22 +752,29 @@
     <script src="../../plugins/select2/js/select2.full.min.js"></script>
     {{-- no katalog --}}
     <script>
-        function updateItemDesc(selectElement) {
-            // Get the selected option
-            var selectedOption = selectElement.options[selectElement.selectedIndex];
-            
-            // Get the data-name and data-price attributes from the selected option
-            var nameKatalog = selectedOption.getAttribute('data-name');
-            var price = selectedOption.getAttribute('data-price');
-            
-            // Find the corresponding item_desc and price input fields
-            var inputDesc = selectElement.closest('td').nextElementSibling.querySelector('input[name="item_desc[]"]');
-            var inputPrice = selectElement.closest('td').nextElementSibling.nextElementSibling.querySelector('input[name="unit_price[]"]');
-            
-            // Set the value of the input fields to the name_katalog and price
-            inputDesc.value = nameKatalog || ''; // Set to empty string if name_katalog is not available
-            inputPrice.value = price || ''; // Set to empty string if price is not available
-        }
+        function updateItemDesc(inputElement) {
+    // Get the input value
+    var inputValue = inputElement.value;
+
+    // Find the matching option in the datalist (if using datalist)
+    var options = document.getElementById('katalog-options').options;
+    var selectedOption = Array.from(options).find(option => option.value === inputValue);
+
+    if (selectedOption) {
+        // Get the data-name and data-price attributes from the selected option
+        var nameKatalog = selectedOption.getAttribute('data-name');
+        var price = selectedOption.getAttribute('data-price');
+
+        // Find the corresponding item_desc and price input fields
+        var inputDesc = inputElement.closest('td').nextElementSibling.querySelector('input[name="item_desc[]"]');
+        var inputPrice = inputElement.closest('td').nextElementSibling.nextElementSibling.querySelector('input[name="unit_price[]"]');
+
+        // Set the value of the input fields to the name_katalog and price
+        inputDesc.value = nameKatalog || ''; // Set to empty string if name_katalog is not available
+        inputPrice.value = price || ''; // Set to empty string if price is not available
+    }
+}
+
     </script>
     
     
@@ -930,14 +937,14 @@
                     <tr id="R${++rowIdx}">
                         <td class="row-index text-center fixed-column"><p> ${rowIdx}</p></td>
                         <td>
-                                                                    <select class="form-control" name="item[]" id="item" style="width:100px" onchange="updateItemDesc(this)">
-                                                                        <option selected="selected" required disabled></option>
+                                                                    <input list="katalog-options" class="form-control" name="item[]" id="item" style="width:100px" oninput="updateItemDesc(this)">
+                                                                    <datalist id="katalog-options">
                                                                         @foreach ($no_katalog as $u)
                                                                             <option value="{{ $u->no_katalog }}" data-name="{{ $u->nama_katalog }}" data-price="{{ $u->price }}">
                                                                                 {{ $u->no_katalog }}
                                                                             </option>
                                                                         @endforeach
-                                                                    </select>
+                                                                    </datalist>
                                                                 </td>
                                                                 <td>
                                                                     <input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]">
