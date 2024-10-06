@@ -2578,8 +2578,6 @@ class ActivitiesController extends Controller
         return compact('COGS', 'GPM', 'OHorg', 'NOI', 'BNP', 'LSP');
     }
 
-    // Store or update WIP data
-    // Store or update WIP data
     private function storeWIPData($order, $costs, $financialMetrics)
     {
         try {
@@ -2649,22 +2647,30 @@ class ActivitiesController extends Controller
                     'noi' => $financialMetrics['NOI'],
                     'bnp' => $financialMetrics['BNP'],
                     'lsp' => $financialMetrics['LSP'],
-                    'wip_date' => now() // Add current date
+                    'wip_date' => now() // Set current date
                 ];
 
-                // Update or create WIP data for each order
-                WIP::updateOrCreate(
-                    ['order_id' => $order->id],
-                    $wipData
-                );
+                // Check if there's already a WIP record for the same order with today's date
+                $existingWIP = WIP::where('order_id', $order->id)
+                                  ->whereDate('wip_date', now()->toDateString()) // Check today's date
+                                  ->first();
 
-                Log::info('WIP data stored/updated successfully for order.', $wipData);
+                if ($existingWIP) {
+                    // Update the existing WIP record for today
+                    $existingWIP->update($wipData);
+                    Log::info('WIP data updated for order.', $wipData);
+                } else {
+                    // Create a new WIP record for today
+                    WIP::create($wipData);
+                    Log::info('New WIP data created for order.', $wipData);
+                }
             }
         } catch (\Exception $e) {
             Log::error('Error storing/updating WIP data for all orders.', ['error' => $e->getMessage()]);
             throw $e; // Re-throw exception for higher-level handling if necessary
         }
     }
+
 
 
     // Format response data
