@@ -150,10 +150,30 @@ class ReportController extends Controller
     {
         return view('report.wip');
     }
-    public function wip_process()
+    public function wip_process(Request $request)
     {
-        return view('report.wip_process');
+        // Fetch start and end dates from the request
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Query to fetch WIP data where the associated order status is not "Finished" or "Delivered"
+        $orders = \App\Models\WIP::whereHas('order', function ($query) {
+            $query->notfinished();
+            $query->notdelivered();
+        });
+
+        // If the user provided a start and end date, filter the query by that date range
+        if ($startDate && $endDate) {
+            $orders = $orders->whereBetween('wip_date', [$startDate, $endDate]);
+        }
+
+        // Get the results of the query
+        $orders = $orders->get();
+
+        // Pass the data to the view
+        return view('report.wip_process', compact('orders'));
     }
+
     public function wip_material()
     {
         return view('report.wip_material');
@@ -162,13 +182,49 @@ class ReportController extends Controller
     {
         return view('report.outstanding');
     }
-    public function finishgood()
+    public function finishgood(Request $request)
     {
-        return view('report.finishgood');
+        // Fetch start and end dates from the request
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Query to fetch WIP data where the associated order status is not "Finished" or "Delivered"
+        $orders = \App\Models\WIP::whereHas('order', function ($query) {
+            $query->Finished();
+        });
+
+        // If the user provided a start and end date, filter the query by that date range
+        if ($startDate && $endDate) {
+            $orders = $orders->whereBetween('wip_date', [$startDate, $endDate]);
+        }
+
+        // Get the results of the query
+        $orders = $orders->get();
+
+        // Pass the data to the view
+        return view('report.finishgood', compact('orders'));
     }
-    public function delivered()
+    public function delivered(Request $request)
     {
-        return view('report.delivered');
+        // Fetch start and end dates from the request
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Query to fetch WIP data where the associated order status is not "Finished" or "Delivered"
+        $orders = \App\Models\WIP::whereHas('order', function ($query) {
+            $query->Delivered();
+        });
+
+        // If the user provided a start and end date, filter the query by that date range
+        if ($startDate && $endDate) {
+            $orders = $orders->whereBetween('wip_date', [$startDate, $endDate]);
+        }
+
+        // Get the results of the query
+        $orders = $orders->get();
+
+        // Pass the data to the view
+        return view('report.delivered', compact('orders'));
     }
     public function hpp()
     {
