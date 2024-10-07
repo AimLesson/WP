@@ -31,35 +31,79 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <!-- Form to filter by order number -->
                                 <form method="GET" action="{{ route('controlsheet') }}">
                                     <div class="form-group">
                                         <label for="order_number">Order Number:</label>
-                                        <input type="text" id="order_number" name="order_number" class="form-control"
+                                        <input list="order_numbers" id="order_number" name="order_number" class="form-control"
                                             value="{{ old('order_number', $orderNumber) }}">
+
+                                        <datalist id="order_numbers">
+                                            @foreach (\App\Models\Order::pluck('order_number') as $orderNumber)
+                                                <option value="{{ $orderNumber }}"></option>
+                                            @endforeach
+                                        </datalist>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-custom">Filter</button>
                                 </form>
-
                                 <div class="card p-3 m-3">
                                     @if ($order)
-                                        <!-- Display Order details -->
                                         <div class="row">
-                                            <div class="col-md-5">
-                                                <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
-                                                <p><strong>Issued:</strong> {{ $order->order_date }}</p>
-                                                <p><strong>Date Wanted:</strong> {{ $order->dod }}</p>
-                                                <p><strong>Number SO:</strong> {{ $order->so_number }}</p>
-                                                <p><strong>Customer:</strong> {{ $order->customer }}</p>
+                                            <!-- Left column for order details -->
+                                            <div class="col-md-6">
+                                                <div class="card border-light mb-3">
+                                                    <div class="card-header bg-light">
+                                                        <h5>Order Information</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
+                                                        <p><strong>Issued Date:</strong> {{ $order->order_date }}</p>
+                                                        <p><strong>Date Wanted:</strong> {{ $order->dod }}</p>
+                                                        <p><strong>Number SO:</strong> {{ $order->so_number }}</p>
+                                                        <p><strong>Customer:</strong> {{ $order->customer }}</p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-md-5">
-                                                <p><strong>Product:</strong> {{ $order->product }}</p>
-                                                <p><strong>Number of Product:</strong> {{ $order->qty }}</p>
-                                                <p><strong>Customer Name:</strong> {{ $order->customer_name }}</p>
-                                                <p><strong>Order Date:</strong> {{ $order->order_date }}</p>
+
+
+                                            <!-- Right column for product details -->
+                                            <div class="col-md-6">
+                                                <div class="card border-light mb-3">
+                                                    <div class="card-header bg-light">
+                                                        <h5>Product Information</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p><strong>Product:</strong> {{ $order->product }}</p>
+                                                        <p><strong>Number of Products:</strong> {{ $order->qty }}</p>
+                                                        <p><strong>Customer Name:</strong> {{ $order->customer_name }}</p>
+                                                        <p><strong>Order Date:</strong> {{ $order->order_date }}</p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+                                    @else
+                                        <p>No order details available.</p>
                                     @endif
+                                </div>
+
+                                <!-- Color Legend Section -->
+                                <div class="card p-3 m-3">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <span class="badge bg-success text-white p-2">Started</span> - Process has
+                                            started
+                                        </div>
+                                        <div class="col-md-3">
+                                            <span class="badge bg-warning text-white p-2">Pending</span> - Process is
+                                            pending
+                                        </div>
+                                        <div class="col-md-3">
+                                            <span class="badge bg-primary text-white p-2">Finished</span> - Process is
+                                            finished
+                                        </div>
+                                        <div class="col-md-3">
+                                            <span class="badge bg-secondary text-white p-2">Queue</span> - Process in queue
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <table id="controlsheet" class="table table-head-fixed text-nowrap mt-4">

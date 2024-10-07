@@ -2600,10 +2600,20 @@ class ActivitiesController extends Controller
                 'wip_date' => now() // Add current date
             ];
 
-            WIP::updateOrCreate(
-                ['order_id' => $order->id],
-                $wipData
-            );
+            // Check if there's already a WIP record for the same order with today's date
+            $existingWIP = WIP::where('order_id', $order->id)
+                ->whereDate('wip_date', now()->toDateString()) // Check today's date
+                ->first();
+
+            if ($existingWIP) {
+                // Update the existing WIP record for today
+                $existingWIP->update($wipData);
+                Log::info('WIP data updated for order.', $wipData);
+            } else {
+                // Create a new WIP record for today
+                WIP::create($wipData);
+                Log::info('New WIP data created for order.', $wipData);
+            }
             Log::info('WIP data stored/updated successfully.', $wipData);
         } catch (\Exception $e) {
             Log::error('Error storing/updating WIP data.', ['error' => $e->getMessage()]);
@@ -2652,8 +2662,8 @@ class ActivitiesController extends Controller
 
                 // Check if there's already a WIP record for the same order with today's date
                 $existingWIP = WIP::where('order_id', $order->id)
-                                  ->whereDate('wip_date', now()->toDateString()) // Check today's date
-                                  ->first();
+                    ->whereDate('wip_date', now()->toDateString()) // Check today's date
+                    ->first();
 
                 if ($existingWIP) {
                     // Update the existing WIP record for today
