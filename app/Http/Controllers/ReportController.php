@@ -155,6 +155,14 @@ class ReportController extends Controller
         // Fetch start and end dates from the request
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $orderType = $request->input('order_type'); // New order type filter
+
+        // Log the filter inputs
+        Log::info('WIP Process Report Filter Inputs', [
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'order_type' => $orderType
+        ]);
 
         // Query to fetch WIP data where the associated order status is not "Finished" or "Delivered"
         $orders = \App\Models\WIP::whereHas('order', function ($query) {
@@ -162,16 +170,79 @@ class ReportController extends Controller
             $query->notdelivered();
         });
 
-        // If the user provided a start and end date, filter the query by that date range
+        // Log the base query
+        Log::info('Base WIP query executed');
+
+        // Filter by date range
         if ($startDate && $endDate) {
             $orders = $orders->whereBetween('wip_date', [$startDate, $endDate]);
+
+            // Log the detailed information about the date range used
+            Log::info('Date Range Filter Applied', [
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'query' => "Filtering records between $startDate and $endDate"
+            ]);
+        } else {
+            // Log when the date range is not applied
+            Log::info('No Date Range Filter Applied');
+        }
+
+        // Filter by order type (WF or MDC) based on the order_number format
+        if ($orderType == 'WF') {
+            $orders = $orders->whereHas('order', function ($query) {
+                $query->where('order_number', 'like', '%-W%');
+            });
+            Log::info('WF Order Type Filter Applied');
+        } elseif ($orderType == 'MDC') {
+            $orders = $orders->whereHas('order', function ($query) {
+                $query->where('order_number', 'like', '%-M%');
+            });
+            Log::info('MDC Order Type Filter Applied');
         }
 
         // Get the results of the query
         $orders = $orders->get();
 
-        // Pass the data to the view
-        return view('report.wip_process', compact('orders'));
+        // Log the number of results retrieved
+        Log::info('WIP Process Query Results', [
+            'total_orders' => $orders->count()
+        ]);
+
+        // Calculate the sums for the total columns
+        $totalMaterialCost = $orders->sum('total_material_cost');
+        $totalLaborCost = $orders->sum('total_labor_cost');
+        $totalMachineCost = $orders->sum('total_machine_cost');
+        $totalStandardPartCost = $orders->sum('total_standard_part_cost');
+        $totalSubContractCost = $orders->sum('total_sub_contract_cost');
+        $totalOverheadCost = $orders->sum('total_overhead_cost');
+        $totalWIP = $orders->sum('cogs');
+        $totalSales = $orders->sum('total_sales');
+
+        // Log the totals calculated
+        Log::info('WIP Process Totals', [
+            'total_material_cost' => $totalMaterialCost,
+            'total_labor_cost' => $totalLaborCost,
+            'total_machine_cost' => $totalMachineCost,
+            'total_standard_part_cost' => $totalStandardPartCost,
+            'total_sub_contract_cost' => $totalSubContractCost,
+            'total_overhead_cost' => $totalOverheadCost,
+            'total_wip' => $totalWIP,
+            'total_sales' => $totalSales,
+        ]);
+
+        // Pass the data and the sums to the view
+        return view('report.wip_process', compact(
+            'orders',
+            'totalMaterialCost',
+            'totalLaborCost',
+            'totalMachineCost',
+            'totalStandardPartCost',
+            'totalSubContractCost',
+            'totalOverheadCost',
+            'totalWIP',
+            'totalSales'
+        ));
     }
 
     public function wip_material()
@@ -187,44 +258,148 @@ class ReportController extends Controller
         // Fetch start and end dates from the request
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $orderType = $request->input('order_type'); // New order type filter
+
+        // Log the filter inputs
+        Log::info('Finish Good Report Filter Inputs', [
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'order_type' => $orderType
+        ]);
 
         // Query to fetch WIP data where the associated order status is not "Finished" or "Delivered"
         $orders = \App\Models\WIP::whereHas('order', function ($query) {
-            $query->Finished();
+            $query->finished();
         });
 
-        // If the user provided a start and end date, filter the query by that date range
+        // Log the base query
+        Log::info('Base Finish Good query executed');
+
+        // Filter by date range
         if ($startDate && $endDate) {
             $orders = $orders->whereBetween('wip_date', [$startDate, $endDate]);
+
+            // Log the detailed information about the date range used
+            Log::info('Date Range Filter Applied', [
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'query' => "Filtering records between $startDate and $endDate"
+            ]);
+        } else {
+            // Log when the date range is not applied
+            Log::info('No Date Range Filter Applied');
+        }
+
+        // Filter by order type (WF or MDC) based on the order_number format
+        if ($orderType == 'WF') {
+            $orders = $orders->whereHas('order', function ($query) {
+                $query->where('order_number', 'like', '%-W%');
+            });
+            Log::info('WF Order Type Filter Applied');
+        } elseif ($orderType == 'MDC') {
+            $orders = $orders->whereHas('order', function ($query) {
+                $query->where('order_number', 'like', '%-M%');
+            });
+            Log::info('MDC Order Type Filter Applied');
         }
 
         // Get the results of the query
         $orders = $orders->get();
 
-        // Pass the data to the view
-        return view('report.finishgood', compact('orders'));
+        // Log the number of results retrieved
+        Log::info('Finish Good Query Results', [
+            'total_orders' => $orders->count()
+        ]);
+
+        // Calculate the sums for the total columns
+        $totalMaterialCost = $orders->sum('total_material_cost');
+        $totalLaborCost = $orders->sum('total_labor_cost');
+        $totalMachineCost = $orders->sum('total_machine_cost');
+        $totalStandardPartCost = $orders->sum('total_standard_part_cost');
+        $totalSubContractCost = $orders->sum('total_sub_contract_cost');
+        $totalOverheadCost = $orders->sum('total_overhead_cost');
+        $totalWIP = $orders->sum('cogs');
+        $totalSales = $orders->sum('total_sales');
+
+        // Log the totals calculated
+        Log::info('Finish Good Totals', [
+            'total_material_cost' => $totalMaterialCost,
+            'total_labor_cost' => $totalLaborCost,
+            'total_machine_cost' => $totalMachineCost,
+            'total_standard_part_cost' => $totalStandardPartCost,
+            'total_sub_contract_cost' => $totalSubContractCost,
+            'total_overhead_cost' => $totalOverheadCost,
+            'total_wip' => $totalWIP,
+            'total_sales' => $totalSales,
+        ]);
+
+        // Pass the data and the sums to the view
+        return view('report.finishgood', compact(
+            'orders',
+            'totalMaterialCost',
+            'totalLaborCost',
+            'totalMachineCost',
+            'totalStandardPartCost',
+            'totalSubContractCost',
+            'totalOverheadCost',
+            'totalWIP',
+            'totalSales'
+        ));
     }
+
     public function delivered(Request $request)
     {
         // Fetch start and end dates from the request
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $orderType = $request->input('order_type'); // New order type filter
 
         // Query to fetch WIP data where the associated order status is not "Finished" or "Delivered"
         $orders = \App\Models\WIP::whereHas('order', function ($query) {
-            $query->Delivered();
+            $query->delivered();
         });
 
-        // If the user provided a start and end date, filter the query by that date range
+        // Filter by date range
         if ($startDate && $endDate) {
             $orders = $orders->whereBetween('wip_date', [$startDate, $endDate]);
+        }
+
+        // Filter by order type (WF or MDC) based on the order_number format
+        if ($orderType == 'WF') {
+            $orders = $orders->whereHas('order', function ($query) {
+                $query->where('order_number', 'like', '%-W%');
+            });
+        } elseif ($orderType == 'MDC') {
+            $orders = $orders->whereHas('order', function ($query) {
+                $query->where('order_number', 'like', '%-M%');
+            });
         }
 
         // Get the results of the query
         $orders = $orders->get();
 
-        // Pass the data to the view
-        return view('report.delivered', compact('orders'));
+        // Calculate the sums for the total columns
+        $totalMaterialCost = $orders->sum('total_material_cost');
+        $totalLaborCost = $orders->sum('total_labor_cost');
+        $totalMachineCost = $orders->sum('total_machine_cost');
+        $totalStandardPartCost = $orders->sum('total_standard_part_cost');
+        $totalSubContractCost = $orders->sum('total_sub_contract_cost');
+        $totalOverheadCost = $orders->sum('total_overhead_cost');
+        $totalWIP = $orders->sum('cogs');
+        $totalSales = $orders->sum('total_sales');
+
+        // Pass the data and the sums to the view
+        return view('report.delivered', compact(
+            'orders',
+            'totalMaterialCost',
+            'totalLaborCost',
+            'totalMachineCost',
+            'totalStandardPartCost',
+            'totalSubContractCost',
+            'totalOverheadCost',
+            'totalWIP',
+            'totalSales'
+        ));
     }
     public function hpp()
     {

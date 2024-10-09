@@ -22,25 +22,28 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <!-- Date Range Filter Form -->
-                <div class="row">
-                    <div class="col-12">
-                        <form method="GET" action="{{ route('report.wip_process') }}">
-                            <div class="form-row">
-                                <div class="col">
-                                    <input type="date" class="form-control" name="start_date" value="{{ request('start_date') }}">
-                                </div>
-                                <div class="col">
-                                    <input type="date" class="form-control" name="end_date" value="{{ request('end_date') }}">
-                                </div>
-                                <div class="col">
-                                    <button type="submit" class="btn btn-primary">Filter</button>
-                                    <a href="{{ route('report.wip_process') }}" class="btn btn-secondary">Reset</a>
-                                </div>
-                            </div>
-                        </form>
+                <form method="GET" action="{{ route('report.wip_process') }}">
+                    <div class="form-row">
+                        <div class="col">
+                            <input type="date" class="form-control" name="start_date" value="{{ request('start_date') }}">
+                        </div>
+                        <div class="col">
+                            <input type="date" class="form-control" name="end_date" value="{{ request('end_date') }}">
+                        </div>
+                        <div class="col">
+                            <select class="form-control" name="order_type">
+                                <option value="">All</option>
+                                <option value="WF" {{ request('order_type') == 'WF' ? 'selected' : '' }}>WF</option>
+                                <option value="MDC" {{ request('order_type') == 'MDC' ? 'selected' : '' }}>MDC</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <a href="{{ route('report.wip_process') }}" class="btn btn-secondary">Reset</a>
+                        </div>
                     </div>
-                </div>
+                </form>
+
                 <br>
 
                 <!-- WIP Data Table -->
@@ -84,11 +87,26 @@
                                                 <td>{{ formatRupiah($m->total_overhead_cost) }}</td>
                                                 <td>{{ formatRupiah($m->cogs) }}</td>
                                                 <td>{{ formatRupiah($m->total_sales) }}</td>
-                                                <td>{{ $m->updated_at }}</td>
+                                                <td>{{ $m->wip_date }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="2" class="text-right">Total:</th>
+                                            <th>{{ formatRupiah($totalMaterialCost) }}</th>
+                                            <th>{{ formatRupiah($totalLaborCost) }}</th>
+                                            <th>{{ formatRupiah($totalMachineCost) }}</th>
+                                            <th>{{ formatRupiah($totalStandardPartCost) }}</th>
+                                            <th>{{ formatRupiah($totalSubContractCost) }}</th>
+                                            <th>{{ formatRupiah($totalOverheadCost) }}</th>
+                                            <th>{{ formatRupiah($totalWIP) }}</th>
+                                            <th>{{ formatRupiah($totalSales) }}</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
+
                             </div>
                         </div>
                     </div>
