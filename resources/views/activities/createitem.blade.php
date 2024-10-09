@@ -143,6 +143,7 @@
                                                         <th style="width:80px">No Item</th>
                                                         <th class="col-sm-2">Item Name</th>
                                                         <th class="col-sm-2">Date Wanted</th>
+                                                        <th class="col-md-6">Kode Log</th>
                                                         <th class="col-md-6">Material</th>
                                                         <th class="col-md-6">Shape</th>
                                                         <th style="width:80px">Massa(kg/m³)</th>
@@ -171,16 +172,32 @@
                                                         <td><input class="form-control" style="min-width:120px"
                                                                 type="date" id="dod_item1" name="dod_item[]"></td>
                                                         <td>
-                                                            <select class="form-control select2 material"
-                                                                style="width:180px" id="material1" name="material[]">
-                                                                <option selected="selected" required disabled>--Material--
+                                                            <select class="form-control select2 kodelog"
+                                                                style="width:180px" id="kodelog1" name="kodelog[]">
+                                                                <option selected="selected" required disabled>--Kode Log--
                                                                 </option>
-                                                                @foreach ($standardParts as $m)
-                                                                    <option value="{{ $m->nama_barang }}">
-                                                                        {{ $m->nama_barang }}</option>
+                                                                @foreach ($kode_log as $m)
+                                                                    <option value="{{ $m->kode_log }}">
+                                                                        {{ $m->kode_log }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </td>
+                                                        <td>
+                                                            <select class="form-control select2 material"
+                                                                style="width:180px" id="material${rowIdx}"
+                                                                name="material[]">
+                                                                <option selected="selected" required disabled>--Material--
+                                                                </option>
+                                                                @foreach ($standardParts as $m)
+                                                                    <option value="{{ $m->nama_barang }}"
+                                                                        data-kode-log="{{ $m->kode_log }}">
+                                                                        {{ $m->nama_barang }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+
+
                                                         {{-- <td><input class="form-control material-price" style="width:100px"
                                                             type="number" id="mp" name="mp[]"
                                                             step="0.01" value="{{$standardParts->harga}}" readonly></td> --}}
@@ -310,14 +327,231 @@
         updateTitle('Add Items');
     </script>
 
+    // <script>
+    //     $(document).ready(function() {
+
+    //         // Function to filter nama_barang based on selected kode_log
+    //         function filterNamaBarang(row) {
+    //             const selectedKodeLog = $(row).find('.kodelog').val();
+    //             const materialDropdown = $(row).find('.material');
+
+    //             // Show only the options that match the selected kode_log
+    //             materialDropdown.find('option').each(function() {
+    //                 const kodeLogMaterial = $(this).data('kode-log');
+
+    //                 if (kodeLogMaterial === selectedKodeLog || !selectedKodeLog) {
+    //                     $(this).show(); // Show if it matches or if no kode_log is selected
+    //                 } else {
+    //                     $(this).hide(); // Hide if it doesn't match
+    //                 }
+    //             });
+
+    //             // Reset to the first valid option
+    //             materialDropdown.val(materialDropdown.find('option:visible').first().val());
+    //         }
+
+    //         // Event listener for kode_log change
+    //         $(document).on('change', '.kodelog', function() {
+    //             const row = $(this).closest('tr');
+    //             filterNamaBarang(row);
+    //         });
+
+    //         // Initialize filtering for existing rows
+    //         filterNamaBarang($('#soadd-table tbody tr').first());
+
+    //         let rowIdx = 1;
+
+    //         // Function to get material price based on selected material
+    //         function getMaterialPrice(material) {
+    //             const materialPrices = JSON.parse($('#materialPrices').val());
+    //             const selectedMaterial = materialPrices.find(m => m.nama_barang === material);
+    //             return selectedMaterial ? parseFloat(selectedMaterial.harga) : 0;
+    //         }
+
+    //         function calculateWeight(row) {
+    //             const shape = $(row).find('.shape').val();
+    //             let massa = parseFloat($(row).find('.massa').val());
+    //             const length = parseFloat($(row).find('.length').val());
+    //             const width = parseFloat($(row).find('.width').val());
+    //             const thickness = parseFloat($(row).find('.thickness').val());
+    //             let weight = 0;
+
+    //             // Automatically set massa based on shape selection
+    //             if (shape.includes('non_ss')) {
+    //                 massa = 7.85; // Non-stainless steel
+    //             } else if (shape.includes('ss')) {
+    //                 massa = 7.99; // Stainless steel
+    //             }
+
+    //             // Update the massa field automatically
+    //             $(row).find('.massa').val(massa.toFixed(2));
+
+    //             // Convert mm³ to m³ and use kg/m³ for density (since weight is in kg)
+    //             const materialDensity = massa / 1000000;
+
+    //             // Calculate weight based on shape
+    //             if (shape === 'square') {
+    //                 weight = materialDensity * length * width * thickness;
+    //             } else if (shape === 'circle') {
+    //                 const radius = width / 2;
+    //                 const volume = Math.PI * radius * radius * thickness;
+    //                 weight = materialDensity * volume;
+    //             } else if (shape === 'sheet_metal_non_ss' || shape === 'square_block_non_ss' || shape ===
+    //                 'sheet_metal_ss' || shape === 'square_block_ss') {
+    //                 weight = materialDensity * length * width * thickness;
+    //             } else if (shape === 'square_pipe_non_ss' || shape === 'square_pipe_ss') {
+    //                 // You might want to revise this formula for pipes depending on their cross-section.
+    //                 weight = length; // Assuming this is a placeholder for now
+    //             }
+
+    //             $(row).find('.weight').val(weight.toFixed(5));
+    //             return weight;
+    //         }
+
+
+    //         // Event listener to auto-fill massa based on selected shape
+    //         $(document).on('change', '.shape', function() {
+    //             const row = $(this).closest('tr');
+    //             calculateWeight(row);
+    //         });
+
+
+    //         function calculateMaterialCost(row) {
+    //             const weight = calculateWeight(row);
+    //             const material = $(row).find('.material').val();
+    //             const materialPrice = getMaterialPrice(material);
+    //             const materialCost = weight * materialPrice;
+
+    //             $(row).find('.material-cost').val(materialCost.toFixed(2));
+    //         }
+
+    //         function addListeners(row) {
+    //             $(row).find('.shape, .massa, .length, .width, .thickness, .material').on('input change',
+    //                 function() {
+    //                     calculateMaterialCost(row);
+    //                 });
+
+    //             // Reapply filterNamaBarang function when a new row is added
+    //             $(row).find('.kodelog').on('change', function() {
+    //                 filterNamaBarang(row);
+    //             });
+    //         }
+
+    //         addListeners($('#soadd-table tbody tr'));
+
+    //         $('#addBtn').click(function() {
+    //             rowIdx++;
+    //             const newRow = `
+    //             <tr>
+    //                 <td><input class="row-index form-control" style="width:50px" type="text" id="id_item${rowIdx}" name="id_item[]" value="${rowIdx}"></td>
+    //                 <td><input class="form-control" style="min-width:120px" type="text" id="no_item${rowIdx}" name="no_item[]"></td>
+    //                 <td><input class="form-control" style="min-width:120px" type="text" id="item${rowIdx}" name="item[]"></td>
+    //                 <td><input class="form-control" style="min-width:120px" type="date" id="dod_item${rowIdx}" name="dod_item[]"></td>
+    //                 <td>
+    //                     <select class="form-control select2 kodelog" style="width:180px" id="kodelog${rowIdx}" name="kodelog[]">
+    //                         <option selected="selected" required disabled>--Kode Log--</option>
+    //                         @foreach ($kode_log as $m)
+    //                             <option value="{{ $m->kode_log }}">{{ $m->kode_log }}</option>
+    //                         @endforeach
+    //                     </select>
+    //                 </td>
+    //                 <td>
+    //                     <select class="form-control select2 material" style="width:180px" id="material${rowIdx}" name="material[]">
+    //                         <option selected="selected" required disabled>--Material--</option>
+    //                         @foreach ($standardParts as $m)
+    //                             <option value="{{ $m->nama_barang }}">{{ $m->nama_barang }}</option>
+    //                         @endforeach
+    //                     </select>
+    //                 </td>
+    //                 <td>
+    //                     <select class="form-control select2 shape" style="width:180px" id="shape${rowIdx}" name="shape[]">
+    //                         <option selected="selected" required disabled>--Shape--</option>
+    //                         <option value="square">Persegi</option>
+    //                         <option value="circle">Lingkaran</option>
+    //                         <option value="sheet_metal_non_ss">Sheet Metal Non-SS</option>
+    //                         <option value="square_block_non_ss">Square Block Non-SS</option>
+    //                         <option value="square_pipe_non_ss">Square Pipe Non-SS</option>
+    //                         <option value="sheet_metal_ss">Sheet Metal SS</option>
+    //                         option value="square_block_ss">Square Block SS</option>
+    //                         <option value="square_pipe_ss">Square Pipe SS</option>
+
+    //                     </select>
+    //                 </td>
+    //                 <td><input class="form-control massa" style="width:100px" type="number" id="massa${rowIdx}" name="massa[]" step="0.01" value="0"></td>
+    //                 <td><input class="form-control" style="min-width:80px" type="text" id="nos${rowIdx}" name="nos[]"></td>
+    //                 <td><input class="form-control" style="min-width:80px" type="text" id="nob${rowIdx}" name="nob[]"></td>
+    //                 <td><input class="form-control" style="min-width:120px" type="date" id="issued_item${rowIdx}" name="issued_item[]"></td>
+    //                 <td><input class="form-control" style="min-width:200px" type="text" id="ass_drawing${rowIdx}" name="ass_drawing[]"></td>
+    //                 <td><input class="form-control" style="min-width:200px" type="text" id="drawing_no${rowIdx}" name="drawing_no[]"></td>
+    //                 <td><input class="form-control length" style="min-width:100px" type="number" id="length${rowIdx}" name="length[]" step="0.01" value="0"></td>
+    //                 <td><input class="form-control width" style="min-width:80px" type="number" id="width${rowIdx}" name="width[]" step="0.01" value="0"></td>
+    //                 <td><input class="form-control thickness" style="min-width:80px" type="number" id="thickness${rowIdx}" name="thickness[]" step="0.01" value="0"></td>
+    //                 <td><input class="form-control weight" style="width:100px" type="number" id="weight${rowIdx}" name="weight[]" step="0.01" value="0" readonly></td>
+    //                 <td><input class="form-control material-cost" style="width:100px" type="number" id="material_cost${rowIdx}" name="material_cost[]" step="0.01" value="0" readonly></td>
+    //                 <td><button class="btn btn-danger btn-remove remove" type="button">Remove</button></td>
+    //             </tr>`;
+
+    //             $('#soadd-table tbody').append(newRow);
+    //             addListeners($('#soadd-table tbody tr').last());
+
+    //             // Add listeners to the newly added row
+    //             addListeners(addedRow);
+
+    //             // Apply the filtering to the new row
+    //             filterNamaBarang(addedRow);
+    //         });
+
+    //         $('#soadd-table').on('click', '.remove', function() {
+    //             $(this).closest('tr').remove();
+    //             rowIdx--;
+    //         });
+    //     });
+    // </script>
+
     <script>
         $(document).ready(function() {
+            // Function to filter nama_barang based on selected kode_log
+            function filterNamaBarang(row) {
+                const selectedKodeLog = $(row).find('.kodelog').val();
+                const materialDropdown = $(row).find('.material');
+
+                console.log('Filtering materials for kode_log:', selectedKodeLog);
+
+                // Show only the options that match the selected kode_log
+                materialDropdown.find('option').each(function() {
+                    const kodeLogMaterial = $(this).data('kode-log');
+
+                    if (kodeLogMaterial === selectedKodeLog || !selectedKodeLog) {
+                        $(this).show(); // Show if it matches or if no kode_log is selected
+                        console.log('Showing option:', $(this).val());
+                    } else {
+                        $(this).hide(); // Hide if it doesn't match
+                        console.log('Hiding option:', $(this).val());
+                    }
+                });
+
+                // Reset to the first valid option
+                materialDropdown.val(materialDropdown.find('option:visible').first().val());
+            }
+
+            // Event listener for kode_log change
+            $(document).on('change', '.kodelog', function() {
+                const row = $(this).closest('tr');
+                console.log('kode_log changed in row:', row.index());
+                filterNamaBarang(row);
+            });
+
+            // Initialize filtering for existing rows
+            filterNamaBarang($('#soadd-table tbody tr').first());
+
             let rowIdx = 1;
 
             // Function to get material price based on selected material
             function getMaterialPrice(material) {
                 const materialPrices = JSON.parse($('#materialPrices').val());
                 const selectedMaterial = materialPrices.find(m => m.nama_barang === material);
+                console.log('Material selected:', material, 'Price:', selectedMaterial ? selectedMaterial.harga :
+                    'Not found');
                 return selectedMaterial ? parseFloat(selectedMaterial.harga) : 0;
             }
 
@@ -329,11 +563,15 @@
                 const thickness = parseFloat($(row).find('.thickness').val());
                 let weight = 0;
 
+                console.log('Calculating weight for row:', row.index(), 'Shape:', shape);
+
                 // Automatically set massa based on shape selection
                 if (shape.includes('non_ss')) {
                     massa = 7.85; // Non-stainless steel
+                    console.log('Shape is non-SS, massa set to:', massa);
                 } else if (shape.includes('ss')) {
                     massa = 7.99; // Stainless steel
+                    console.log('Shape is SS, massa set to:', massa);
                 }
 
                 // Update the massa field automatically
@@ -349,25 +587,24 @@
                     const radius = width / 2;
                     const volume = Math.PI * radius * radius * thickness;
                     weight = materialDensity * volume;
-                } else if (shape === 'sheet_metal_non_ss' || shape === 'square_block_non_ss' || shape ===
-                    'sheet_metal_ss' || shape === 'square_block_ss') {
+                } else if (shape.includes('sheet_metal') || shape.includes('square_block')) {
                     weight = materialDensity * length * width * thickness;
-                } else if (shape === 'square_pipe_non_ss' || shape === 'square_pipe_ss') {
-                    // You might want to revise this formula for pipes depending on their cross-section.
-                    weight = length; // Assuming this is a placeholder for now
+                } else if (shape.includes('square_pipe')) {
+                    weight = length; // Placeholder
                 }
+
+                console.log('Calculated weight:', weight.toFixed(5));
 
                 $(row).find('.weight').val(weight.toFixed(5));
                 return weight;
             }
 
-
             // Event listener to auto-fill massa based on selected shape
             $(document).on('change', '.shape', function() {
                 const row = $(this).closest('tr');
+                console.log('Shape changed in row:', row.index());
                 calculateWeight(row);
             });
-
 
             function calculateMaterialCost(row) {
                 const weight = calculateWeight(row);
@@ -375,14 +612,22 @@
                 const materialPrice = getMaterialPrice(material);
                 const materialCost = weight * materialPrice;
 
+                console.log('Calculated material cost for row:', row.index(), 'Cost:', materialCost.toFixed(2));
+
                 $(row).find('.material-cost').val(materialCost.toFixed(2));
             }
 
             function addListeners(row) {
                 $(row).find('.shape, .massa, .length, .width, .thickness, .material').on('input change',
-                    function() {
-                        calculateMaterialCost(row);
-                    });
+            function() {
+                    console.log('Input changed in row:', row.index());
+                    calculateMaterialCost(row);
+                });
+
+                // Reapply filterNamaBarang function when a new row is added
+                $(row).find('.kodelog').on('change', function() {
+                    filterNamaBarang(row);
+                });
             }
 
             addListeners($('#soadd-table tbody tr'));
@@ -396,10 +641,18 @@
                     <td><input class="form-control" style="min-width:120px" type="text" id="item${rowIdx}" name="item[]"></td>
                     <td><input class="form-control" style="min-width:120px" type="date" id="dod_item${rowIdx}" name="dod_item[]"></td>
                     <td>
+                        <select class="form-control select2 kodelog" style="width:180px" id="kodelog${rowIdx}" name="kodelog[]">
+                            <option selected="selected" required disabled>--Kode Log--</option>
+                            @foreach ($kode_log as $m)
+                                <option value="{{ $m->kode_log }}">{{ $m->kode_log }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
                         <select class="form-control select2 material" style="width:180px" id="material${rowIdx}" name="material[]">
                             <option selected="selected" required disabled>--Material--</option>
                             @foreach ($standardParts as $m)
-                                <option value="{{ $m->nama_barang }}">{{ $m->nama_barang }}</option>
+                                <option value="{{ $m->nama_barang }}" data-kode-log="{{ $m->kode_log }}">{{ $m->nama_barang }}</option>
                             @endforeach
                         </select>
                     </td>
@@ -432,11 +685,20 @@
                 </tr>`;
 
                 $('#soadd-table tbody').append(newRow);
-                addListeners($('#soadd-table tbody tr').last());
+                const addedRow = $('#soadd-table tbody tr').last();
+
+                console.log('New row added:', rowIdx);
+
+                addListeners(addedRow);
+
+                // Apply the filtering to the new row
+                filterNamaBarang(addedRow);
             });
 
             $('#soadd-table').on('click', '.remove', function() {
-                $(this).closest('tr').remove();
+                const row = $(this).closest('tr');
+                console.log('Removing row:', row.index());
+                row.remove();
                 rowIdx--;
             });
         });

@@ -1076,9 +1076,13 @@ class ActivitiesController extends Controller
     public function createitem()
     {
         $material   = Material::get();
-        $standardParts = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])->get();
+        $kode_log = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])
+        ->select('kode_log') // Select only the 'kode_log' field
+        ->distinct()         // Ensure distinct 'kode_log' values
+        ->get();
+            $standardParts = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])->get();
         $order = Order::where('order_status', '!=', 'Finished')->get();
-        return view('activities.createitem', compact('material', 'order', 'standardParts'));
+        return view('activities.createitem', compact('material', 'order', 'standardParts', 'kode_log'));
     }
     public function storeitem(Request $request)
     {
