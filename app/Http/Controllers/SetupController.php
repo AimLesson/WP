@@ -615,13 +615,18 @@ class SetupController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'kbli_code'    => 'required',
+                'kbli_code'    => 'required|unique:kbli_code,kbli_code', // Add unique validation here
                 'description'  => 'required',
+            ],
+            [
+                'kbli_code.unique' => 'The KBLI Code has already been used. Please enter a unique code.',
             ]
         );
 
         if ($validator->fails()) {
-            return redirect()->route('setup.createkblicode')->withErrors($validator)->withInput();
+            return redirect()->route('setup.createkblicode')
+                ->withErrors($validator)
+                ->withInput();
         }
 
         $kbli_code['kbli_code'] = $request->kbli_code;
@@ -631,6 +636,7 @@ class SetupController extends Controller
 
         return redirect()->route('setup.kblicode')->with('success', 'KBLI Code Added');
     }
+
 
     public function editkblicode(Request $request, $id)
     {
@@ -1738,7 +1744,7 @@ class SetupController extends Controller
         return redirect()->route('setup.katalog')->with('success', 'Katalog delete successfully');
     }
 
-    
+
     //setup - Salesman
     public function salesman()
     {
