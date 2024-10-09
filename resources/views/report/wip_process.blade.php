@@ -104,7 +104,13 @@
                                             <th>{{ formatRupiah($totalSales) }}</th>
                                             <th></th>
                                         </tr>
+                                        <tr>
+                                            <th colspan="11" class="text-center">
+                                                Total Work In Process(WIP) : {{ $totalRows }} Process
+                                            </th>
+                                        </tr>
                                     </tfoot>
+
                                 </table>
 
                             </div>

@@ -164,14 +164,20 @@ class ReportController extends Controller
             'order_type' => $orderType
         ]);
 
-        // Query to fetch WIP data where the associated order status is not "Finished" or "Delivered"
-        $orders = \App\Models\WIP::whereHas('order', function ($query) {
+        // Base query to fetch WIP data where the associated order status is not "Finished" or "Delivered"
+        $baseQuery = \App\Models\WIP::whereHas('order', function ($query) {
             $query->notfinished();
             $query->notdelivered();
         });
 
-        // Log the base query
-        Log::info('Base WIP query executed');
+        // Count the total number of rows before applying any filter
+        $totalRows = $baseQuery->count();
+
+        // Log the total rows
+        Log::info('Total Rows without filter', ['total_rows' => $totalRows]);
+
+        // Clone the base query to apply filters
+        $orders = clone $baseQuery;
 
         // Filter by date range
         if ($startDate && $endDate) {
@@ -231,7 +237,7 @@ class ReportController extends Controller
             'total_sales' => $totalSales,
         ]);
 
-        // Pass the data and the sums to the view
+        // Pass the data, the sums, and the total row count to the view
         return view('report.wip_process', compact(
             'orders',
             'totalMaterialCost',
@@ -241,7 +247,8 @@ class ReportController extends Controller
             'totalSubContractCost',
             'totalOverheadCost',
             'totalWIP',
-            'totalSales'
+            'totalSales',
+            'totalRows' // Pass the unfiltered total row count
         ));
     }
 
