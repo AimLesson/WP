@@ -67,25 +67,32 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="quotation_no" class="form-label">Quotation No.</label>
-                                                <input style="margin-left: 10px; margin-top:7px" class="form-check-input" type="checkbox" id="so_internal" name="so_internal" onchange="toggleQuotationInput()">
-                                                <label style="margin-left: 35px; font-weight:500" for="so_internal" class="form-label">New</label>
-                                            
+                                                <input style="margin-left: 10px; margin-top:7px" class="form-check-input"
+                                                    type="checkbox" id="so_internal" name="so_internal"
+                                                    onchange="toggleQuotationInput()">
+                                                <label style="margin-left: 35px; font-weight:500" for="so_internal"
+                                                    class="form-label">New</label>
+
                                                 <!-- Manual Input Field -->
-                                                <input type="text" name="quotation_manual" class="form-control" style="display: none" id="so_internal_text" placeholder="Internal">
-                                            
+                                                <input type="text" name="quotation_manual" class="form-control"
+                                                    style="display: none" id="so_internal_text" placeholder="Internal">
+
                                                 <!-- Dropdown Select -->
-                                                <select name="quotation_no" id="quotation_no" onchange="fetchQuotationData()" class="form-control select2" style="width: 100%;" required>
+                                                <select name="quotation_no" id="quotation_no"
+                                                    onchange="fetchQuotationData()" class="form-control select2"
+                                                    style="width: 100%;" required>
                                                     <option selected="selected" disabled>-- Select Quotation ---</option>
                                                     @foreach ($quotation as $q)
-                                                        <option value="{{ $q->quotation_no }}">{{ $q->quotation_no }}</option>
+                                                        <option value="{{ $q->quotation_no }}">{{ $q->quotation_no }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
-                                            
+
                                                 @error('quotation_no')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
-                                            
+
                                             <div class="form-group">
                                                 <label for="po_number" class="form-label">PO No.</label>
                                                 <input type="text" name="po_number" class="form-control" id="po_number"
@@ -823,6 +830,28 @@
     <!-- Select2 -->
     <script src="../../plugins/select2/js/select2.full.min.js"></script>
     <script>
+        @if (session('validationErrors'))
+            // Parse the validation errors
+            let validationErrors = JSON.parse(@json(session('validationErrors')));
+
+            // Build the error message string
+            let errorMessage = '';
+            Object.keys(validationErrors).forEach(function(field) {
+                validationErrors[field].forEach(function(message) {
+                    errorMessage += message + '<br>';
+                });
+            });
+
+            // Display SweetAlert with the error messages
+            Swal.fire({
+                title: 'Validation Error',
+                icon: 'error',
+                html: errorMessage, // Display the error messages with line breaks
+                confirmButtonText: 'Ok'
+            });
+        @endif
+    </script>
+    <script>
         function fetchQuotationData() {
             var quotationNo = document.getElementById('quotation_no').value;
 
@@ -991,67 +1020,71 @@
 
             // Fungsi untuk mengatur tampilan dan select berdasarkan status checkbox
             function toggleQuotationInput() {
-    var checkbox = document.getElementById('so_internal');
-    var inputText = document.getElementById('so_internal_text');
-    var selectQuotation = document.getElementById('quotation_no');
+                var checkbox = document.getElementById('so_internal');
+                var inputText = document.getElementById('so_internal_text');
+                var selectQuotation = document.getElementById('quotation_no');
 
-    if (checkbox.checked) {
-        // Show the manual input and hide the select dropdown
-        inputText.style.display = 'block';
-        selectQuotation.style.display = 'none';
-        selectQuotation.value = ''; // Clear the selected value in the dropdown
-        selectQuotation.removeAttribute('required'); // Remove required attribute
+                if (checkbox.checked) {
+                    // Show the manual input and hide the select dropdown
+                    inputText.style.display = 'block';
+                    selectQuotation.style.display = 'none';
+                    selectQuotation.value = ''; // Clear the selected value in the dropdown
+                    selectQuotation.removeAttribute('required'); // Remove required attribute
 
-        // Clear all populated fields
-        document.getElementById('company_name').value = '';
-        document.getElementById('name').value = '';
-        document.getElementById('date').value = '';
-        document.getElementById('address').value = '';
-        document.getElementById('phone').value = '';
-        document.getElementById('tax_address').value = '';
-        document.getElementById('npwp').value = '';
-        document.getElementById('fax').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('description').value = '';
+                    // Clear all populated fields
+                    document.getElementById('company_name').value = '';
+                    document.getElementById('name').value = '';
+                    document.getElementById('date').value = '';
+                    document.getElementById('address').value = '';
+                    document.getElementById('phone').value = '';
+                    document.getElementById('tax_address').value = '';
+                    document.getElementById('npwp').value = '';
+                    document.getElementById('fax').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('description').value = '';
 
-        // Clear all rows from the dynamic table
-        var tableBody = document.querySelector("#quotationadd-table tbody");
-        tableBody.innerHTML = ""; // Remove all rows
-        rowIdx = 0; // Reset row index counter
-    } else {
-        // Show the select dropdown and hide the manual input
-        inputText.style.display = 'none';
-        selectQuotation.style.display = 'block';
-        selectQuotation.setAttribute('required', 'required'); // Add required attribute back
-        inputText.value = ''; // Clear the manual input value
-    }
-}
+                    // Clear all rows from the dynamic table
+                    var tableBody = document.querySelector("#quotationadd-table tbody");
+                    tableBody.innerHTML = ""; // Remove all rows
+                    rowIdx = 0; // Reset row index counter
+                } else {
+                    // Show the select dropdown and hide the manual input
+                    inputText.style.display = 'none';
+                    selectQuotation.style.display = 'block';
+                    selectQuotation.setAttribute('required', 'required'); // Add required attribute back
+                    inputText.value = ''; // Clear the manual input value
+                }
+            }
 
-// Add event listener for checkbox change
-document.getElementById('so_internal').addEventListener('change', toggleQuotationInput);
+            // Add event listener for checkbox change
+            document.getElementById('so_internal').addEventListener('change', toggleQuotationInput);
 
-// Quotation dropdown change listener
-document.getElementById('quotation_no').addEventListener('change', function() {
-    var selectedQuotationNo = this.value; // Get the selected quotation number
+            // Quotation dropdown change listener
+            document.getElementById('quotation_no').addEventListener('change', function() {
+                var selectedQuotationNo = this.value; // Get the selected quotation number
 
-    // Use existing data from quotations to fill in other fields
-    var quotations = <?php echo json_encode($quotation); ?>; // Convert PHP data to JSON
-    var selectedQuotation = quotations.find(function(q) {
-        return q.quotation_no === selectedQuotationNo;
-    });
+                // Use existing data from quotations to fill in other fields
+                var quotations = <?php echo json_encode($quotation); ?>; // Convert PHP data to JSON
+                var selectedQuotation = quotations.find(function(q) {
+                    return q.quotation_no === selectedQuotationNo;
+                });
 
-    // Populate other fields
-    document.getElementById('company_name').value = selectedQuotation ? selectedQuotation.company_name : '';
-    document.getElementById('name').value = selectedQuotation ? selectedQuotation.name : '';
-    document.getElementById('date').value = selectedQuotation ? selectedQuotation.date : '';
-    document.getElementById('address').value = selectedQuotation ? selectedQuotation.address : '';
-    document.getElementById('phone').value = selectedQuotation ? selectedQuotation.phone : '';
-    document.getElementById('tax_address').value = selectedQuotation ? selectedQuotation.tax_address : '';
-    document.getElementById('npwp').value = selectedQuotation ? selectedQuotation.npwp : '';
-    document.getElementById('fax').value = selectedQuotation ? selectedQuotation.fax : '';
-    document.getElementById('email').value = selectedQuotation ? selectedQuotation.email : '';
-    document.getElementById('description').value = selectedQuotation ? selectedQuotation.description : '';
-});
+                // Populate other fields
+                document.getElementById('company_name').value = selectedQuotation ? selectedQuotation
+                    .company_name : '';
+                document.getElementById('name').value = selectedQuotation ? selectedQuotation.name : '';
+                document.getElementById('date').value = selectedQuotation ? selectedQuotation.date : '';
+                document.getElementById('address').value = selectedQuotation ? selectedQuotation.address :
+                    '';
+                document.getElementById('phone').value = selectedQuotation ? selectedQuotation.phone : '';
+                document.getElementById('tax_address').value = selectedQuotation ? selectedQuotation
+                    .tax_address : '';
+                document.getElementById('npwp').value = selectedQuotation ? selectedQuotation.npwp : '';
+                document.getElementById('fax').value = selectedQuotation ? selectedQuotation.fax : '';
+                document.getElementById('email').value = selectedQuotation ? selectedQuotation.email : '';
+                document.getElementById('description').value = selectedQuotation ? selectedQuotation
+                    .description : '';
+            });
 
 
             // Ambil elemen input
@@ -1353,7 +1386,7 @@ document.getElementById('quotation_no').addEventListener('change', function() {
                 tax = parseFloat(tax.toFixed(2));
                 // Menghitung total_amount
                 var total_amount = (subtotal - discount) + (tax + freight);
-                
+
                 var dp = (dp_percent / 100) * total_amount;
 
                 // Menetapkan nilai pada elemen HTML

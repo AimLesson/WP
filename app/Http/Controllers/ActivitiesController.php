@@ -413,7 +413,7 @@ class ActivitiesController extends Controller
         Log::info('Store SO request data: ', $request->all());
 
         // Validate the input
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'so_number'         => 'required|unique:salesorder,so_number',
             'quotation_no'      => ['required_if:so_internal,false'], // Quotation No is only required if 'so_internal' is false (checkbox not checked)
             'po_number'         => 'required',
@@ -453,6 +453,19 @@ class ActivitiesController extends Controller
             'tax_type'          => 'required',
             'description'       => 'required',
         ]);
+
+
+    // Check if validation fails
+    if ($validator->fails()) {
+        Log::warning('Validation failed: ', $validator->errors()->toArray());
+
+        // Pass validation errors to session as JSON
+        return redirect()->route('activities.createso')
+                         ->withErrors($validator)
+                         ->withInput()
+                         ->with('validationErrors', json_encode($validator->messages()->toArray()))
+                         ->with('error', 'Validation failed. Please check the input fields.');
+    }
 
         DB::beginTransaction();
         try {
@@ -1077,10 +1090,10 @@ class ActivitiesController extends Controller
     {
         $material   = Material::get();
         $kode_log = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])
-        ->select('kode_log') // Select only the 'kode_log' field
-        ->distinct()         // Ensure distinct 'kode_log' values
-        ->get();
-            $standardParts = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])->get();
+            ->select('kode_log') // Select only the 'kode_log' field
+            ->distinct()         // Ensure distinct 'kode_log' values
+            ->get();
+        $standardParts = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])->get();
         $order = Order::where('order_status', '!=', 'Finished')->get();
         return view('activities.createitem', compact('material', 'order', 'standardParts', 'kode_log'));
     }
