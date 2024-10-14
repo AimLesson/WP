@@ -2827,6 +2827,7 @@ class ActivitiesController extends Controller
         // Create a new Order instance with the data from the selected order
         $newOrder = $selectedOrder->replicate();
         $newOrder->order_number = $request->input('order_number');
+        $newOrder->order_status = 'Queue'; // Automatically set order_status to 'Queue'
         $newOrder->save();
 
         // Copy related items
@@ -2856,6 +2857,7 @@ class ActivitiesController extends Controller
         // Redirect back with a success message
         return redirect()->route('activities.order')->with('success', 'Order copied successfully with related items and processes.');
     }
+
 
     public function data_maintenance()
     {
