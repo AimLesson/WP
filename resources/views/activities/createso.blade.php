@@ -67,27 +67,32 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="quotation_no" class="form-label">Quotation No.</label>
+                                                <!-- Checkbox for SO Internal -->
                                                 <input style="margin-left: 10px; margin-top:7px" class="form-check-input"
                                                     type="checkbox" id="so_internal" name="so_internal"
-                                                    onchange="toggleQuotationInput()">
+                                                    onchange="toggleQuotationInput()"
+                                                    {{ old('so_internal') ? 'checked' : '' }}>
                                                 <label style="margin-left: 35px; font-weight:500" for="so_internal"
                                                     class="form-label">New</label>
 
-                                                <!-- Manual Input Field -->
+                                                <!-- Manual Input Field (Only visible when checkbox is checked) -->
                                                 <input type="text" name="quotation_manual" class="form-control"
-                                                    style="display: none" id="so_internal_text" placeholder="Internal">
+                                                    style="display: {{ old('so_internal') ? 'block' : 'none' }}"
+                                                    id="so_internal_text" placeholder="Internal"
+                                                    value="{{ old('quotation_manual') }}">
 
-                                                <!-- Dropdown Select -->
+                                                <!-- Dropdown Select (Disabled when checkbox is checked) -->
                                                 <select name="quotation_no" id="quotation_no"
                                                     onchange="fetchQuotationData()" class="form-control select2"
-                                                    style="width: 100%;" required>
+                                                    style="width: 100%;" {{ old('so_internal') ? 'disabled' : 'required' }}>
                                                     <option selected="selected" disabled>-- Select Quotation ---</option>
                                                     @foreach ($quotation as $q)
-                                                        <option value="{{ $q->quotation_no }}">{{ $q->quotation_no }}
+                                                        <option value="{{ $q->quotation_no }}"
+                                                            {{ old('quotation_no') == $q->quotation_no ? 'selected' : '' }}>
+                                                            {{ $q->quotation_no }}
                                                         </option>
                                                     @endforeach
                                                 </select>
-
                                                 @error('quotation_no')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -96,146 +101,167 @@
                                             <div class="form-group">
                                                 <label for="po_number" class="form-label">PO No.</label>
                                                 <input type="text" name="po_number" class="form-control" id="po_number"
-                                                    placeholder=" PO No." required>
+                                                    placeholder="PO No." value="{{ old('po_number') }}" required>
                                                 @error('po_number')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="company_name" class="form-label">Company Name</label>
                                                 <input type="text" name="company_name" class="form-control"
-                                                    id="company_name" placeholder=" Company Name" required>
+                                                    id="company_name" placeholder="Company Name"
+                                                    value="{{ old('company_name') }}" required>
                                                 @error('company_name')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="name" class="form-label">Name</label>
                                                 <input type="text" name="name" class="form-control" id="name"
-                                                    placeholder=" Name" required>
+                                                    placeholder="Name" value="{{ old('name') }}" required>
                                                 @error('name')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
                                         </div>
+
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="so_number" class="form-label">SO No.</label>
                                                 <input type="text" name="so_number" class="form-control" id="so_number"
-                                                    placeholder=" SO No." required>
+                                                    placeholder="SO No." value="{{ old('so_number') }}" required>
                                                 @error('so_number')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="date" class="form-label">Date</label>
                                                 <input type="date" name="date" class="form-control" id="date"
-                                                    placeholder="Select Date" required>
+                                                    placeholder="Select Date" value="{{ old('date') }}" required>
                                                 @error('date')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="address" class="form-label">Address</label>
-                                                <textarea name="address" class="form-control" id="address" placeholder=" Address" oninput="capitalizeName(this)"
-                                                    required></textarea>
+                                                <textarea name="address" class="form-control" id="address" placeholder="Address" oninput="capitalizeName(this)"
+                                                    required>{{ old('address') }}</textarea>
                                                 @error('address')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="phone" class="form-label">Phone</label>
                                                 <input type="text" name="phone" class="form-control" id="phone"
-                                                    placeholder=" Phone" required>
+                                                    placeholder="Phone" value="{{ old('phone') }}" required>
                                                 @error('phone')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
                                         </div>
+
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="order_unit" class="form-label">Order Unit</label>
                                                 <select class="form-control select2" name="order_unit" id="order_unit"
-                                                    style="width: 100%;">
-                                                    <option selected="selected" required disabled selected>-- Select Order
-                                                        Unit --</option>
+                                                    style="width: 100%;" required>
+                                                    <option selected="selected" disabled>-- Select Order Unit --</option>
                                                     @foreach ($order_unit as $ou)
-                                                        <option value="{{ $ou->id_order_unit }}">
-                                                            {{ $ou->code_order }}</option>
+                                                        <option value="{{ $ou->id_order_unit }}"
+                                                            {{ old('order_unit') == $ou->id_order_unit ? 'selected' : '' }}>
+                                                            {{ $ou->code_order }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                                 @error('order_unit')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="sow_no" class="form-label">SOW No.</label>
                                                 <input type="text" name="sow_no" class="form-control" id="sow_no"
-                                                    placeholder=" SOW No." required>
+                                                    placeholder="SOW No." value="{{ old('sow_no') }}" required>
                                                 @error('sow_no')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="tax_address" class="form-label">Tax Address</label>
-                                                <textarea name="tax_address" class="form-control" id="tax_address" placeholder=" Tax Address"
-                                                    oninput="capitalizeName(this)" required></textarea>
+                                                <textarea name="tax_address" class="form-control" id="tax_address" placeholder="Tax Address"
+                                                    oninput="capitalizeName(this)" required>{{ old('tax_address') }}</textarea>
                                                 @error('tax_address')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="npwp" class="form-label">NPWP</label>
                                                 <input type="text" name="npwp" class="form-control" id="npwp"
-                                                    placeholder="__.___.___._-___.___">
+                                                    placeholder="__.___.___._-___.___" value="{{ old('npwp') }}">
                                                 @error('npwp')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
                                         </div>
+
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="fax" class="form-label">Fax</label>
                                                 <input type="text" name="fax" class="form-control" id="fax"
-                                                    placeholder=" Fax" required>
+                                                    placeholder="Fax" value="{{ old('fax') }}" required>
                                                 @error('fax')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="email" class="form-label">Email</label>
                                                 <input type="email" name="email" class="form-control" id="email"
-                                                    placeholder=" Email">
+                                                    placeholder="Email" value="{{ old('email') }}">
                                                 @error('email')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
-                                            <div class="form-group" required>
+
+                                            <div class="form-group">
                                                 <label for="confirmation" class="form-label">Confirmation</label>
                                                 <div>
                                                     <div class="form-check">
                                                         <input type="radio" name="confirmation" id="meet"
-                                                            value="Meet" required>
+                                                            value="Meet"
+                                                            {{ old('confirmation') == 'Meet' ? 'checked' : '' }} required>
                                                         <label for="meet" class="form-check-label">Meet</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="radio" name="confirmation" id="byphone"
-                                                            value="by Phone" required>
+                                                            value="by Phone"
+                                                            {{ old('confirmation') == 'by Phone' ? 'checked' : '' }}
+                                                            required>
                                                         <label for="byphone" class="form-check-label">by Phone</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="radio" name="confirmation" id="confirm_email"
-                                                            value="Email" required>
+                                                            value="Email"
+                                                            {{ old('confirmation') == 'Email' ? 'checked' : '' }} required>
                                                         <label for="confirm_email" class="form-check-label">Email</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="radio" name="confirmation" id="confirm_fax"
-                                                            value="Fax" required>
+                                                            value="Fax"
+                                                            {{ old('confirmation') == 'Fax' ? 'checked' : '' }} required>
                                                         <label for="confirm_fax" class="form-check-label">Fax</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="radio" name="confirmation" id="note"
-                                                            value="Note" required>
+                                                            value="Note"
+                                                            {{ old('confirmation') == 'Note' ? 'checked' : '' }} required>
                                                         <label for="note" class="form-check-label">Note</label>
                                                     </div>
                                                 </div>
@@ -252,49 +278,57 @@
                                                 <div>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" name="type" id="new"
-                                                            value="New" required>
+                                                            value="New" {{ old('type') == 'New' ? 'checked' : '' }}
+                                                            required>
                                                         <label for="new" class="form-check-label radio-label"
                                                             style="margin-right: 35px;">New</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" name="type" id="repeat"
-                                                            value="Repeat" required>
+                                                            value="Repeat" {{ old('type') == 'Repeat' ? 'checked' : '' }}
+                                                            required>
                                                         <label for="repeat" class="form-check-label radio-label"
                                                             style="margin-right: 35px;">Repeat</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" name="type" id="prototype"
-                                                            value="Prototype" required>
+                                                            value="Prototype"
+                                                            {{ old('type') == 'Prototype' ? 'checked' : '' }} required>
                                                         <label for="prototype" class="form-check-label radio-label"
                                                             style="margin-right: 35px;">Prototype</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" name="type" id="repair"
-                                                            value="Repair" required>
+                                                            value="Repair" {{ old('type') == 'Repair' ? 'checked' : '' }}
+                                                            required>
                                                         <label for="repair" class="form-check-label radio-label"
                                                             style="margin-right: 35px;">Repair</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" name="type" id="resharpening"
-                                                            value="Resharpening" required>
+                                                            value="Resharpening"
+                                                            {{ old('type') == 'Resharpening' ? 'checked' : '' }} required>
                                                         <label for="resharpening" class="form-check-label radio-label"
                                                             style="margin-right: 35px;">Resharpening</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" name="type" id="harden"
-                                                            value="Harden" required>
+                                                            value="Harden" {{ old('type') == 'Harden' ? 'checked' : '' }}
+                                                            required>
                                                         <label for="harden" class="form-check-label radio-label"
                                                             style="margin-right: 35px;">Harden</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" name="type" id="painting"
-                                                            value="Painting" required>
+                                                            value="Painting"
+                                                            {{ old('type') == 'Painting' ? 'checked' : '' }} required>
                                                         <label for="painting" class="form-check-label radio-label"
                                                             style="margin-right: 35px;">Painting</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" name="type" id="others"
-                                                            value="Others" required>
+                                                            value="Others" {{ old('type') == 'Others' ? 'checked' : '' }}
+                                                            required>
                                                         <label for="others" class="form-check-label radio-label"
                                                             style="margin-right: 35px;">Others</label>
                                                     </div>
@@ -305,6 +339,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-md-9">
                                             <div class="form-group">
@@ -315,8 +350,9 @@
                                                     <button type="button" id="add-product-row"
                                                         class="btn btn-primary btn-custom btn-xs">
                                                         <a href="javascript:void(0)" class="text-light font-18"
-                                                            title="Add Product" id="addBtn"><i
-                                                                class="fa fa-plus"></i></a>
+                                                            title="Add Product" id="addBtn">
+                                                            <i class="fa fa-plus"></i>
+                                                        </a>
                                                     </button>
                                                 </label>
                                                 <div class="table-responsive" style="max-width: 100%;">
@@ -343,69 +379,74 @@
                                                             <tr>
                                                                 <td class="row-index text-center fixed-column">1</td>
                                                                 <td><input class="form-control" style="min-width:120px"
-                                                                        type="text" id="item" name="item[]">
-                                                                </td>
-                                                                <td><input class="form-control"style="min-width:200px"
-                                                                        type="text" id="item_desc" name="item_desc[]">
-                                                                </td>
+                                                                        type="text" id="item" name="item[]"
+                                                                        value="{{ old('item.0') }}"></td>
+                                                                <td><input class="form-control" style="min-width:200px"
+                                                                        type="text" id="item_desc" name="item_desc[]"
+                                                                        value="{{ old('item_desc.0') }}"></td>
                                                                 <td><input class="form-control qty" style="width:80px"
-                                                                        type="number" id="qty" name="qty[]">
-                                                                </td>
-                                                                <td><select class="form-control" name="unit[]"
-                                                                        id="unit" style="width:110px">
-                                                                        <option selected="selected" required disabled
-                                                                            selected>-- Unit --
+                                                                        type="number" id="qty" name="qty[]"
+                                                                        value="{{ old('qty.0') }}"></td>
+                                                                <td>
+                                                                    <select class="form-control" name="unit[]"
+                                                                        id="unit" style="width:110px" required>
+                                                                        <option selected="selected" disabled>-- Unit --
                                                                         </option>
                                                                         @foreach ($unit as $u)
-                                                                            <option value="{{ $u->unit }}">
+                                                                            <option value="{{ $u->unit }}"
+                                                                                {{ old('unit.0') == $u->unit ? 'selected' : '' }}>
                                                                                 {{ $u->unit }}</option>
                                                                         @endforeach
                                                                     </select>
                                                                 </td>
                                                                 <td><input class="form-control unit_price"
                                                                         style="width:120px" type="text"
-                                                                        id="unit_price" name="unit_price[]"></td>
-                                                                <td><input class="form-control disc"style="min-width:80px"
-                                                                        type="text" id="disc" name="disc[]"
-                                                                        value="0">
-                                                                </td>
+                                                                        id="unit_price" name="unit_price[]"
+                                                                        value="{{ old('unit_price.0') }}"></td>
+                                                                <td><input class="form-control disc"
+                                                                        style="min-width:80px" type="text"
+                                                                        id="disc" name="disc[]"
+                                                                        value="{{ old('disc.0', '0') }}"></td>
                                                                 <td><input class="form-control total" style="width:150px"
                                                                         type="text" id="amount" name="amount[]"
-                                                                        value="0" readonly></td>
-                                                                <td><select class="form-control select2"
+                                                                        value="{{ old('amount.0', '0') }}" readonly></td>
+                                                                <td>
+                                                                    <select class="form-control select2"
                                                                         name="product_type[]" id="product_type"
-                                                                        style="min-width:210px">
-                                                                        <option selected="selected" required disabled>--
-                                                                            Select Product Type --</option>
+                                                                        style="min-width:210px" required>
+                                                                        <option selected="selected" disabled>-- Select
+                                                                            Product Type --</option>
                                                                         @foreach ($producttype as $pt)
-                                                                            <option value="{{ $pt->product_name }}">
+                                                                            <option value="{{ $pt->product_name }}"
+                                                                                {{ old('product_type.0') == $pt->product_name ? 'selected' : '' }}>
                                                                                 {{ $pt->product_name }}</option>
                                                                         @endforeach
-                                                                    </select></td>
+                                                                    </select>
+                                                                </td>
                                                                 <td><input class="form-control" style="min-width:120px"
                                                                         type="text" id="order_no" name="order_no[]"
-                                                                        required>
-                                                                </td>
-                                                                <td><input class="form-control"style="min-width:200px"
+                                                                        value="{{ old('order_no.0') }}" required></td>
+                                                                <td><input class="form-control" style="min-width:200px"
                                                                         type="text" id="spec" name="spec[]"
-                                                                        required>
-                                                                </td>
-                                                                <td><select class="form-control select2" name="kbli[]"
-                                                                        id="kbli" style="min-width:150px">
-                                                                        <option selected="selected" required disabled>--
-                                                                            Select KBLI --</option>
+                                                                        value="{{ old('spec.0') }}" required></td>
+                                                                <td>
+                                                                    <select class="form-control select2" name="kbli[]"
+                                                                        id="kbli" style="min-width:150px" required>
+                                                                        <option selected="selected" disabled>-- Select KBLI
+                                                                            --</option>
                                                                         @foreach ($kbli as $k)
-                                                                            <option value="{{ $k->kbli_code }}">
+                                                                            <option value="{{ $k->kbli_code }}"
+                                                                                {{ old('kbli.0') == $k->kbli_code ? 'selected' : '' }}>
                                                                                 {{ $k->kbli_code }} -
-                                                                                {{ $k->description }}</option>
+                                                                                {{ $k->description }}
+                                                                            </option>
                                                                         @endforeach
                                                                     </select>
                                                                 </td>
                                                                 <td><a href="javascript:void(0)"
                                                                         class="text-danger font-18 remove"
                                                                         title="Delete Product"><i
-                                                                            class="fa fa-trash"></i></a>
-                                                                </td>
+                                                                            class="fa fa-trash"></i></a></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -415,13 +456,14 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="description" class="form-label">Description</label>
-                                                <textarea name="description" class="form-control" id="description" placeholder=" Description" required></textarea>
+                                                <textarea name="description" class="form-control" id="description" placeholder="Description" required>{{ old('description') }}</textarea>
                                                 @error('description')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-md-9">
                                             <div class="row">
@@ -431,31 +473,41 @@
                                                         <div>
                                                             <div class="form-check form-check-inline">
                                                                 <input type="radio" name="sample" id="photo"
-                                                                    value="Photo" required>
+                                                                    value="Photo"
+                                                                    {{ old('sample') == 'Photo' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="photo" class="form-check-label radio-label"
                                                                     style="margin-right: 5px;">Photo</label>
                                                             </div>
                                                             <div class="form-check form-check-inline">
                                                                 <input type="radio" name="sample" id="2dd"
-                                                                    value="2D Drawing" required>
+                                                                    value="2D Drawing"
+                                                                    {{ old('sample') == '2D Drawing' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="2dd" class="form-check-label radio-label"
                                                                     style="margin-right: 5px;">2D Drawing</label>
                                                             </div>
                                                             <div class="form-check form-check-inline">
                                                                 <input type="radio" name="sample" id="3dd"
-                                                                    value="3D Drawing" required>
+                                                                    value="3D Drawing"
+                                                                    {{ old('sample') == '3D Drawing' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="3dd" class="form-check-label radio-label"
                                                                     style="margin-right: 5px;">3D Drawing</label>
                                                             </div>
                                                             <div class="form-check form-check-inline">
                                                                 <input type="radio" name="sample" id="sample"
-                                                                    value="Sample" required>
+                                                                    value="Sample"
+                                                                    {{ old('sample') == 'Sample' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="sample" class="form-check-label radio-label"
                                                                     style="margin-right: 5px;">Sample</label>
                                                             </div>
                                                             <div class="form-check form-check-inline">
                                                                 <input type="radio" name="sample" id="none"
-                                                                    value="None" required>
+                                                                    value="None"
+                                                                    {{ old('sample') == 'None' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="none" class="form-check-label radio-label"
                                                                     style="margin-right: 5px;">None</label>
                                                             </div>
@@ -466,7 +518,6 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -476,14 +527,18 @@
                                                         <div>
                                                             <div class="form-check">
                                                                 <input type="radio" name="ass_type" id="aia"
-                                                                    value="in ATMI" required>
+                                                                    value="in ATMI"
+                                                                    {{ old('ass_type') == 'in ATMI' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="aia"
                                                                     class="form-check-label radio-label">Assy in
                                                                     ATMI</label>
                                                             </div>
                                                             <div class="form-check">
                                                                 <input type="radio" name="ass_type" id="aosl"
-                                                                    value="on Shipping Location" required>
+                                                                    value="on Shipping Location"
+                                                                    {{ old('ass_type') == 'on Shipping Location' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="aosl"
                                                                     class="form-check-label radio-label">Assy on Shipping
                                                                     Location</label>
@@ -500,13 +555,17 @@
                                                         <div>
                                                             <div class="form-check">
                                                                 <input type="radio" name="qc_statement" id="qcs"
-                                                                    value="QC Sheet" required>
+                                                                    value="QC Sheet"
+                                                                    {{ old('qc_statement') == 'QC Sheet' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="qcs"
                                                                     class="form-check-label radio-label">QC Sheet</label>
                                                             </div>
                                                             <div class="form-check">
                                                                 <input type="radio" name="qc_statement" id="atr"
-                                                                    value="Assy Test Report" required>
+                                                                    value="Assy Test Report"
+                                                                    {{ old('qc_statement') == 'Assy Test Report' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="atr"
                                                                     class="form-check-label radio-label">Assy Test
                                                                     Report</label>
@@ -523,21 +582,27 @@
                                                         <div>
                                                             <div class="form-check">
                                                                 <input type="radio" name="packing_type" id="cp"
-                                                                    value="Cartoon Packing" required>
+                                                                    value="Cartoon Packing"
+                                                                    {{ old('packing_type') == 'Cartoon Packing' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="cp"
                                                                     class="form-check-label radio-label">Cartoon
                                                                     Packing</label>
                                                             </div>
                                                             <div class="form-check">
                                                                 <input type="radio" name="packing_type" id="wp"
-                                                                    value="Wood Packing" required>
+                                                                    value="Wood Packing"
+                                                                    {{ old('packing_type') == 'Wood Packing' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="wp"
                                                                     class="form-check-label radio-label">Wood
                                                                     Packing</label>
                                                             </div>
                                                             <div class="form-check">
                                                                 <input type="radio" name="packing_type" id="sp"
-                                                                    value="Special Packing" required>
+                                                                    value="Special Packing"
+                                                                    {{ old('packing_type') == 'Special Packing' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="sp"
                                                                     class="form-check-label radio-label">Special
                                                                     Packing</label>
@@ -554,31 +619,33 @@
                                                         <div>
                                                             <div class="form-check">
                                                                 <input type="radio" name="top" id="cod"
-                                                                    value="COD" required>
+                                                                    value="COD"
+                                                                    {{ old('top') == 'COD' ? 'checked' : '' }} required>
                                                                 <label for="cod"
                                                                     class="form-check-label radio-label">COD</label>
                                                             </div>
                                                             <div class="form-check">
                                                                 <input type="radio" name="top" id="cbd"
-                                                                    value="CBD" required>
+                                                                    value="CBD"
+                                                                    {{ old('top') == 'CBD' ? 'checked' : '' }} required>
                                                                 <label for="cbd"
                                                                     class="form-check-label radio-label">CBD</label>
                                                             </div>
                                                             <div class="form-check">
                                                                 <input type="radio" name="top" id="net"
-                                                                    value="NET" required>
+                                                                    value="NET"
+                                                                    {{ old('top') == 'NET' ? 'checked' : '' }} required>
                                                                 <label for="net"
                                                                     class="form-check-label radio-label">NET</label>
                                                                 <input style="width: 32px; margin-left: 5px;"
                                                                     type="text" name="net_days" id="net_days"
-                                                                    value="30">
+                                                                    value="{{ old('net_days', '30') }}">
                                                             </div>
                                                         </div>
                                                         @error('top')
                                                             <small class="text-danger">{{ $message }}</small>
                                                         @enderror
                                                     </div>
-
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -589,13 +656,17 @@
                                                         <div>
                                                             <div class="form-check">
                                                                 <input type="radio" name="ptp" id="includeptp"
-                                                                    value="Include" required>
+                                                                    value="Include"
+                                                                    {{ old('ptp') == 'Include' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="includeptp"
                                                                     class="form-check-label radio-label">Include</label>
                                                             </div>
                                                             <div class="form-check">
                                                                 <input type="radio" name="ptp" id="excludeptp"
-                                                                    value="Exclude" required>
+                                                                    value="Exclude"
+                                                                    {{ old('ptp') == 'Exclude' ? 'checked' : '' }}
+                                                                    required>
                                                                 <label for="excludeptp"
                                                                     class="form-check-label radio-label">Exclude</label>
                                                             </div>
@@ -609,7 +680,8 @@
                                                     <div class="form-group">
                                                         <label for="dod" class="form-label">DOD</label>
                                                         <input type="date" name="dod" class="form-control"
-                                                            id="dod" placeholder="Select Date" required>
+                                                            id="dod" value="{{ old('dod') }}"
+                                                            placeholder="Select Date" required>
                                                         @error('dod')
                                                             <small class="text-danger">{{ $message }}</small>
                                                         @enderror
@@ -619,8 +691,7 @@
                                                     <div class="form-group">
                                                         <label for="shipping_address" class="form-label">Shipping
                                                             Address</label>
-                                                        <textarea name="shipping_address" class="form-control" id="shipping_address" placeholder=" Shipping Address"
-                                                            oninput="capitalizeName(this)" required></textarea>
+                                                        <textarea class="form-control" name="shipping_address" id="shipping_address" required>{{ old('shipping_address') }}</textarea>
                                                         @error('shipping_address')
                                                             <small class="text-danger">{{ $message }}</small>
                                                         @enderror
@@ -631,19 +702,19 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="file" class="form-label">Upload File</label>
-                                                <input type="file" name="file" class="form-control-file"
-                                                    id="file">
+                                                <input type="file" name="file" class="form-control-file" id="file">
                                             </div>
                                             <img id="filePreview" src="#" alt=""
                                                 style="max-width: 100%; max-height: 200px; display: block; margin: 0 auto;">
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="ship_date" class="form-label">Shipping Date</label>
-                                                <input type="date" name="ship_date" class="form-control"
-                                                    id="ship_date" placeholder="Select Date" required>
+                                                <input type="date" name="ship_date" class="form-control" id="ship_date"
+                                                    placeholder="Select Date" value="{{ old('ship_date') }}" required>
                                                 @error('ship_date')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -653,11 +724,15 @@
                                             <div class="form-group">
                                                 <label for="fob" class="form-label">FOB</label>
                                                 <select class="form-control select2" name="fob" id="fob"
-                                                    style="width: 100%;">
-                                                    <option selected="selected" required disabled selected>-- Select FOB --
+                                                    style="width: 100%;" required>
+                                                    <option disabled {{ old('fob') == null ? 'selected' : '' }}>-- Select FOB
+                                                        --
                                                     </option>
-                                                    <option value="1">Shipping Point</option>
-                                                    <option value="2">Destination</option>
+                                                    <option value="1" {{ old('fob') == '1' ? 'selected' : '' }}>Shipping
+                                                        Point</option>
+                                                    <option value="2" {{ old('fob') == '2' ? 'selected' : '' }}>
+                                                        Destination
+                                                    </option>
                                                 </select>
                                                 @error('fob')
                                                     <small class="text-danger">{{ $message }}</small>
@@ -668,14 +743,13 @@
                                             <div class="form-group">
                                                 <label for="salesman" class="form-label">Salesman</label>
                                                 <select class="form-control select2" name="salesman" id="salesman"
-                                                    style="width: 100%;">
-                                                    <option selected="selected" required disabled selected>--
-                                                        Select
-                                                        Salesman --
-                                                    </option>
+                                                    style="width: 100%;" required>
+                                                    <option disabled {{ old('salesman') == null ? 'selected' : '' }}>-- Select
+                                                        Salesman --</option>
                                                     @foreach ($user as $u)
                                                         @if ($u->unit === 'MA')
-                                                            <option value="{{ $u->name }}">
+                                                            <option value="{{ $u->name }}"
+                                                                {{ old('salesman') == $u->name ? 'selected' : '' }}>
                                                                 {{ $u->name }}
                                                             </option>
                                                         @endif
@@ -687,9 +761,9 @@
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-md-3">
                                         </div>
@@ -745,12 +819,14 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
                                                 <div class="col-md-4">
                                                     <div class="row">
                                                         <div class="col-md-9" style="margin-top: 20%">
                                                             <input type="text" name="discount_percent"
                                                                 class="form-control" id="discount_percent"
-                                                                placeholder="Discount" value="0">
+                                                                placeholder="Discount"
+                                                                value="{{ old('discount_percent', '0') }}">
                                                         </div>
                                                         <div class="col-md-3" style="margin-top: 20%">
                                                             <div class="vertical-center" style="font-size: 18px;">
@@ -758,12 +834,13 @@
                                                         </div>
                                                         <div class="col-md-12" style="margin-top: 8%">
                                                             <select class="form-control" name="tax_type" id="tax_type">
-                                                                <option value="Select Tax Type" disabled selected>-- Select
-                                                                    Tax Type --</option>
+                                                                <option disabled
+                                                                    {{ old('tax_type') == null ? 'selected' : '' }}>
+                                                                    -- Select Tax Type --</option>
                                                                 @foreach ($tax_type as $t)
-                                                                    <option value="{{ $t->id_tax }}">
-                                                                        {{ $t->id_tax }}|
-                                                                        {{ $t->tax }}</option>
+                                                                    <option value="{{ $t->id_tax }}"
+                                                                        {{ old('tax_type') == $t->id_tax ? 'selected' : '' }}>
+                                                                        {{ $t->id_tax }} | {{ $t->tax }}</option>
                                                                 @endforeach
                                                             </select>
                                                             @error('tax_type')
@@ -772,7 +849,8 @@
                                                         </div>
                                                         <div class="col-md-9" style="margin-top: 47%">
                                                             <input type="text" name="dp_percent" class="form-control"
-                                                                id="dp_percent" placeholder="DP" value="0">
+                                                                id="dp_percent" placeholder="DP"
+                                                                value="{{ old('dp_percent', '0') }}">
                                                         </div>
                                                         <div class="col-md-3" style="margin-top: 46%">
                                                             <div class="vertical-center" style="font-size: 18px;">
@@ -780,49 +858,56 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <input class="form-control total" style="margin-bottom: 8%"
-                                                            type="text" id="subtotal" name="subtotal" value="0"
-                                                            readonly>
+                                                            type="text" id="subtotal" name="subtotal"
+                                                            value="{{ old('subtotal', '0') }}" readonly>
                                                     </div>
                                                     <div class="form-group">
                                                         <input class="form-control discount" style="margin-bottom: 8%"
                                                             type="text" id="discount" name="discount"
-                                                            value="0">
+                                                            value="{{ old('discount', '0') }}">
                                                     </div>
                                                     <div class="form-group">
-                                                        <input class="form-control" style="margin-bottom: 8%"type="text"
-                                                            id="tax" name="tax" value="0" readonly>
+                                                        <input class="form-control" style="margin-bottom: 8%" type="text"
+                                                            id="tax" name="tax" value="{{ old('tax', '0') }}"
+                                                            readonly>
                                                     </div>
                                                     <div class="form-group">
                                                         <input type="text" name="freight" style="margin-bottom: 8%"
-                                                            class="form-control" id="freight" value="0"
-                                                            placeholder="Input Freight" required>
+                                                            class="form-control" id="freight"
+                                                            value="{{ old('freight', '0') }}" placeholder="Input Freight"
+                                                            required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <input class="form-control" style="margin-bottom: 8%"
-                                                            type="text" id="total_amount" name="total_amount"
-                                                            value="0" readonly>
+                                                        <input class="form-control" style="margin-bottom: 8%" type="text"
+                                                            id="total_amount" name="total_amount"
+                                                            value="{{ old('total_amount', '0') }}" readonly>
                                                     </div>
                                                     <div class="form-group">
                                                         <input class="form-control" type="text" id="dp"
-                                                            name="dp" value="0">
+                                                            name="dp" value="{{ old('dp', '0') }}">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary btn-custom">Add Sales Order</button>
-                                </div>
                             </div>
+
+
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-custom">Add Sales Order</button>
                         </div>
                     </div>
-                </form>
             </div>
-        </section>
+    </div>
+    </form>
+    </div>
+    </section>
     </div>
     <!-- Pastikan Anda telah menyertakan SweetAlert di proyek Anda -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

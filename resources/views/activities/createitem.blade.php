@@ -214,9 +214,13 @@
                                                                 </option>
                                                                 <option value="square_pipe_non_ss">Square Pipe Non-SS
                                                                 </option>
+                                                                <option value="round_pipe_non_ss">Round Pipe Non-SS
+                                                                </option>
                                                                 <option value="sheet_metal_ss">Sheet Metal SS</option>
                                                                 <option value="square_block_ss">Square Block SS</option>
                                                                 <option value="square_pipe_ss">Square Pipe SS</option>
+                                                                <option value="round_pipe_ss">Round Pipe SS</option>
+
                                                             </select>
                                                         </td>
 
@@ -589,7 +593,7 @@
                     weight = materialDensity * volume;
                 } else if (shape.includes('sheet_metal') || shape.includes('square_block')) {
                     weight = materialDensity * length * width * thickness;
-                } else if (shape.includes('square_pipe')) {
+                } else if (shape.includes('square_pipe') || shape.includes('round_pipe')) {
                     weight = length; // Placeholder
                 }
 
@@ -664,10 +668,11 @@
                             <option value="sheet_metal_non_ss">Sheet Metal Non-SS</option>
                             <option value="square_block_non_ss">Square Block Non-SS</option>
                             <option value="square_pipe_non_ss">Square Pipe Non-SS</option>
+                            <option value="round_pipe_non_ss">Round Pipe Non-SS</option>
                             <option value="sheet_metal_ss">Sheet Metal SS</option>
                             option value="square_block_ss">Square Block SS</option>
                             <option value="square_pipe_ss">Square Pipe SS</option>
-
+                            <option value="round_pipe_ss">Round Pipe SS</option>
                         </select>
                     </td>
                     <td><input class="form-control massa" style="width:100px" type="number" id="massa${rowIdx}" name="massa[]" step="0.01" value="0"></td>
