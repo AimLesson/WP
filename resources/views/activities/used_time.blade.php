@@ -28,27 +28,39 @@
                                 <form action="{{ route('activities.used_time') }}" method="GET">
                                     <div class="form-group">
                                         <label for="order_number" class="form-label">Order</label>
-                                        <select name="order_number" id="order_number" class="form-control select2"
-                                            style="width: 100%;" required>
-                                            <option selected="selected" disabled>-- Select Order --</option>
+                                        <input name="order_number" id="order_number" class="form-control" list="order_list" style="width: 100%;" required
+                                            value="{{ session('order_number') }}" placeholder="-- Select Order --">
+                                        <datalist id="order_list">
                                             @foreach ($orders as $o)
-                                                <option value="{{ $o->order_number }}">{{ $o->order_number }}</option>
+                                                <option value="{{ $o->order_number }}">
+                                                    {{ $o->order_number }}
+                                                </option>
+                                            @endforeach
+                                        </datalist>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="item_number" class="form-label">Item</label>
+                                        <select name="item_number" id="item_number" class="form-control select2" style="width: 100%;" required>
+                                            <option disabled>-- Select Item --</option>
+                                            @foreach ($items as $i)
+                                                <option value="{{ $i->item_number }}"
+                                                    {{ session('item_number') == $i->item_number ? 'selected' : '' }}>
+                                                    {{ $i->item_number }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="item_number" class="form-label">Item</label>
-                                        <select name="item_number" id="item_number" class="form-control select2"
-                                            style="width: 100%;" required>
-                                            <option selected="selected" disabled>-- Select Item --</option>
-                                        </select>
-                                    </div>
                                     <button type="submit" class="btn btn-primary btn-custom">Filter</button>
-                                    <button type="button" class="btn btn-secondary btn-custom" id="scan-qr-btn">Scan QR
-                                        Code</button>
+                                    <button type="button" class="btn btn-secondary btn-custom" id="scan-qr-btn">Scan QR Code</button>
+                                </form>
+                                <form action="{{ route('activities.clear_filters') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-secondary btn-custom">Reset Filter</button>
                                 </form>
                                 <div id="reader" style="width: 100%; display: none;"></div>
                             </div>
+
                         </div>
 
                         <div class="card">

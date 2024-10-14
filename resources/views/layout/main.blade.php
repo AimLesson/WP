@@ -259,7 +259,7 @@
 
 
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand-lg navbar-white navbar-light">
+        <nav class="main-header navbar navbar-expand-lg navbar-white navbar-light sticky-top">
             <!-- Left navbar links -->
             <ul class="navbar-nav flex-column flex-sm-row">
                 <li class="nav-item order-1 order-sm-1">

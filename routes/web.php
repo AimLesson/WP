@@ -410,6 +410,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
                 Route::get('/activities/used_time', [ActivitiesController::class, 'used_time'])->name('activities.used_time');
                 Route::get('/activities/used_time/create', [ActivitiesController::class, 'createused_time'])->name('activities.createused_time');
                 Route::post('/activities/used_time/update_status/{id}', [ActivitiesController::class, 'updateStatus'])->name('activities.update_status');
+                Route::post('/activities/clear-filters', [ActivitiesController::class, 'clearFilters'])->name('activities.clear_filters');
 
                 //activities - Used Time Barcode
                 Route::get('/activities', [ActivitiesController::class, 'activities'])->name('activities');
