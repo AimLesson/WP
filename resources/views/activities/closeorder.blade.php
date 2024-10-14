@@ -45,7 +45,7 @@
                                             <th>QTY</th>
                                             <th>DOD</th>
                                             <th>Sale Price</th>
-                                            <th>State</th>
+                                            <th style="width: 100%">State</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -66,7 +66,7 @@
                                                     <form action="{{ route('activities.updateStatusClosed', $o->id) }}" method="POST" class="order-status-form">
                                                         @csrf
                                                         @method('PUT')
-                                                        <select name="order_status" class="form-control" data-order-id="{{ $o->id }}">
+                                                        <select name="order_status" class="form-control" data-order-id="{{ $o->id }}" placeholder="{{ $o->order_status}}" style="width: 150px; white-space: nowrap;">
                                                             <option value="finished" {{ $o->order_status == 'finished' ? 'selected' : '' }}>Finished</option>
                                                             <option value="pending" {{ $o->order_status == 'pending' ? 'selected' : '' }}>Pending</option>
                                                             <option value="started" {{ $o->order_status == 'started' ? 'selected' : '' }}>Started</option>
