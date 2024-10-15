@@ -76,10 +76,10 @@
                                                     class="form-label">New</label>
 
                                                 <!-- Manual Input Field (Only visible when checkbox is checked) -->
-                                                <input type="text" name="quotation_manual" class="form-control"
+                                                <input type="text" name="quotation_no" class="form-control"
                                                     style="display: {{ old('so_internal') ? 'block' : 'none' }}"
                                                     id="so_internal_text" placeholder="Internal"
-                                                    value="{{ old('quotation_manual') }}">
+                                                    value="">
 
                                                 <!-- Dropdown Select (Disabled when checkbox is checked) -->
                                                 <select name="quotation_no" id="quotation_no"
@@ -186,7 +186,7 @@
                                             <div class="form-group">
                                                 <label for="sow_no" class="form-label">SOW No.</label>
                                                 <input type="text" name="sow_no" class="form-control" id="sow_no"
-                                                    placeholder="SOW No." value="{{ old('sow_no') }}" required>
+                                                    placeholder="SOW No." value="-">
                                                 @error('sow_no')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -223,7 +223,7 @@
 
                                             <div class="form-group">
                                                 <label for="email" class="form-label">Email</label>
-                                                <input type="email" name="email" class="form-control" id="email"
+                                                <input type="text" name="email" class="form-control" id="email"
                                                     placeholder="Email" value="{{ old('email') }}">
                                                 @error('email')
                                                     <small class="text-danger">{{ $message }}</small>
@@ -363,9 +363,9 @@
                                                                 <th style="width: 20px" class="fixed-column">No</th>
                                                                 <th class="col-sm-2">No Katalog</th>
                                                                 <th class="col-md-6">Nama Katalog</th>
+                                                                <th style="width:100px;">Unit Price</th>
                                                                 <th style="width:80px;">Qty</th>
                                                                 <th style="width:80px;">Unit</th>
-                                                                <th style="width:100px;">Unit Price</th>
                                                                 <th style="width:80px;">Disc (%)</th>
                                                                 <th>Amount</th>
                                                                 <th class="col-sm-6">Product Type</th>
@@ -378,15 +378,25 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class="row-index text-center fixed-column">1</td>
-                                                                <td><input class="form-control" style="min-width:120px"
-                                                                        type="text" id="item" name="item[]"
-                                                                        value="{{ old('item.0') }}"></td>
-                                                                <td><input class="form-control" style="min-width:200px"
-                                                                        type="text" id="item_desc" name="item_desc[]"
-                                                                        value="{{ old('item_desc.0') }}"></td>
+                                                                <td>
+                                                                    <input list="katalog-options" class="form-control" name="item[]" id="item" value="" style="width:100px" oninput="updateItemDesc(this)">
+                                                                    <datalist id="katalog-options">
+                                                                        @foreach ($no_katalog as $u)
+                                                                            <option value="{{ $u->no_katalog }}" data-name="{{ $u->nama_katalog }}" data-price="{{ $u->price }}">
+                                                                                {{ $u->no_katalog }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </datalist>
+                                                                </td>
+                                                                <td>
+                                                                    <input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]" value="">
+                                                                </td>
+                                                                <td>
+                                                                    <input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]" value="">
+                                                                </td>
                                                                 <td><input class="form-control qty" style="width:80px"
                                                                         type="number" id="qty" name="qty[]"
-                                                                        value="{{ old('qty.0') }}"></td>
+                                                                        value=""></td>
                                                                 <td>
                                                                     <select class="form-control" name="unit[]"
                                                                         id="unit" style="width:110px" required>
@@ -394,22 +404,18 @@
                                                                         </option>
                                                                         @foreach ($unit as $u)
                                                                             <option value="{{ $u->unit }}"
-                                                                                {{ old('unit.0') == $u->unit ? 'selected' : '' }}>
+                                                                                {{ $u->unit ? 'selected' : '' }}>
                                                                                 {{ $u->unit }}</option>
                                                                         @endforeach
                                                                     </select>
                                                                 </td>
-                                                                <td><input class="form-control unit_price"
-                                                                        style="width:120px" type="text"
-                                                                        id="unit_price" name="unit_price[]"
-                                                                        value="{{ old('unit_price.0') }}"></td>
                                                                 <td><input class="form-control disc"
                                                                         style="min-width:80px" type="text"
                                                                         id="disc" name="disc[]"
-                                                                        value="{{ old('disc.0', '0') }}"></td>
+                                                                        value=""></td>
                                                                 <td><input class="form-control total" style="width:150px"
                                                                         type="text" id="amount" name="amount[]"
-                                                                        value="{{ old('amount.0', '0') }}" readonly></td>
+                                                                        value="" readonly></td>
                                                                 <td>
                                                                     <select class="form-control select2"
                                                                         name="product_type[]" id="product_type"
@@ -425,10 +431,10 @@
                                                                 </td>
                                                                 <td><input class="form-control" style="min-width:120px"
                                                                         type="text" id="order_no" name="order_no[]"
-                                                                        value="{{ old('order_no.0') }}" required></td>
+                                                                        value="" required></td>
                                                                 <td><input class="form-control" style="min-width:200px"
                                                                         type="text" id="spec" name="spec[]"
-                                                                        value="{{ old('spec.0') }}" required></td>
+                                                                        value="" required></td>
                                                                 <td>
                                                                     <select class="form-control select2" name="kbli[]"
                                                                         id="kbli" style="min-width:150px" required>
@@ -742,19 +748,18 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="salesman" class="form-label">Salesman</label>
-                                                <select class="form-control select2" name="salesman" id="salesman"
-                                                    style="width: 100%;" required>
-                                                    <option disabled {{ old('salesman') == null ? 'selected' : '' }}>-- Select
-                                                        Salesman --</option>
+                                                <input list="salesman-options" class="form-control" name="salesman" id="salesman" style="width: 100%;" required>
+                                                <datalist id="salesman-options">
+                                                    <option {{ old('salesman') == null ? 'selected' : '' }}></option>
                                                     @foreach ($user as $u)
                                                         @if ($u->unit === 'MA')
-                                                            <option value="{{ $u->name }}"
-                                                                {{ old('salesman') == $u->name ? 'selected' : '' }}>
-                                                                {{ $u->name }}
-                                                            </option>
+                                                            <option value="{{ $u->name }}">{{ $u->name }}</option>
+                                                            {{ old('salesman') == $u->name ? 'selected' : '' }}>
+                                                            {{ $u->name }}
                                                         @endif
                                                     @endforeach
-                                                </select>
+                                                </datalist>
+
                                                 @error('salesman')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -968,8 +973,20 @@
                             <input type="hidden" name="quotationadd[]" value="${itemData.id}">
                             <td hidden class="ids">${itemData.id}</td>
                             <td class="row-index text-center fixed-column">${i+1}</td>
-                            <td><input class="form-control" style="min-width:120px" type="text" id="item" name="item[]" value="${itemData.item}"></td>
+                            <td>
+                                                                    <input list="katalog-options" class="form-control" name="item[]" id="item" value="${itemData.item}" style="width:100px" oninput="updateItemDesc(this)">
+                                                                    <datalist id="katalog-options">
+                                                                        @foreach ($no_katalog as $u)
+                                                                            <option value="{{ $u->no_katalog }}" data-name="{{ $u->nama_katalog }}" data-price="{{ $u->price }}">
+                                                                                {{ $u->no_katalog }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </datalist>
+                                                                </td>
                             <td><input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]" value="${itemData.item_desc}"></td>
+                            <td>
+                                                                    <input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]" value="${formatCurrency(itemData.unit_price)}">
+                                                                </td>
                             <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]" value="${itemData.qty}"></td>
                             <td><select class="form-control" name="unit[]" id="unit"style="width:110px">
                                     <option selected="selected" required>${itemData.unit}</option>
@@ -978,7 +995,6 @@
                                         @endforeach
                                 </select>
                             </td>
-                            <td><input class="form-control unit_price" style="width:120px" type="text" id="unit_price" name="unit_price[]" value="${formatCurrency(itemData.unit_price)}"></td>
                             <td><input class="form-control disc"style="min-width:80px"type="text" id="disc" name="disc[]" value="${itemData.disc}"></td>
                             <td><input class="form-control total" style="width:150px" type="text" id="amount" name="amount[]" value="${formatCurrency(itemData.amount)}" readonly></td>
                             <td><select class="form-control select2"
@@ -1235,20 +1251,31 @@
                 $("#soadd-table tbody").append(`
                     <tr id="R${++rowIdx}">
                         <td class="row-index text-center fixed-column"><p> ${rowIdx}</p></td>
-                        <td><input class="form-control" style="min-width:120px" type="text" id="item" name="item[]"></td>
-                        <td><input class="form-control"style="min-width:200px" type="text" id="item_desc" name="item_desc[]"></td>
-                        <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]" min="0"></td>
-                        <td><select class="form-control" name="unit[]" id="unit" style="width:100px">
-                                                                            <option selected="selected" required disabled
-                                                                                selected>
+                        <td>
+                                                                    <input list="katalog-options" class="form-control" name="item[]" id="item" style="width:100px" oninput="updateItemDesc(this)">
+                                                                    <datalist id="katalog-options">
+                                                                        @foreach ($no_katalog as $u)
+                                                                            <option value="{{ $u->no_katalog }}" data-name="{{ $u->nama_katalog }}" data-price="{{ $u->price }}">
+                                                                                {{ $u->no_katalog }}
                                                                             </option>
-                                                                            @foreach ($unit as $u)<option value="{{ $u->unit }}">
-                                                                                    {{ $u->unit }}</option> @endforeach
-                                                                        </select></td>
-                        <td><input class="form-control unit_price" style="width:120px" type="text" id="unit_price" name="unit_price[]"></td>
-                        <td><input class="form-control disc"style="min-width:80px" type="text" id="disc" name="disc[]" value="0"></td>
-                        <td><input class="form-control total" style="width:150px" type="text" id="amount" name="amount[]" value="0" readonly></td>
-                        <td><select class="form-control select2"
+                                                                        @endforeach
+                                                                    </datalist>
+                                                                </td>
+                            <td><input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]"></td>
+                            <td>
+                                                                    <input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]">
+                                                                </td>
+                            <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]" ></td>
+                            <td><select class="form-control" name="unit[]" id="unit"style="width:110px">
+                                    <option selected="selected" required></option>-- Unit --</option>
+                                        @foreach ($unit as $u)
+                                            <option value="{{ $u->unit }}">{{ $u->unit }}</option>
+                                        @endforeach
+                                </select>
+                            </td>
+                            <td><input class="form-control disc"style="min-width:80px"type="text" id="disc" name="disc[]"></td>
+                            <td><input class="form-control total" style="width:150px" type="text" id="amount" name="amount[]"  readonly></td>
+                            <td><select class="form-control select2"
                                                                         name="product_type[]" id="product_type"
                                                                         style="min-width:210px">
                                                                         <option selected="selected" required disabled>--
@@ -1445,6 +1472,7 @@
 
                 var discount = (discount_percent / 100) * subtotal;
 
+                
                 // Menghitung tax
                 var taxType = parseInt($("#tax_type").val()) || 0;
                 switch (taxType) {
@@ -1483,5 +1511,30 @@
                 $("#dp").val(formatRupiahHelper(dp.toFixed(2)));
             }
         });
+    </script>
+    <script>
+        function updateItemDesc(inputElement) {
+    // Get the input value
+    var inputValue = inputElement.value;
+
+    // Find the matching option in the datalist (if using datalist)
+    var options = document.getElementById('katalog-options').options;
+    var selectedOption = Array.from(options).find(option => option.value === inputValue);
+
+    if (selectedOption) {
+        // Get the data-name and data-price attributes from the selected option
+        var nameKatalog = selectedOption.getAttribute('data-name');
+        var price = selectedOption.getAttribute('data-price');
+
+        // Find the corresponding item_desc and price input fields
+        var inputDesc = inputElement.closest('td').nextElementSibling.querySelector('input[name="item_desc[]"]');
+        var inputPrice = inputElement.closest('td').nextElementSibling.nextElementSibling.querySelector('input[name="unit_price[]"]');
+
+        // Set the value of the input fields to the name_katalog and price
+        inputDesc.value = nameKatalog || ''; // Set to empty string if name_katalog is not available
+        inputPrice.value = price || ''; // Set to empty string if price is not available
+    }
+}
+
     </script>
 @endsection

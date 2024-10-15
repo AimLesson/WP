@@ -325,7 +325,7 @@
                 var selectedSo = so.find(function(so) {
                     return so.so_number === selectedSO;
                 });
-
+                
                 var soadd = <?php echo json_encode($soadd); ?>; // Mengonversi data PHP ke JSON
                 var selectedSoadd = soadd.find(function(soadd) {
                     return soadd.so_number === selectedSO;
