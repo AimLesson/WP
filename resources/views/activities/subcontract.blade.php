@@ -28,6 +28,8 @@
                         <a href="{{ route('activities.createsub_contract') }}" class="btn btn-primary mb-3">
                             <i class="fas fa-plus"></i> Add
                         </a>
+                      
+
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Sub Contract</h3>

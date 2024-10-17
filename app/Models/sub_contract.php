@@ -27,6 +27,6 @@ class sub_contract extends Model
 
     public function sub_contracts()
 {
-    return $this->hasMany(Sub_Contract::class, 'order_number', 'order_number');
+    return $this->hasMany(sub_contract::class, 'order_number', 'order_number');
 }
 }

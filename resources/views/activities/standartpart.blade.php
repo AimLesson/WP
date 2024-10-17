@@ -28,6 +28,15 @@
                         <a href="{{ route('activities.createstandartpart') }}" class="btn btn-primary mb-3">
                             <i class="fas fa-plus"></i> Add
                         </a>
+                         <!-- Filter Form -->
+                         <form method="GET" action="{{ route('activities.standartpart') }}" class="mb-3">
+                            <div class="input-group">
+                                <input type="text" name="order_number" class="form-control" placeholder="Filter by Order Number" value="{{ request()->input('order_number') }}">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                </div>
+                            </div>
+                        </form>
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Standart Part (Plan)</h3>

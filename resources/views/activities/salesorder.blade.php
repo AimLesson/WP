@@ -32,7 +32,7 @@
                              <!-- Search form -->
                              <form method="GET" action="{{ route('activities.salesorder') }}" class="mb-3">
                                 <div class="form-group row">
-                                    <label for="so_number" class="col-sm-2 col-form-label">Search by SO Number:</label>
+                                    <label for="so_number" class="col-sm-2 col-form-label">Filtered by SO Number:</label>
                                     <div class="col-sm-4">
                                         <input type="text" name="so_number" id="so_number" class="form-control"
                                                value="{{ request('so_number') }}" placeholder="Enter SO number">

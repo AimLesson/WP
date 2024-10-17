@@ -774,6 +774,16 @@ class ActivitiesController extends Controller
     $order = $query->get(); // Fetch the filtered results
     return view('activities.order', compact('order'));
 }
+
+public function viewOrder($order_number)
+{
+    // Get the specific order based on the order_number
+    $order = Order::notFinished()->where('order_number', $order_number)->first();
+
+    // Pass the order object to the view
+    return view('activities.vieworder', compact('order'));
+}
+
     public function createorder()
     {
         $soadd = SalesOrderAdd::get();
@@ -946,12 +956,22 @@ class ActivitiesController extends Controller
 
 
     //activities - customer
-    public function customer()
-    {
-        $customer = customer::get();
+    public function customer(Request $request)
+{
+    // Get the customer number filter from the request
+    $customer_no = $request->input('customer_no');
 
-        return view('activities.customer', compact('customer'));
+    // Check if there is a filter input
+    if ($customer_no) {
+        // Apply the filter to get only customers that match the input customer number
+        $customer = Customer::where('customer_no', 'like', '%' . $customer_no . '%')->get();
+    } else {
+        // If no filter is provided, return all customers
+        $customer = Customer::get();
     }
+
+    return view('activities.customer', compact('customer', 'customer_no'));
+}
     public function createcustomer()
     {
         return view('activities.createcustomer');
@@ -1084,25 +1104,41 @@ class ActivitiesController extends Controller
     //     return view('activities.item', compact('order'));
     // }
 
-    public function item()
-    {
-        // Get all order numbers from the Order model where order_status is not 'Finished'
-        $orderNumbers = Order::where('order_status', '!=', 'Finished')->pluck('order_number');
+    public function item(Request $request)
+{
+    // Get the order number filter from the request
+    $filterOrderNumber = $request->input('order_number');
 
-        // Filter items based on the order numbers
-        $item = DB::table('item')
-            ->whereIn('order_number', $orderNumbers)
-            ->get();
+    // Get all order numbers from the Order model where order_status is not 'Finished'
+    $orderNumbers = Order::where('order_status', '!=', 'Finished')->pluck('order_number');
 
-        // Filter joined items based on the order numbers
-        $itemJoin = DB::table('item')
-            ->join('itemadd', 'item.order_number', '=', 'itemadd.order_number')
-            ->whereIn('item.order_number', $orderNumbers)
-            ->select('item.*', 'itemadd.*')
-            ->get();
+    // Filter items based on the filter order number, if provided
+    $itemQuery = DB::table('item')
+        ->whereIn('order_number', $orderNumbers);
 
-        return view('activities.item', compact('item', 'itemJoin'));
+    if ($filterOrderNumber) {
+        // If a filter is applied, use the filter value
+        $itemQuery->where('order_number', $filterOrderNumber);
     }
+
+    // Get the filtered items
+    $item = $itemQuery->get();
+
+    // Filter joined items based on the filter order number, if provided
+    $itemJoinQuery = DB::table('item')
+        ->join('itemadd', 'item.order_number', '=', 'itemadd.order_number')
+        ->whereIn('item.order_number', $orderNumbers);
+
+    if ($filterOrderNumber) {
+        $itemJoinQuery->where('item.order_number', $filterOrderNumber);
+    }
+
+    // Get the filtered joined items
+    $itemJoin = $itemJoinQuery->get();
+
+    return view('activities.item', compact('item', 'itemJoin', 'filterOrderNumber'));
+}
+
 
 
     public function viewitem($order_number)
@@ -1346,16 +1382,25 @@ class ActivitiesController extends Controller
     }
 
 
-    public function processing()
-    {
-        // Get all order numbers from the Order model where order_status is not 'Finished'
-        $orderNumbers = Order::where('order_status', '!=', 'Finished')->pluck('order_number');
+    public function processing(Request $request)
+{
+    // Get all order numbers from the Order model where order_status is not 'Finished'
+    $orderNumbers = Order::where('order_status', '!=', 'Finished')->pluck('order_number');
 
-        // Filter processings based on the order numbers
-        $processing = ProcessingAdd::whereIn('order_number', $orderNumbers)->get();
+    // Check if the request has an order_number filter
+    $query = ProcessingAdd::whereIn('order_number', $orderNumbers);
 
-        return view('activities.processing', compact('processing'));
+    if ($request->has('order_number') && !empty($request->order_number)) {
+        $query->where('order_number', $request->order_number);
     }
+
+    // Get the filtered results
+    $processing = $query->get();
+
+    // Return the view with filtered data and the current filter
+    return view('activities.processing', compact('processing'))->with('order_number', $request->order_number);
+}
+
 
 
     public function createprocessing()
@@ -1604,24 +1649,34 @@ class ActivitiesController extends Controller
 
 
     // activities - standartpart
-    public function standartpartindex()
+    public function standartpartindex(Request $request)
     {
+        // Get the filter value from the request
+        $filterOrderNumber = $request->input('order_number');
+    
         // Get all order numbers from the Order model where order_status is not 'Finished'
         $orderNumbers = Order::where('order_status', '!=', 'Finished')->pluck('order_number');
-
-        // Filter standart_part based on the order numbers
-        $standartpart = DB::table('standart_part')
-            ->whereIn('order_number', $orderNumbers)
-            ->get();
-
-        // Filter joined standart_part and standart_partadd based on the order numbers
-        $standartpartJoin = DB::table('standart_part')
+    
+        // Apply the filter for `order_number` if it's set, otherwise get all
+        $standartpartQuery = DB::table('standart_part')->whereIn('order_number', $orderNumbers);
+        $standartpartJoinQuery = DB::table('standart_part')
             ->join('standart_partadd', 'standart_part.order_number', '=', 'standart_partadd.order_number')
-            ->whereIn('standart_part.order_number', $orderNumbers)
-            ->select('standart_part.*', 'standart_partadd.*')
-            ->get();
-
-        return view('activities.standartpart', compact('standartpart', 'standartpartJoin'));
+            ->whereIn('standart_part.order_number', $orderNumbers);
+    
+        if ($filterOrderNumber) {
+            // Filter the data by order_number
+            $standartpartQuery->where('order_number', $filterOrderNumber);
+            $standartpartJoinQuery->where('standart_part.order_number', $filterOrderNumber);
+        }
+    
+        // Get the filtered data
+        $standartpart = $standartpartQuery->get();
+        $standartpartJoin = $standartpartJoinQuery->select('standart_part.*', 'standart_partadd.*')->get();
+    
+        // Check if both tables have no data
+        $noDataFound = $standartpart->isEmpty() && $standartpartJoin->isEmpty();
+    
+        return view('activities.standartpart', compact('standartpart', 'standartpartJoin', 'noDataFound'));
     }
 
 
@@ -1816,10 +1871,11 @@ class ActivitiesController extends Controller
 
 
     //SubCont. Controller
-    public function sub_contract()
+    public function sub_contract(Request $request)
     {
         return view('activities.subcontract');
     }
+    
 
     public function createsub_contract()
     {
@@ -2293,9 +2349,17 @@ class ActivitiesController extends Controller
     }
 
     //Close order Controller
-    public function CloseOrder()
+    public function CloseOrder(Request $request)
     {
-        $order = Order::finished()->get();
+        $query = Order::Finished(); // Get the base query for unfinished orders
+    
+        if ($request->has('order_number')) {
+            $order_number = $request->input('order_number');
+            // Apply filter by order_number
+            $query->where('order_number', 'LIKE', '%' . $order_number . '%');
+        }
+    
+        $order = $query->get(); // Fetch the filtered results
         return view('activities.closeorder', compact('order'));
     }
 
@@ -2990,11 +3054,20 @@ class ActivitiesController extends Controller
     }
 
 
-    public function delivery_process()
+    public function delivery_process(Request $request)
     {
-        $order = Order::finished()->get();
+        $query = Order::Finished(); // Get the base query for unfinished orders
+    
+        if ($request->has('order_number')) {
+            $order_number = $request->input('order_number');
+            // Apply filter by order_number
+            $query->where('order_number', 'LIKE', '%' . $order_number . '%');
+        }
+    
+        $order = $query->get(); // Fetch the filtered results
         return view('activities.deliveryprocess', compact('order'));
     }
+    
     public function real_hpp()
     {
         return view('activities.realhpp');

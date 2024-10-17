@@ -28,6 +28,21 @@
                         <a href="{{ route('activities.createcustomer') }}" class="btn btn-primary mb-3"><i
                                 class="fas fa-plus"></i>
                             Add</a>
+
+                            <!-- Filter Form -->
+                            <form action="{{ route('activities.customer') }}" method="GET" class="mb-3">
+                                <div class="form-group row align-items-center">
+                                    <label for="customer_no" class="col-auto">Customer No.</label>
+                                    <div class="col-auto">
+                                        <input type="text" name="customer_no" id="customer_no" class="form-control" 
+                                            placeholder="Enter Customer No." value="{{ request('customer_no') }}">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                                    </div>
+                                </div>
+                            </form>
+
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Customer Data</h3>

@@ -290,6 +290,8 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('/activities/order/edit/{id}', [ActivitiesController::class, 'editorder'])->name('activities.editorder');
         Route::put('/activities/order/update/{id}', [ActivitiesController::class, 'updateorder'])->name('activities.updateorder');
         Route::delete('/activities/order/delete/{id}', [ActivitiesController::class, 'deleteorder'])->name('activities.deleteorder');
+        Route::get('activities/order/view/{order_number}', [ActivitiesController::class, 'viewOrder']);
+
 
         //activities - items
         Route::get('/activities/item', [ActivitiesController::class, 'item'])->name('activities.item');
@@ -358,7 +360,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 
         Route::get('/activities/data_maintenance', [ActivitiesController::class, 'data_maintenance'])->name('activities.data_maintenance');
         Route::get('/activities/update_group_unit', [ActivitiesController::class, 'update_group_unit'])->name('activities.update_group_unit');
-        Route::get('/activities/delivery_process', [ActivitiesController::class, 'delivery_process'])->name('activities.delivery_process');
+        Route::get('/activities/deliveryprocess', [ActivitiesController::class, 'delivery_process'])->name('activities.deliveryprocess');
         Route::get('/activities/real_hpp', [ActivitiesController::class, 'real_hpp'])->name('activities.real_hpp');
         Route::get('/activities/finish_order', [ActivitiesController::class, 'finish_order'])->name('activities.finish_order');
 
@@ -380,7 +382,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
 
                 //activities - sub_contract
                 Route::get('/activities', [ActivitiesController::class, 'activities'])->name('activities');
-                Route::get('/activities/sub_contract', [ActivitiesController::class, 'sub_contract'])->name('activities.sub_contract');
+                Route::get('/activities/subcontract', [ActivitiesController::class, 'sub_contract'])->name('activities.subcontract');
                 Route::get('/activities/sub_contract/create', [ActivitiesController::class, 'createsub_contract'])->name('activities.createsub_contract');
                 Route::get('/activities/usedtime/create', [ActivitiesController::class, 'createusedtime'])->name('activities.createusedtime');
                 Route::get('activities/sub_contract/view/{order_number}', [ActivitiesController::class, 'viewsub_contract']);

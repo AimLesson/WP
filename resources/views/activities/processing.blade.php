@@ -28,6 +28,22 @@
                         <a href="{{ route('activities.createprocessing') }}" class="btn btn-primary mb-3"><i
                                 class="fas fa-plus"></i>
                             Add</a>
+
+                             <!-- Filter Form -->
+                        <form method="GET" action="{{ route('activities.processing') }}" class="mb-3">
+                            <div class="row">
+                                <label for="customer_no" class="col-auto">Order No.</label>
+                                <div class="col-md-4">
+                                    <input type="text" name="order_number" class="form-control"
+                                           placeholder="Filter by Order Number"
+                                           value="{{ request()->get('order_number') }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                                    <a href="{{ route('activities.processing') }}" class="btn btn-secondary">Reset</a>
+                                </div>
+                            </div>
+                        </form>
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Processings Data</h3>

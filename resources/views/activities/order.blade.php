@@ -32,7 +32,7 @@
                          <!-- Filter Form -->
                          <form action="{{ route('activities.order') }}" method="GET" class="mb-3">
                             <div class="form-group row">
-                                <label for="order_number" class="col-auto">Order No.</label>
+                                <label for="order_number" class="col-auto">Filtered by Order No.</label>
                                 <div class="col-auto">
                                     <input type="text" name="order_number" id="order_number" class="form-control"
                                            placeholder="Enter Order No." value="{{ request('order_number') }}">
@@ -72,7 +72,7 @@
                                             @foreach ($order as $o)
                                                 <tr>
                                                     <td >{{ $o->id }}</td>
-                                                    <td >{{ $o->order_number }}</a></td>
+                                                    <td ><a href="{{ url('activities/order/view/' . $o->order_number) }}">{{ $o->order_number }}</a></td>
                                                     <td>{{ $o->customer }}</td>
                                                     <td>{{ $o->order_date }}</td>
                                                     <td>{{$o->so_number}}</td>

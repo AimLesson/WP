@@ -101,7 +101,7 @@
                 </a>
             </li>
             <li class="nav-item {{ request()->is('activities/sub_contract') ||request()->is('activities/sub_contract/create')||(request()->is('activities/sub_contract/edit/{id}')&&request()->route('id')==$item->id) ? 'active' : '' }}">
-                <a href="{{route('activities.sub_contract')}}" class="nav-link">
+                <a href="{{route('activities.subcontract')}}" class="nav-link">
                     <i class="nav-icon fas fa-people-arrows"></i>
                     <p>
                         Sub. Cont.
@@ -189,7 +189,7 @@
                 </a>
             </li>
             <li class="nav-item {{ request()->is('activities/delivery_process') ? 'active' : '' }}">
-                <a href="{{route('activities.delivery_process')}}" class="nav-link">
+                <a href="{{route('activities.deliveryprocess')}}" class="nav-link">
                     <i class="nav-icon fas fa-truck"></i>
                     <p>
                         Delivery Process

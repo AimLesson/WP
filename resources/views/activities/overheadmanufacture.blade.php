@@ -20,6 +20,7 @@
         </div>
         <!-- /.content-header -->
 
+        
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
@@ -28,6 +29,7 @@
                         <a href="{{ route('activities.createoverhead_manufacture') }}" class="btn btn-primary mb-3">
                             <i class="fas fa-plus"></i> Add
                         </a>
+                        
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Overhead Manufacture</h3>
