@@ -28,6 +28,21 @@
                         <a href="{{ route('activities.createso') }}" class="btn btn-primary mb-3"><i
                                 class="fas fa-plus"></i>
                             Add</a>
+
+                             <!-- Search form -->
+                             <form method="GET" action="{{ route('activities.salesorder') }}" class="mb-3">
+                                <div class="form-group row">
+                                    <label for="so_number" class="col-sm-2 col-form-label">Search by SO Number:</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" name="so_number" id="so_number" class="form-control"
+                                               value="{{ request('so_number') }}" placeholder="Enter SO number">
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                                    </div>
+                                </div>
+                            </form>
+
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Sales Order Data</h3>

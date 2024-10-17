@@ -46,15 +46,28 @@ class ActivitiesController extends Controller
 
 
     //activities - quotation
-    public function quotationindex()
+    public function quotationindex(Request $request)
     {
-        $quotation     = DB::table('quotation')->get();
+        // Get the quotation_no filter from the request
+        $filterQuotationNo = $request->input('quotation_no');
+    
+        // Start the query
+        $quotation = DB::table('quotation');
+    
+        // Apply filter if quotation_no is present
+        if ($filterQuotationNo) {
+            $quotation->where('quotation_no', 'like', '%' . $filterQuotationNo . '%');
+        }
+    
+        // Fetch the quotations and perform the join
+        $quotation = $quotation->get();
         $quotationJoin = DB::table('quotation')
             ->join('quotationadd', 'quotation.quotation_no', '=', 'quotationadd.quotation_no')
             ->select('quotation.*', 'quotationadd.*')
             ->get();
-
-        return view('activities.quotation', compact('quotation', 'quotationJoin'));
+    
+        // Return the view with the filtered data
+        return view('activities.quotation', compact('quotation', 'quotationJoin', 'filterQuotationNo'));
     }
     public function viewquotation($quotation_no)
     {
@@ -360,16 +373,24 @@ class ActivitiesController extends Controller
     }
 
 
-    //activities - sales order
-    public function salesorder()
+    public function salesorder(Request $request)
     {
-        $salesorder     = DB::table('salesorder')->get();
+        // Get the search input from the request (if any)
+        $search = $request->input('so_number');
+    
+        // If a search input exists, filter the salesorder by so_number
+        $salesorder = DB::table('salesorder')
+            ->when($search, function ($query, $search) {
+                return $query->where('so_number', 'like', '%' . $search . '%');
+            })
+            ->get();
+    
         $salesorderJoin = DB::table('salesorder')
             ->join('soadd', 'salesorder.so_number', '=', 'soadd.so_number')
             ->select('salesorder.*', 'soadd.*')
             ->get();
-
-        return view('activities.salesorder', compact('salesorder', 'salesorderJoin'));
+    
+        return view('activities.salesorder', compact('salesorder', 'salesorderJoin', 'search'));
     }
     public function viewsalesorder($so_number)
     {
@@ -740,11 +761,19 @@ class ActivitiesController extends Controller
     }
 
     //order controller
-    public function order()
-    {
-        $order = Order::notFinished()->get();
-        return view('activities.order', compact('order'));
+    public function order(Request $request)
+{
+    $query = Order::notFinished(); // Get the base query for unfinished orders
+
+    if ($request->has('order_number')) {
+        $order_number = $request->input('order_number');
+        // Apply filter by order_number
+        $query->where('order_number', 'LIKE', '%' . $order_number . '%');
     }
+
+    $order = $query->get(); // Fetch the filtered results
+    return view('activities.order', compact('order'));
+}
     public function createorder()
     {
         $soadd = SalesOrderAdd::get();

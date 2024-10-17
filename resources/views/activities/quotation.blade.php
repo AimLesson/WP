@@ -28,6 +28,22 @@
                         <a href="{{ route('activities.createquotation') }}" class="btn btn-primary mb-3"><i
                                 class="fas fa-plus"></i>
                             Add</a>
+
+                          <!-- Filter Form -->
+                    <form action="{{ route('activities.quotation') }}" method="GET" class="mb-3">
+                        <div class="form-group row">
+                            <label for="quotation_no" class="col-sm-2 col-form-label">Filter by Quotation No.</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="quotation_no" class="form-control" id="quotation_no"
+                                    value="{{ old('quotation_no', $filterQuotationNo) }}"
+                                    placeholder="Enter Quotation No.">
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                            </div>
+                        </div>
+                    </form>
+
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Quotation Data</h3>

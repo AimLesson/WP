@@ -28,6 +28,22 @@
                         <a href="{{ route('activities.createorder') }}" class="btn btn-primary mb-3"><i
                             class="fas fa-plus"></i>
                         Add</a>
+
+                         <!-- Filter Form -->
+                         <form action="{{ route('activities.order') }}" method="GET" class="mb-3">
+                            <div class="form-group row">
+                                <label for="order_number" class="col-auto">Order No.</label>
+                                <div class="col-auto">
+                                    <input type="text" name="order_number" id="order_number" class="form-control"
+                                           placeholder="Enter Order No." value="{{ request('order_number') }}">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Order </h3>
