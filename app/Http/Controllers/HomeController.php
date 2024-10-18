@@ -31,12 +31,43 @@ class HomeController extends Controller
         });
         $data = $orders->pluck('count');
 
+            // Fetch the order statuses and their counts
         $orderStatuses = Order::select('order_status', Order::raw('count(*) as total'))
-                              ->groupBy('order_status')
-                              ->get();
+        ->whereIn('order_status', ['Queue', 'Started', 'Pending', 'Finished', 'Delivered']) // ensure only the 5 statuses
+        ->groupBy('order_status')
+        ->get();
 
+        // Prepare the labels and data
         $statusLabels = $orderStatuses->pluck('order_status');
         $statusData = $orderStatuses->pluck('total');
+
+        // Set the custom color mappings for each status
+        $colorMap = [
+        'Queue' => [
+        'backgroundColor' => 'rgba(157, 157, 157, 0.2)',
+        'borderColor' => 'rgba(157, 157, 157, 0.8)',
+        ],
+        'Started' => [
+        'backgroundColor' => 'rgba(11, 205, 0, 0.2)',
+        'borderColor' => 'rgba(11, 205, 0, 0.8)',
+        ],
+        'Pending' => [
+        'backgroundColor' => 'rgba(255, 206, 86, 0.2)',
+        'borderColor' => 'rgba(255, 206, 86, 1)',
+        ],
+        'Finished' => [
+        'backgroundColor' => 'rgba(54, 162, 235, 0.2)',
+        'borderColor' => 'rgba(54, 162, 235, 1)',
+        ],
+        'Delivered' => [
+        'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
+        'borderColor' => 'rgba(255, 99, 132, 1)',
+        ],
+        ];
+
+        // Extract background colors and border colors from the map based on the statuses
+        $backgroundColors = $statusLabels->map(fn($status) => $colorMap[$status]['backgroundColor']);
+        $borderColors = $statusLabels->map(fn($status) => $colorMap[$status]['borderColor']);
 
         $wfCount = 0;
         $mdcCount = 0;
@@ -50,7 +81,7 @@ class HomeController extends Controller
             }
         }
 
-        return view('dashboard', compact('labels', 'data', 'statusLabels', 'statusData', 'wfCount', 'mdcCount'));
+        return view('dashboard', compact('labels', 'data', 'statusLabels', 'statusData', 'wfCount', 'mdcCount','backgroundColors','borderColors'));
     }
 
     public function file()

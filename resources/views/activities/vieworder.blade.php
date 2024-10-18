@@ -273,29 +273,7 @@
                                 </div>
                                 <h5 class="print-only" style="text-align: right; font-weight:bold;">{{ $order->order_number }}</h5>
                                 <table class="table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>No.</th>
-                                            <th>ITEM</th>
-                                            <th class="d-none d-sm-table-cell">DESCRIPTION</th>
-                                            <th>QTY</th>
-                                            <th>UNIT PRICE</th>
-                                            <th>UNIT</th>
-                                            <th>DISCOUNT</th>
-                                            <th class="text-right">AMOUNT</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{{ $order->item }}</td>
-                                                <td class="d-none d-sm-table-cell">{{ $order->item_desc }}</td>
-                                                <td>{{ $order->qty }}</td>
-                                                <td class="unitprice">{{ $order->unit_price }}</td>
-                                                <td>{{ $order->unit }}</td>
-                                                <td>{{ $order->disc }}</td>
-                                                <td class="text-right amount">{{ $order->amount }}</td>
-                                            </tr>
-                                    </tbody>
+                                    
                                 </table>
                             </div>
                         </div>
