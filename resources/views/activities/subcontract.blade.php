@@ -58,7 +58,7 @@
                                         @endphp
                                         @foreach ($data as $m)
                                             <tr>
-                                                <td>{{ $m->id }}</td>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $m->order_number }}</td>
                                                 <td>{{ $m->item_no }}</td>
                                                 <td>{{ $m->dod }}</td>

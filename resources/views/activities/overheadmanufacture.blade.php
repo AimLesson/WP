@@ -54,7 +54,7 @@
                                         @endphp
                                         @foreach ($data as $m)
                                             <tr>
-                                                <td>{{ $m->id }}</td>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>
                                                     <a href="{{ route('activities.editoverhead_manufacture', $m->id) }}" class="btn-xs btn-warning">
                                                         <i class="fas fa-pen"></i> Edit

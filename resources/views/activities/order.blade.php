@@ -56,7 +56,7 @@
                                     <table id="customer" class="table table-head-fixed text-nowrap">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
+                                                <th>No</th>
                                                 <th>Order No.</th>
                                                 <th>Customer</th>
                                                 <th>Date Order</th>
@@ -72,7 +72,7 @@
                                         <tbody>
                                             @foreach ($order as $o)
                                                 <tr>
-                                                    <td >{{ $o->id }}</td>
+                                                    <td >{{ $loop->iteration }}</td>
                                                     <td ><a href="{{ url('activities/order/view/' . $o->order_number) }}">{{ $o->order_number }}</a></td>
                                                     <td>{{ $o->customer }}</td>
                                                     <td>{{ $o->order_date }}</td>

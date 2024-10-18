@@ -53,7 +53,7 @@
                                 <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No</th>
                                             <th>QR Code</th>
                                             <th>Order Number</th>
                                             <th>Item Number</th>
@@ -69,7 +69,7 @@
                                     <tbody>
                                         @foreach ($processing as $pr)
                                             <tr>
-                                                <td>{{ $pr->id }}</td>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>
                                                     @if($pr->barcode_id)
                                                         {!! QrCode::size(100)->generate($pr->barcode_id) !!}

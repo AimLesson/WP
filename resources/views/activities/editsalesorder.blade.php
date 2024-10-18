@@ -370,10 +370,10 @@
                                                                             </datalist>
                                                                         </td>
                                                                         <td>
-                                                                            <input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]" value="{{ $item->item_desc }}">
+                                                                            <input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]" value="{{ $item->item_desc }}" readonly>
                                                                         </td>
                                                                         <td>
-                                                                            <input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]" value="{{ $item->unit_price }}">
+                                                                            <input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]" value="{{ $item->unit_price }}" readonly>
                                                                         </td>
                                                                     <td><input class="form-control qty" style="width:80px"
                                                                             type="number" id="qty" name="qty[]"
@@ -1133,68 +1133,79 @@
             });
 
             var rowIdx = 1;
-            $("#addBtn").on("click", function() {
-                // Adding a row inside the tbody.
-                var rowCount = $("#soadd-table tbody tr").length;
-                $("#soadd-table tbody").append(`
-                <tr id="R${rowCount + 1}">
-                    <td class="row-index text-center fixed-column"><p> ${rowCount + 1}</p></td>
-                     <td>
-                                                                    <input list="katalog-options" class="form-control" name="item[]" id="item" style="width:100px" oninput="updateItemDesc(this)">
-                                                                    <datalist id="katalog-options">
-                                                                        @foreach ($no_katalog as $u)
-                                                                            <option value="{{ $u->no_katalog }}" data-name="{{ $u->nama_katalog }}" data-price="{{ $u->price }}">
-                                                                                {{ $u->no_katalog }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </datalist>
-                                                                </td>
-                            <td><input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]"></td>
-                            <td>
-                                                                    <input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]">
-                                                                </td>
-                            <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]" ></td>
-                            <td><select class="form-control" name="unit[]" id="unit"style="width:110px">
-                                    <option selected="selected" required></option>-- Unit --</option>
-                                        @foreach ($unit as $u)
-                                            <option value="{{ $u->unit }}">{{ $u->unit }}</option>
-                                        @endforeach
-                                </select>
-                            </td>
-                            <td><input class="form-control disc"style="min-width:80px"type="text" id="disc" name="disc[]"></td>
-                            <td><input class="form-control total" style="width:150px" type="text" id="amount" name="amount[]"  readonly></td>
-                            <td><select class="form-control select2"
-                                                                        name="product_type[]" id="product_type"
-                                                                        style="min-width:210px">
-                                                                        <option selected="selected" required disabled>--
-                                                                            Select Product Type --</option>
-                                                                        @foreach ($producttype as $pt)
-                                                                            <option value="{{ $pt->product_name }}">
-                                                                                {{ $pt->product_name }}</option>
-                                                                        @endforeach
-                                                                    </select></td>
-                                                                <td><input class="form-control" style="min-width:120px"
-                                                                        type="text" id="order_no" name="order_no[]"
-                                                                        required>
-                                                                </td>
-                                                                <td><input class="form-control"style="min-width:200px"
-                                                                        type="text" id="spec" name="spec[]"
-                                                                        required>
-                                                                </td>
-                                                                <td><select class="form-control select2" name="kbli[]"
-                                                                        id="kbli" style="min-width:150px">
-                                                                        <option selected="selected" required disabled>--
-                                                                            Select KBLI --</option>
-                                                                        @foreach ($kbli as $k)
-                                                                            <option value="{{ $k->kbli_code }}">
-                                                                                {{ $k->kbli_code }} -
-                                                                                {{ $k->description }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </td>
-                    <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash"></i></a></td>
-                </tr>`);
-            });
+$("#addBtn").on("click", function() {
+    // Adding a row inside the tbody.
+    var rowCount = $("#soadd-table tbody tr").length;
+
+    // Append new row HTML
+    var newRow = `<tr id="R${rowCount + 1}">
+        <td class="row-index text-center fixed-column"><p> ${rowCount + 1}</p></td>
+        <td>
+            <input list="katalog-options" class="form-control" name="item[]" id="item-${rowCount + 1}" style="width:100px" oninput="updateItemDesc(this, ${rowCount + 1})">
+            <datalist id="katalog-options">
+                @foreach ($no_katalog as $u)
+                    <option value="{{ $u->no_katalog }}" data-name="{{ $u->nama_katalog }}" data-price="{{ $u->price }}">
+                        {{ $u->no_katalog }}
+                    </option>
+                @endforeach
+            </datalist>
+        </td>
+        <td><input class="form-control" style="min-width:200px" type="text" id="item_desc-${rowCount + 1}" name="item_desc[]" readonly></td>
+        <td><input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price-${rowCount + 1}" name="unit_price[]" readonly></td>
+        <td><input class="form-control qty" style="width:80px" type="number" id="qty-${rowCount + 1}" name="qty[]"></td>
+        <td><select class="form-control" name="unit[]" id="unit-${rowCount + 1}" style="width:110px">
+            <option selected="selected" required>-- Unit --</option>
+            @foreach ($unit as $u)
+                <option value="{{ $u->unit }}">{{ $u->unit }}</option>
+            @endforeach
+        </select></td>
+        <td><input class="form-control disc" style="min-width:80px" type="text" id="disc-${rowCount + 1}" name="disc[]"></td>
+        <td><input class="form-control total" style="width:150px" type="text" id="amount-${rowCount + 1}" name="amount[]" readonly></td>
+        <td><select class="form-control select2" name="product_type[]" id="product_type-${rowCount + 1}" style="min-width:210px">
+            <option selected="selected" required disabled>-- Select Product Type --</option>
+            @foreach ($producttype as $pt)
+                <option value="{{ $pt->product_name }}">{{ $pt->product_name }}</option>
+            @endforeach
+        </select></td>
+        <td><input class="form-control" style="min-width:120px" type="text" id="order_no-${rowCount + 1}" name="order_no[]" required></td>
+        <td><input class="form-control" style="min-width:200px" type="text" id="spec-${rowCount + 1}" name="spec[]" required></td>
+        <td><select class="form-control select2" name="kbli[]" id="kbli-${rowCount + 1}" style="min-width:150px">
+            <option selected="selected" required disabled>-- Select KBLI --</option>
+            @foreach ($kbli as $k)
+                <option value="{{ $k->kbli_code }}">{{ $k->kbli_code }} - {{ $k->description }}</option>
+            @endforeach
+        </select></td>
+        <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash"></i></a></td>
+    </tr>`;
+
+    // Append new row
+    $("#soadd-table tbody").append(newRow);
+
+    // Add event listener to check duplicate no_katalog
+    $(`#item-${rowCount + 1}`).on("change", function() {
+        checkDuplicateKatalog($(this));
+    });
+});
+
+// Function to check if no_katalog already exists in the table
+function checkDuplicateKatalog(element) {
+    var selectedKatalog = element.val();
+    var isDuplicate = false;
+
+    // Loop through all existing no_katalog inputs
+    $("input[name='item[]']").each(function() {
+        if ($(this).val() === selectedKatalog && !$(this).is(element)) {
+            isDuplicate = true;
+            return false; // Exit loop early if duplicate found
+        }
+    });
+
+    if (isDuplicate) {
+        alert("This no_katalog is already selected. Please choose another.");
+        element.val(''); // Clear the input field
+    }
+}
+
             
             $("#soadd-table tbody").on("click", ".remove", function() {
                 // Mendapatkan total produk di dalam tabel

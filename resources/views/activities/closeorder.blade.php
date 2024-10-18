@@ -50,7 +50,7 @@
                                 <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No</th>
                                             <th>Order No.</th>
                                             <th>Customer</th>
                                             <th>Date Order</th>
@@ -65,7 +65,7 @@
                                     <tbody>
                                         @foreach ($order as $o)
                                             <tr>
-                                                <td>{{ $o->id }}</td>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td><a
                                                         href="#">{{ $o->order_number }}</a>
                                                 </td>

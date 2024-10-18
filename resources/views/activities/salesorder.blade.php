@@ -53,7 +53,7 @@
                                 <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No</th>
                                             <th>SO No.</th>
                                             <th>PO No.</th>
                                             <th>Company Name</th>
@@ -66,7 +66,7 @@
                                     <tbody>
                                         @foreach ($salesorder as $so)
                                             <tr>
-                                                <td >{{ $so->id }}</td>
+                                                <td >{{ $loop->iteration }}</td>
                                                 <td ><a href="{{ url('activities/salesorder/view/' . $so->so_number) }}">{{ $so->so_number }}</a></td>
                                                 <td>{{ $so->po_number }}</td>
                                                 <td>{{ $so->company_name }}</td>

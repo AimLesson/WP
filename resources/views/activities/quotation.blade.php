@@ -54,7 +54,7 @@
                                 <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No</th>
                                             <th>Quotation No.</th>
                                             <th>Company Name</th>
                                             <th>Description</th>
@@ -66,7 +66,7 @@
                                     <tbody>
                                         @foreach ($quotation as $q)
                                             <tr>
-                                                <td >{{ $q->id }}</td>
+                                                <td >{{ $loop->iteration }}</td>
                                                 <td ><a href="{{ url('activities/quotation/view/' . $q->quotation_no) }}">{{ $q->quotation_no }}</a></td>
                                                 <td>{{ $q->company_name }}</td>
                                                 <td>{{ $q->description }}</td>
