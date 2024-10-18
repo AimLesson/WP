@@ -66,7 +66,7 @@
                                             <tr>
                                                 <td>{{ $o->id }}</td>
                                                 <td><a
-                                                        href="{{ url('activities/order/view/' . $o->order_number) }}">{{ $o->order_number }}</a>
+                                                        href="#">{{ $o->order_number }}</a>
                                                 </td>
                                                 <td>{{ $o->customer }}</td>
                                                 <td>{{ $o->order_date }}</td>

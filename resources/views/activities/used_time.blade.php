@@ -28,8 +28,9 @@
                                 <form action="{{ route('activities.used_time') }}" method="GET">
                                     <div class="form-group">
                                         <label for="order_number" class="form-label">Order</label>
-                                        <input name="order_number" id="order_number" class="form-control" list="order_list" style="width: 100%;" required
-                                            value="{{ session('order_number') }}" placeholder="-- Select Order --">
+                                        <input name="order_number" id="order_number" class="form-control" list="order_list"
+                                            style="width: 100%;" required value="{{ session('order_number') }}"
+                                            placeholder="-- Select Order --">
                                         <datalist id="order_list">
                                             @foreach ($orders as $o)
                                                 <option value="{{ $o->order_number }}">
@@ -41,7 +42,8 @@
 
                                     <div class="form-group">
                                         <label for="item_number" class="form-label">Item</label>
-                                        <select name="item_number" id="item_number" class="form-control select2" style="width: 100%;" required>
+                                        <select name="item_number" id="item_number" class="form-control select2"
+                                            style="width: 100%;" required>
                                             <option disabled>-- Select Item --</option>
                                             @foreach ($items as $i)
                                                 <option value="{{ $i->item_number }}"
@@ -52,7 +54,8 @@
                                         </select>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-custom">Filter</button>
-                                    <button type="button" class="btn btn-secondary btn-custom" id="scan-qr-btn">Scan QR Code</button>
+                                    <button type="button" class="btn btn-secondary btn-custom" id="scan-qr-btn">Scan QR
+                                        Code</button>
                                 </form>
                                 <form action="{{ route('activities.clear_filters') }}" method="POST">
                                     @csrf
@@ -152,12 +155,24 @@
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $('#order_number').on('change', function() {
-            var orderNumber = $(this).val();
-            $('#item_number').empty();
-            $('#item_number').append('<option selected="selected" disabled>-- Select Item --</option>');
+        $(document).ready(function() {
+            // Trigger change event on order_number input if there's a selected value
+            var selectedOrderNumber = $('#order_number').val();
+            if (selectedOrderNumber) {
+                loadItemsByOrder(selectedOrderNumber); // Trigger the AJAX call to load items for the selected order
+            }
 
-            if (orderNumber) {
+            $('#order_number').on('change', function() {
+                var orderNumber = $(this).val();
+                $('#item_number').empty();
+                $('#item_number').append('<option selected="selected" disabled>-- Select Item --</option>');
+
+                if (orderNumber) {
+                    loadItemsByOrder(orderNumber); // Load items when order is selected
+                }
+            });
+
+            function loadItemsByOrder(orderNumber) {
                 $.ajax({
                     url: '/items-by-order/' + orderNumber,
                     type: 'GET',
@@ -165,8 +180,14 @@
                     success: function(data) {
                         console.log(data);
                         $.each(data, function(key, item) {
-                            $('#item_number').append('<option value="' + item.no_item + '">' +
-                                item.no_item + '</option>');
+                            // Only append items that have a non-empty item number
+                            if (item.no_item && item.no_item.trim() !== '') {
+                                $('#item_number').append('<option value="' + item.no_item +
+                                    '"' +
+                                    (item.no_item == "{{ session('item_number') }}" ?
+                                        ' selected' : '') + '>' +
+                                    item.no_item + '</option>');
+                            }
                         });
                     },
                     error: function(xhr, status, error) {
@@ -174,6 +195,7 @@
                     }
                 });
             }
+
         });
 
         $('#scan-qr-btn').on('click', function() {
