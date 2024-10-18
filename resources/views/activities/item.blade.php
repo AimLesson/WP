@@ -41,7 +41,6 @@
                                 <a href="{{ route('activities.item') }}" class="btn btn-secondary">Reset</a>
                                </div>
                             </div>
-                            
                         </form>
 
 

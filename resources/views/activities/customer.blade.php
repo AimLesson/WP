@@ -39,6 +39,7 @@
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                                        <a href="{{ route('activities.customer') }}" class="btn btn-secondary">Reset</a>
                                     </div>
                                 </div>
                             </form>

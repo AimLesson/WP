@@ -35,6 +35,7 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                                    <a href="{{ route('activities.deliveryprocess') }}" class="btn btn-secondary">Reset</a>
                                 </div>
                             </div>
                         </form>
