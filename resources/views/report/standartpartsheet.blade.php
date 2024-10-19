@@ -27,98 +27,38 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Standart Part Sheet</h3>
+                                <h3 class="card-title">Standart Part (StockBar)</h3>
                             </div>
-                            
                             <!-- /.card-header -->
-                            {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
                             <div class="card-body">
-                                <table id="machine" class="table table-head-fixed text-nowrap">
-                                    {{-- <table id="machine" class="table table-bordered table-striped"> --}}
+                                <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Order No.</th>
-                                            <th>Customer</th>
-                                            <th>Product</th>
-                                            <th>SO No.</th>
-                                            <th>D O D</th>
-                                            <th>No of Product</th>
-                                            <th>Item No.</th>
-                                            <th>Item Name.</th>
-                                            <th>Part No</th>
-                                            <th>Part Name</th>
-                                            <th>Qty</th>
-                                            <th>Unit</th>
-                                            <th>Price / Unit</th>
-                                            <th>Total Prices</th>
-                                            <th>Info</th>
-                                            <th>No Order</th>
-                                            <th>Pemesanan</th>
-                                            <th>Pesanan</th>
+                                            <th scope="col">Order Number</th>
+                                            <th scope="col">Item Number</th>
+                                            <th scope="col">Tanggal</th>
+                                            <th scope="col">Nama Barang</th>
+                                            <th scope="col">Jumlah</th>
+                                            <th scope="col">satuan</th>
+                                            <th scope="col">Harga</th>
+                                            <th scope="col">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php
-                                            // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $order = \App\Models\Standartpart_sheet::get();
+                                            $standart_part = \App\Models\WPLink::where('jenis', 'parts')->get();
                                         @endphp
-                                        @foreach ($order as $m)
+                                        @foreach ($standart_part as $m)
                                             <tr>
-                                                <td>{{ $m->id }}</td>
                                                 <td>{{ $m->order_number }}</td>
-                                                <td>{{ $m->customer }}</td>
-                                                <td>{{ $m->product }}</td>
-                                                <td>{{ $m->so_no }}</td>
-                                                <td>{{ $m->dod }}</td>
-                                                <td>{{ $m->no_product }}</td>
-                                                <td>{{ $m->item_no }}</td>
-                                                <td>{{ $m->item_name }}</td>
-                                                <td>{{ $m->part_no }}</td>
-                                                <td>{{ $m->part_name }}</td>
-                                                <td>{{ $m->qty }}</td>
-                                                <td>{{ $m->unit }}</td>
-                                                <td>{{ 'Rp. ' . number_format($m->price, 0, ',', '.') }}</td>
-                                                <td>{{ 'Rp. ' . number_format($m->total_price, 0, ',', '.') }}</td>
-                                                <td>{{ $m->info}}</td>
-                                                <td>{{ $m->order_number}}</td>
-                                                <td>{{ $m->pemesanan}}</td>
-                                                <td>{{ $m->pesanan}}</td>
-                                                {{-- <td>{{$m->total_mach}}</td> --}}
+                                                <td>{{ $m->no_item }}</td>
+                                                <td>{{ $m->created_at }}</td>
+                                                <td>{{ $m->material }}</td>
+                                                <td>{{ $m->jumlah }}</td>
+                                                <td>{{ $m->satuan }}</td>
+                                                <td>{{ formatRupiah($m->harga) }}</td>
+                                                <td>{{ formatRupiah($m->total) }}</td>
                                             </tr>
-                                            <div class="modal fade" id="modal-hapus{{ $m->id }}">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Confirm Delete Order</h4>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p>Are you sure delete Order 
-                                                                <b>{{ $m->id_machine }} - {{ $m->machine_name }} -
-                                                                    {{ $m->machine_type }}?</b>
-                                                            </p>
-                                                        </div>
-                                                        <div class="modal-footer justify-content-between">
-                                                            <form
-                                                                action="{{ route('setup.deletemachine', ['id' => $m->id]) }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="button" class="btn btn-default"
-                                                                    data-dismiss="modal">Batal</button>
-                                                                <button type="submit" class="btn btn-danger">Ya,
-                                                                    Hapus</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                    <!-- /.modal-content -->
-                                                </div>
-                                                <!-- /.modal-dialog -->
-                                            </div>
                                             <!-- /.modal -->
                                         @endforeach
                                     </tbody>

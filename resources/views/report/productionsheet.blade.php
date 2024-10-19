@@ -216,7 +216,7 @@
                     svgElements.each(function() {
                         var svg = $(this).clone();
                         $(win.document.body).find('th').eq($(this).closest('td').index()).html(svg);
-                    });  
+                    });
                 }
             },
             {

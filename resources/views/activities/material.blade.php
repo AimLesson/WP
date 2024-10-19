@@ -106,7 +106,7 @@
                         </div>
                         <!-- /.card -->
 
-                        <div class="card">
+                        {{-- <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Standart Part (StockBar)</h3>
                             </div>
@@ -146,7 +146,7 @@
                                 </table>
                             </div>
                             <!-- /.card-body -->
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <!-- /.row (main row) -->
