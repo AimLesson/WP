@@ -145,21 +145,21 @@
                                             <table class="table" id="soadd-table" style="width: 100%; overflow-x: auto;">
                                                 <thead>
                                                     <tr>
-                                                        <th class="width:80px">ID Item</th>
-                                                        <th class="width:80px">No Item</th>
+                                                        <th style="width:80px">ID Item</th>
+                                                        <th style="width:80px">No Item</th>
                                                         <th class="col-sm-2">Item Name</th>
-                                                        <th class="col-sm-2">DOD</th>
+                                                        <th class="col-sm-2">Date Wanted</th>
                                                         <th class="col-md-6">Material</th>
-                                                        <th style="width:80px;">Qty</th>
                                                         <th style="width:80px">NOS</th>
                                                         <th style="width:80px">NOB</th>
                                                         <th class="col-sm-2">Issued</th>
                                                         <th class="col-md-6">Ass Drawing</th>
                                                         <th class="col-md-6">Drawing No</th>
-                                                        <th style="width:80px;">Weight(mm)</th>
+                                                        <th style="width:80px;">Weight(kg)</th>
                                                         <th style="width:100px;">Length(mm)</th>
                                                         <th style="width:80px;">Width(mm)</th>
                                                         <th>Thickness(mm)</th>
+                                                        <th>Material Cost</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -191,16 +191,15 @@
                                                                     <option selected="selected" required disabled>
                                                                         --Material--
                                                                     </option>
-                                                                    @foreach ($material as $m)
-                                                                        <option value="{{ $m->material }}"
-                                                                            @if ($m->material === $item->material) selected @endif>
-                                                                            {{ $m->material }}</option>
+                                                                    @foreach ($standardParts as $m)
+                                                                        <option value="{{ $m->nama_barang }}"
+                                                                            @if ($m->nama_barang === $item->material) selected @endif>
+                                                                            {{ $m->nama_barang }}</option>
                                                                     @endforeach
+                                                                    <option value="Rangkaian">
+                                                                        Rangkaian
+                                                                    </option>
                                                                 </select>
-                                                            </td>
-                                                            <td><input class="form-control qty" style="width:80px"
-                                                                    type="number" id="qty" name="qty[]"
-                                                                    value="{{ $item->qty }}" step="0.01">
                                                             </td>
                                                             <td><input class="form-control nos" style="width:80px"
                                                                     type="text" id="nos" name="nos[]"
@@ -352,7 +351,7 @@
                                                         <td><input class="form-control"style="min-width:80px"
                                                                 type="text" id="nob" name="nob[]">
                                                         </td>
-                                                        
+
                                                         <td><input class="form-control" style="min-width:120px" type="date" id="issued_item" name="issued_item[]"></td>
                                                         <td><input class="form-control"style="min-width:200px"
                                                                 type="text" id="ass_drawing" name="ass_drawing[]">

@@ -1292,13 +1292,14 @@ public function viewOrder($order_number)
     {
         $order = Order::where('order_status', '!=', 'Finished')->get();
         $material = Material::get();
+        $standardParts = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])->get();
         $item       = DB::table('item')->where('order_number', $order_number)->first();
         $itemJoin   = DB::table('item')
             ->join('itemadd', 'item.order_number', '=', 'itemadd.order_number')
             ->select('item.*', 'itemadd.*')
             ->where('itemadd.order_number', $order_number)
             ->get();
-        return view('activities.edititem', compact('order', 'material', 'item', 'itemJoin'));
+        return view('activities.edititem', compact('order', 'material', 'item', 'itemJoin','standardParts'));
     }
     public function updateitem(Request $request)
     {
