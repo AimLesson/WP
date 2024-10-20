@@ -558,6 +558,7 @@ class ActivitiesController extends Controller
 
             // Save the additional items in SalesOrderAdd
             foreach ($request->item as $key => $items) {
+                // Prepare SalesOrderAdd data
                 $soAdd['item'] = $items;
                 $soAdd['so_number'] = $salesorder->so_number;
                 $soAdd['item_desc'] = $request->item_desc[$key];
@@ -571,8 +572,41 @@ class ActivitiesController extends Controller
                 $soAdd['spec'] = $request->spec[$key];
                 $soAdd['kbli'] = $request->kbli[$key];
 
+                // Create the SalesOrderAdd record
                 SalesOrderAdd::create($soAdd);
+
+                // Prepare Order data
+                $orderData = [
+                    'order_number'     => $request->order_no[$key], // from SalesOrderAdd order_no
+                    'so_number'        => $salesorder->so_number, // from $salesorder
+                    'quotation_number' => $salesorder->quotation_no, // from $salesorder
+                    'kbli_code'        => $request->kbli[$key], // from SalesOrderAdd kbli
+                    'reff_number'      => null, // NULL
+                    'order_date'       => $salesorder->date, // from $salesorder
+                    'product_type'     => $request->product_type[$key], // from SalesOrderAdd product_type
+                    'po_number'        => $salesorder->po_number, // NULL
+                    'sale_price'       => $salesorder->total_amount, // from $salesorder
+                    'production_cost'  => null, // NULL
+                    'information'      => $salesorder->description, // from $salesorder
+                    'information2'     => null, // NULL
+                    'information3'     => null, // NULL
+                    'order_status'     => 'Queue', // Default to 'Queue'
+                    'customer'         => $salesorder->name, // from $salesorder
+                    'product'          => $items, // from SalesOrderAdd item
+                    'qty'              => $request->qty[$key], // from SalesOrderAdd qty
+                    'dod'              => $salesorder->dod, // from $salesorder
+                    'dod_forecast'     => $salesorder->dod, // from $salesorder
+                    'sample'           => $salesorder->sample, // from $salesorder
+                    'material'         => null, // NULL
+                    'catalog_number'   => null, // NULL
+                    'material_cost'    => null, // NULL
+                    'dod_adj'          => $salesorder->dod // from $salesorder
+                ];
+
+                // Create the Order record
+                Order::create($orderData);
             }
+
 
             DB::commit();
 
@@ -1439,7 +1473,12 @@ public function viewOrder($order_number)
 
     public function getItemsByOrderNumber($orderNumber)
     {
+        // Fetch the items for the given order number
         $items = ItemAdd::where('order_number', $orderNumber)->get();
+
+        // Log the fetched items and the order number for debugging
+        Log::info('Fetched Items for Order Number: ' . $orderNumber, ['items' => $items]);
+
         return response()->json($items);
     }
 

@@ -279,6 +279,8 @@
 
     <script>
         $(document).ready(function() {
+            let items = []; // Declare an empty array to hold the fetched items
+
             $('#order_number').on('change', function() {
                 var orderNumber = $(this).val();
 
@@ -287,11 +289,16 @@
                 $('#no_item').append('<option selected="selected" disabled>-- Select Item --</option>');
 
                 if (orderNumber) {
+                    console.log('Fetching items for order number: ' + orderNumber); // Log the selected order number
+
                     $.ajax({
                         url: '/items-by-order/' + orderNumber,
                         type: 'GET',
                         dataType: 'json',
                         success: function(data) {
+                            items = data; // Assign the fetched data to the items array
+                            console.log('Fetched items:', items); // Log the fetched items array
+
                             $.each(data, function(key, item) {
                                 $('#no_item').append('<option value="' + item.no_item +
                                     '">' + item.no_item + '</option>');
@@ -303,38 +310,47 @@
                     });
                 }
             });
-        });
-    </script>
 
-    <script>
-        document.getElementById('order_number').addEventListener('change', function() {
-            var selectedOrderNumber = this.value;
-            var orders = @json($orders);
+            $('#order_number').change(function() {
+                var selectedOrderNumber = $(this).val();
+                var orders = @json($orders);
 
-            var selectedOrder = orders.find(function(order) {
-                return order.order_number === selectedOrderNumber;
+                console.log('Selected order number:', selectedOrderNumber); // Log the selected order number
+                console.log('Orders array:', orders); // Log the orders array
+
+                var selectedOrder = orders.find(function(order) {
+                    return order.order_number === selectedOrderNumber;
+                });
+
+                console.log('Selected order:', selectedOrder); // Log the selected order
+
+                $('#so_number').val(selectedOrder ? selectedOrder.so_number : '');
+                $('#product').val(selectedOrder ? selectedOrder.product : '');
+                $('#company_name').val(selectedOrder ? selectedOrder.customer : '');
+                $('#dod').val(selectedOrder ? selectedOrder.dod : '');
             });
 
-            document.getElementById('so_number').value = selectedOrder ? selectedOrder.so_number : '';
-            document.getElementById('product').value = selectedOrder ? selectedOrder.product : '';
-            document.getElementById('company_name').value = selectedOrder ? selectedOrder.customer : '';
-            document.getElementById('dod').value = selectedOrder ? selectedOrder.dod : '';
-        });
+            // When no_item is changed, populate the relevant fields based on the selected item
+            $('#no_item').change(function() {
+                var selectedItemNumber = $(this).val();
 
-        document.getElementById('no_item').addEventListener('change', function() {
-            var selectedItemNumber = this.value;
-            var items = @json($items);
+                console.log('Selected item number:', selectedItemNumber); // Log the selected item number
 
-            var selectedItem = items.find(function(item) {
-                return item.no_item === selectedItemNumber;
+                // Find the selected item from the dynamically updated items array
+                var selectedItem = items.find(function(item) {
+                    return item.no_item === selectedItemNumber;
+                });
+
+                console.log('Selected item:', selectedItem); // Log the selected item
+
+                // Populate the fields based on the selected item
+                $('#dod_item').val(selectedItem ? selectedItem.dod_item : '');
+                $('#material').val(selectedItem ? selectedItem.material : '');
+                $('#item').val(selectedItem ? selectedItem.item : '');
+                $('#drawing_no').val(selectedItem ? selectedItem.drawing_no : '');
+                $('#nos').val(selectedItem ? selectedItem.nos : '');
+                $('#issued_item').val(selectedItem ? selectedItem.issued_item : '');
             });
-
-            document.getElementById('dod_item').value = selectedItem ? selectedItem.dod_item : '';
-            document.getElementById('material').value = selectedItem ? selectedItem.material : '';
-            document.getElementById('item').value = selectedItem ? selectedItem.item : '';
-            document.getElementById('drawing_no').value = selectedItem ? selectedItem.drawing_no : '';
-            document.getElementById('nos').value = selectedItem ? selectedItem.nos : '';
-            document.getElementById('issued_item').value = selectedItem ? selectedItem.issued_item : '';
         });
     </script>
 
