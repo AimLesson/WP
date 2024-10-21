@@ -68,11 +68,13 @@
                                             <div class="form-group">
                                                 <label for="quotation_no" class="form-label">Quotation No.</label>
                                                 <input type="text" name="quotation_no" class="form-control"
-                                                    id="quotation_no" placeholder=" Quotation No." required>
+                                                    id="quotation_no" value="{{ old('quotation_no', $newQuotationNo) }}"
+                                                    readonly>
                                                 @error('quotation_no')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="company_name" class="form-label">Company Name</label>
                                                 <input style="margin-left: 10px; margin-top:7px" class="form-check-input"
@@ -294,20 +296,27 @@
                                                             <tr>
                                                                 <td class="row-index text-center fixed-column">1</td>
                                                                 <td>
-                                                                    <input list="katalog-options" class="form-control" name="item[]" id="item" style="width:100px" oninput="updateItemDesc(this)">
+                                                                    <input list="katalog-options" class="form-control"
+                                                                        name="item[]" id="item" style="width:100px"
+                                                                        oninput="updateItemDesc(this)">
                                                                     <datalist id="katalog-options">
                                                                         @foreach ($no_katalog as $u)
-                                                                            <option value="{{ $u->no_katalog }}" data-name="{{ $u->nama_katalog }}" data-price="{{ $u->price }}">
+                                                                            <option value="{{ $u->no_katalog }}"
+                                                                                data-name="{{ $u->nama_katalog }}"
+                                                                                data-price="{{ $u->price }}">
                                                                                 {{ $u->no_katalog }}
                                                                             </option>
                                                                         @endforeach
                                                                     </datalist>
                                                                 </td>
                                                                 <td>
-                                                                    <input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]">
+                                                                    <input class="form-control" style="min-width:200px"
+                                                                        type="text" id="item_desc" name="item_desc[]">
                                                                 </td>
                                                                 <td>
-                                                                    <input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]">
+                                                                    <input class="form-control unit_price"
+                                                                        style="min-width:200px" type="text"
+                                                                        id="unit_price" name="unit_price[]">
                                                                 </td>
                                                                 <td><input class="form-control qty" style="width:80px"
                                                                         type="number" id="qty" name="qty[]">
@@ -608,12 +617,14 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="salesman" class="form-label">Salesman</label>
-                                                <input list="salesman-options" class="form-control" name="salesman" id="salesman" style="width: 100%;" required>
+                                                <input list="salesman-options" class="form-control" name="salesman"
+                                                    id="salesman" style="width: 100%;" required>
                                                 <datalist id="salesman-options">
                                                     <option disabled selected>-- Select Salesman --</option>
                                                     @foreach ($user as $u)
                                                         @if ($u->unit === 'MA')
-                                                            <option value="{{ $u->name }}">{{ $u->name }}</option>
+                                                            <option value="{{ $u->name }}">{{ $u->name }}
+                                                            </option>
                                                         @endif
                                                     @endforeach
                                                 </datalist>
@@ -749,31 +760,31 @@
     {{-- no katalog --}}
     <script>
         function updateItemDesc(inputElement) {
-    // Get the input value
-    var inputValue = inputElement.value;
+            // Get the input value
+            var inputValue = inputElement.value;
 
-    // Find the matching option in the datalist (if using datalist)
-    var options = document.getElementById('katalog-options').options;
-    var selectedOption = Array.from(options).find(option => option.value === inputValue);
+            // Find the matching option in the datalist (if using datalist)
+            var options = document.getElementById('katalog-options').options;
+            var selectedOption = Array.from(options).find(option => option.value === inputValue);
 
-    if (selectedOption) {
-        // Get the data-name and data-price attributes from the selected option
-        var nameKatalog = selectedOption.getAttribute('data-name');
-        var price = selectedOption.getAttribute('data-price');
+            if (selectedOption) {
+                // Get the data-name and data-price attributes from the selected option
+                var nameKatalog = selectedOption.getAttribute('data-name');
+                var price = selectedOption.getAttribute('data-price');
 
-        // Find the corresponding item_desc and price input fields
-        var inputDesc = inputElement.closest('td').nextElementSibling.querySelector('input[name="item_desc[]"]');
-        var inputPrice = inputElement.closest('td').nextElementSibling.nextElementSibling.querySelector('input[name="unit_price[]"]');
+                // Find the corresponding item_desc and price input fields
+                var inputDesc = inputElement.closest('td').nextElementSibling.querySelector('input[name="item_desc[]"]');
+                var inputPrice = inputElement.closest('td').nextElementSibling.nextElementSibling.querySelector(
+                    'input[name="unit_price[]"]');
 
-        // Set the value of the input fields to the name_katalog and price
-        inputDesc.value = nameKatalog || ''; // Set to empty string if name_katalog is not available
-        inputPrice.value = price || ''; // Set to empty string if price is not available
-    }
-}
-
+                // Set the value of the input fields to the name_katalog and price
+                inputDesc.value = nameKatalog || ''; // Set to empty string if name_katalog is not available
+                inputPrice.value = price || ''; // Set to empty string if price is not available
+            }
+        }
     </script>
-    
-    
+
+
 
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {

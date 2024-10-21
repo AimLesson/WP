@@ -78,8 +78,7 @@
                                                 <!-- Manual Input Field (Only visible when checkbox is checked) -->
                                                 <input type="text" name="quotation_no" class="form-control"
                                                     style="display: {{ old('so_internal') ? 'block' : 'none' }}"
-                                                    id="so_internal_text" placeholder="Internal"
-                                                    value="">
+                                                    id="so_internal_text" placeholder="Internal" value="">
 
                                                 <!-- Dropdown Select (Disabled when checkbox is checked) -->
                                                 <select name="quotation_no" id="quotation_no"
@@ -379,20 +378,30 @@
                                                             <tr>
                                                                 <td class="row-index text-center fixed-column">1</td>
                                                                 <td>
-                                                                    <input list="katalog-options" class="form-control" name="item[]" id="item" value="" style="width:100px" oninput="updateItemDesc(this)">
+                                                                    <input list="katalog-options" class="form-control"
+                                                                        name="item[]" id="item" value=""
+                                                                        style="width:100px"
+                                                                        oninput="updateItemDesc(this)">
                                                                     <datalist id="katalog-options">
                                                                         @foreach ($no_katalog as $u)
-                                                                            <option value="{{ $u->no_katalog }}" data-name="{{ $u->nama_katalog }}" data-price="{{ $u->price }}">
+                                                                            <option value="{{ $u->no_katalog }}"
+                                                                                data-name="{{ $u->nama_katalog }}"
+                                                                                data-price="{{ $u->price }}">
                                                                                 {{ $u->no_katalog }}
                                                                             </option>
                                                                         @endforeach
                                                                     </datalist>
                                                                 </td>
                                                                 <td>
-                                                                    <input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]" value="" readonly>
+                                                                    <input class="form-control" style="min-width:200px"
+                                                                        type="text" id="item_desc" name="item_desc[]"
+                                                                        value="" readonly>
                                                                 </td>
                                                                 <td>
-                                                                    <input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]" value=""readonly>
+                                                                    <input class="form-control unit_price"
+                                                                        style="min-width:200px" type="text"
+                                                                        id="unit_price" name="unit_price[]"
+                                                                        value=""readonly>
                                                                 </td>
                                                                 <td><input class="form-control qty" style="width:80px"
                                                                         type="number" id="qty" name="qty[]"
@@ -411,8 +420,8 @@
                                                                 </td>
                                                                 <td><input class="form-control disc"
                                                                         style="min-width:80px" type="text"
-                                                                        id="disc" name="disc[]"
-                                                                        value=""></td>
+                                                                        id="disc" name="disc[]" value="">
+                                                                </td>
                                                                 <td><input class="form-control total" style="width:150px"
                                                                         type="text" id="amount" name="amount[]"
                                                                         value="" readonly></td>
@@ -643,7 +652,7 @@
                                                                     {{ old('top') == 'NET' ? 'checked' : '' }} required>
                                                                 <label for="net"
                                                                     class="form-check-label radio-label">NET</label>
-                                                                <input style="width: 32px; margin-left: 5px;"
+                                                                <input style="width: 77px; margin-left: 5px;"
                                                                     type="text" name="net_days" id="net_days"
                                                                     value="{{ old('net_days', '30') }}">
                                                             </div>
@@ -708,7 +717,8 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="file" class="form-label">Upload File</label>
-                                                <input type="file" name="file" class="form-control-file" id="file">
+                                                <input type="file" name="file" class="form-control-file"
+                                                    id="file">
                                             </div>
                                             <img id="filePreview" src="#" alt=""
                                                 style="max-width: 100%; max-height: 200px; display: block; margin: 0 auto;">
@@ -719,8 +729,9 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="ship_date" class="form-label">Shipping Date</label>
-                                                <input type="date" name="ship_date" class="form-control" id="ship_date"
-                                                    placeholder="Select Date" value="{{ old('ship_date') }}" required>
+                                                <input type="date" name="ship_date" class="form-control"
+                                                    id="ship_date" placeholder="Select Date"
+                                                    value="{{ old('ship_date') }}" required>
                                                 @error('ship_date')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -731,10 +742,12 @@
                                                 <label for="fob" class="form-label">FOB</label>
                                                 <select class="form-control select2" name="fob" id="fob"
                                                     style="width: 100%;" required>
-                                                    <option disabled {{ old('fob') == null ? 'selected' : '' }}>-- Select FOB
+                                                    <option disabled {{ old('fob') == null ? 'selected' : '' }}>-- Select
+                                                        FOB
                                                         --
                                                     </option>
-                                                    <option value="1" {{ old('fob') == '1' ? 'selected' : '' }}>Shipping
+                                                    <option value="1" {{ old('fob') == '1' ? 'selected' : '' }}>
+                                                        Shipping
                                                         Point</option>
                                                     <option value="2" {{ old('fob') == '2' ? 'selected' : '' }}>
                                                         Destination
@@ -748,12 +761,14 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="salesman" class="form-label">Salesman</label>
-                                                <input list="salesman-options" class="form-control" name="salesman" id="salesman" style="width: 100%;" required>
+                                                <input list="salesman-options" class="form-control" name="salesman"
+                                                    id="salesman" style="width: 100%;" required>
                                                 <datalist id="salesman-options">
                                                     <option {{ old('salesman') == null ? 'selected' : '' }}></option>
                                                     @foreach ($user as $u)
                                                         @if ($u->unit === 'MA')
-                                                            <option value="{{ $u->name }}">{{ $u->name }}</option>
+                                                            <option value="{{ $u->name }}">{{ $u->name }}
+                                                            </option>
                                                             {{ old('salesman') == $u->name ? 'selected' : '' }}>
                                                             {{ $u->name }}
                                                         @endif
@@ -845,7 +860,8 @@
                                                                 @foreach ($tax_type as $t)
                                                                     <option value="{{ $t->id_tax }}"
                                                                         {{ old('tax_type') == $t->id_tax ? 'selected' : '' }}>
-                                                                        {{ $t->id_tax }} | {{ $t->tax }}</option>
+                                                                        {{ $t->id_tax }} | {{ $t->tax }}
+                                                                    </option>
                                                                 @endforeach
                                                             </select>
                                                             @error('tax_type')
@@ -876,24 +892,25 @@
                                                             value="{{ old('discount', '0') }}">
                                                     </div>
                                                     <div class="form-group">
-                                                        <input class="form-control" style="margin-bottom: 8%" type="text"
-                                                            id="tax" name="tax" value="{{ old('tax', '0') }}"
-                                                            readonly>
+                                                        <input class="form-control" style="margin-bottom: 8%"
+                                                            type="text" id="tax" name="tax"
+                                                            value="{{ old('tax', '0') }}" readonly>
                                                     </div>
                                                     <div class="form-group">
                                                         <input type="text" name="freight" style="margin-bottom: 8%"
                                                             class="form-control" id="freight"
-                                                            value="{{ old('freight', '0') }}" placeholder="Input Freight"
-                                                            required>
+                                                            value="{{ old('freight', '0') }}"
+                                                            placeholder="Input Freight" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <input class="form-control" style="margin-bottom: 8%" type="text"
-                                                            id="total_amount" name="total_amount"
+                                                        <input class="form-control" style="margin-bottom: 8%"
+                                                            type="text" id="total_amount" name="total_amount"
                                                             value="{{ old('total_amount', '0') }}" readonly>
                                                     </div>
                                                     <div class="form-group">
-                                                        <input class="form-control"style="margin-bottom: 8%" type="text" id="dp"
-                                                            name="dp" value="{{ old('dp', '0') }}">
+                                                        <input class="form-control"style="margin-bottom: 8%"
+                                                            type="text" id="dp" name="dp"
+                                                            value="{{ old('dp', '0') }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -941,6 +958,7 @@
             });
         @endif
     </script>
+
     <script>
         function fetchQuotationData() {
             var quotationNo = document.getElementById('quotation_no').value;
@@ -1030,6 +1048,7 @@
                                 <i class="fa fa-trash"></i></a>
                             </td>
                         </tr>`);
+                        generateOrderNumbers();
                     }
 
                     setRadioButton('confirmation', quotationData.confirmation);
@@ -1248,7 +1267,7 @@
             var rowIdx = 1;
             let selectedKatalogs = []; // Store selected katalogs
 
-            $("#addBtn").on("click", function () {
+            $("#addBtn").on("click", function() {
                 $("#soadd-table tbody").append(`
                     <tr id="R${++rowIdx}">
                         <td class="row-index text-center fixed-column"><p>${rowIdx}</p></td>
@@ -1292,9 +1311,10 @@
                         <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 `);
+                generateOrderNumbers();
             });
 
-                        // Function to generate the katalog options dynamically, excluding already selected katalogs
+            // Function to generate the katalog options dynamically, excluding already selected katalogs
             function generateKatalogOptions() {
                 let options = '';
                 @foreach ($no_katalog as $u)
@@ -1308,32 +1328,33 @@
             }
 
             // Event handler to add selected katalog to the list and update the options
-            $(document).on('change', 'input[name="item[]"]', function () {
+            $(document).on('change', 'input[name="item[]"]', function() {
                 let selectedKatalog = $(this).val();
-                
+
                 if (selectedKatalog && !selectedKatalogs.includes(selectedKatalog)) {
                     selectedKatalogs.push(selectedKatalog); // Add the selected katalog to the list
                 }
-                
+
                 // Update all rows with the new options
-                $("datalist").each(function () {
+                $("datalist").each(function() {
                     $(this).html(generateKatalogOptions());
                 });
             });
 
             // Event handler to remove katalog when a row is removed
-            $(document).on('click', '.remove', function () {
+            $(document).on('click', '.remove', function() {
                 let row = $(this).closest('tr');
                 let removedKatalog = row.find('input[name="item[]"]').val();
-                
+
                 if (removedKatalog) {
-                    selectedKatalogs = selectedKatalogs.filter(katalog => katalog !== removedKatalog); // Remove from selected katalogs list
+                    selectedKatalogs = selectedKatalogs.filter(katalog => katalog !==
+                        removedKatalog); // Remove from selected katalogs list
                 }
-                
+
                 row.remove(); // Remove the row
-                
+
                 // Update all rows with the new options
-                $("datalist").each(function () {
+                $("datalist").each(function() {
                     $(this).html(generateKatalogOptions());
                 });
             });
@@ -1458,6 +1479,33 @@
                 calc_total();
             });
 
+            // Function to generate the incremented order numbers based on so_number input
+            function generateOrderNumbers() {
+                // Get the base SO number from the input
+                let soNumber = document.getElementById('so_number').value; // Example: "24-0000-W"
+
+                // Select all the rows in the table where the order_number input exists
+                let rows = document.querySelectorAll('#soadd-table tbody tr');
+
+                // Loop through the rows and assign incremented order numbers
+                rows.forEach(function(row, index) {
+                    // Find the order_number input in the current row
+                    let orderNumberInput = row.querySelector('input[name="order_no[]"]');
+
+                    // Create the incremented order number, e.g., 24-0000-W1, 24-0000-W2, etc.
+                    let incrementedOrderNumber = `${soNumber}${index + 1}`;
+
+                    // Set the value of the order_number input field
+                    orderNumberInput.value = incrementedOrderNumber;
+                });
+            }
+
+            // Event listener to trigger the order number generation when SO number changes
+            document.getElementById('so_number').addEventListener('input', generateOrderNumbers);
+
+            // Optionally, you can call the function on page load or whenever needed
+            generateOrderNumbers();
+
             function formatRupiah(input) {
                 // Menghilangkan karakter selain angka
                 var nominal = input.value.replace(/\D/g, '');
@@ -1501,7 +1549,7 @@
 
                 var discount = (discount_percent / 100) * subtotal;
 
-                
+
                 // Menghitung tax
                 var taxType = parseInt($("#tax_type").val()) || 0;
                 switch (taxType) {
@@ -1543,27 +1591,27 @@
     </script>
     <script>
         function updateItemDesc(inputElement) {
-    // Get the input value
-    var inputValue = inputElement.value;
+            // Get the input value
+            var inputValue = inputElement.value;
 
-    // Find the matching option in the datalist (if using datalist)
-    var options = document.getElementById('katalog-options').options;
-    var selectedOption = Array.from(options).find(option => option.value === inputValue);
+            // Find the matching option in the datalist (if using datalist)
+            var options = document.getElementById('katalog-options').options;
+            var selectedOption = Array.from(options).find(option => option.value === inputValue);
 
-    if (selectedOption) {
-        // Get the data-name and data-price attributes from the selected option
-        var nameKatalog = selectedOption.getAttribute('data-name');
-        var price = selectedOption.getAttribute('data-price');
+            if (selectedOption) {
+                // Get the data-name and data-price attributes from the selected option
+                var nameKatalog = selectedOption.getAttribute('data-name');
+                var price = selectedOption.getAttribute('data-price');
 
-        // Find the corresponding item_desc and price input fields
-        var inputDesc = inputElement.closest('td').nextElementSibling.querySelector('input[name="item_desc[]"]');
-        var inputPrice = inputElement.closest('td').nextElementSibling.nextElementSibling.querySelector('input[name="unit_price[]"]');
+                // Find the corresponding item_desc and price input fields
+                var inputDesc = inputElement.closest('td').nextElementSibling.querySelector('input[name="item_desc[]"]');
+                var inputPrice = inputElement.closest('td').nextElementSibling.nextElementSibling.querySelector(
+                    'input[name="unit_price[]"]');
 
-        // Set the value of the input fields to the name_katalog and price
-        inputDesc.value = nameKatalog || ''; // Set to empty string if name_katalog is not available
-        inputPrice.value = price || ''; // Set to empty string if price is not available
-    }
-}
-
+                // Set the value of the input fields to the name_katalog and price
+                inputDesc.value = nameKatalog || ''; // Set to empty string if name_katalog is not available
+                inputPrice.value = price || ''; // Set to empty string if price is not available
+            }
+        }
     </script>
 @endsection

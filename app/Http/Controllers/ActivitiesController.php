@@ -85,8 +85,27 @@ class ActivitiesController extends Controller
         $unit = Unit::get();
         $no_katalog = NoKatalog::get();
         $user = User::get();
-        return view('activities.createquotation', compact('user', 'unit', 'tax_type', 'customers', 'no_katalog'));
+
+        // Get the last created quotation
+        $lastQuotation = Quotation::latest('created_at')->first();
+
+        // Set the year (24 represents the year 2024)
+        $year = now()->format('y'); // This will return '24' for 2024
+
+        // Extract the order number and increment it
+        if ($lastQuotation) {
+            $lastOrderNumber = (int) substr($lastQuotation->quotation_no, -4); // Get last 4 digits
+            $newOrderNumber = $lastOrderNumber + 1;
+        } else {
+            $newOrderNumber = 1; // Start from 0001 if no quotation exists
+        }
+
+        // Format the new quotation number (e.g., Q-240001)
+        $newQuotationNo = 'Q' . $year .'-'. str_pad($newOrderNumber, 4, '0', STR_PAD_LEFT);
+
+        return view('activities.createquotation', compact('user', 'unit', 'tax_type', 'customers', 'no_katalog', 'newQuotationNo'));
     }
+
     public function storequotation(Request $request)
     {
         if ($request->has('addcompany')) {
