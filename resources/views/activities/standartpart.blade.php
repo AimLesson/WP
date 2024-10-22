@@ -37,6 +37,7 @@
                                 </div>
                             </div>
                         </form>
+                        
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Standart Part (Plan)</h3>

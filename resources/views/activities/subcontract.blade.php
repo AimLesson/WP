@@ -28,7 +28,13 @@
                         <a href="{{ route('activities.createsub_contract') }}" class="btn btn-primary mb-3">
                             <i class="fas fa-plus"></i> Add
                         </a>
-                      
+                    
+                         <!-- Add Filter Form -->
+                         <form action="{{ route('activities.subcontract') }}" method="GET" class="form-inline mb-3">
+                            <input type="text" name="order_number" class="form-control mr-2" placeholder="Search by Order Number" value="{{ request('order_number') }}">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                            <a href="{{ route('activities.subcontract') }}" class="btn btn-secondary ml-2">Reset</a>
+                        </form>
 
                         <div class="card">
                             <div class="card-header">

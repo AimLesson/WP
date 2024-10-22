@@ -1712,31 +1712,46 @@ public function viewOrder($order_number)
     {
         // Get the filter value from the request
         $filterOrderNumber = $request->input('order_number');
-
+    
         // Get all order numbers from the Order model where order_status is not 'Finished'
         $orderNumbers = Order::where('order_status', '!=', 'Finished')->pluck('order_number');
-
-        // Apply the filter for `order_number` if it's set, otherwise get all
-        $standartpartQuery = DB::table('standart_part')->whereIn('order_number', $orderNumbers);
-        $standartpartJoinQuery = DB::table('standart_part')
-            ->join('standart_partadd', 'standart_part.order_number', '=', 'standart_partadd.order_number')
-            ->whereIn('standart_part.order_number', $orderNumbers);
-
+    
+        // Initialize empty collections to return when no data is found
+        $standartpart = collect();
+        $standartpartJoin = collect();
+        $noDataFound = true;
+    
+        // Check if order_number is provided and exists in the available orderNumbers
         if ($filterOrderNumber) {
-            // Filter the data by order_number
-            $standartpartQuery->where('order_number', $filterOrderNumber);
-            $standartpartJoinQuery->where('standart_part.order_number', $filterOrderNumber);
+            // If the filtered order_number does not exist in the available list, return empty results
+            if (!$orderNumbers->contains($filterOrderNumber)) {
+                return view('activities.standartpart', compact('standartpart', 'standartpartJoin', 'noDataFound'));
+            }
+    
+            // Otherwise, filter the queries by the specific order_number
+            $standartpartQuery = DB::table('standart_part')->where('order_number', $filterOrderNumber);
+            $standartpartJoinQuery = DB::table('standart_part')
+                ->join('standart_partadd', 'standart_part.order_number', '=', 'standart_partadd.order_number')
+                ->where('standart_part.order_number', $filterOrderNumber);
+        } else {
+            // If no filter is applied, query all relevant records
+            $standartpartQuery = DB::table('standart_part')->whereIn('order_number', $orderNumbers);
+            $standartpartJoinQuery = DB::table('standart_part')
+                ->join('standart_partadd', 'standart_part.order_number', '=', 'standart_partadd.order_number')
+                ->whereIn('standart_part.order_number', $orderNumbers);
         }
-
-        // Get the filtered data
+    
+        // Fetch the filtered data
         $standartpart = $standartpartQuery->get();
         $standartpartJoin = $standartpartJoinQuery->select('standart_part.*', 'standart_partadd.*')->get();
-
+    
         // Check if both tables have no data
         $noDataFound = $standartpart->isEmpty() && $standartpartJoin->isEmpty();
-
+    
+        // Return the view with the filtered data or empty result if no matching order_number
         return view('activities.standartpart', compact('standartpart', 'standartpartJoin', 'noDataFound'));
     }
+    
 
 
     public function viewstandartpart($order_number)
@@ -1931,9 +1946,25 @@ public function viewOrder($order_number)
 
     //SubCont. Controller
     public function sub_contract(Request $request)
-    {
-        return view('activities.subcontract');
+{
+    // Get the order_number from the request if present
+    $order_number = $request->input('order_number');
+
+    // Query the sub_contract model
+    $query = \App\Models\sub_contract::query();
+
+    // Apply filter if order_number is provided
+    if ($order_number) {
+        $query->where('order_number', 'like', '%' . $order_number . '%');
     }
+
+    // Fetch the filtered or full data
+    $data = $query->get();
+
+    // Return the view with the data and the filter value
+    return view('activities.subcontract', compact('data', 'order_number'));
+}
+
 
 
     public function createsub_contract()

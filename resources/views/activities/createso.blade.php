@@ -379,7 +379,7 @@
                                                                 <td class="row-index text-center fixed-column">1</td>
                                                                 <td>
                                                                     <input list="katalog-options" class="form-control"
-                                                                        name="item[]" id="item" value=""
+                                                                        name="item[]" id="item" value="{{ old('item.0') }}"
                                                                         style="width:100px"
                                                                         oninput="updateItemDesc(this)">
                                                                     <datalist id="katalog-options">
@@ -1048,7 +1048,7 @@
                                 <i class="fa fa-trash"></i></a>
                             </td>
                         </tr>`);
-                        generateOrderNumbers();
+                        // generateOrderNumbers();
                     }
 
                     setRadioButton('confirmation', quotationData.confirmation);
