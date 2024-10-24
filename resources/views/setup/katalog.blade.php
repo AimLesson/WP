@@ -28,6 +28,18 @@
                         <a href="{{ route('setup.createkatalog') }}" class="btn btn-primary mb-3"><i
                                 class="fas fa-plus"></i>
                             Add</a>
+
+                            <form action="{{ route('setup.importkatalog') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="form-group">
+                                    <label for="file">Import Katalog Data</label>
+                                    <input type="file" name="file" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-custom">Import</button>
+                            </form>
+
+                            
+
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Katalog Data</h3>

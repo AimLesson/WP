@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\NoKatalogImport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Plan;
 use App\Models\Unit;
 use App\Models\User;
@@ -1743,6 +1745,35 @@ class SetupController extends Controller
         $no_katalog->delete();
         return redirect()->route('setup.katalog')->with('success', 'Katalog delete successfully');
     }
+
+
+    public function importKatalog(Request $request)
+{
+    try {
+        // Log MIME type to help with debugging
+        if ($request->hasFile('file')) {
+            Log::info('File MIME type: ' . $request->file('file')->getMimeType());
+        }
+
+        // Validate that the file is present and has one of the allowed MIME types
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx,csv,txt',
+        ]);
+
+        // Use the file directly without storing it temporarily
+        Excel::import(new NoKatalogImport, $request->file('file'));
+
+        // Redirect to the katalog setup route with success message
+        return redirect()->route('setup.katalog')->with('success', 'Katalog data imported successfully');
+    } catch (\Exception $e) {
+        // Log the error message
+        Log::error('Error importing file: ' . $e->getMessage());
+
+        // Redirect back with an error message
+        return redirect()->route('setup.katalog')->with('error', 'Error importing file. Please try again.');
+    }
+}
+    
 
 
     //setup - Salesman

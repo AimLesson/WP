@@ -36,6 +36,8 @@
                             <a href="{{ route('activities.subcontract') }}" class="btn btn-secondary ml-2">Reset</a>
                         </form>
 
+                        
+
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Sub Contract</h3>

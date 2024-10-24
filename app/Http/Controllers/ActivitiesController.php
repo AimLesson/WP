@@ -2094,10 +2094,23 @@ public function viewOrder($order_number)
 
 
     //Overhead_manufacture Controller
-    public function overhead_manufacture()
-    {
-        return view('activities.overheadmanufacture');
+    public function overhead_manufacture(Request $request)
+{
+    // Get the start and end date from the request
+    $startDate = $request->input('start_date');
+    $endDate = $request->input('end_date');
+
+    // If both start and end date are provided, filter based on the range
+    $query = \App\Models\Overhead::query();
+    if ($startDate && $endDate) {
+        $query->whereBetween('tanggal', [$startDate, $endDate]);
     }
+
+    // Fetch the filtered or unfiltered results
+    $data = $query->get();
+
+    return view('activities.overheadmanufacture', compact('data'));
+}
 
     public function createoverhead_manufacture()
     {

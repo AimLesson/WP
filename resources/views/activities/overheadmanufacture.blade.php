@@ -30,6 +30,19 @@
                             <i class="fas fa-plus"></i> Add
                         </a>
                         
+                        <!-- Filter Form -->
+                        <form method="GET" action="{{ route('activities.overhead_manufacture') }}" class="form-inline mb-3">
+                            <div class="form-group mr-2">
+                                <label for="start_date" class="mr-2">Start Date:</label>
+                                <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
+                            </div>
+                            <div class="form-group mr-2">
+                                <label for="end_date" class="mr-2">End Date:</label>
+                                <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </form>
+
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Overhead Manufacture</h3>

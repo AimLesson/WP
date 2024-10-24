@@ -198,6 +198,8 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('/setup/katalog/edit/{id}', [SetupController::class, 'editkatalog'])->name('setup.editkatalog');
         Route::put('/setup/katalog/update/{id}', [SetupController::class, 'updatekatalog'])->name('setup.updatekatalog');
         Route::delete('/setup/katalog/delete/{id}', [SetupController::class, 'deletekatalog'])->name('setup.deletekatalog');
+        Route::post('/katalog/import', [SetupController::class, 'importKatalog'])->name('setup.importkatalog');
+
 
         //setup - Salesman
         Route::get('/setup/salesman', [SetupController::class, 'salesman'])->name('setup.salesman');
