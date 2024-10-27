@@ -273,7 +273,7 @@
                 <li class="nav-item order-4 order-sm-3">
                     <a href="{{ route('file') }}" class="nav-link {{ Request::is('file') ? 'active' : '' }}">File</a>
                 </li>
-                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                @if (Auth::user()->role == 'superadmin')
                 <li class="nav-item order-5 order-sm-4">
                     <a href="{{ route('setup') }}" class="nav-link {{ Request::is('setup') ? 'active' : '' }}">Setup</a>
                 </li>

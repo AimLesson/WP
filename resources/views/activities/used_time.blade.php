@@ -87,7 +87,9 @@
                                             <th>Started At</th>
                                             <th>Finished At</th>
                                             <th>Status</th>
-                                            <th>Action</th>
+                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                                            <th>Action</th> 
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -108,6 +110,7 @@
                                                 <td>{{ $ut->started_at }}</td>
                                                 <td>{{ $ut->finished_at }}</td>
                                                 <td>{{ ucfirst($ut->status) }}</td>
+                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
                                                     <div class="button-container">
                                                         <form action="{{ route('activities.update_status', $ut->id) }}"
@@ -139,6 +142,7 @@
                                                         </form>
                                                     </div>
                                                 </td>
+                                                @endif
                                             </tr>
                                         @endforeach
                                     </tbody>

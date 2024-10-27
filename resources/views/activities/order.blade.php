@@ -66,7 +66,9 @@
                                                 <th>DOD</th>
                                                 <th>Sale Price</th>
                                                 <th>State</th>
+                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <th>Action</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -82,6 +84,7 @@
                                                     <td>{{$o->dod}}</td>
                                                     <td >{{ 'Rp. ' . number_format($o->sale_price, 0, ',', '.') }}</td>
                                                     <td>{{$o->order_status}}</td>
+                                                    @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                     <td>
                                                         <a href="{{ route('activities.editorder', ['id' => $o->id]) }}"
                                                             class="btn-xs btn-warning"><i class="fas fa-pen"></i>
@@ -91,6 +94,7 @@
                                                             class="btn-xs btn-danger"><i class="fas fa-trash-alt"></i>
                                                             Delete</a>
                                                     </td>
+                                                    @endif
                                                 </tr>
                                                 <div class="modal fade" id="modal-hapus{{ $o->id }}">
                                                     <div class="modal-dialog">

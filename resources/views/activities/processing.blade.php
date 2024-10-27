@@ -25,9 +25,10 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                         <a href="{{ route('activities.createprocessing') }}" class="btn btn-primary mb-3"><i
                                 class="fas fa-plus"></i>
-                            Add</a>
+                            Add</a> @endif
 
                              <!-- Filter Form -->
                         <form method="GET" action="{{ route('activities.processing') }}" class="mb-3">
@@ -63,7 +64,9 @@
                                             <th>Estimated Time</th>
                                             <th>Total Process</th>
                                             <th>Created At</th>
+                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                             <th>Action</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -85,6 +88,7 @@
                                                 <td>{{ $pr->estimated_time }}</td>
                                                 <td>{{ formatRupiah($pr->mach_cost) }}</td>
                                                 <td>{{ $pr->created_at }}</td>
+                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
                                                     <a href="{{ route('activities.editprocessing',$pr->id) }}"
                                                         class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
@@ -93,6 +97,7 @@
                                                         class="btn-xs btn-danger"><i class="fas fa-trash-alt"></i>
                                                         Delete</a>
                                                 </td>
+                                                 @endif
                                             </tr>
                                             <div class="modal fade" id="modal-delete{{ $pr->id }}">
                                                 <div class="modal-dialog">

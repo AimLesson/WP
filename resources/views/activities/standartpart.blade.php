@@ -25,9 +25,10 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                         <a href="{{ route('activities.createstandartpart') }}" class="btn btn-primary mb-3">
                             <i class="fas fa-plus"></i> Add
-                        </a>
+                        </a> @endif
                          <!-- Filter Form -->
                          <form method="GET" action="{{ route('activities.standartpart') }}" class="mb-3">
                             <div class="input-group">
@@ -56,7 +57,9 @@
                                             <th>Date</th>
                                             <th>Item Name</th>
                                             <th>No Item</th>
+                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                             <th>Action</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -74,6 +77,7 @@
                                                 <td>{{ $m->date }}</td>
                                                 <td>{{ $m->item_name }}</td>
                                                 <td>{{ $m->item_no }}</td>
+                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
                                                     <a href="{{ route('activities.editstandartpart', $m->id) }}"
                                                         class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
@@ -82,6 +86,7 @@
                                                         <i class="fas fa-trash-alt"></i> Delete
                                                     </button>
                                                 </td>
+                                                @endif
                                             </tr>
                                             <div class="modal fade" id="modal-hapus{{ $m->id }}">
                                                 <div class="modal-dialog">

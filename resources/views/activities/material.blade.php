@@ -25,9 +25,10 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                         <a href="{{ route('activities.creatematerial') }}" class="btn btn-primary mb-3"><i
                                 class="fas fa-plus"></i>
-                            Add</a>
+                            Add</a> @endif
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Material Data</h3>
@@ -43,7 +44,9 @@
                                             <th>Length</th>
                                             <th>Width</th>
                                             <th>Thickness</th>
+                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                             <th>Action</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -55,6 +58,7 @@
                                                 <td>{{ $m->length }} mm</td>
                                                 <td>{{ $m->width }} mm</td>
                                                 <td>{{ $m->thickness }} mm</td>
+                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
                                                     <a href="{{ route('activities.editmaterial', ['id' => $m->id]) }}"
                                                         class="btn-xs btn-warning"><i class="fas fa-pen"></i>
@@ -64,6 +68,7 @@
                                                         class="btn-xs btn-danger"><i class="fas fa-trash-alt"></i>
                                                         Hapus</a>
                                                 </td>
+                                                @endif
                                             </tr>
                                             <div class="modal fade" id="modal-hapus{{ $m->id }}">
                                                 <div class="modal-dialog">

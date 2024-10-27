@@ -25,9 +25,10 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                         <a href="{{ route('activities.createsub_contract') }}" class="btn btn-primary mb-3">
                             <i class="fas fa-plus"></i> Add
-                        </a>
+                        </a> @endif
                     
                          <!-- Add Filter Form -->
                          <form action="{{ route('activities.subcontract') }}" method="GET" class="form-inline mb-3">
@@ -57,7 +58,9 @@
                                             <th>Price</th>
                                             <th>Total Price</th>
                                             <th>Info</th>
-                                            <th>Action</th>
+                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                                            <th>Action</th> 
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -76,10 +79,12 @@
                                                 <td>{{ formatRupiah($m->price_unit) }}</td>
                                                 <td>{{ formatRupiah($m->total_price) }}</td>
                                                 <td>{{ $m->info }}</td>
+                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
                                                     <a href="{{ route('activities.editsub_contract', $m->id) }}" class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
                                                     <a href="{{ route('activities.deletesub_contract', $m->id) }}" data-toggle="modal" data-target="#modal-delete{{ $m->id }}" class="btn-xs btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
                                                 </td>
+                                                @endif
                                             </tr>
 
                                             <!-- Delete Confirmation Modal -->

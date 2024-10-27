@@ -59,7 +59,9 @@
                                             <th>QTY</th>
                                             <th>DOD</th>
                                             <th>Sale Price</th>
+                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                             <th style="width: 100%">State</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -76,6 +78,7 @@
                                                 <td>{{ $o->qty }}</td>
                                                 <td>{{ $o->dod }}</td>
                                                 <td>{{ formatRupiah($o->sale_price) }}</td>
+                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
                                                     <form action="{{ route('activities.updateStatusClosed', $o->id) }}" method="POST" class="order-status-form">
                                                         @csrf
@@ -87,6 +90,7 @@
                                                         </select>
                                                     </form>
                                                 </td>
+                                                @endif
                                             </tr>
                                             <div class="modal fade" id="modal-hapus{{ $o->id }}">
                                                 <div class="modal-dialog">

@@ -26,9 +26,11 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                         <a href="{{ route('activities.createoverhead_manufacture') }}" class="btn btn-primary mb-3">
                             <i class="fas fa-plus"></i> Add
                         </a>
+                        @endif
                         
                         <!-- Filter Form -->
                         <form method="GET" action="{{ route('activities.overhead_manufacture') }}" class="form-inline mb-3">
@@ -52,7 +54,9 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
+                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                             <th>Action</th>
+                                            @endif
                                             <th>Tanggal</th>
                                             <th>Reference</th>
                                             <th>Descriptions</th>
@@ -68,6 +72,7 @@
                                         @foreach ($data as $m)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
+                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
                                                     <a href="{{ route('activities.editoverhead_manufacture', $m->id) }}" class="btn-xs btn-warning">
                                                         <i class="fas fa-pen"></i> Edit
@@ -76,6 +81,7 @@
                                                         <i class="fas fa-trash-alt"></i> Delete
                                                     </a>
                                                 </td>
+                                                @endif
                                                 <td>{{ $m->tanggal }}</td>
                                                 <td>{{ $m->ref }}</td>
                                                 <td>{{ $m->description }}</td>

@@ -25,9 +25,10 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                         <a href="{{ route('activities.createcustomer') }}" class="btn btn-primary mb-3"><i
                                 class="fas fa-plus"></i>
-                            Add</a>
+                            Add</a> @endif
 
                             <!-- Filter Form -->
                             <form action="{{ route('activities.customer') }}" method="GET" class="mb-3">
@@ -70,7 +71,9 @@
                                             <th>Shipment</th>
                                             <th>Contact Person</th>
                                             <th>Web Page</th>
+                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                             <th>Action</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -93,6 +96,7 @@
                                                 <td>{{ $c->shipment }}</td>
                                                 <td>{{$c->cp}}</td>
                                                 <td>{{ $c->webpage }}</td>
+                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
                                                     <a href="{{ route('activities.editcustomer', ['id' => $c->id]) }}"
                                                         class="btn-xs btn-warning"><i class="fas fa-pen"></i>
@@ -102,6 +106,7 @@
                                                         class="btn-xs btn-danger"><i class="fas fa-trash-alt"></i>
                                                         Delete</a>
                                                 </td>
+                                                @endif
                                             </tr>
                                             <div class="modal fade" id="modal-hapus{{ $c->id }}">
                                                 <div class="modal-dialog">
