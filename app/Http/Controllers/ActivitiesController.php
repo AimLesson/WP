@@ -2096,14 +2096,15 @@ public function viewOrder($order_number)
     //Overhead_manufacture Controller
     public function overhead_manufacture(Request $request)
 {
-    // Get the start and end date from the request
-    $startDate = $request->input('start_date');
-    $endDate = $request->input('end_date');
+    // Get the order number from the request
+    $orderNumber = $request->input('order_number');
 
-    // If both start and end date are provided, filter based on the range
+    // Create a query for the Overhead model
     $query = \App\Models\Overhead::query();
-    if ($startDate && $endDate) {
-        $query->whereBetween('tanggal', [$startDate, $endDate]);
+
+    // If order number is provided, filter based on the order_number
+    if ($orderNumber) {
+        $query->where('order_number', $orderNumber);
     }
 
     // Fetch the filtered or unfiltered results

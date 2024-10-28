@@ -75,8 +75,8 @@
         }
 
         .logo-kiri img {
-            max-width: 120px;
-            max-height: 120px;
+            max-width: 200px;
+            max-height: 150px;
         }
 
         .vertical-line {
@@ -98,6 +98,11 @@
             flex-direction: row;
         }
 
+        .logo-kanan b {
+            display: flex;
+            flex-direction: row;
+        }
+
         .logo-kanan img:not(:last-child) {
             margin-right: 10px;
         }
@@ -108,33 +113,28 @@
             flex-direction: column;
             align-items: center;
             max-width: 1000px;
-            border: 1px solid #000;
-            /* Menambahkan border dengan ketebalan 2px dan warna hitam */
-            border-radius: 10px;
-            /* Sesuaikan dengan lebar kolom info perusahaan */
         }
 
         .company-info b {
-            font-size: 15px;
+            font-size: 20px;
             /* Memperbesar tulisan "PT. ATMI SOLO" */
-            border-bottom: 2px solid black;
             /* Menambah garis hitam di bawah tulisan "PT. ATMI SOLO" */
             width: 100%;
-            text-align: left;
+            text-align: center;
             /* Membuat garis sepanjang kolom */
-            box-sizing: border-box;
+            
             /* Memastikan padding tidak mempengaruhi lebar */
         }
 
         .company-info p {
-            font-size: 12px;
-            text-align: left;
+            font-size: 20px;
+            text-align: center;
             margin-bottom: 5px;
             margin-top: 5px;
             /* Jarak antar baris */
             width: 100%;
             /* Membuat garis sepanjang kolom */
-            box-sizing: border-box;
+           
             /* Memastikan padding tidak mempengaruhi lebar */
         }
 
@@ -180,6 +180,57 @@
             color-adjust: exact;
         }
 
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            margin: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            
+            padding: 10px;
+        }
+        .header, .order-info, .section, .footer {
+            border-bottom: 1px solid #000; /* Border between sections */
+            padding: 10px 0;
+        }
+        .header .left, .header .right, 
+        .order-info .left, .order-info .right {
+            width: 48%;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .header .left, .order-info .left {
+            border-right: 1px solid #000; /* Vertical divider between columns */
+            padding-right: 10px;
+        }
+        .section p, .footer p {
+            margin: 5px 0;
+        }
+
+        .signature-section {
+        position: absolute;
+        bottom: -150%; /* Stick to the bottom */
+        left: 0; /* Stick to the left */
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: right;
+        text-align: right;
+        width: 100%; /* Full width to center-align content */
+        font-size: 14px; /* Adjust the font size if needed */
+    }
+
+    .signature-left {
+        font-weight: bold;
+    }
+
+    .signature-right {
+        margin-top: 100px; /* Space between the title and name */
+    }
+
     }
 </style>
     <div class="content-wrapper" style="background-color: rgb(255, 255, 255);">
@@ -205,15 +256,12 @@
         <div class="header print-only">
             <div class="logo-kiri">
                 <img src="{{ asset('lte/dist/img/ptatmisolo.png') }}" alt="Logo PT. ATMI Solo" class="logo">
-                <div class="vertical-line"></div>
                 <div class="company-info">
                     <b>PT. ATMI SOLO</b>
-                    <p>Jl. Adisucipto / Jl. Mojo No. 1 Karangasem, Laweyan, Surakarta 57145<br>
-                        Phone: +62 271 714466 - Fax: +62 271 714390<br>
-                        PO BOX 215 Surakarta 57145, Jawa Tengah, Indonesia<br>
-                        Email: marketing@atmi.co.id - Website: http://www.atmi.co.id</p>
+                    <p>ORDER/PESANAN</p>
                 </div>
                 <div class="logo-kanan">
+                    <b>F.PPIC</b>
                     <img src="{{ asset('lte/dist/img/atmipro.png') }}" alt="Logo ATMI Pro" class="logo">
                     <img src="{{ asset('lte/dist/img/truv.jpg') }}" alt="Logo ISO" class="logo">
                 </div>
@@ -225,9 +273,9 @@
         <div class="container print-only" style="background-color: rgb(255, 255, 255);margin-bottom:30px;">
             <div class="col-md-12" style="text-align: center;">
                 <h4 style="margin-top:7px;">ORDER</h4>
-                
             </div> 
         </div>
+        
         <section class="content" style="background-color: rgb(255, 255, 255);">
             <div class="container-fluid" style="background-color: rgb(255, 255, 255);">
                 <div class="row">
@@ -236,8 +284,8 @@
                             <div class="card-body">
                                 <div class="col-auto float-right ml-auto no-print">
                                     <div class="btn-group btn-group-sm">
-                                        <button class="btn btn-white">CSV</button>
-                                        <button class="btn btn-white">PDF</button>
+                                        {{-- <button class="btn btn-white">CSV</button>
+                                        <button class="btn btn-white">PDF</button> --}}
                                         <button class="btn btn-white" onclick="printPage()">Print</button>
                                     </div>
                                 </div>
@@ -271,10 +319,50 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <h5 class="print-only" style="text-align: right; font-weight:bold;">{{ $order->order_number }}</h5>
-                                <table class="table table-striped table-hover">
-                                    
-                                </table>
+                                {{-- <h5 class="print-only" style="text-align: center; font-weight:bold;">{{ $order->order_number }}</h5> --}}
+                                <div class="header">
+                                    <div class="left">
+                                        <p><strong>PT ATMI SOLO</strong></p>
+                                        <p>Jl. Mojo No. 1<br>SURAKARTA - 57145</p>
+                                        <p>Telp: 0217-714466, Fax: 0217-714390</p>
+                                    </div>
+                                    <div class="right">
+                                        <p><strong>Pemesan:</strong>{{ $order->customer }}</p>
+                                        <p>No. Pesanan: {{ $order->order_number }}</p>
+                                        <p>No. PO: {{ $order->quotation_number }}</p>
+                                    </div>
+                                </div>
+                                <!-- Order Information Section -->
+                                <div class="header">
+                                    <div class="left">
+                                        <p><strong>NOMOR PESANAN:</strong> {{ $order->order_number }}</p>
+                                        <p><strong>TANGGAL PESANAN:</strong> {{ $order->order_date }}</p>
+                                        <p><strong>REF. SURAT: </strong>{{ $order->reff_number }}</p>
+                                        <p><strong>PESANAN:</strong> {{ $order->product }}</p>
+                                        <p><strong>JUMLAH PESANAN:</strong> {{ $order->qty }}</p>
+                                    </div>
+                                    <div class="right">
+                                        <p><strong>No. SO:</strong> {{ $order->so_number }}</p>
+                                    </div>
+                                </div>
+                                <!-- Sample and Catalog Section -->
+                                <div class="section">
+                                    <p><strong>Contoh:</strong></p>
+                                    <p>No. Catalog: {{ $order->catalog_number }}</p>
+                                </div>
+                                <!-- Additional Information Section -->
+                                <div class="footer">
+                                    <p><strong>Keterangan:</strong>{{ $order->information }}</p>
+                                </div>
+                                <!-- Signature Section -->
+                                <div class="signature-section">
+                                    <div class="signature-left">
+                                        <p>Surakarta, {{ now()->format('d-m-Y') }}</p>
+                                    </div>
+                                    <div class="signature-right">
+                                        <p>St. Hermawan BP</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

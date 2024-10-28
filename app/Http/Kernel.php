@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AuthMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -69,6 +70,6 @@ class Kernel extends HttpKernel
 
     protected $routeMiddleware = [
         // ...
-        'auth' => \App\Http\Middleware\AuthMiddleware::class,
+        'update.activity' => \App\Http\Middleware\UpdateLastActivity::class,
     ];
 }

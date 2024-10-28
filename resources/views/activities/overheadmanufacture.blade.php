@@ -32,24 +32,27 @@
                         </a>
                         @endif
                         
-                        <!-- Filter Form -->
-                        <form method="GET" action="{{ route('activities.overhead_manufacture') }}" class="form-inline mb-3">
-                            <div class="form-group mr-2">
-                                <label for="start_date" class="mr-2">Start Date:</label>
-                                <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
-                            </div>
-                            <div class="form-group mr-2">
-                                <label for="end_date" class="mr-2">End Date:</label>
-                                <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Filter</button>
-                        </form>
+                       <!-- Filter Form -->
+                    <form method="GET" action="{{ route('activities.overhead_manufacture') }}" class="form-inline mb-3">
+                        <div class="form-group mr-2">
+                            <label for="order_number" class="mr-2">Order Number:</label>
+                            <input type="text" name="order_number" id="order_number" class="form-control" value="{{ request('order_number') }}" placeholder="Enter Order Number">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </form>
 
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Overhead Manufacture</h3>
                             </div>
                             <div class="card-body">
+                                @if($data->isEmpty())
+                                    <p>No records found for the provided order number. Showing all records instead:</p>
+
+                                    @php
+                                        $data = \App\Models\Overhead::all();
+                                    @endphp
+                                @endif
                                 <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
@@ -57,6 +60,7 @@
                                             @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                             <th>Action</th>
                                             @endif
+                                            <th>Order Number</th>
                                             <th>Tanggal</th>
                                             <th>Reference</th>
                                             <th>Descriptions</th>
@@ -82,7 +86,8 @@
                                                     </a>
                                                 </td>
                                                 @endif
-                                                <td>{{ $m->tanggal }}</td>
+                                                <td>{{ $m->order_number }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($m->tanggal)->format('d-m-y') }}</td>
                                                 <td>{{ $m->ref }}</td>
                                                 <td>{{ $m->description }}</td>
                                                 <td>{{ formatRupiah($m->jumlah) }}</td>
