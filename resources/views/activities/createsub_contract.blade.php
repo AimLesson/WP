@@ -12,7 +12,7 @@
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('activities') }}">Activities</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('activities.sub_contract') }}">Sub Contract</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('activities.subcontract') }}">Sub Contract</a></li>
                         <li class="breadcrumb-item active">Add Sub Contract</li>
                     </ol>
                 </div>

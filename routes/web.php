@@ -385,7 +385,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
                 //activities - sub_contract
                 Route::get('/activities', [ActivitiesController::class, 'activities'])->name('activities');
                 Route::get('/activities/subcontract', [ActivitiesController::class, 'sub_contract'])->name('activities.subcontract');
-                Route::get('/activities/sub_contract/create', [ActivitiesController::class, 'createsub_contract'])->name('activities.createsub_contract');
+                Route::get('/activities/subcontract/create', [ActivitiesController::class, 'createsub_contract'])->name('activities.createsub_contract');
                 Route::get('/activities/usedtime/create', [ActivitiesController::class, 'createusedtime'])->name('activities.createusedtime');
                 Route::get('activities/sub_contract/view/{order_number}', [ActivitiesController::class, 'viewsub_contract']);
                 Route::post('/activities/sub_contract/store', [ActivitiesController::class, 'storesub_contract'])->name('activities.storesub_contract');

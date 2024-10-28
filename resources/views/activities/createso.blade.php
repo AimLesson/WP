@@ -395,13 +395,13 @@
                                                                 <td>
                                                                     <input class="form-control" style="min-width:200px"
                                                                         type="text" id="item_desc" name="item_desc[]"
-                                                                        value="" readonly>
+                                                                        value="" >
                                                                 </td>
                                                                 <td>
                                                                     <input class="form-control unit_price"
                                                                         style="min-width:200px" type="text"
                                                                         id="unit_price" name="unit_price[]"
-                                                                        value=""readonly>
+                                                                        value="">
                                                                 </td>
                                                                 <td><input class="form-control qty" style="width:80px"
                                                                         type="number" id="qty" name="qty[]"
@@ -1277,8 +1277,8 @@
                                 ${generateKatalogOptions()} <!-- Use a function to generate options -->
                             </datalist>
                         </td>
-                        <td><input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]" readonly></td>
-                        <td><input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]" readonly></td>
+                        <td><input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]" ></td>
+                        <td><input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]"></td>
                         <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]"></td>
                         <td>
                             <select class="form-control" name="unit[]" id="unit" style="width:110px">
