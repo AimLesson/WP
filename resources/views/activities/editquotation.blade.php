@@ -655,24 +655,21 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="salesman" class="form-label">Salesman</label>
-                                                <select class="form-control select2" name="salesman" id="salesman"
-                                                    style="width: 100%;">
-                                                    <option value="Select Salesman" disabled selected>--
-                                                        Select
-                                                        Salesman --</option>
-                                                    @foreach ($user as $u)
-                                                        @if ($u->unit === 'MA')
-                                                            <option value="{{ $u->name }}"
-                                                                @if ($u->name == $quotationJoin[0]->salesman) selected @endif>
-                                                                {{ $u->name }}
-                                                            </option>
-                                                        @endif
+                                                <select class="form-control select2" name="salesman" id="salesman" style="width: 100%;" required>
+                                                    <!-- Placeholder option -->
+                                                    <option value="" disabled selected>-- Select Salesman --</option>
+                                            
+                                                    @foreach ($salesmen as $s)
+                                                        <option value="{{ $s->salesman }}" {{ $s->salesman == $quotationJoin[0]->salesman ? 'selected' : '' }}>
+                                                            {{ $s->salesman }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
+                                            
                                                 @error('salesman')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
-                                            </div>
+                                            </div>                                            
                                         </div>
                                         <div class="col-md-3">
                                         </div>

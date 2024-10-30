@@ -83,6 +83,7 @@ class ActivitiesController extends Controller
         $customers = Customer::get();
         $tax_type = TaxType::get();
         $unit = Unit::get();
+        $salesmen = Salesman::get();
         $no_katalog = NoKatalog::get();
         $user = User::get();
 
@@ -103,7 +104,7 @@ class ActivitiesController extends Controller
         // Format the new quotation number (e.g., Q-240001)
         $newQuotationNo = 'Q' . $year .'-'. str_pad($newOrderNumber, 4, '0', STR_PAD_LEFT);
 
-        return view('activities.createquotation', compact('user', 'unit', 'tax_type', 'customers', 'no_katalog', 'newQuotationNo'));
+        return view('activities.createquotation', compact('user', 'unit', 'tax_type', 'customers', 'no_katalog', 'newQuotationNo','salesmen'));
     }
 
     public function storequotation(Request $request)
@@ -248,6 +249,7 @@ class ActivitiesController extends Controller
         $customers = Customer::get();
         $tax_type = TaxType::get();
         $unit = Unit::get();
+        $salesmen = Salesman::get();
         $no_katalog = NoKatalog::get();
         $user = User::get();
         $quotation     = DB::table('quotation')->where('quotation_no', $quotation_no)->first();
@@ -257,7 +259,7 @@ class ActivitiesController extends Controller
             ->where('quotationadd.quotation_no', $quotation_no)
             ->get();
 
-        return view('activities.editquotation', compact('quotation', 'quotationJoin', 'user', 'unit', 'tax_type', 'customers', 'no_katalog'));
+        return view('activities.editquotation', compact('quotation', 'quotationJoin', 'user', 'unit', 'tax_type', 'customers', 'no_katalog','salesmen'));
     }
     public function deletequotationadd(Request $request)
     {
@@ -424,6 +426,7 @@ class ActivitiesController extends Controller
     {
         $kbli = Kblicode::get();
         $unit = Unit::get();
+        $salesmen = Salesman::get();
         $no_katalog = NoKatalog::get();
         $tax_type = TaxType::get();
         $user = User::get();
@@ -431,7 +434,7 @@ class ActivitiesController extends Controller
         $order_unit = OrderUnit::get();
         $quotation  = Quotation::get();
 
-        return view('activities.createso', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation', 'no_katalog'));
+        return view('activities.createso', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation', 'no_katalog','salesmen'));
     }
     public function getQuotationData($quotation_no)
     {
@@ -643,50 +646,50 @@ class ActivitiesController extends Controller
     }
 
     public function editsalesorder($so_number)
-    {
-        try {
-            Log::info('Entered editsalesorder method', ['so_number' => $so_number]);
+{
+    try {
+        Log::info('Entered editsalesorder method', ['so_number' => $so_number]);
 
-            $kbli = Kblicode::get();
-            Log::info('Fetched Kblicode');
+        $kbli = Kblicode::get();
+        Log::info('Fetched Kblicode');
 
-            $unit = Unit::get();
-            Log::info('Fetched Unit');
+        $unit = Unit::get();
+        Log::info('Fetched Unit');
 
-            $no_katalog = NoKatalog::get();
-            Log::info('Fetched NoKatalog');
+        $no_katalog = NoKatalog::get();
+        Log::info('Fetched NoKatalog');
 
-            $tax_type = TaxType::get();
-            Log::info('Fetched TaxType');
+        $tax_type = TaxType::get();
+        Log::info('Fetched TaxType');
 
-            $user = User::get();
-            Log::info('Fetched User');
+        $salesmen = Salesman::get(); 
+        Log::info('Fetched Salesmen');
 
-            $producttype = ProductType::get();
-            Log::info('Fetched ProductType');
+        $producttype = ProductType::get();
+        Log::info('Fetched ProductType');
 
-            $order_unit = OrderUnit::get();
-            Log::info('Fetched OrderUnit');
+        $order_unit = OrderUnit::get();
+        Log::info('Fetched OrderUnit');
 
-            $quotation = Quotation::get();
-            Log::info('Fetched Quotation');
+        $quotation = Quotation::get();
+        Log::info('Fetched Quotation');
 
-            $salesorder = DB::table('salesorder')->where('so_number', $so_number)->first();
-            Log::info('Fetched SalesOrder', ['salesorder' => $salesorder]);
+        $salesorder = DB::table('salesorder')->where('so_number', $so_number)->first();
+        Log::info('Fetched SalesOrder', ['salesorder' => $salesorder]);
 
-            $salesorderJoin = DB::table('salesorder')
-                ->join('soadd', 'salesorder.so_number', '=', 'soadd.so_number')
-                ->select('salesorder.*', 'soadd.*')
-                ->where('soadd.so_number', $so_number)
-                ->get();
-            Log::info('Fetched SalesOrderJoin', ['salesorderJoin' => $salesorderJoin]);
+        $salesorderJoin = DB::table('salesorder')
+            ->join('soadd', 'salesorder.so_number', '=', 'soadd.so_number')
+            ->select('salesorder.*', 'soadd.*')
+            ->where('soadd.so_number', $so_number)
+            ->get();
+        Log::info('Fetched SalesOrderJoin', ['salesorderJoin' => $salesorderJoin]);
 
-            return view('activities.editsalesorder', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation', 'salesorder', 'salesorderJoin', 'no_katalog'));
-        } catch (\Exception $e) {
-            Log::error('Error in editsalesorder method', ['message' => $e->getMessage()]);
-            return redirect()->back()->withErrors('An error occurred while processing the sales order.');
-        }
+        return view('activities.editsalesorder', compact('producttype', 'order_unit', 'salesmen', 'tax_type', 'unit', 'kbli', 'quotation', 'salesorder', 'salesorderJoin', 'no_katalog'));
+    } catch (\Exception $e) {
+        Log::error('Error in editsalesorder method', ['message' => $e->getMessage()]);
+        return redirect()->back()->withErrors('An error occurred while processing the sales order.');
     }
+}
     public function deletesoadd(Request $request)
     {
         DB::beginTransaction();

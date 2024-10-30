@@ -761,24 +761,17 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="salesman" class="form-label">Salesman</label>
-                                                <input list="salesman-options" class="form-control" name="salesman"
-                                                    id="salesman" style="width: 100%;" required>
-                                                <datalist id="salesman-options">
-                                                    <option {{ old('salesman') == null ? 'selected' : '' }}></option>
-                                                    @foreach ($user as $u)
-                                                        @if ($u->unit === 'MA')
-                                                            <option value="{{ $u->name }}">{{ $u->name }}
-                                                            </option>
-                                                            {{ old('salesman') == $u->name ? 'selected' : '' }}>
-                                                            {{ $u->name }}
-                                                        @endif
+                                                <select class="form-control" name="salesman" id="salesman" style="width: 100%;" required>
+                                                    <option disabled selected>-- Select Salesman --</option>
+                                                    @foreach ($salesmen as $s)
+                                                        <option value="{{ $s->salesman }}">{{ $s->salesman }}</option>
                                                     @endforeach
-                                                </datalist>
-
+                                                </select>
+                                            
                                                 @error('salesman')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
-                                            </div>
+                                            </div> 
                                         </div>
                                         <div class="col-md-3">
                                         </div>

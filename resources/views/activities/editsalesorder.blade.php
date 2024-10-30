@@ -726,19 +726,16 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="salesman" class="form-label">Salesman</label>
-                                                <input list="salesman-options" class="form-control" name="salesman" id="salesman" value="{{ old('salesman', $salesorderJoin[0]->salesman) }}" style="width: 100%;" required>
-                                                
-                                                <datalist id="salesman-options">
-                                                    <!-- Empty option for default selection -->
-                                                    <option value="" disabled {{ old('salesman') == null ? 'selected' : '' }}>-- Select Salesman --</option>
+                                                <select class="form-control" name="salesman" id="salesman" style="width: 100%;" required>
+                                                    <!-- Default placeholder option -->
+                                                    <option value="" disabled {{ old('salesman', $salesorderJoin[0]->salesman) == null ? 'selected' : '' }}>-- Select Salesman --</option>
                                                     
-                                                    @foreach ($user as $u)
-                                                        @if ($u->unit === 'MA')
-                                                            <!-- Options for salesmen -->
-                                                            <option value="{{ $u->name }}">{{ $u->name }}</option>
-                                                        @endif
+                                                    @foreach ($salesmen as $s)
+                                                        <option value="{{ $s->salesman }}" {{ old('salesman', $salesorderJoin[0]->salesman) == $s->salesman ? 'selected' : '' }}>
+                                                            {{ $s->salesman }}
+                                                        </option>
                                                     @endforeach
-                                                </datalist>
+                                                </select>
                                             
                                                 @error('salesman')
                                                     <small class="text-danger">{{ $message }}</small>
