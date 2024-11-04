@@ -435,7 +435,8 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::put('/activities/update-status-closed/{id}', [ActivitiesController::class, 'updateStatusClosed'])->name('activities.updateStatusClosed');
         Route::post('/update-status', [ActivitiesController::class, 'updateStatusOrder'])->name('update-status');
 
-
+        Route::get('/activities/qc', [ActivitiesController::class, 'qc'])->name('activities.qc');
+        Route::post('/activities/order/{id}/status', [ActivitiesController::class, 'updateQCStatus'])->name('activities.updateQCStatus');
 
         //report
         Route::get('/report', [ReportController::class, 'report'])->name('report');
