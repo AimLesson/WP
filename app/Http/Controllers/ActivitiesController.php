@@ -204,7 +204,7 @@ class ActivitiesController extends Controller
             $quotation->freight           = $freight;
 
             $inputTotalAmount = $request->input('total_amount');
-            $totalAmount = str_replace(['Rp', '.', ','], '', $inputTotalAmount);
+            $totalAmount = str_replace(['Rp','.', ','], '', $inputTotalAmount);
             $quotation->total_amount = $totalAmount; // Menggunakan variabel $totalAmount yang telah dibersihkan
 
             if ($request->hasFile('file')) {
@@ -229,7 +229,7 @@ class ActivitiesController extends Controller
                 $quotationAdd['unit']           = $request->unit[$key];
 
                 // Menghilangkan karakter 'Rp', ',', dan '.'
-                $inputAmount = str_replace(['Rp', ',', '.'], '', $request->input('amount')[$key]);
+                $inputAmount = str_replace(['Rp',',','.'], '', $request->input('amount')[$key]);
                 $quotationAdd['amount'] = $inputAmount;
 
                 QuotationAdd::create($quotationAdd);
@@ -597,36 +597,34 @@ class ActivitiesController extends Controller
                 // Create the SalesOrderAdd record
                 SalesOrderAdd::create($soAdd);
 
-                // Prepare Order data
-                $orderData = [
-                    'order_number'     => $request->order_no[$key], // from SalesOrderAdd order_no
-                    'so_number'        => $salesorder->so_number, // from $salesorder
-                    'quotation_number' => $salesorder->quotation_no, // from $salesorder
-                    'kbli_code'        => $request->kbli[$key], // from SalesOrderAdd kbli
-                    'reff_number'      => null, // NULL
-                    'order_date'       => $salesorder->date, // from $salesorder
-                    'product_type'     => $request->product_type[$key], // from SalesOrderAdd product_type
-                    'po_number'        => $salesorder->po_number, // NULL
-                    'sale_price'       => $salesorder->total_amount, // from $salesorder
-                    'production_cost'  => null, // NULL
-                    'information'      => $salesorder->description, // from $salesorder
-                    'information2'     => null, // NULL
-                    'information3'     => null, // NULL
-                    'order_status'     => 'Queue', // Default to 'Queue'
-                    'customer'         => $salesorder->name, // from $salesorder
-                    'product'          => $items, // from SalesOrderAdd item
-                    'qty'              => $request->qty[$key], // from SalesOrderAdd qty
-                    'dod'              => $salesorder->dod, // from $salesorder
-                    'dod_forecast'     => $salesorder->dod, // from $salesorder
-                    'sample'           => $salesorder->sample, // from $salesorder
-                    'material'         => null, // NULL
-                    'catalog_number'   => null, // NULL
-                    'material_cost'    => null, // NULL
-                    'dod_adj'          => $salesorder->dod // from $salesorder
-                ];
+                // Loop through each item to update or create Order records
+                foreach ($request->item as $key => $items) {
+                    $orderData = [
+                        'order_number'     => $request->order_no[$key], // Unique identifier
+                        'so_number'        => $salesorder->so_number,
+                        'quotation_number' => $salesorder->quotation_no,
+                        'kbli_code'        => $request->kbli[$key],
+                        'order_date'       => $salesorder->date,
+                        'product_type'     => $request->product_type[$key],
+                        'po_number'        => $salesorder->po_number,
+                        'sale_price'       => $salesorder->total_amount,
+                        'information'      => $salesorder->description,
+                        'order_status'     => 'Queue',
+                        'customer'         => $salesorder->name,
+                        'product'          => $items,
+                        'qty'              => $request->qty[$key],
+                        'dod'              => $salesorder->dod,
+                        'dod_forecast'     => $salesorder->dod,
+                        'sample'           => $salesorder->sample,
+                        'dod_adj'          => $salesorder->dod
+                    ];
 
-                // Create the Order record
-                Order::create($orderData);
+                    // Use updateOrCreate for Order model
+                    Order::updateOrCreate(
+                        ['order_number' => $request->order_no[$key]], // Match on unique order number
+                        $orderData // Data to insert or update
+                    );
+                }
             }
 
 
@@ -641,7 +639,7 @@ class ActivitiesController extends Controller
                 'input_data' => $request->all()
             ]);
 
-            return redirect()->route('activities.createso')->with('error', 'Failed to add Sales Order. Please try again!');
+            return redirect()->route('activities.createso')->with('error', 'Failed to add Sales Order. Please try again!')->withInput();
         }
     }
 
