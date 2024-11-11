@@ -38,7 +38,10 @@
                             <label for="order_number" class="mr-2">Order Number:</label>
                             <input type="text" name="order_number" id="order_number" class="form-control" value="{{ request('order_number') }}" placeholder="Enter Order Number">
                         </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                            <a href="{{ route('activities.overhead_manufacture') }}" class="btn btn-secondary">Reset</a>
+                        </div>
                     </form>
 
                         <div class="card">
@@ -70,9 +73,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                            $data = \App\Models\Overhead::get();
-                                        @endphp
                                         @foreach ($data as $m)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
@@ -81,9 +81,9 @@
                                                     <a href="{{ route('activities.editoverhead_manufacture', $m->id) }}" class="btn-xs btn-warning">
                                                         <i class="fas fa-pen"></i> Edit
                                                     </a>
-                                                    <a href="{{ route('activities.deleteoverhead_manufacture', ['id' => $m->id]) }}" class="btn-xs btn-danger" data-toggle="modal" data-target="#modal-hapus{{ $m->id }}">
+                                                    <button class="btn-xs btn-danger" data-toggle="modal" data-target="#modal-hapus{{ $m->id }}">
                                                         <i class="fas fa-trash-alt"></i> Delete
-                                                    </a>
+                                                    </button>
                                                 </td>
                                                 @endif
                                                 <td>{{ $m->order_number }}</td>
@@ -115,11 +115,8 @@
                                                             </form>
                                                         </div>
                                                     </div>
-                                                    <!-- /.modal-content -->
                                                 </div>
-                                                <!-- /.modal-dialog -->
                                             </div>
-                                            <!-- /.modal -->
                                         @endforeach
                                     </tbody>
                                 </table>

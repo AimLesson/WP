@@ -82,7 +82,7 @@
                                                         <div class="flex">
                                                             <button type="button" class="btn btn-default me-2"
                                                                 onclick="updateStatus({{ $o->id }}, 'approved')">Approve</button>
-                                                            <button type="button" class="btn btn-danger btn-custom"
+                                                            <button type="button" class="btn btn-danger btn-remove"
                                                                 onclick="updateStatus({{ $o->id }}, 'pending')">Reject</button>
                                                         </div>
                                                     </td>

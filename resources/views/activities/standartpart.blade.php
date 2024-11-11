@@ -30,11 +30,16 @@
                             <i class="fas fa-plus"></i> Add
                         </a> @endif
                          <!-- Filter Form -->
-                         <form method="GET" action="{{ route('activities.standartpart') }}" class="mb-3">
-                            <div class="input-group">
-                                <input type="text" name="order_number" class="form-control" placeholder="Filter by Order Number" value="{{ request()->input('order_number') }}">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-primary">Filter</button>
+                          <form method="GET" action="{{ route('activities.standartpart') }}" class="mb-3">
+                            <div class="form-group row">
+                                <label for="order_number" class="col-sm-2 col-form-label">Filtered by Order Number:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="order_number" id="order_number" class="form-control"
+                                           value="{{ request('order_number') }}" placeholder="Enter Order Number">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                                    <a href="{{ route('activities.standartpart') }}" class="btn btn-secondary">Reset</a>
                                 </div>
                             </div>
                         </form>
@@ -63,10 +68,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                            $standart_part = \App\Models\Standart_part::get();
-                                        @endphp
-                                        @foreach ($standart_part as $m)
+                                        @foreach ($standartpart as $m)
                                             <tr>
                                                 <td>{{ $m->order_number }}</td>
                                                 <td>{{ $m->id }}</td>
@@ -79,10 +81,8 @@
                                                 <td>{{ $m->item_no }}</td>
                                                 @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
-                                                    <a href="{{ route('activities.editstandartpart', $m->id) }}"
-                                                        class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
-                                                    <button class="btn-xs btn-danger" data-toggle="modal"
-                                                        data-target="#modal-hapus{{ $m->id }}">
+                                                    <a href="{{ route('activities.editstandartpart', $m->id) }}" class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
+                                                    <button class="btn-xs btn-danger" data-toggle="modal" data-target="#modal-hapus{{ $m->id }}">
                                                         <i class="fas fa-trash-alt"></i> Delete
                                                     </button>
                                                 </td>
@@ -93,8 +93,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">Confirm Delete Standart Part</h4>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
@@ -102,25 +101,18 @@
                                                             <p>Are you sure to delete <b>{{ $m->part_name }}?</b></p>
                                                         </div>
                                                         <div class="modal-footer justify-content-between">
-                                                            <form
-                                                                action="{{ route('activities.deletestandartpart', $m->id) }}"
-                                                                method="POST">
+                                                            <form action="{{ route('activities.deletestandartpart', $m->id) }}" method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="button" class="btn btn-default"
-                                                                    data-dismiss="modal">Cancel</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-danger btn-remove">Delete</button>
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn btn-danger btn-remove">Delete</button>
                                                             </form>
                                                         </div>
                                                     </div>
-                                                    <!-- /.modal-content -->
                                                 </div>
-                                                <!-- /.modal-dialog -->
                                             </div>
-                                            <!-- /.modal -->
                                         @endforeach
-                                    </tbody>
+                                    </tbody>                                    
                                 </table>
                             </div>
                             <!-- /.card-body -->

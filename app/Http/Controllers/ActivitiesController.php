@@ -2096,23 +2096,25 @@ class ActivitiesController extends Controller
 
     //Overhead_manufacture Controller
     public function overhead_manufacture(Request $request)
-    {
-        // Get the order number from the request
-        $orderNumber = $request->input('order_number');
+{
+    // Get the order number from the request
+    $filterOrderNumber = $request->input('order_number');
 
-        // Create a query for the Overhead model
-        $query = \App\Models\Overhead::query();
+    // Create a query for the Overhead model
+    $query = \App\Models\Overhead::query();
 
-        // If order number is provided, filter based on the order_number
-        if ($orderNumber) {
-            $query->where('order_number', $orderNumber);
-        }
-
-        // Fetch the filtered or unfiltered results
-        $data = $query->get();
-
-        return view('activities.overheadmanufacture', compact('data'));
+    // If order number is provided, filter based on the order_number
+    if ($filterOrderNumber) {
+        $query->where('order_number', $filterOrderNumber);
     }
+
+    // Fetch the filtered or unfiltered results
+    $data = $query->get();
+
+    // Return the view with the filtered data and the filter value
+    return view('activities.overheadmanufacture', compact('data', 'filterOrderNumber'));
+}
+
 
     public function createoverhead_manufacture()
     {

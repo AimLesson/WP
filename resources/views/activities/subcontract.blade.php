@@ -31,12 +31,16 @@
                         </a> @endif
                     
                          <!-- Add Filter Form -->
-                         <form action="{{ route('activities.subcontract') }}" method="GET" class="form-inline mb-3">
-                            <input type="text" name="order_number" class="form-control mr-2" placeholder="Search by Order Number" value="{{ request('order_number') }}">
-                            <button type="submit" class="btn btn-primary">Search</button>
-                            <a href="{{ route('activities.subcontract') }}" class="btn btn-secondary ml-2">Reset</a>
+                         <form method="GET" action="{{ route('activities.subcontract') }}" class="form-inline mb-3">
+                            <div class="form-group mr-2">
+                                <label for="order_number" class="mr-2">Order Number:</label>
+                                <input type="text" name="order_number" id="order_number" class="form-control" value="{{ request('order_number') }}" placeholder="Enter Order Number">
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                                <a href="{{ route('activities.subcontract') }}" class="btn btn-secondary">Reset</a>
+                            </div>
                         </form>
-
                         
 
                         <div class="card">
@@ -64,9 +68,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                            $data = \App\Models\sub_contract::get();
-                                        @endphp
                                         @foreach ($data as $m)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
