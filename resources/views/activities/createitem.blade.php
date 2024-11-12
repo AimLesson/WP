@@ -129,12 +129,13 @@
                                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom:0px;"
                                             class="form-label">
                                             Produk
-                                            <button type="button" id="add-product-row"
-                                                class="btn btn-primary btn-xs btn-custom">
-                                                <a href="javascript:void(0)" class="text-light font-18" title="Add Product"
-                                                    id="addBtn"><i class="fa fa-plus"></i></a>
+                                            <button type="button" id="addBtn"
+                                                class="btn btn-primary btn-xs btn-custom text-light font-18"
+                                                title="Add Product">
+                                                <i class="fa fa-plus"></i>
                                             </button>
                                         </label>
+
                                         <div class="table-responsive" style="max-width: 100%;">
                                             <table class="table" id="soadd-table" style="width: 100%; overflow-x: auto;">
                                                 <thead>
@@ -371,25 +372,27 @@
             materialDropdown.find('option').each(function() {
                 const kodeLogMaterial = $(this).data('kode-log');
 
+                // Check if the option should be visible based on selected kode_log
                 if (
                     (selectedKodeLog === 'Assy' && kodeLogMaterial === 'Assy') ||
                     (selectedKodeLog === 'Sub-Assy' && kodeLogMaterial === 'Sub-Assy') ||
                     (!selectedKodeLog && !kodeLogMaterial) ||
-                    // Show if no kode_log is selected and option has no data-kode-log
-                    (kodeLogMaterial === selectedKodeLog) // Show if kode_log matches exactly
+                    // No kode_log is selected and option has no data-kode-log
+                    (kodeLogMaterial === selectedKodeLog) // Exact match with kode_log
                 ) {
-                    $(this).show(); // Show if it matches
-                    console.log('Showing option:', $(this).val());
+                    $(this).show(); // Show matching options
                 } else {
-                    $(this).hide(); // Hide if it doesn't match
-                    console.log('Hiding option:', $(this).val());
+                    $(this).hide(); // Hide non-matching options
                 }
             });
 
-            // Reset to the first visible option
-            materialDropdown.val(materialDropdown.find('option:visible').first().val());
+            // Set the material dropdown value based on selected kode_log
+            if (selectedKodeLog === 'Assy' || selectedKodeLog === 'Sub-Assy') {
+                materialDropdown.val(selectedKodeLog).trigger('change');
+            } else {
+                materialDropdown.val(materialDropdown.find('option:visible').first().val());
+            }
         }
-
 
         // Event listener for kode_log change
         $(document).on('change', '.kodelog', function() {
@@ -400,6 +403,7 @@
 
         // Initialize filtering for existing rows
         filterNamaBarang($('#soadd-table tbody tr').first());
+
 
         let rowIdx = 1;
 
@@ -500,6 +504,7 @@
         addListeners($('#soadd-table tbody tr'));
 
         $('#addBtn').click(function() {
+            console.log("Add button clicked");
             rowIdx++;
             const newRow = `
                 <tr>
@@ -516,7 +521,7 @@
                                                                     <option value="Assy">
                                                                         Assy
                                                                     </option>
-                                                                    <option value="Sub Assy">
+                                                                    <option value="Sub-Assy">
                                                                         Sub-Assy
                                                                     </option>
 
@@ -531,7 +536,7 @@
                                                                     <option value="Assy">
                                                                         Assy
                                                                     </option>
-                                                                    <option value="Sub Assy">
+                                                                    <option value="Sub-Assy">
                                                                         Sub-Assy
                                                                     </option>
 
@@ -547,7 +552,7 @@
                             <option value="square_pipe_non_ss">Square Pipe Non-SS</option>
                             <option value="round_pipe_non_ss">Round Pipe Non-SS</option>
                             <option value="sheet_metal_ss">Sheet Metal SS</option>
-                            option value="square_block_ss">Square Block SS</option>
+                            <option value="square_block_ss">Square Block SS</option>
                             <option value="square_pipe_ss">Square Pipe SS</option>
                             <option value="round_pipe_ss">Round Pipe SS</option>
                         </select>
@@ -573,16 +578,14 @@
 
             addListeners(addedRow);
 
-            // Apply the filtering to the new row
             filterNamaBarang(addedRow);
         });
 
         $('#soadd-table').on('click', '.remove', function() {
-        const row = $(this).closest('tr');
-        console.log('Removing row:', row.index());
-        row.remove();
-        rowIdx--;
-        });
+            const row = $(this).closest('tr');
+            console.log('Removing row:', row.index());
+            row.remove();
+            rowIdx--;
         });
     </script>
 @endsection

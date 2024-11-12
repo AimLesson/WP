@@ -44,7 +44,6 @@ class ActivitiesController extends Controller
         return view('activities.activities');
     }
 
-
     //activities - quotation
     public function quotationindex(Request $request)
     {
@@ -61,21 +60,14 @@ class ActivitiesController extends Controller
 
         // Fetch the quotations and perform the join
         $quotation = $quotation->get();
-        $quotationJoin = DB::table('quotation')
-            ->join('quotationadd', 'quotation.quotation_no', '=', 'quotationadd.quotation_no')
-            ->select('quotation.*', 'quotationadd.*')
-            ->get();
+        $quotationJoin = DB::table('quotation')->join('quotationadd', 'quotation.quotation_no', '=', 'quotationadd.quotation_no')->select('quotation.*', 'quotationadd.*')->get();
 
         // Return the view with the filtered data
         return view('activities.quotation', compact('quotation', 'quotationJoin', 'filterQuotationNo'));
     }
     public function viewquotation($quotation_no)
     {
-        $quotationJoin = DB::table('quotation')
-            ->join('quotationadd', 'quotation.quotation_no', '=', 'quotationadd.quotation_no')
-            ->select('quotation.*', 'quotationadd.*')
-            ->where('quotationadd.quotation_no', $quotation_no)
-            ->get();
+        $quotationJoin = DB::table('quotation')->join('quotationadd', 'quotation.quotation_no', '=', 'quotationadd.quotation_no')->select('quotation.*', 'quotationadd.*')->where('quotationadd.quotation_no', $quotation_no)->get();
         return view('activities.viewquotation', compact('quotationJoin'));
     }
     public function createquotation()
@@ -125,86 +117,86 @@ class ActivitiesController extends Controller
             ]);
         }
         $request->validate([
-            'quotation_no'      => 'required|unique:quotation,quotation_no',
-            'company_name'      => 'required',
-            'name'              => 'required',
-            'date'              => 'required|date',
-            'address'           => 'required',
-            'npwp'              => 'nullable',
-            'phone'             => 'required',
-            'fax'               => 'required',
-            'tax_address'       => 'required',
-            'confirmation'      => 'required',
-            'type'              => 'required',
-            'description'       => 'required',
-            'sample'            => 'required',
-            'ass_type'          => 'required',
-            'qc_statement'      => 'required',
-            'packing_type'      => 'required',
-            'top'               => 'required',
-            'ptp'               => 'required',
-            'dod'               => 'required',
-            'shipping_address'  => 'required',
-            'file'              => 'nullable',
-            'valid'             => 'required|date',
-            'mdp'               => 'required',
-            'salesman'          => 'required',
-            'subtotal'          => 'required',
-            'discount'          => 'required',
-            'tax'               => 'required',
-            'freight'           => 'required',
-            'total_amount'      => 'required',
+            'quotation_no' => 'required|unique:quotation,quotation_no',
+            'company_name' => 'required',
+            'name' => 'required',
+            'date' => 'required|date',
+            'address' => 'required',
+            'npwp' => 'nullable',
+            'phone' => 'required',
+            'fax' => 'required',
+            'tax_address' => 'required',
+            'confirmation' => 'required',
+            'type' => 'required',
+            'description' => 'required',
+            'sample' => 'required',
+            'ass_type' => 'required',
+            'qc_statement' => 'required',
+            'packing_type' => 'required',
+            'top' => 'required',
+            'ptp' => 'required',
+            'dod' => 'required',
+            'shipping_address' => 'required',
+            'file' => 'nullable',
+            'valid' => 'required|date',
+            'mdp' => 'required',
+            'salesman' => 'required',
+            'subtotal' => 'required',
+            'discount' => 'required',
+            'tax' => 'required',
+            'freight' => 'required',
+            'total_amount' => 'required',
         ]);
         // dd(request()->all());
         DB::beginTransaction();
         try {
-            $quotation = new Quotation;
-            $quotation->quotation_no      = $request->quotation_no;
-            $quotation->company_name      = $request->company_name;
-            $quotation->name              = $request->name;
-            $quotation->date              = $request->date;
-            $quotation->address           = $request->address;
-            $quotation->npwp              = $request->npwp;
-            $quotation->phone             = $request->phone;
-            $quotation->fax               = $request->fax;
-            $quotation->tax_address       = $request->tax_address;
-            $quotation->email             = $request->email;
-            $quotation->confirmation      = $request->confirmation;
-            $quotation->type              = $request->type;
-            $quotation->description       = $request->description;
-            $quotation->sample            = $request->sample;
-            $quotation->ass_type          = $request->ass_type;
-            $quotation->qc_statement      = $request->qc_statement;
-            $quotation->packing_type      = $request->packing_type;
-            $quotation->top               = $request->top;
-            $quotation->net_days          = $request->net_days;
-            $quotation->ptp               = $request->ptp;
-            $quotation->dod               = $request->dod;
-            $quotation->shipping_address  = $request->shipping_address;
-            $quotation->valid             = $request->valid;
-            $quotation->mdp               = $request->mdp;
-            $quotation->salesman          = $request->salesman;
-            $quotation->discount_percent  = $request->discount_percent;
-            $quotation->tax_type          = $request->tax_type;
+            $quotation = new Quotation();
+            $quotation->quotation_no = $request->quotation_no;
+            $quotation->company_name = $request->company_name;
+            $quotation->name = $request->name;
+            $quotation->date = $request->date;
+            $quotation->address = $request->address;
+            $quotation->npwp = $request->npwp;
+            $quotation->phone = $request->phone;
+            $quotation->fax = $request->fax;
+            $quotation->tax_address = $request->tax_address;
+            $quotation->email = $request->email;
+            $quotation->confirmation = $request->confirmation;
+            $quotation->type = $request->type;
+            $quotation->description = $request->description;
+            $quotation->sample = $request->sample;
+            $quotation->ass_type = $request->ass_type;
+            $quotation->qc_statement = $request->qc_statement;
+            $quotation->packing_type = $request->packing_type;
+            $quotation->top = $request->top;
+            $quotation->net_days = $request->net_days;
+            $quotation->ptp = $request->ptp;
+            $quotation->dod = $request->dod;
+            $quotation->shipping_address = $request->shipping_address;
+            $quotation->valid = $request->valid;
+            $quotation->mdp = $request->mdp;
+            $quotation->salesman = $request->salesman;
+            $quotation->discount_percent = $request->discount_percent;
+            $quotation->tax_type = $request->tax_type;
 
             $inputsubtotal = $request->input('subtotal');
             $subtotal = str_replace(['Rp', '.', ','], '', $inputsubtotal);
-            $quotation->subtotal          = $subtotal;
+            $quotation->subtotal = $subtotal;
 
             $inputdiscount = $request->input('discount');
             $discount = str_replace(['Rp', '.', ','], '', $inputdiscount);
-            $quotation->discount          = $discount;
+            $quotation->discount = $discount;
 
             $inputtax = $request->input('tax');
             $tax = str_replace(['Rp', '.', ','], '', $inputtax);
-            $quotation->tax               = $tax;
+            $quotation->tax = $tax;
 
             $inputfreight = $request->input('freight');
             $freight = str_replace(['Rp', '.', ','], '', $inputfreight);
-            $quotation->freight           = $freight;
+            $quotation->freight = $freight;
 
             $inputTotalAmount = $request->input('total_amount');
-            $totalAmount = str_replace(['Rp','.', ','], '', $inputTotalAmount);
+            $totalAmount = str_replace(['Rp', '.', ','], '', $inputTotalAmount);
             $quotation->total_amount = $totalAmount; // Menggunakan variabel $totalAmount yang telah dibersihkan
 
             if ($request->hasFile('file')) {
@@ -216,25 +208,24 @@ class ActivitiesController extends Controller
             $quotation->save();
 
             foreach ($request->item as $key => $items) {
-                $quotationAdd['item']           = $items;
-                $quotationAdd['quotation_no']   = $quotation->quotation_no;
-                $quotationAdd['disc']           = $request->disc[$key];
-                $quotationAdd['item_desc']      = $request->item_desc[$key];
-                $quotationAdd['qty']            = $request->qty[$key];
+                $quotationAdd['item'] = $items;
+                $quotationAdd['quotation_no'] = $quotation->quotation_no;
+                $quotationAdd['disc'] = $request->disc[$key];
+                $quotationAdd['item_desc'] = $request->item_desc[$key];
+                $quotationAdd['qty'] = $request->qty[$key];
 
                 // Menghilangkan karakter 'Rp', ',', dan '.'
                 $inputUnitPrice = str_replace(['Rp', ',', '.'], '', $request->input('unit_price')[$key]);
                 $quotationAdd['unit_price'] = $inputUnitPrice;
 
-                $quotationAdd['unit']           = $request->unit[$key];
+                $quotationAdd['unit'] = $request->unit[$key];
 
                 // Menghilangkan karakter 'Rp', ',', dan '.'
-                $inputAmount = str_replace(['Rp',',','.'], '', $request->input('amount')[$key]);
+                $inputAmount = str_replace(['Rp', ',', '.'], '', $request->input('amount')[$key]);
                 $quotationAdd['amount'] = $inputAmount;
 
                 QuotationAdd::create($quotationAdd);
             }
-
 
             DB::commit();
 
@@ -252,12 +243,8 @@ class ActivitiesController extends Controller
         $salesmen = Salesman::get();
         $no_katalog = NoKatalog::get();
         $user = User::get();
-        $quotation     = DB::table('quotation')->where('quotation_no', $quotation_no)->first();
-        $quotationJoin = DB::table('quotation')
-            ->join('quotationadd', 'quotation.quotation_no', '=', 'quotationadd.quotation_no')
-            ->select('quotation.*', 'quotationadd.*')
-            ->where('quotationadd.quotation_no', $quotation_no)
-            ->get();
+        $quotation = DB::table('quotation')->where('quotation_no', $quotation_no)->first();
+        $quotationJoin = DB::table('quotation')->join('quotationadd', 'quotation.quotation_no', '=', 'quotationadd.quotation_no')->select('quotation.*', 'quotationadd.*')->where('quotationadd.quotation_no', $quotation_no)->get();
 
         return view('activities.editquotation', compact('quotation', 'quotationJoin', 'user', 'unit', 'tax_type', 'customers', 'no_katalog', 'salesmen'));
     }
@@ -300,38 +287,38 @@ class ActivitiesController extends Controller
 
         try {
             $update = [
-                'quotation_no'      => $request->quotation_no,
-                'company_name'      => $request->company_name,
-                'name'              => $request->name,
-                'date'              => $request->date,
-                'address'           => $request->address,
-                'npwp'              => $request->npwp,
-                'phone'             => $request->phone,
-                'fax'               => $request->fax,
-                'tax_address'       => $request->tax_address,
-                'email'             => $request->email,
-                'confirmation'      => $request->confirmation,
-                'type'              => $request->type,
-                'description'       => $request->description,
-                'sample'            => $request->sample,
-                'ass_type'          => $request->ass_type,
-                'qc_statement'      => $request->qc_statement,
-                'packing_type'      => $request->packing_type,
-                'top'               => $request->top,
-                'net_days'          => $request->net_days,
-                'ptp'               => $request->ptp,
-                'dod'               => $request->dod,
-                'shipping_address'  => $request->shipping_address,
-                'valid'             => $request->valid,
-                'mdp'               => $request->mdp,
-                'salesman'          => $request->salesman,
-                'discount_percent'  => $request->discount_percent,
-                'tax_type'          => $request->tax_type,
-                'subtotal'          => str_replace(['Rp', '.', ','], '', $request->subtotal),
-                'discount'          => str_replace(['Rp', '.', ','], '', $request->discount),
-                'tax'               => str_replace(['Rp', '.', ','], '', $request->tax),
-                'freight'           => str_replace(['Rp', '.', ','], '', $request->freight),
-                'total_amount'      => str_replace(['Rp', '.', ','], '', $request->total_amount),
+                'quotation_no' => $request->quotation_no,
+                'company_name' => $request->company_name,
+                'name' => $request->name,
+                'date' => $request->date,
+                'address' => $request->address,
+                'npwp' => $request->npwp,
+                'phone' => $request->phone,
+                'fax' => $request->fax,
+                'tax_address' => $request->tax_address,
+                'email' => $request->email,
+                'confirmation' => $request->confirmation,
+                'type' => $request->type,
+                'description' => $request->description,
+                'sample' => $request->sample,
+                'ass_type' => $request->ass_type,
+                'qc_statement' => $request->qc_statement,
+                'packing_type' => $request->packing_type,
+                'top' => $request->top,
+                'net_days' => $request->net_days,
+                'ptp' => $request->ptp,
+                'dod' => $request->dod,
+                'shipping_address' => $request->shipping_address,
+                'valid' => $request->valid,
+                'mdp' => $request->mdp,
+                'salesman' => $request->salesman,
+                'discount_percent' => $request->discount_percent,
+                'tax_type' => $request->tax_type,
+                'subtotal' => str_replace(['Rp', '.', ','], '', $request->subtotal),
+                'discount' => str_replace(['Rp', '.', ','], '', $request->discount),
+                'tax' => str_replace(['Rp', '.', ','], '', $request->tax),
+                'freight' => str_replace(['Rp', '.', ','], '', $request->freight),
+                'total_amount' => str_replace(['Rp', '.', ','], '', $request->total_amount),
             ];
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
@@ -350,15 +337,14 @@ class ActivitiesController extends Controller
             foreach ($request->item as $key => $item) {
                 $quotationAdd = [
                     'quotation_no' => $request->quotation_no,
-                    'item'         => $item,
-                    'item_desc'    => $request->item_desc[$key],
+                    'item' => $item,
+                    'item_desc' => $request->item_desc[$key],
                     //'disc'         => $request->disc[$key],
-                    'qty'          => $request->qty[$key],
-                    'unit_price'   => str_replace(['Rp', ',', '.'], '', $request->unit_price[$key]),
-                    'unit'         => $request->unit[$key],
-                    'disc'         => str_replace(['Rp', ',', '.'], '', $request->disc[$key]),
-                    'amount'       => str_replace(['Rp', ',', '.'], '', $request->amount[$key]),
-
+                    'qty' => $request->qty[$key],
+                    'unit_price' => str_replace(['Rp', ',', '.'], '', $request->unit_price[$key]),
+                    'unit' => $request->unit[$key],
+                    'disc' => str_replace(['Rp', ',', '.'], '', $request->disc[$key]),
+                    'amount' => str_replace(['Rp', ',', '.'], '', $request->amount[$key]),
                 ];
 
                 QuotationAdd::create($quotationAdd);
@@ -393,7 +379,6 @@ class ActivitiesController extends Controller
         }
     }
 
-
     public function salesorder(Request $request)
     {
         // Get the search input from the request (if any)
@@ -406,20 +391,13 @@ class ActivitiesController extends Controller
             })
             ->get();
 
-        $salesorderJoin = DB::table('salesorder')
-            ->join('soadd', 'salesorder.so_number', '=', 'soadd.so_number')
-            ->select('salesorder.*', 'soadd.*')
-            ->get();
+        $salesorderJoin = DB::table('salesorder')->join('soadd', 'salesorder.so_number', '=', 'soadd.so_number')->select('salesorder.*', 'soadd.*')->get();
 
         return view('activities.salesorder', compact('salesorder', 'salesorderJoin', 'search'));
     }
     public function viewsalesorder($so_number)
     {
-        $salesorderJoin = DB::table('salesorder')
-            ->join('soadd', 'salesorder.so_number', '=', 'soadd.so_number')
-            ->select('salesorder.*', 'soadd.*')
-            ->where('soadd.so_number', $so_number)
-            ->get();
+        $salesorderJoin = DB::table('salesorder')->join('soadd', 'salesorder.so_number', '=', 'soadd.so_number')->select('salesorder.*', 'soadd.*')->where('soadd.so_number', $so_number)->get();
         return view('activities.viewsalesorder', compact('salesorderJoin'));
     }
     public function createso()
@@ -432,7 +410,7 @@ class ActivitiesController extends Controller
         $user = User::get();
         $producttype = ProductType::get();
         $order_unit = OrderUnit::get();
-        $quotation  = Quotation::get();
+        $quotation = Quotation::get();
 
         return view('activities.createso', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation', 'no_katalog', 'salesmen'));
     }
@@ -440,11 +418,7 @@ class ActivitiesController extends Controller
     {
         $quotation = DB::table('quotation')->where('quotation_no', $quotation_no)->first();
 
-        $quotationJoin = DB::table('quotation')
-            ->join('quotationadd', 'quotation.quotation_no', '=', 'quotationadd.quotation_no')
-            ->select('quotation.*', 'quotationadd.*')
-            ->where('quotationadd.quotation_no', $quotation_no)
-            ->get();
+        $quotationJoin = DB::table('quotation')->join('quotationadd', 'quotation.quotation_no', '=', 'quotationadd.quotation_no')->select('quotation.*', 'quotationadd.*')->where('quotationadd.quotation_no', $quotation_no)->get();
 
         $result = compact('quotation', 'quotationJoin');
 
@@ -457,53 +431,53 @@ class ActivitiesController extends Controller
 
         // Validate the input
         $validator = Validator::make($request->all(), [
-            'so_number'         => 'required|unique:salesorder,so_number',
-            'quotation_no'      => ['required_if:so_internal,false'], // Quotation No is only required if 'so_internal' is false (checkbox not checked)
-            'po_number'         => 'required',
-            'company_name'      => 'required',
-            'name'              => 'required',
-            'address'           => 'required',
-            'phone'             => 'required',
-            'order_unit'        => 'required',
-            'sow_no'            => 'required',
-            'tax_address'       => 'required',
-            'npwp'              => 'nullable',
-            'fax'               => 'required',
-            'confirmation'      => 'required',
-            'type'              => 'required',
-            'sample'            => 'required',
-            'ass_type'          => 'required',
-            'qc_statement'      => 'required',
-            'packing_type'      => 'required',
-            'ptp'               => 'required',
-            'dod'               => 'required|date',
-            'shipping_address'  => 'required',
-            'date'              => 'required|date',
-            'top'               => 'required',
-            'net_days'          => 'required',
-            'fob'               => 'required',
-            'ship_date'         => 'required|date',
-            'salesman'          => 'required',
-            'dp'                => 'required',
-            'dp_percent'        => 'required',
-            'file'              => 'nullable',
-            'subtotal'          => 'required',
-            'discount'          => 'required',
-            'tax'               => 'required',
-            'freight'           => 'required',
-            'total_amount'      => 'required',
-            'discount_percent'  => 'required',
-            'tax_type'          => 'required',
-            'description'       => 'required',
+            'so_number' => 'required|unique:salesorder,so_number',
+            'quotation_no' => ['required_if:so_internal,false'], // Quotation No is only required if 'so_internal' is false (checkbox not checked)
+            'po_number' => 'required',
+            'company_name' => 'required',
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'order_unit' => 'required',
+            'sow_no' => 'required',
+            'tax_address' => 'required',
+            'npwp' => 'nullable',
+            'fax' => 'required',
+            'confirmation' => 'required',
+            'type' => 'required',
+            'sample' => 'required',
+            'ass_type' => 'required',
+            'qc_statement' => 'required',
+            'packing_type' => 'required',
+            'ptp' => 'required',
+            'dod' => 'required|date',
+            'shipping_address' => 'required',
+            'date' => 'required|date',
+            'top' => 'required',
+            'net_days' => 'required',
+            'fob' => 'required',
+            'ship_date' => 'required|date',
+            'salesman' => 'required',
+            'dp' => 'required',
+            'dp_percent' => 'required',
+            'file' => 'nullable',
+            'subtotal' => 'required',
+            'discount' => 'required',
+            'tax' => 'required',
+            'freight' => 'required',
+            'total_amount' => 'required',
+            'discount_percent' => 'required',
+            'tax_type' => 'required',
+            'description' => 'required',
         ]);
-
 
         // Check if validation fails
         if ($validator->fails()) {
             Log::warning('Validation failed: ', $validator->errors()->toArray());
 
             // Pass validation errors to session as JSON
-            return redirect()->route('activities.createso')
+            return redirect()
+                ->route('activities.createso')
                 ->withErrors($validator)
                 ->withInput()
                 ->with('validationErrors', json_encode($validator->messages()->toArray()))
@@ -513,37 +487,37 @@ class ActivitiesController extends Controller
         DB::beginTransaction();
         try {
             // Create the Sales Order
-            $salesorder = new SalesOrder;
-            $salesorder->so_number         = $request->so_number;
-            $salesorder->quotation_no      = $request->input('quotation_no', null); // If no quotation_no, set to null
-            $salesorder->company_name      = $request->company_name;
-            $salesorder->name              = $request->name;
-            $salesorder->address           = $request->address;
-            $salesorder->phone             = $request->phone;
-            $salesorder->order_unit        = $request->order_unit;
-            $salesorder->sow_no            = $request->sow_no;
-            $salesorder->tax_address       = $request->tax_address;
-            $salesorder->email             = $request->email;
-            $salesorder->npwp              = $request->npwp;
-            $salesorder->fax               = $request->fax;
-            $salesorder->confirmation      = $request->confirmation;
-            $salesorder->type              = $request->type;
-            $salesorder->sample            = $request->sample;
-            $salesorder->ass_type          = $request->ass_type;
-            $salesorder->qc_statement      = $request->qc_statement;
-            $salesorder->packing_type      = $request->packing_type;
-            $salesorder->ptp               = $request->ptp;
-            $salesorder->dod               = $request->dod;
-            $salesorder->shipping_address  = $request->shipping_address;
-            $salesorder->date              = $request->date;
-            $salesorder->top               = $request->top;
-            $salesorder->net_days          = $request->net_days;
-            $salesorder->fob               = $request->fob;
-            $salesorder->ship_date         = $request->ship_date;
-            $salesorder->po_number         = $request->po_number;
-            $salesorder->salesman          = $request->salesman;
-            $salesorder->dp                = $request->dp;
-            $salesorder->dp_percent        = $request->dp_percent;
+            $salesorder = new SalesOrder();
+            $salesorder->so_number = $request->so_number;
+            $salesorder->quotation_no = $request->input('quotation_no', null); // If no quotation_no, set to null
+            $salesorder->company_name = $request->company_name;
+            $salesorder->name = $request->name;
+            $salesorder->address = $request->address;
+            $salesorder->phone = $request->phone;
+            $salesorder->order_unit = $request->order_unit;
+            $salesorder->sow_no = $request->sow_no;
+            $salesorder->tax_address = $request->tax_address;
+            $salesorder->email = $request->email;
+            $salesorder->npwp = $request->npwp;
+            $salesorder->fax = $request->fax;
+            $salesorder->confirmation = $request->confirmation;
+            $salesorder->type = $request->type;
+            $salesorder->sample = $request->sample;
+            $salesorder->ass_type = $request->ass_type;
+            $salesorder->qc_statement = $request->qc_statement;
+            $salesorder->packing_type = $request->packing_type;
+            $salesorder->ptp = $request->ptp;
+            $salesorder->dod = $request->dod;
+            $salesorder->shipping_address = $request->shipping_address;
+            $salesorder->date = $request->date;
+            $salesorder->top = $request->top;
+            $salesorder->net_days = $request->net_days;
+            $salesorder->fob = $request->fob;
+            $salesorder->ship_date = $request->ship_date;
+            $salesorder->po_number = $request->po_number;
+            $salesorder->salesman = $request->salesman;
+            $salesorder->dp = $request->dp;
+            $salesorder->dp_percent = $request->dp_percent;
 
             // Handle the money inputs
             $subtotal = str_replace(['Rp', '.', ','], '', $request->input('subtotal'));
@@ -561,9 +535,9 @@ class ActivitiesController extends Controller
             $totalAmount = str_replace(['Rp', '.', ','], '', $request->input('total_amount'));
             $salesorder->total_amount = $totalAmount;
 
-            $salesorder->discount_percent  = $request->discount_percent;
-            $salesorder->tax_type          = $request->tax_type;
-            $salesorder->description       = $request->description;
+            $salesorder->discount_percent = $request->discount_percent;
+            $salesorder->tax_type = $request->tax_type;
+            $salesorder->description = $request->description;
 
             // Handle file upload
             if ($request->hasFile('file')) {
@@ -600,33 +574,32 @@ class ActivitiesController extends Controller
                 // Loop through each item to update or create Order records
                 foreach ($request->item as $key => $items) {
                     $orderData = [
-                        'order_number'     => $request->order_no[$key], // Unique identifier
-                        'so_number'        => $salesorder->so_number,
+                        'order_number' => $request->order_no[$key], // Unique identifier
+                        'so_number' => $salesorder->so_number,
                         'quotation_number' => $salesorder->quotation_no,
-                        'kbli_code'        => $request->kbli[$key],
-                        'order_date'       => $salesorder->date,
-                        'product_type'     => $request->product_type[$key],
-                        'po_number'        => $salesorder->po_number,
-                        'sale_price'       => $salesorder->total_amount,
-                        'information'      => $salesorder->description,
-                        'order_status'     => 'Queue',
-                        'customer'         => $salesorder->name,
-                        'product'          => $items,
-                        'qty'              => $request->qty[$key],
-                        'dod'              => $salesorder->dod,
-                        'dod_forecast'     => $salesorder->dod,
-                        'sample'           => $salesorder->sample,
-                        'dod_adj'          => $salesorder->dod
+                        'kbli_code' => $request->kbli[$key],
+                        'order_date' => $salesorder->date,
+                        'product_type' => $request->product_type[$key],
+                        'po_number' => $salesorder->po_number,
+                        'sale_price' => $salesorder->total_amount,
+                        'information' => $salesorder->description,
+                        'order_status' => 'Queue',
+                        'customer' => $salesorder->name,
+                        'product' => $items,
+                        'qty' => $request->qty[$key],
+                        'dod' => $salesorder->dod,
+                        'dod_forecast' => $salesorder->dod,
+                        'sample' => $salesorder->sample,
+                        'dod_adj' => $salesorder->dod,
                     ];
 
                     // Use updateOrCreate for Order model
                     Order::updateOrCreate(
                         ['order_number' => $request->order_no[$key]], // Match on unique order number
-                        $orderData // Data to insert or update
+                        $orderData, // Data to insert or update
                     );
                 }
             }
-
 
             DB::commit();
 
@@ -636,7 +609,7 @@ class ActivitiesController extends Controller
 
             // Log the error with detailed input data for debugging
             Log::error('Failed to create Sales Order: ' . $e->getMessage(), [
-                'input_data' => $request->all()
+                'input_data' => $request->all(),
             ]);
 
             return redirect()->route('activities.createso')->with('error', 'Failed to add Sales Order. Please try again!')->withInput();
@@ -675,11 +648,7 @@ class ActivitiesController extends Controller
             $salesorder = DB::table('salesorder')->where('so_number', $so_number)->first();
             Log::info('Fetched SalesOrder', ['salesorder' => $salesorder]);
 
-            $salesorderJoin = DB::table('salesorder')
-                ->join('soadd', 'salesorder.so_number', '=', 'soadd.so_number')
-                ->select('salesorder.*', 'soadd.*')
-                ->where('soadd.so_number', $so_number)
-                ->get();
+            $salesorderJoin = DB::table('salesorder')->join('soadd', 'salesorder.so_number', '=', 'soadd.so_number')->select('salesorder.*', 'soadd.*')->where('soadd.so_number', $so_number)->get();
             Log::info('Fetched SalesOrderJoin', ['salesorderJoin' => $salesorderJoin]);
 
             return view('activities.editsalesorder', compact('producttype', 'order_unit', 'salesmen', 'tax_type', 'unit', 'kbli', 'quotation', 'salesorder', 'salesorderJoin', 'no_katalog'));
@@ -715,44 +684,44 @@ class ActivitiesController extends Controller
 
         try {
             $update = [
-                'so_number'         => $request->so_number,
-                'quotation_no'      => $request->quotation_no,
-                'po_number'         => $request->po_number,
-                'company_name'      => $request->company_name,
-                'name'              => $request->name,
-                'address'           => $request->address,
-                'phone'             => $request->phone,
-                'order_unit'        => $request->order_unit,
-                'sow_no'            => $request->sow_no,
-                'tax_address'       => $request->tax_address,
-                'email'             => $request->email,
-                'npwp'              => $request->npwp,
-                'fax'               => $request->fax,
-                'confirmation'      => $request->confirmation,
-                'type'              => $request->type,
-                'sample'            => $request->sample,
-                'ass_type'          => $request->ass_type,
-                'qc_statement'      => $request->qc_statement,
-                'packing_type'      => $request->packing_type,
-                'ptp'               => $request->ptp,
-                'dod'               => $request->dod,
-                'shipping_address'  => $request->shipping_address,
-                'date'              => $request->date,
-                'top'               => $request->top,
-                'net_days'          => $request->net_days,
-                'fob'               => $request->fob,
-                'ship_date'         => $request->ship_date,
-                'salesman'          => $request->salesman,
-                'dp'          => str_replace(['Rp', '.', ','], '', $request->dp),
-                'dp_percent'        => $request->dp_percent,
-                'subtotal'          => str_replace(['Rp', '.', ','], '', $request->subtotal),
-                'discount'          => str_replace(['Rp', '.', ','], '', $request->discount),
-                'tax'               => str_replace(['Rp', '.', ','], '', $request->tax),
-                'freight'           => str_replace(['Rp', '.', ','], '', $request->freight),
-                'total_amount'      => str_replace(['Rp', '.', ','], '', $request->total_amount),
-                'discount_percent'  => $request->discount_percent,
-                'tax_type'          => $request->tax_type,
-                'description'       => $request->description,
+                'so_number' => $request->so_number,
+                'quotation_no' => $request->quotation_no,
+                'po_number' => $request->po_number,
+                'company_name' => $request->company_name,
+                'name' => $request->name,
+                'address' => $request->address,
+                'phone' => $request->phone,
+                'order_unit' => $request->order_unit,
+                'sow_no' => $request->sow_no,
+                'tax_address' => $request->tax_address,
+                'email' => $request->email,
+                'npwp' => $request->npwp,
+                'fax' => $request->fax,
+                'confirmation' => $request->confirmation,
+                'type' => $request->type,
+                'sample' => $request->sample,
+                'ass_type' => $request->ass_type,
+                'qc_statement' => $request->qc_statement,
+                'packing_type' => $request->packing_type,
+                'ptp' => $request->ptp,
+                'dod' => $request->dod,
+                'shipping_address' => $request->shipping_address,
+                'date' => $request->date,
+                'top' => $request->top,
+                'net_days' => $request->net_days,
+                'fob' => $request->fob,
+                'ship_date' => $request->ship_date,
+                'salesman' => $request->salesman,
+                'dp' => str_replace(['Rp', '.', ','], '', $request->dp),
+                'dp_percent' => $request->dp_percent,
+                'subtotal' => str_replace(['Rp', '.', ','], '', $request->subtotal),
+                'discount' => str_replace(['Rp', '.', ','], '', $request->discount),
+                'tax' => str_replace(['Rp', '.', ','], '', $request->tax),
+                'freight' => str_replace(['Rp', '.', ','], '', $request->freight),
+                'total_amount' => str_replace(['Rp', '.', ','], '', $request->total_amount),
+                'discount_percent' => $request->discount_percent,
+                'tax_type' => $request->tax_type,
+                'description' => $request->description,
             ];
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
@@ -770,18 +739,18 @@ class ActivitiesController extends Controller
             // Tambahkan item baru
             foreach ($request->item as $key => $item) {
                 $salesorderAdd = [
-                    'item'         => $item,
-                    'so_number'    => $request->so_number,
-                    'item_desc'    => $request->item_desc[$key],
-                    'qty'          => $request->qty[$key],
-                    'unit'         => $request->unit[$key],
-                    'unit_price'   => str_replace(['Rp', ',', '.'], '', $request->unit_price[$key]),
-                    'disc'         => str_replace(['Rp', ',', '.'], '', $request->disc[$key]),
-                    'amount'       => str_replace(['Rp', ',', '.'], '', $request->amount[$key]),
+                    'item' => $item,
+                    'so_number' => $request->so_number,
+                    'item_desc' => $request->item_desc[$key],
+                    'qty' => $request->qty[$key],
+                    'unit' => $request->unit[$key],
+                    'unit_price' => str_replace(['Rp', ',', '.'], '', $request->unit_price[$key]),
+                    'disc' => str_replace(['Rp', ',', '.'], '', $request->disc[$key]),
+                    'amount' => str_replace(['Rp', ',', '.'], '', $request->amount[$key]),
                     'product_type' => $request->product_type[$key],
-                    'order_no'     => $request->order_no[$key],
-                    'spec'         => $request->spec[$key],
-                    'kbli'         => $request->kbli[$key],
+                    'order_no' => $request->order_no[$key],
+                    'spec' => $request->spec[$key],
+                    'kbli' => $request->kbli[$key],
                 ];
 
                 SalesOrderAdd::create($salesorderAdd);
@@ -851,23 +820,20 @@ class ActivitiesController extends Controller
     }
     public function storeorder(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'order_number'      => 'required|unique:order,order_number',
-                'so_number'         => 'required',
-                'quotation_number'  => 'required',
-                'kbli_code'         => 'required',
-                'order_date'        => 'required',
-                'product_type'      => 'required',
-                'po_number'         => 'required',
-                'sale_price'        => 'required',
-                'customer'          => 'required',
-                'product'           => 'required',
-                'qty'               => 'required',
-                'dod'               => 'required',
-            ],
-        );
+        $validator = Validator::make($request->all(), [
+            'order_number' => 'required|unique:order,order_number',
+            'so_number' => 'required',
+            'quotation_number' => 'required',
+            'kbli_code' => 'required',
+            'order_date' => 'required',
+            'product_type' => 'required',
+            'po_number' => 'required',
+            'sale_price' => 'required',
+            'customer' => 'required',
+            'product' => 'required',
+            'qty' => 'required',
+            'dod' => 'required',
+        ]);
 
         if ($validator->fails()) {
             return redirect()->route('activities.createorder')->withErrors($validator)->withInput();
@@ -916,78 +882,69 @@ class ActivitiesController extends Controller
         if (!$order) {
             return redirect()->route('activities.order')->with('error', 'Order not Found');
         }
-        return view('activities.editorder', compact(
-            'order',
-            'soadd',
-            'so',
-            'kbli_code',
-            'so_number',
-            'customers',
-            'quotation_no',
-            'producttype',
-        ));
+        return view('activities.editorder', compact('order', 'soadd', 'so', 'kbli_code', 'so_number', 'customers', 'quotation_no', 'producttype'));
     }
     public function updateorder(Request $request, $id)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'order_number'      => 'required',
-                'so_number'         => 'required',
-                'quotation_number'  => 'required',
-                'kbli_code'         => 'required',
-                'reff_number'       => 'required',
-                'order_date'        => 'required',
-                'product_type'      => 'required', // Perbaikan nama field
-                'po_number'         => 'required',
-                'sale_price'        => 'required',
-                'production_cost'   => 'required',
-                'information'       => 'nullable',
-                'information2'       => 'nullable',
-                'information3'       => 'nullable',
-                'order_status'      => 'required',
-                'customer'          => 'required',
-                'product'           => 'required',
-                'qty'               => 'required',
-                'dod'               => 'required',
-                'dod_forecast'      => 'required',
-                'sample'            => 'required',
-                'material'          => 'required',
-                'catalog_number'    => 'required',
-                'material_cost'     => 'required',
-                'dod_adj'           => 'required',
-            ]
-        );
+        $validator = Validator::make($request->all(), [
+            'order_number' => 'required',
+            'so_number' => 'required',
+            'quotation_number' => 'required',
+            'kbli_code' => 'required',
+            'reff_number' => 'required',
+            'order_date' => 'required',
+            'product_type' => 'required', // Perbaikan nama field
+            'po_number' => 'required',
+            'sale_price' => 'required',
+            'production_cost' => 'required',
+            'information' => 'nullable',
+            'information2' => 'nullable',
+            'information3' => 'nullable',
+            'order_status' => 'required',
+            'customer' => 'required',
+            'product' => 'required',
+            'qty' => 'required',
+            'dod' => 'required',
+            'dod_forecast' => 'required',
+            'sample' => 'required',
+            'material' => 'required',
+            'catalog_number' => 'required',
+            'material_cost' => 'required',
+            'dod_adj' => 'required',
+        ]);
 
         if ($validator->fails()) {
-            return redirect()->route('activities.editorder', ['id' => $id])->withErrors($validator)->withInput();
+            return redirect()
+                ->route('activities.editorder', ['id' => $id])
+                ->withErrors($validator)
+                ->withInput();
         }
 
         $order = [
-            'order_number'      => $request->order_number,
-            'so_number'         => $request->so_number,
-            'quotation_number'  => $request->quotation_number,
-            'kbli_code'         => $request->kbli_code,
-            'reff_number'       => $request->reff_number,
-            'order_date'        => $request->order_date,
-            'product_type'      => $request->product_type, // Perbaikan nama field
-            'po_number'         => $request->po_number,
-            'sale_price'        => $request->sale_price,
-            'production_cost'   => $request->production_cost,
-            'information'       => $request->information,
-            'information2'      => $request->information2,
-            'information3'      => $request->information3,
-            'order_status'      => $request->order_status,
-            'customer'          => $request->customer,
-            'product'           => $request->product,
-            'qty'               => $request->qty,
-            'dod'               => $request->dod,
-            'dod_forecast'      => $request->dod_forecast,
-            'sample'            => $request->sample,
-            'material'          => $request->material,
-            'catalog_number'    => $request->catalog_number,
-            'material_cost'     => $request->material_cost,
-            'dod_adj'           => $request->dod_adj,
+            'order_number' => $request->order_number,
+            'so_number' => $request->so_number,
+            'quotation_number' => $request->quotation_number,
+            'kbli_code' => $request->kbli_code,
+            'reff_number' => $request->reff_number,
+            'order_date' => $request->order_date,
+            'product_type' => $request->product_type, // Perbaikan nama field
+            'po_number' => $request->po_number,
+            'sale_price' => $request->sale_price,
+            'production_cost' => $request->production_cost,
+            'information' => $request->information,
+            'information2' => $request->information2,
+            'information3' => $request->information3,
+            'order_status' => $request->order_status,
+            'customer' => $request->customer,
+            'product' => $request->product,
+            'qty' => $request->qty,
+            'dod' => $request->dod,
+            'dod_forecast' => $request->dod_forecast,
+            'sample' => $request->sample,
+            'material' => $request->material,
+            'catalog_number' => $request->catalog_number,
+            'material_cost' => $request->material_cost,
+            'dod_adj' => $request->dod_adj,
         ];
 
         Order::whereId($id)->update($order);
@@ -1005,9 +962,6 @@ class ActivitiesController extends Controller
 
         return redirect()->route('activities.order')->with('success', 'Order data successfully deleted');
     }
-
-
-
 
     //activities - customer
     public function customer(Request $request)
@@ -1035,24 +989,23 @@ class ActivitiesController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'company'       => 'required|unique:customer,company',
-                'name'          => 'required',
-                'address'       => 'required',
-                'city'          => 'required',
-                'phone'         => 'required',
-                'tax_address'   => 'required',
-                'shipment'      => 'required',
-                'customer_no'      => 'nullable',
-                'province'      => 'nullable',
-                'zipcode'      => 'nullable',
-                'country'      => 'nullable',
-                'cp'      => 'nullable',
-                'webpage'      => 'nullable',
-
+                'company' => 'required|unique:customer,company',
+                'name' => 'required',
+                'address' => 'required',
+                'city' => 'required',
+                'phone' => 'required',
+                'tax_address' => 'required',
+                'shipment' => 'required',
+                'customer_no' => 'nullable',
+                'province' => 'nullable',
+                'zipcode' => 'nullable',
+                'country' => 'nullable',
+                'cp' => 'nullable',
+                'webpage' => 'nullable',
             ],
             [
                 'company.unique' => 'Company name has already been taken.',
-            ]
+            ],
         );
 
         if ($validator->fails()) {
@@ -1076,7 +1029,6 @@ class ActivitiesController extends Controller
         $customer['cp'] = $request->cp;
         $customer['webpage'] = $request->webpage;
 
-
         Customer::create($customer);
 
         return redirect()->route('activities.customer')->with('success', 'Customer Added');
@@ -1093,24 +1045,21 @@ class ActivitiesController extends Controller
     }
     public function updatecustomer(Request $request, $id)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'company'       => 'required',
-                'name'          => 'required',
-                'address'       => 'required',
-                'city'          => 'required',
-                'phone'         => 'required',
-                'tax_address'   => 'required',
-                'shipment'      => 'required',
-                'customer_no'      => 'nullable',
-                'province'      => 'nullable',
-                'zipcode'      => 'nullable',
-                'country'      => 'nullable',
-                'cp'      => 'nullable',
-                'webpage'      => 'nullable',
-            ]
-        );
+        $validator = Validator::make($request->all(), [
+            'company' => 'required',
+            'name' => 'required',
+            'address' => 'required',
+            'city' => 'required',
+            'phone' => 'required',
+            'tax_address' => 'required',
+            'shipment' => 'required',
+            'customer_no' => 'nullable',
+            'province' => 'nullable',
+            'zipcode' => 'nullable',
+            'country' => 'nullable',
+            'cp' => 'nullable',
+            'webpage' => 'nullable',
+        ]);
 
         if ($validator->fails()) {
             return redirect()->route('activities.editcustomer')->withErrors($validator)->withInput();
@@ -1151,7 +1100,6 @@ class ActivitiesController extends Controller
         return redirect()->route('activities.customer')->with('success', 'Customer data successfully deleted');
     }
 
-
     // public function item()
     // {
     //     $order = Order::get();
@@ -1167,8 +1115,7 @@ class ActivitiesController extends Controller
         $orderNumbers = Order::where('order_status', '!=', 'Finished')->pluck('order_number');
 
         // Filter items based on the filter order number, if provided
-        $itemQuery = DB::table('item')
-            ->whereIn('order_number', $orderNumbers);
+        $itemQuery = DB::table('item')->whereIn('order_number', $orderNumbers);
 
         if ($filterOrderNumber) {
             // If a filter is applied, use the filter value
@@ -1179,9 +1126,7 @@ class ActivitiesController extends Controller
         $item = $itemQuery->get();
 
         // Filter joined items based on the filter order number, if provided
-        $itemJoinQuery = DB::table('item')
-            ->join('itemadd', 'item.order_number', '=', 'itemadd.order_number')
-            ->whereIn('item.order_number', $orderNumbers);
+        $itemJoinQuery = DB::table('item')->join('itemadd', 'item.order_number', '=', 'itemadd.order_number')->whereIn('item.order_number', $orderNumbers);
 
         if ($filterOrderNumber) {
             $itemJoinQuery->where('item.order_number', $filterOrderNumber);
@@ -1193,24 +1138,18 @@ class ActivitiesController extends Controller
         return view('activities.item', compact('item', 'itemJoin', 'filterOrderNumber'));
     }
 
-
-
     public function viewitem($order_number)
     {
         $item = DB::table('item')->get();
-        $itemJoin = DB::table('item')
-            ->join('itemadd', 'item.order_number', '=', 'itemadd.order_number')
-            ->select('item.*', 'itemadd.*')
-            ->where('itemadd.order_number', $order_number)
-            ->get();
+        $itemJoin = DB::table('item')->join('itemadd', 'item.order_number', '=', 'itemadd.order_number')->select('item.*', 'itemadd.*')->where('itemadd.order_number', $order_number)->get();
         return view('activities.viewitem', compact('item', 'itemJoin'));
     }
     public function createitem()
     {
-        $material   = Material::get();
+        $material = Material::get();
         $kode_log = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])
             ->select('kode_log') // Select only the 'kode_log' field
-            ->distinct()         // Ensure distinct 'kode_log' values
+            ->distinct() // Ensure distinct 'kode_log' values
             ->get();
         $standardParts = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])->get();
         $order = Order::where('order_status', '!=', 'Finished')->get();
@@ -1219,17 +1158,17 @@ class ActivitiesController extends Controller
     public function storeitem(Request $request)
     {
         $request->validate([
-            'order_number'  => 'required',
-            'so_number'     => 'required',
-            'product'       => 'required',
-            'company_name'  => 'required',
-            'dod'           => 'required',
+            'order_number' => 'required',
+            'so_number' => 'required',
+            'product' => 'required',
+            'company_name' => 'required',
+            'dod' => 'required',
         ]);
 
         DB::beginTransaction();
         try {
             Log::info('Starting to save item');
-            $item = new Item;
+            $item = new Item();
             $item->order_number = $request->order_number;
             $item->so_number = $request->so_number;
             $item->product = $request->product;
@@ -1259,13 +1198,7 @@ class ActivitiesController extends Controller
                     'material_cost' => $request->material_cost,
                 ]);
 
-                if (
-                    !isset($request->dod_item[$key]) || !isset($request->id_item[$key]) || !isset($request->no_item[$key]) ||
-                    !isset($request->material[$key]) || !isset($request->weight[$key]) || !isset($request->length[$key]) ||
-                    !isset($request->width[$key]) || !isset($request->thickness[$key]) || !isset($request->ass_drawing[$key]) ||
-                    !isset($request->drawing_no[$key]) || !isset($request->nos[$key]) || !isset($request->nob[$key]) ||
-                    !isset($request->issued_item[$key])
-                ) {
+                if (!isset($request->dod_item[$key]) || !isset($request->id_item[$key]) || !isset($request->no_item[$key]) || !isset($request->material[$key]) || !isset($request->weight[$key]) || !isset($request->length[$key]) || !isset($request->width[$key]) || !isset($request->thickness[$key]) || !isset($request->ass_drawing[$key]) || !isset($request->drawing_no[$key]) || !isset($request->nos[$key]) || !isset($request->nob[$key]) || !isset($request->issued_item[$key])) {
                     throw new \Exception("Missing array index for key $key");
                 }
 
@@ -1275,20 +1208,20 @@ class ActivitiesController extends Controller
                 }
 
                 $itemAdd = [
-                    'item'        => $items,
-                    'dod_item'    => $request->dod_item[$key],
-                    'id_item'     => $request->id_item[$key],
-                    'no_item'     => $request->no_item[$key],
+                    'item' => $items,
+                    'dod_item' => $request->dod_item[$key],
+                    'id_item' => $request->id_item[$key],
+                    'no_item' => $request->no_item[$key],
                     'order_number' => $item->order_number,
-                    'material'    => $request->material[$key],
-                    'weight'      => $request->weight[$key],
-                    'length'      => $request->length[$key],
-                    'width'       => $request->width[$key],
-                    'thickness'   => $request->thickness[$key],
+                    'material' => $request->material[$key],
+                    'weight' => $request->weight[$key],
+                    'length' => $request->length[$key],
+                    'width' => $request->width[$key],
+                    'thickness' => $request->thickness[$key],
                     'ass_drawing' => $request->ass_drawing[$key],
-                    'drawing_no'  => $request->drawing_no[$key],
-                    'nos'         => $request->nos[$key],
-                    'nob'         => $request->nob[$key],
+                    'drawing_no' => $request->drawing_no[$key],
+                    'nos' => $request->nos[$key],
+                    'nob' => $request->nob[$key],
                     'issued_item' => $request->issued_item[$key],
                     'material_cost' => $request->material_cost[$key],
                 ];
@@ -1307,18 +1240,13 @@ class ActivitiesController extends Controller
         }
     }
 
-
     public function edititem($order_number)
     {
         $order = Order::where('order_status', '!=', 'Finished')->get();
         $material = Material::get();
         $standardParts = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])->get();
-        $item       = DB::table('item')->where('order_number', $order_number)->first();
-        $itemJoin   = DB::table('item')
-            ->join('itemadd', 'item.order_number', '=', 'itemadd.order_number')
-            ->select('item.*', 'itemadd.*')
-            ->where('itemadd.order_number', $order_number)
-            ->get();
+        $item = DB::table('item')->where('order_number', $order_number)->first();
+        $itemJoin = DB::table('item')->join('itemadd', 'item.order_number', '=', 'itemadd.order_number')->select('item.*', 'itemadd.*')->where('itemadd.order_number', $order_number)->get();
         return view('activities.edititem', compact('order', 'material', 'item', 'itemJoin', 'standardParts'));
     }
     public function updateitem(Request $request)
@@ -1327,31 +1255,31 @@ class ActivitiesController extends Controller
         try {
             // dd($request->all());
             $update = [
-                'order_number'  =>  $request->order_number,
-                'so_number'     =>  $request->so_number,
-                'product'       =>  $request->product,
-                'company_name'  =>  $request->company_name,
-                'dod'           =>  $request->dod,
+                'order_number' => $request->order_number,
+                'so_number' => $request->so_number,
+                'product' => $request->product,
+                'company_name' => $request->company_name,
+                'dod' => $request->dod,
             ];
             Item::where('order_number', $request->order_number)->update($update);
             ItemAdd::where('order_number', $request->order_number)->delete();
 
             foreach ($request->item as $key => $item) {
                 $itemAdd = [
-                    'item'        => $item,
-                    'dod_item'    => $request->dod_item[$key],
-                    'id_item'     => $request->id_item[$key],
-                    'no_item'     => $request->no_item[$key],
+                    'item' => $item,
+                    'dod_item' => $request->dod_item[$key],
+                    'id_item' => $request->id_item[$key],
+                    'no_item' => $request->no_item[$key],
                     'order_number' => $item->order_number,
-                    'material'    => $request->material[$key],
-                    'weight'      => $request->weight[$key],
-                    'length'      => $request->length[$key],
-                    'width'       => $request->width[$key],
-                    'thickness'   => $request->thickness[$key],
+                    'material' => $request->material[$key],
+                    'weight' => $request->weight[$key],
+                    'length' => $request->length[$key],
+                    'width' => $request->width[$key],
+                    'thickness' => $request->thickness[$key],
                     'ass_drawing' => $request->ass_drawing[$key],
-                    'drawing_no'  => $request->drawing_no[$key],
-                    'nos'         => $request->nos[$key],
-                    'nob'         => $request->nob[$key],
+                    'drawing_no' => $request->drawing_no[$key],
+                    'nos' => $request->nos[$key],
+                    'nob' => $request->nob[$key],
                     'issued_item' => $request->issued_item[$key],
                 ];
                 ItemAdd::create($itemAdd);
@@ -1409,7 +1337,7 @@ class ActivitiesController extends Controller
                 'product' => $order->product,
                 'customer' => $order->customer,
                 'dod' => $order->dod,
-                'items' => $items
+                'items' => $items,
             ]);
         } else {
             return response()->json(['error' => 'Order not found'], 404);
@@ -1436,7 +1364,6 @@ class ActivitiesController extends Controller
         }
     }
 
-
     public function processing(Request $request)
     {
         // Get all order numbers from the Order model where order_status is not 'Finished'
@@ -1456,14 +1383,12 @@ class ActivitiesController extends Controller
         return view('activities.processing', compact('processing'))->with('order_number', $request->order_number);
     }
 
-
-
     public function createprocessing()
     {
         $orders = Order::where('order_status', '!=', 'Finished')->get();
-        $material   = Material::get();
-        $machine    = Machine::get();
-        $items    = ItemAdd::get();
+        $material = Material::get();
+        $machine = Machine::get();
+        $items = ItemAdd::get();
 
         return view('activities.createprocessing', compact('orders', 'material', 'machine', 'items'));
     }
@@ -1556,7 +1481,7 @@ class ActivitiesController extends Controller
             'dod' => $request->dod,
             'machine_cost' => $request->machine_cost,
             'labor_cost' => $request->labor_cost,
-            'total' => $request->total
+            'total' => $request->total,
         ];
 
         $arrayLengths = array_map('count', $arrays);
@@ -1596,7 +1521,7 @@ class ActivitiesController extends Controller
                 'mach_cost' => $request->machine_cost[$index],
                 'labor_cost' => $request->labor_cost[$index],
                 'total' => $request->total[$index],
-                'barcode_id' => $barcode_id
+                'barcode_id' => $barcode_id,
             ]);
 
             Log::info('Processing item saved', ['index' => $index, 'barcode_id' => $barcode_id]);
@@ -1620,7 +1545,6 @@ class ActivitiesController extends Controller
         $uniqueId = strtoupper(uniqid());
         return "{$orderNumber}-{$date}-{$index}-{$uniqueId}";
     }
-
 
     public function editprocessing($id)
     {
@@ -1706,8 +1630,6 @@ class ActivitiesController extends Controller
         return response()->json($itemAddData);
     }
 
-
-
     // activities - standartpart
     public function standartpartindex(Request $request)
     {
@@ -1731,15 +1653,11 @@ class ActivitiesController extends Controller
 
             // Otherwise, filter the queries by the specific order_number
             $standartpartQuery = DB::table('standart_part')->where('order_number', $filterOrderNumber);
-            $standartpartJoinQuery = DB::table('standart_part')
-                ->join('standart_partadd', 'standart_part.order_number', '=', 'standart_partadd.order_number')
-                ->where('standart_part.order_number', $filterOrderNumber);
+            $standartpartJoinQuery = DB::table('standart_part')->join('standart_partadd', 'standart_part.order_number', '=', 'standart_partadd.order_number')->where('standart_part.order_number', $filterOrderNumber);
         } else {
             // If no filter is applied, query all relevant records
             $standartpartQuery = DB::table('standart_part')->whereIn('order_number', $orderNumbers);
-            $standartpartJoinQuery = DB::table('standart_part')
-                ->join('standart_partadd', 'standart_part.order_number', '=', 'standart_partadd.order_number')
-                ->whereIn('standart_part.order_number', $orderNumbers);
+            $standartpartJoinQuery = DB::table('standart_part')->join('standart_partadd', 'standart_part.order_number', '=', 'standart_partadd.order_number')->whereIn('standart_part.order_number', $orderNumbers);
         }
 
         // Fetch the filtered data
@@ -1753,15 +1671,9 @@ class ActivitiesController extends Controller
         return view('activities.standartpart', compact('standartpart', 'standartpartJoin', 'noDataFound'));
     }
 
-
-
     public function viewstandartpart($order_number)
     {
-        $quotationJoin = DB::table('standart_part')
-            ->join('standart_partadd', 'standart_part.order_number', '=', 'standart_partadd.order_number')
-            ->select('standart_part.*', 'standart_partadd.*')
-            ->where('standart_partadd.order_number', $order_number)
-            ->get();
+        $quotationJoin = DB::table('standart_part')->join('standart_partadd', 'standart_part.order_number', '=', 'standart_partadd.order_number')->select('standart_part.*', 'standart_partadd.*')->where('standart_partadd.order_number', $order_number)->get();
         return view('activities.viewstandartpart', compact('standartpartJoin'));
     }
 
@@ -1775,11 +1687,7 @@ class ActivitiesController extends Controller
     {
         $orders = Order::where('order_status', '!=', 'Finished')->get();
         $items = ItemAdd::get();
-        $standardParts = StandartpartAPI::whereIn('kd_akun', [
-            '131210', '131220', '131240', '135110', '135120', '135220',
-            '136100', '136200', '136310', '136320', '136400',
-            '514110', '514210', '523422', '524120', '524220'
-        ])->get();
+        $standardParts = StandartpartAPI::whereIn('kd_akun', ['131210', '131220', '131240', '135110', '135120', '135220', '136100', '136200', '136310', '136320', '136400', '514110', '514210', '523422', '524120', '524220'])->get();
         return view('activities.createstandartpart', compact('standardParts', 'orders', 'items'));
     }
 
@@ -1855,7 +1763,7 @@ class ActivitiesController extends Controller
                         'price' => $request->price_unit[$index],
                         'total' => $request->total_price[$index],
                         'info' => $request->info[$index] ?? null,
-                    ]
+                    ],
                 ]);
                 return redirect()->back()->with('error', 'An error occurred while saving the data. Please try again.');
             }
@@ -1867,7 +1775,6 @@ class ActivitiesController extends Controller
         // Redirect with success message
         return redirect()->route('activities.createstandartpart')->with('success', 'Standart Part(s) added successfully.');
     }
-
 
     public function editstandartpart($id)
     {
@@ -1913,18 +1820,20 @@ class ActivitiesController extends Controller
         }
 
         // Update the standard part entry
-        DB::table('standart_part')->where('id', $id)->update([
-            'order_number' => $request->order_number,
-            'item_no' => $request->no_item,
-            'item_name' => $request->item,
-            'date' => $request->date,
-            'part_name' => $request->part_name,
-            'qty' => $request->qty,
-            'unit' => $request->unit,
-            'price' => $request->price_unit,
-            'total' => $request->total_price,
-            'info' => $request->info ?? null,
-        ]);
+        DB::table('standart_part')
+            ->where('id', $id)
+            ->update([
+                'order_number' => $request->order_number,
+                'item_no' => $request->no_item,
+                'item_name' => $request->item,
+                'date' => $request->date,
+                'part_name' => $request->part_name,
+                'qty' => $request->qty,
+                'unit' => $request->unit,
+                'price' => $request->price_unit,
+                'total' => $request->total_price,
+                'info' => $request->info ?? null,
+            ]);
 
         // Redirect with success message
         return redirect()->route('activities.standartpart')->with('success', 'Standard part updated successfully.');
@@ -1943,7 +1852,6 @@ class ActivitiesController extends Controller
         // Redirect with success message
         return redirect()->route('activities.standartpart')->with('success', 'Standard part deleted successfully.');
     }
-
 
     //SubCont. Controller
     public function sub_contract(Request $request)
@@ -1965,8 +1873,6 @@ class ActivitiesController extends Controller
         // Return the view with the data and the filter value
         return view('activities.subcontract', compact('data', 'order_number'));
     }
-
-
 
     public function createsub_contract()
     {
@@ -2092,29 +1998,26 @@ class ActivitiesController extends Controller
         return redirect()->route('activities.sub_contract')->with('success', 'Sub-contract deleted successfully.');
     }
 
-
-
     //Overhead_manufacture Controller
     public function overhead_manufacture(Request $request)
-{
-    // Get the order number from the request
-    $filterOrderNumber = $request->input('order_number');
+    {
+        // Get the order number from the request
+        $filterOrderNumber = $request->input('order_number');
 
-    // Create a query for the Overhead model
-    $query = \App\Models\Overhead::query();
+        // Create a query for the Overhead model
+        $query = \App\Models\Overhead::query();
 
-    // If order number is provided, filter based on the order_number
-    if ($filterOrderNumber) {
-        $query->where('order_number', $filterOrderNumber);
+        // If order number is provided, filter based on the order_number
+        if ($filterOrderNumber) {
+            $query->where('order_number', $filterOrderNumber);
+        }
+
+        // Fetch the filtered or unfiltered results
+        $data = $query->get();
+
+        // Return the view with the filtered data and the filter value
+        return view('activities.overheadmanufacture', compact('data', 'filterOrderNumber'));
     }
-
-    // Fetch the filtered or unfiltered results
-    $data = $query->get();
-
-    // Return the view with the filtered data and the filter value
-    return view('activities.overheadmanufacture', compact('data', 'filterOrderNumber'));
-}
-
 
     public function createoverhead_manufacture()
     {
@@ -2229,7 +2132,6 @@ class ActivitiesController extends Controller
         return redirect()->route('activities.overhead_manufacture')->with('success', 'Overhead manufacture record deleted successfully.');
     }
 
-
     //Material Controller
     public function material()
     {
@@ -2255,7 +2157,7 @@ class ActivitiesController extends Controller
         ]);
 
         // Create a new material record
-        $material = new Material;
+        $material = new Material();
         $material->id_material = $request->id_material;
         $material->material = $request->material;
         $material->length = $request->length;
@@ -2361,59 +2263,78 @@ class ActivitiesController extends Controller
         return redirect()->route('activities.used_time');
     }
 
-
-
     public function updateStatus(Request $request, $id)
     {
-        Log::info('Update status method called.', ['processing_add_id' => $id, 'action' => $request->action]);
-
+        Log::info('updateStatus called with parameters', ['id' => $id, 'request_data' => $request->all()]);
+    
+        // Retrieve ProcessingAdd by $id
         $processingAdd = ProcessingAdd::find($id);
-        $user = auth()->user();
-
         if (!$processingAdd) {
             Log::error('ProcessingAdd not found.', ['processing_add_id' => $id]);
             return redirect()->route('activities.used_time')->withErrors(['error' => 'ProcessingAdd not found.']);
         }
-
-        if ($request->action == 'start') {
-            if ($processingAdd->status == 'pending') {
+    
+        $order_number = $processingAdd->order_number;
+        $user = auth()->user();
+    
+        // Update ProcessingAdd status based on requested action
+        switch ($request->action) {
+            case 'start':
                 $processingAdd->status = 'started';
                 $processingAdd->started_at = now();
-            } else {
-                // Start from initial state
-                $processingAdd->status = 'started';
-                $processingAdd->started_at = now();
-                $processingAdd->duration = 0;
-            }
-        } elseif ($request->action == 'pending') {
-            $processingAdd->status = 'pending';
-            $processingAdd->pending_at = now();
-            $processingAdd->duration += now()->diffInSeconds($processingAdd->started_at);
-        } elseif ($request->action == 'finish') {
-            $processingAdd->status = 'finished';
-            $processingAdd->finished_at = now();
-            $processingAdd->duration += now()->diffInSeconds($processingAdd->started_at);
-        } else {
-            Log::error('Invalid action provided.', ['action' => $request->action]);
-            return redirect()->route('activities.used_time')->withErrors(['error' => 'Invalid action.']);
+                $processingAdd->duration = $processingAdd->status === 'pending' ? $processingAdd->duration : 0;
+                break;
+            case 'pending':
+                $processingAdd->status = 'pending';
+                $processingAdd->pending_at = now();
+                $processingAdd->duration += now()->diffInSeconds($processingAdd->started_at);
+                break;
+            case 'finish':
+                $processingAdd->status = 'finished';
+                $processingAdd->finished_at = now();
+                $processingAdd->duration += now()->diffInSeconds($processingAdd->started_at);
+                break;
+            default:
+                Log::error('Invalid action provided.', ['action' => $request->action]);
+                return redirect()->route('activities.used_time')->withErrors(['error' => 'Invalid action.']);
         }
-
-        $processingAdd->user_name = $user->name; // Storing the user's name
+    
+        $processingAdd->user_name = $user->name;
         $processingAdd->save();
-        Log::info('ProcessingAdd status updated.', ['processing_add_id' => $processingAdd->id, 'status' => $processingAdd->status, 'duration' => $processingAdd->duration]);
-
-        // Update the order status based on the new processing statuses
-        try {
-            $processingAdd->order->updateOrderStatus();
-            Log::info('Order status updated.', ['order_id' => $processingAdd->order->id]);
-        } catch (\Exception $e) {
-            Log::error('Error updating order status.', ['order_id' => $processingAdd->order->id, 'error' => $e->getMessage()]);
-            return redirect()->route('activities.used_time')->withErrors(['error' => 'Error updating order status.']);
+    
+        Log::info('ProcessingAdd status updated.', [
+            'processing_add_id' => $processingAdd->id,
+            'status' => $processingAdd->status,
+            'duration' => $processingAdd->duration,
+        ]);
+    
+        // Find the related ItemAdd and update its status
+        $itemAdd = ItemAdd::where('order_number', $order_number)
+                          ->whereHas('processingAdds', function ($query) use ($id) {
+                              $query->where('id', $id);
+                          })->first();
+    
+        if ($itemAdd) {
+            $itemAdd->updateItemStatus();
+            Log::info('Item status updated.', ['item_id' => $itemAdd->id]);
+    
+            // Trigger the order status update
+            $order = $itemAdd->order;
+            if ($order) {
+                $order->updateOrderStatus();
+                Log::info('Order status updated.', ['order_id' => $order->id]);
+            }
+        } else {
+            Log::error('Associated ItemAdd not found.', ['processing_add_id' => $id]);
+            return redirect()->route('activities.used_time')->withErrors(['error' => 'Associated ItemAdd not found.']);
         }
-
+    
         return redirect()->route('activities.used_time');
     }
-
+    
+    
+    
+    
 
     public function getCustomerData($companyName)
     {
@@ -2458,7 +2379,7 @@ class ActivitiesController extends Controller
     //Close order Controller
     public function CloseOrder(Request $request)
     {
-        $query = Order::Finished(); // Get the base query for unfinished orders
+        $query = Order::QCPass(); // Get the base query for unfinished orders
 
         if ($request->has('order_number')) {
             $order_number = $request->input('order_number');
@@ -2486,7 +2407,7 @@ class ActivitiesController extends Controller
         } catch (\Exception $e) {
             Log::error('Validation failed', [
                 'order_id' => $id,
-                'error_message' => $e->getMessage()
+                'error_message' => $e->getMessage(),
             ]);
             return response()->json(['success' => false, 'message' => 'Validation failed.'], 400); // Return 400 for validation error
         }
@@ -2513,8 +2434,6 @@ class ActivitiesController extends Controller
         }
     }
 
-
-
     public function calculation()
     {
         $orders = Order::where('order_status', '!=', 'Finished')->pluck('order_number', 'id'); // Fetch orders with condition
@@ -2532,14 +2451,13 @@ class ActivitiesController extends Controller
                 Log::error('Invalid duration format.', ['duration' => $duration]);
                 return 0; // Or handle the error appropriately
             }
-            list($hours, $minutes, $seconds) = $timeParts;
-            return $hours + ($minutes / 60) + ($seconds / 3600);
+            [$hours, $minutes, $seconds] = $timeParts;
+            return $hours + $minutes / 60 + $seconds / 3600;
         } else {
             Log::error('Invalid duration format. done', ['duration' => $duration]);
             return 0;
         }
     }
-
 
     public function calculate(Request $request)
     {
@@ -2601,7 +2519,7 @@ class ActivitiesController extends Controller
                     Log::info('Real cost calculated for processing.', [
                         'item_number' => $processing->item_number,
                         'mach_cost_real' => $processing->mach_cost_real,
-                        'labor_cost_real' => $processing->labor_cost_real
+                        'labor_cost_real' => $processing->labor_cost_real,
                     ]);
                 } catch (\Exception $e) {
                     Log::warning('Duration conversion failed.', ['duration' => $processing->duration, 'error' => $e->getMessage()]);
@@ -2630,19 +2548,16 @@ class ActivitiesController extends Controller
 
         $responseData['subcon'] = $subcon;
 
-
         Log::info('Response data prepared.', ['responseData' => $responseData]);
 
         return response()->json($responseData, 200); // Ensure status code 200 for success
     }
 
-
     // Fetch order with related data
     private function fetchOrder($orderId)
     {
         try {
-            return Order::with(['items.processings', 'processings', 'subContracts', 'salesOrder', 'standartParts', 'overheads'])
-                ->findOrFail($orderId);
+            return Order::with(['items.processings', 'processings', 'subContracts', 'salesOrder', 'standartParts', 'overheads'])->findOrFail($orderId);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::error('Order fetch failed.', ['order_id' => $orderId, 'error' => $e->getMessage()]);
             return null;
@@ -2654,9 +2569,7 @@ class ActivitiesController extends Controller
         try {
             Log::info('Fetching WPLink costs.', ['order_number' => $orderNumber, 'jenis' => $jenis]);
 
-            $total = WPLink::where('order_number', $orderNumber)
-                ->where('jenis', $jenis)
-                ->sum('total');
+            $total = WPLink::where('order_number', $orderNumber)->where('jenis', $jenis)->sum('total');
 
             Log::info('WPLink costs fetched.', ['order_number' => $orderNumber, 'jenis' => $jenis, 'harga' => $total]);
 
@@ -2706,14 +2619,13 @@ class ActivitiesController extends Controller
                 'totalCosts' => $totalMaterialCost + $totalMachineCost + $totalLaborCost + $totalSubContractCost + $totalStandardPartCost + $totalOverheadCost,
                 'itemizedCosts' => $itemizedCosts,
                 'machineProcessingDetails' => $machineCostResult['details'],
-                'laborProcessingDetails' => $laborCostResult['details']
+                'laborProcessingDetails' => $laborCostResult['details'],
             ];
         } catch (\Exception $e) {
             Log::error('Error calculating costs.', ['error' => $e->getMessage()]);
             return null;
         }
     }
-
 
     private function calculateProcessingCosts($processings, $costType)
     {
@@ -2734,7 +2646,7 @@ class ActivitiesController extends Controller
                 'durationInHours' => $durationInHours,
                 'costPerHour' => $costPerHour,
                 'cost' => $cost,
-                'estimatedCost' => $estimatedCost
+                'estimatedCost' => $estimatedCost,
             ]);
 
             $totalCost += $cost;
@@ -2747,16 +2659,15 @@ class ActivitiesController extends Controller
                 'estimated_cost' => $estimatedCost,
                 'duration_hours' => $durationInHours,
                 'cost_per_hour' => $costPerHour,
-                'cost' => $cost
+                'cost' => $cost,
             ];
         }
 
         return [
             'totalCost' => $totalCost,
-            'details' => $processingDetails
+            'details' => $processingDetails,
         ];
     }
-
 
     // Calculate machine and labor costs by items
     private function calculateCostsByItems($order)
@@ -2781,16 +2692,15 @@ class ActivitiesController extends Controller
 
         return [
             'machineCostsByItems' => $machineCostsByItems,
-            'laborCostsByItems' => $laborCostsByItems
+            'laborCostsByItems' => $laborCostsByItems,
         ];
     }
 
     // Calculate financial metrics
     private function calculateFinancialMetrics($totalSales, $totalCosts)
     {
-
-        $totalSales = (float)$totalSales; // Cast to float
-        $totalCosts = (float)$totalCosts; // Cast to float
+        $totalSales = (float) $totalSales; // Cast to float
+        $totalCosts = (float) $totalCosts; // Cast to float
 
         $COGS = $totalCosts;
         $GPM = $totalSales - $COGS;
@@ -2821,7 +2731,7 @@ class ActivitiesController extends Controller
                 'noi' => $financialMetrics['NOI'],
                 'bnp' => $financialMetrics['BNP'],
                 'lsp' => $financialMetrics['LSP'],
-                'wip_date' => now() // Add current date
+                'wip_date' => now(), // Add current date
             ];
 
             // Check if there's already a WIP record for the same order with today's date
@@ -2844,7 +2754,6 @@ class ActivitiesController extends Controller
             throw $e; // Re-throw exception for higher-level handling if necessary
         }
     }
-
 
     // Store or update WIP data for all orders
     private function storeWIPDataForAllOrders()
@@ -2881,7 +2790,7 @@ class ActivitiesController extends Controller
                     'noi' => $financialMetrics['NOI'],
                     'bnp' => $financialMetrics['BNP'],
                     'lsp' => $financialMetrics['LSP'],
-                    'wip_date' => now() // Set current date
+                    'wip_date' => now(), // Set current date
                 ];
 
                 // Check if there's already a WIP record for the same order with today's date
@@ -2904,8 +2813,6 @@ class ActivitiesController extends Controller
             throw $e; // Re-throw exception for higher-level handling if necessary
         }
     }
-
-
 
     // Format response data
     private function formatResponseData($costs, $order)
@@ -2938,24 +2845,24 @@ class ActivitiesController extends Controller
                 return [
                     'item_id' => $itemCost['item_id'],
                     'item_name' => $itemCost['item_name'],
-                    'machine_cost' => $this->formatNumber($itemCost['machine_cost'])
+                    'machine_cost' => $this->formatNumber($itemCost['machine_cost']),
                 ];
             }, $costs['itemizedCosts']['machineCostsByItems']),
             'laborCostsByItems' => array_map(function ($itemCost) {
                 return [
                     'item_id' => $itemCost['item_id'],
                     'item_name' => $itemCost['item_name'],
-                    'labor_cost' => $this->formatNumber($itemCost['labor_cost'])
+                    'labor_cost' => $this->formatNumber($itemCost['labor_cost']),
                 ];
             }, $costs['itemizedCosts']['laborCostsByItems']),
             'machineProcessingDetails' => $costs['machineProcessingDetails'],
-            'laborProcessingDetails' => $costs['laborProcessingDetails']
+            'laborProcessingDetails' => $costs['laborProcessingDetails'],
         ];
     }
 
     private function formatNumber($number)
     {
-        return number_format((float)$number, 0);
+        return number_format((float) $number, 0);
     }
 
     public function calculateAllOrders(Request $request)
@@ -2992,8 +2899,8 @@ class ActivitiesController extends Controller
                 'oh_org' => $calculationData['OHorg'],
                 'noi' => $calculationData['NOI'],
                 'bnp' => $calculationData['BNP'],
-                'lsp' => $calculationData['LSP']
-            ]
+                'lsp' => $calculationData['LSP'],
+            ],
         );
 
         return response()->json($calculationData);
@@ -3017,19 +2924,19 @@ class ActivitiesController extends Controller
         $status = $request->input('status');
 
         if ($status === 'approved') {
-            $order->produksi_status = "Disetujui";
+            $order->order_status = 'QC Pass';
+            $order->produksi_status = 'Disetujui';
         } elseif ($status === 'pending') {
-            $order->order_status = "Pending";
+            $order->order_status = 'Pending';
         }
 
         $order->save();
 
         return response()->json([
             'success' => true,
-            'message' => $status === 'approved' ? 'Order approved successfully.' : 'Order rejected successfully.'
+            'message' => $status === 'approved' ? 'Order approved successfully.' : 'Order rejected successfully.',
         ]);
     }
-
 
     public function maintenance_standart()
     {
@@ -3046,7 +2953,7 @@ class ActivitiesController extends Controller
         // Validate the request data
         $validatedData = $request->validate([
             'selected_order_id' => 'required|exists:order,id',
-            'order_number' => 'required|unique:order,order_number'
+            'order_number' => 'required|unique:order,order_number',
         ]);
 
         // Fetch the selected order
@@ -3086,7 +2993,6 @@ class ActivitiesController extends Controller
         return redirect()->route('activities.order')->with('success', 'Order copied successfully with related items and processes.');
     }
 
-
     public function data_maintenance()
     {
         return view('activities.datamaintenance');
@@ -3101,7 +3007,7 @@ class ActivitiesController extends Controller
             'id' => $request->id,
             'type' => $request->type,
             'value' => $request->value,
-            'description' => $request->description
+            'description' => $request->description,
         ]);
 
         try {
@@ -3128,7 +3034,7 @@ class ActivitiesController extends Controller
                     'produksi_status' => $order->produksi_status,
                     'marketing_status' => $order->marketing_status,
                     'surat_jalan_status' => $order->surat_jalan_status,
-                ]
+                ],
             ]);
 
             // Update the specific status based on the type
@@ -3162,11 +3068,7 @@ class ActivitiesController extends Controller
             }
 
             // Check if all statuses are "Disetujui"
-            if (
-                $order->produksi_status === 'Disetujui' &&
-                $order->marketing_status === 'Disetujui' &&
-                $order->surat_jalan_status === 'Disetujui'
-            ) {
+            if ($order->produksi_status === 'Disetujui' && $order->marketing_status === 'Disetujui' && $order->surat_jalan_status === 'Disetujui') {
                 $order->order_status = 'Delivered';
                 Log::info('Order status set to Delivered', ['order_id' => $order->id]);
             }
@@ -3188,10 +3090,9 @@ class ActivitiesController extends Controller
         }
     }
 
-
     public function delivery_process(Request $request)
     {
-        $query = Order::Finished(); // Get the base query for unfinished orders
+        $query = Order::QCPass(); // Get the base query for unfinished orders
 
         if ($request->has('order_number')) {
             $order_number = $request->input('order_number');

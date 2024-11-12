@@ -61,6 +61,7 @@
                                             <th>SO No</th>
                                             <th>Product</th>
                                             <th>Created At</th>
+                                            <th>Status Process</th>
                                             @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                             <th>Action</th>
                                             @endif
@@ -76,6 +77,7 @@
                                                 <td>{{ $it->so_number }}</td>
                                                 <td>{{$it->product}}</td>
                                                 <td>{{$it->created_at}}</td>
+                                                <td>{{$it->status}}</td>
                                                 @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
                                                     <a href="{{ url('activities/item/edit/' . $it->order_number) }}"

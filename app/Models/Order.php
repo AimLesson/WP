@@ -80,6 +80,10 @@ class Order extends Model
     {
         return $query->where('order_status', 'Delivered');
     }
+    public function scopeQCPass($query)
+    {
+        return $query->where('order_status', 'QC Pass');
+    }
 
     public function scopenotDelivered($query)
     {
@@ -88,16 +92,15 @@ class Order extends Model
 
     public function updateOrderStatus()
     {
-        $processings = $this->processings;
-
-        if ($processings->isEmpty()) {
+        $items = $this->items;
+        
+        if ($items->isEmpty()) {
             $this->order_status = 'queue';
         } else {
-            $allStatuses = $processings->pluck('status')->unique();
-
+            $allStatuses = $items->pluck('status')->unique();
+    
             if ($allStatuses->count() === 1) {
-                $status = $allStatuses->first();
-                $this->order_status = $status;
+                $this->order_status = $allStatuses->first();
             } else {
                 if ($allStatuses->contains('started')) {
                     $this->order_status = 'started';
@@ -105,13 +108,13 @@ class Order extends Model
                     $this->order_status = 'pending';
                 } elseif ($allStatuses->contains('queue')) {
                     $this->order_status = 'queue';
-                } elseif ($allStatuses->count() === 1 && $allStatuses->first() === 'finished') {
-                    // Ensure all processings are finished
-                    $this->order_status = 'Finished';
+                } elseif ($allStatuses->every(fn($status) => $status === 'finished')) {
+                    $this->order_status = 'finished';
                 }
             }
         }
-
+    
         $this->save();
     }
+    
 }

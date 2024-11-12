@@ -282,6 +282,7 @@
                                             <th>Length</th>
                                             <th>Width</th>
                                             <th>Thickness</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -301,6 +302,7 @@
                                                 <td>{{ $item->length }} mm</td>
                                                 <td>{{ $item->width }} mm</td>
                                                 <td>{{ $item->thickness }} mm</td>
+                                                <td>{{$item->status}}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

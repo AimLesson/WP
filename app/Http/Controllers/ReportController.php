@@ -276,7 +276,7 @@ class ReportController extends Controller
 
         // Query to fetch WIP data where the associated order status is not "Finished" or "Delivered"
         $orders = \App\Models\WIP::whereHas('order', function ($query) {
-            $query->finished();
+            $query->QCPass();
         });
 
         // Log the base query
