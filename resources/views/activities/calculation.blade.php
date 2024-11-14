@@ -43,7 +43,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </form>
+                        </form>                    
                         <div id="calculation-result" style="display: none;">
                             <div class="row">
                                 <div class="col-md-6">
@@ -188,8 +188,8 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                     <!-- Print Button -->
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="printTable('material-table', 'Material Cost Details')">Print</button>
+                                    <button type="button" class="btn btn-primary btn-custom"
+                                    onclick="printTable('material-table', 'Material Cost Details', 'materialCostModal')">Print</button>                                
                                 </div>
                                 <div class="modal-body">
                                     <!-- Material Cost Table -->
@@ -228,8 +228,8 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                     <!-- Print Button -->
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="printTable('standard-part-table', 'Standart Part Details')">Print</button>
+                                    <button type="button" class="btn btn-primary btn-custom"
+                                    onclick="printTable('standard-part-table', 'Standard Part Details', 'standardPartCostModal')">Print</button>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Standard Part Cost Table -->
@@ -268,8 +268,8 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                     <!-- Print Button -->
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="printTable('labor-costs-table','Labor Cost Details')">Print</button>
+                                    <button type="button" class="btn btn-primary btn-custom"
+                                    onclick="printTable('labor-costs-table', 'Labor Cost Details', 'laborCostModal')">Print</button>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Labor Cost Table -->
@@ -306,8 +306,8 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                     <!-- Print Button -->
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="printTable('machine-costs-table', 'Machine Cost Details')">Print</button>
+                                    <button type="button" class="btn btn-primary btn-custom"
+                                    onclick="printTable('machine-costs-table', 'Machine Cost Details', 'machineCostModal')">Print</button>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Machine Cost Table -->
@@ -347,8 +347,9 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                     <!-- Print Button -->
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="printTable('overheads-table', 'Overhead Manufacture Details')">Print</button>
+                                    <button type="button" class="btn btn-primary btn-custom"
+                                    onclick="printTable('overheads-table', 'Overhead Manufacture Details', 'overheadCostModal')">Print</button>
+                                
                                 </div>
                                 <div class="modal-body">
                                     <!-- Overhead Cost Table -->
@@ -381,8 +382,8 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                     <!-- Print Button -->
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="printTable('subcon-table', 'Sub-Contract Details')">Print</button>
+                                    <button type="button" class="btn btn-primary btn-custom"
+                                    onclick="printTable('subcon-table', 'Sub-Contract Details', 'subconCostModal')">Print</button>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Subcon Cost Table -->
@@ -718,12 +719,12 @@
         });
     </script>
 
-    <script>
-        function printTable(tableId, tableName) {
-            var table = document.getElementById(tableId).outerHTML;
-            var originalContents = document.body.innerHTML;
+<script>
+    function printTable(tableId, tableName, modalId) {
+        var table = document.getElementById(tableId).outerHTML;
+        var originalContents = document.body.innerHTML;
 
-            document.body.innerHTML = `
+        document.body.innerHTML = `
         <html>
         <head>
             <title>${tableName}</title>
@@ -752,10 +753,19 @@
             ${table}
         </body>
         </html>
-    `;
+        `;
 
-            window.print();
-            document.body.innerHTML = originalContents;
-        }
-    </script>
+        window.print();
+
+        // Close the modal after printing
+        var myModalEl = document.getElementById(modalId);
+        var modal = bootstrap.Modal.getInstance(myModalEl);
+        modal.hide();
+
+        // Restore the original page content
+        document.body.innerHTML = originalContents;
+    }
+</script>
+
+
 @endsection
