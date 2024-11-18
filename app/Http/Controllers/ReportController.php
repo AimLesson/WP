@@ -8,12 +8,25 @@ use App\Models\ItemAdd;
 use Illuminate\Http\Request;
 use App\Models\ProcessingAdd;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\ActivitiesController;
 
 class ReportController extends Controller
 {
     public function report()
     {
-        return view('report.report');
+        try {
+            // Instantiate ActivitiesController
+            $activitiesController = new ActivitiesController();
+
+            // Call the storeWIPDataForAllOrders method
+            $activitiesController->storeWIPDataForAllOrders();
+
+            return view('report.report')->with('success', 'WIP data processed successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error calling WIP data process from ReportController.', ['error' => $e->getMessage()]);
+
+            return view('report.report')->with('error', 'Failed to process WIP data. Please try again!');
+        }
     }
     public function order()
     {

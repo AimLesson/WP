@@ -36,14 +36,16 @@
                             @csrf
                             <div class="form-group">
                                 <label for="order_id"></label>
-                                <select name="order_id" id="order_id" class="form-control">
-                                    <option value="" disabled selected>-- Select Order Number --</option>
+                                <input list="order_numbers" id="order_id" name="order_id" class="form-control"
+                                    placeholder="-- Select Order Number --">
+                                <datalist id="order_numbers">
                                     @foreach ($orders as $id => $orderNumber)
-                                        <option value="{{ $id }}">{{ $orderNumber }}</option>
+                                        <option value="{{ $orderNumber }}" data-id="{{ $id }}"></option>
                                     @endforeach
-                                </select>
+                                </datalist>
                             </div>
-                        </form>                    
+                        </form>
+
                         <div id="calculation-result" style="display: none;">
                             <div class="row">
                                 <div class="col-md-6">
@@ -189,7 +191,7 @@
                                         aria-label="Close"></button>
                                     <!-- Print Button -->
                                     <button type="button" class="btn btn-primary btn-custom"
-                                    onclick="printTable('material-table', 'Material Cost Details', 'materialCostModal')">Print</button>                                
+                                        onclick="printTable('material-table', 'Material Cost Details', 'materialCostModal')">Print</button>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Material Cost Table -->
@@ -229,7 +231,7 @@
                                         aria-label="Close"></button>
                                     <!-- Print Button -->
                                     <button type="button" class="btn btn-primary btn-custom"
-                                    onclick="printTable('standard-part-table', 'Standard Part Details', 'standardPartCostModal')">Print</button>
+                                        onclick="printTable('standard-part-table', 'Standard Part Details', 'standardPartCostModal')">Print</button>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Standard Part Cost Table -->
@@ -269,7 +271,7 @@
                                         aria-label="Close"></button>
                                     <!-- Print Button -->
                                     <button type="button" class="btn btn-primary btn-custom"
-                                    onclick="printTable('labor-costs-table', 'Labor Cost Details', 'laborCostModal')">Print</button>
+                                        onclick="printTable('labor-costs-table', 'Labor Cost Details', 'laborCostModal')">Print</button>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Labor Cost Table -->
@@ -307,7 +309,7 @@
                                         aria-label="Close"></button>
                                     <!-- Print Button -->
                                     <button type="button" class="btn btn-primary btn-custom"
-                                    onclick="printTable('machine-costs-table', 'Machine Cost Details', 'machineCostModal')">Print</button>
+                                        onclick="printTable('machine-costs-table', 'Machine Cost Details', 'machineCostModal')">Print</button>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Machine Cost Table -->
@@ -348,8 +350,8 @@
                                         aria-label="Close"></button>
                                     <!-- Print Button -->
                                     <button type="button" class="btn btn-primary btn-custom"
-                                    onclick="printTable('overheads-table', 'Overhead Manufacture Details', 'overheadCostModal')">Print</button>
-                                
+                                        onclick="printTable('overheads-table', 'Overhead Manufacture Details', 'overheadCostModal')">Print</button>
+
                                 </div>
                                 <div class="modal-body">
                                     <!-- Overhead Cost Table -->
@@ -372,8 +374,8 @@
                     </div>
 
                     <!-- SubCOn Cost Modal -->
-                    <div class="modal fade" id="subconCostModal" tabindex="-1"
-                        aria-labelledby="subconCostModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="subconCostModal" tabindex="-1" aria-labelledby="subconCostModalLabel"
+                        aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -383,7 +385,7 @@
                                         aria-label="Close"></button>
                                     <!-- Print Button -->
                                     <button type="button" class="btn btn-primary btn-custom"
-                                    onclick="printTable('subcon-table', 'Sub-Contract Details', 'subconCostModal')">Print</button>
+                                        onclick="printTable('subcon-table', 'Sub-Contract Details', 'subconCostModal')">Print</button>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Subcon Cost Table -->
@@ -429,14 +431,25 @@
             var overheadTable = $('#overhead-table').DataTable();
             var costTable = $('#cost-table').DataTable();
 
-            $('#order_id').change(function() {
-                var orderId = $(this).val();
+            $('#order_id').on('input', function() {
+                var inputValue = $(this).val();
+                var orderId = null;
+
+                // Match the input value to a datalist option
+                $('#order_numbers option').each(function() {
+                    if ($(this).val() === inputValue) {
+                        orderId = $(this).data('id');
+                        return false; // Break the loop
+                    }
+                });
+
                 if (orderId) {
                     fetchCalculationData(orderId);
                 } else {
                     $('#calculation-result').hide();
                 }
             });
+
 
             function fetchCalculationData(orderId) {
                 $.ajax({
@@ -632,14 +645,16 @@
 
 
             function updateMaterialTable(materialData) {
-                var columns = ['created_at', 'material', 'jumlah', 'jenis', 'satuan','harga', 'total', 'barcode_id'];
-                var currencyColumns = ['total','harga'];
+                var columns = ['created_at', 'material', 'jumlah', 'jenis', 'satuan', 'harga', 'total',
+                    'barcode_id'];
+                var currencyColumns = ['total', 'harga'];
                 updateTable('#material-table', materialData, columns, currencyColumns);
             }
 
             function updateStandardPartTable(partData) {
-                var columns = ['created_at', 'material', 'jumlah', 'jenis', 'satuan','harga', 'total', 'barcode_id'];
-                var currencyColumns = ['total','harga'];
+                var columns = ['created_at', 'material', 'jumlah', 'jenis', 'satuan', 'harga', 'total',
+                    'barcode_id'];
+                var currencyColumns = ['total', 'harga'];
                 updateTable('#standard-part-table', partData, columns, currencyColumns);
             }
 
@@ -719,12 +734,12 @@
         });
     </script>
 
-<script>
-    function printTable(tableId, tableName, modalId) {
-        var table = document.getElementById(tableId).outerHTML;
-        var originalContents = document.body.innerHTML;
+    <script>
+        function printTable(tableId, tableName, modalId) {
+            var table = document.getElementById(tableId).outerHTML;
+            var originalContents = document.body.innerHTML;
 
-        document.body.innerHTML = `
+            document.body.innerHTML = `
         <html>
         <head>
             <title>${tableName}</title>
@@ -755,17 +770,15 @@
         </html>
         `;
 
-        window.print();
+            window.print();
 
-        // Close the modal after printing
-        var myModalEl = document.getElementById(modalId);
-        var modal = bootstrap.Modal.getInstance(myModalEl);
-        modal.hide();
+            // Close the modal after printing
+            var myModalEl = document.getElementById(modalId);
+            var modal = bootstrap.Modal.getInstance(myModalEl);
+            modal.hide();
 
-        // Restore the original page content
-        document.body.innerHTML = originalContents;
-    }
-</script>
-
-
+            // Restore the original page content
+            document.body.innerHTML = originalContents;
+        }
+    </script>
 @endsection

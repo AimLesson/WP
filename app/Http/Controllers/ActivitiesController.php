@@ -520,20 +520,21 @@ class ActivitiesController extends Controller
             $salesorder->dp_percent = $request->dp_percent;
 
             // Handle the money inputs
-            $subtotal = str_replace(['Rp', '.', ','], '', $request->input('subtotal'));
+            $subtotal = trim(str_replace(['Rp', '.', ','], '', $request->input('subtotal')));
             $salesorder->subtotal = $subtotal;
 
-            $discount = str_replace(['Rp', '.', ','], '', $request->input('discount'));
+            $discount = trim(str_replace(['Rp', '.', ','], '', $request->input('discount')));
             $salesorder->discount = $discount;
 
-            $tax = str_replace(['Rp', '.', ','], '', $request->input('tax'));
+            $tax = trim(str_replace(['Rp', '.', ','], '', $request->input('tax')));
             $salesorder->tax = $tax;
 
-            $freight = str_replace(['Rp', '.', ','], '', $request->input('freight'));
+            $freight = trim(str_replace(['Rp', '.', ','], '', $request->input('freight')));
             $salesorder->freight = $freight;
 
-            $totalAmount = str_replace(['Rp', '.', ','], '', $request->input('total_amount'));
+            $totalAmount = trim(str_replace(['Rp', '.', ','], '', $request->input('total_amount')));
             $salesorder->total_amount = $totalAmount;
+
 
             $salesorder->discount_percent = $request->discount_percent;
             $salesorder->tax_type = $request->tax_type;
@@ -2756,7 +2757,7 @@ class ActivitiesController extends Controller
     }
 
     // Store or update WIP data for all orders
-    private function storeWIPDataForAllOrders()
+    public function storeWIPDataForAllOrders()
     {
         try {
             // Fetch all orders that need to be updated. You can apply filters if needed.
