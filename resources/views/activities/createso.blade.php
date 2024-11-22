@@ -714,7 +714,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        {{-- <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="file" class="form-label">Upload File</label>
                                                 <input type="file" name="file" class="form-control-file"
@@ -722,7 +722,7 @@
                                             </div>
                                             <img id="filePreview" src="#" alt=""
                                                 style="max-width: 100%; max-height: 200px; display: block; margin: 0 auto;">
-                                        </div>
+                                        </div> --}}
                                     </div>
 
                                     <div class="row">
