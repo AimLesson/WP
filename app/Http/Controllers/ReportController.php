@@ -50,6 +50,24 @@ class ReportController extends Controller
 
         return view('report.controlsheet', compact('items', 'orderNumber', 'orders', 'order'));
     }
+    
+    public function showControlSheet(Request $request)
+{
+    $orderNumber = $request->get('order_number');
+    $order = null;
+
+    // Fetch the order based on the provided order number
+    if ($orderNumber) {
+        $order = Order::where('order_number', $orderNumber)->with('items.processingAdds')->first();
+    }
+
+    // Pass the data to the view
+    return view('controlsheet', [
+        'orderNumber' => $orderNumber,
+        'order' => $order,
+        'items' => $order ? $order->items : collect(),
+    ]);
+}
 
 
     public function getItemsByOrder($orderNumber)
