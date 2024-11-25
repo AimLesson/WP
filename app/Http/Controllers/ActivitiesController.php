@@ -2945,54 +2945,75 @@ class ActivitiesController extends Controller
     }
     public function copyOrder()
     {
-        $orders = Order::all(); // Fetch all orders
+        $orders = Order::finished()->qcPassed()->get(); // Assuming `finished` and `qcPassed` are query scopes
         return view('activities.copy_order', compact('orders'));
     }
+    
 
     public function storeCopiedOrder(Request $request)
     {
+        Log::info('storeCopiedOrder called');
+    
         // Validate the request data
         $validatedData = $request->validate([
             'selected_order_id' => 'required|exists:order,id',
             'order_number' => 'required|unique:order,order_number',
         ]);
-
-        // Fetch the selected order
-        $selectedOrder = Order::find($validatedData['selected_order_id']);
-
-        // Create a new Order instance with the data from the selected order
-        $newOrder = $selectedOrder->replicate();
-        $newOrder->order_number = $request->input('order_number');
-        $newOrder->order_status = 'Queue'; // Automatically set order_status to 'Queue'
-        $newOrder->save();
-
-        // Copy related items
-        $items = Item::where('order_number', $selectedOrder->order_number)->get();
-        foreach ($items as $item) {
-            $newItem = $item->replicate();
-            $newItem->order_number = $newOrder->order_number;
-            $newItem->save();
-
-            // Copy associated item additions
-            $itemAdds = ItemAdd::where('order_number', $item->order_number)->get();
-            foreach ($itemAdds as $itemAdd) {
-                $newItemAdd = $itemAdd->replicate();
-                $newItemAdd->order_number = $newItem->order_number;
-                $newItemAdd->save();
+    
+        Log::info('Validation successful', $validatedData);
+    
+        try {
+            // Fetch the selected order
+            $selectedOrder = Order::find($validatedData['selected_order_id']);
+            Log::info('Selected order retrieved', ['selectedOrder' => $selectedOrder]);
+    
+            // Create a new Order instance with the data from the selected order
+            $newOrder = $selectedOrder->replicate();
+            $newOrder->order_number = $request->input('order_number');
+            $newOrder->order_status = 'Queue'; // Automatically set order_status to 'Queue'
+            $newOrder->save();
+    
+            Log::info('New order saved', ['newOrder' => $newOrder]);
+    
+            // Copy related items
+            $items = Item::where('order_number', $selectedOrder->order_number)->get();
+            foreach ($items as $item) {
+                $newItem = $item->replicate();
+                $newItem->order_number = $newOrder->order_number;
+                $newItem->save();
+    
+                Log::info('Item replicated', ['item' => $item, 'newItem' => $newItem]);
+    
+                // Copy associated item additions
+                $itemAdds = ItemAdd::where('order_number', $item->order_number)->get();
+                foreach ($itemAdds as $itemAdd) {
+                    $newItemAdd = $itemAdd->replicate();
+                    $newItemAdd->order_number = $newItem->order_number;
+                    $newItemAdd->save();
+    
+                    Log::info('ItemAdd replicated', ['itemAdd' => $itemAdd, 'newItemAdd' => $newItemAdd]);
+                }
             }
+    
+            // Copy related processing additions
+            $processes = ProcessingAdd::where('order_number', $selectedOrder->order_number)->get();
+            foreach ($processes as $process) {
+                $newProcess = $process->replicate();
+                $newProcess->order_number = $newOrder->order_number;
+                $newProcess->save();
+    
+                Log::info('ProcessingAdd replicated', ['process' => $process, 'newProcess' => $newProcess]);
+            }
+    
+            // Redirect back with a success message
+            Log::info('Order copying completed');
+            return redirect()->route('activities.order')->with('success', 'Order copied successfully with related items and processes.');
+        } catch (\Exception $e) {
+            Log::error('Error in storeCopiedOrder', ['error' => $e->getMessage()]);
+            return redirect()->route('activities.order')->with('error', 'Failed to copy order. Please check logs.');
         }
-
-        // Copy related processing additions
-        $processes = ProcessingAdd::where('order_number', $selectedOrder->order_number)->get();
-        foreach ($processes as $process) {
-            $newProcess = $process->replicate();
-            $newProcess->order_number = $newOrder->order_number;
-            $newProcess->save();
-        }
-
-        // Redirect back with a success message
-        return redirect()->route('activities.order')->with('success', 'Order copied successfully with related items and processes.');
     }
+    
 
     public function data_maintenance()
     {
