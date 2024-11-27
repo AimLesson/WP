@@ -34,22 +34,33 @@ class ReportController extends Controller
     }
     public function controlsheet(Request $request)
     {
-        // Fetch all orders with status not 'finished'
-        $orders = Order::where('order_status', '!=', 'finished')->get();
-
+        // Fetch all orders except those with 'finished' status
+        $orders = Order::all();
+    
         // Get the order_number from the request
         $orderNumber = $request->input('order_number');
-
+    
         // Fetch the selected order details
         $order = Order::where('order_number', $orderNumber)->first();
-
+    
         // Fetch the items with the specified order_number and their related processing steps
-        $items = ItemAdd::with('processingAdds')
+        $items = ItemAdd::with(['processingAdds' => function ($query) use ($orderNumber) {
+                $query->where('order_number', $orderNumber);
+            }])
             ->where('order_number', $orderNumber)
             ->get();
-
+    
+        // Validate duplicates
+        $duplicateProcesses = $items->flatMap->processingAdds->duplicates('id');
+        if ($duplicateProcesses->isNotEmpty()) {
+            return redirect()->back()->withErrors([
+                'duplicates' => 'Duplicate processing steps found for this order.',
+            ]);
+        }
+    
         return view('report.controlsheet', compact('items', 'orderNumber', 'orders', 'order'));
     }
+    
     
     public function showControlSheet(Request $request)
 {

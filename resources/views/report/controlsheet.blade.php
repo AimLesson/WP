@@ -31,20 +31,23 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <form method="GET" action="{{ route('controlsheet') }}">
-                                    <div class="form-group">
-                                        <label for="order_number">Order Number:</label>
-                                        <input list="order_numbers" id="order_number" name="order_number" class="form-control"
-                                            value="{{ old('order_number', $orderNumber) }}">
+                            <form method="GET" action="{{ route('controlsheet') }}">
+                                <div class="form-group">
+                                    <label for="order_number">Order Number:</label>
+                                    <input list="order_numbers" id="order_number" name="order_number" class="form-control"
+                                        value="{{ old('order_number', $orderNumber) }}">
 
-                                        <datalist id="order_numbers">
-                                            @foreach (\App\Models\Order::pluck('order_number') as $orderNumber)
-                                                <option value="{{ $orderNumber }}"></option>
-                                            @endforeach
-                                        </datalist>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary btn-custom">Filter</button>
-                                </form>
+                                    <datalist id="order_numbers">
+                                        @foreach (\App\Models\Order::pluck('order_number') as $orderNumber)
+                                            <option value="{{ $orderNumber }}"></option>
+                                        @endforeach
+                                    </datalist>
+                                </div>
+                                <div class="d-flex">
+                                    <button type="submit" class="btn btn-primary btn-custom me-2">Filter</button>
+                                    <a href="{{ route('controlsheet') }}" class="btn btn-secondary btn-custom">Reset</a>
+                                </div>
+                            </form>
                                 <div class="card p-3 m-3">
                                     @if ($order)
                                         <div class="row">
