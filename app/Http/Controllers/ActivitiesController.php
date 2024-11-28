@@ -1774,7 +1774,7 @@ class ActivitiesController extends Controller
         Log::info('All standart_part entries added successfully');
 
         // Redirect with success message
-        return redirect()->route('activities.createstandartpart')->with('success', 'Standart Part(s) added successfully.');
+        return redirect()->route('activities.standartpart')->with('success', 'Standart Part(s) added successfully.');
     }
 
     public function editstandartpart($id)
@@ -1922,7 +1922,7 @@ class ActivitiesController extends Controller
         }
 
         // Redirect with success message
-        return redirect()->route('activities.createsub_contract')->with('success', 'Sub Contract(s) added successfully.');
+        return redirect()->route('activities.sub_contract')->with('success', 'Sub Contract(s) added successfully.');
     }
 
     public function editsub_contract($id)
