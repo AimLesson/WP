@@ -84,7 +84,10 @@ class Order extends Model
     {
         return $query->where('order_status', 'QC Pass');
     }
-
+    public function scopeNotQCPass($query)
+    {
+        return $query->where('order_status', '!=', 'QCPass');
+    }
     public function scopenotDelivered($query)
     {
         return $query->where('order_status', '!=', 'Delivered');

@@ -29,4 +29,10 @@ class sub_contract extends Model
 {
     return $this->hasMany(sub_contract::class, 'order_number', 'order_number');
 }
+
+public function order()
+{
+    return $this->belongsTo(Order::class, 'order_number', 'order_number');
+}
+
 }
