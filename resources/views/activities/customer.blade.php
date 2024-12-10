@@ -25,7 +25,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin' || Auth::user()->unit == 'MA')
                         <a href="{{ route('activities.createcustomer') }}" class="btn btn-primary mb-3"><i
                                 class="fas fa-plus"></i>
                             Add</a> @endif
@@ -71,7 +71,7 @@
                                             <th>Shipment</th>
                                             <th>Contact Person</th>
                                             <th>Web Page</th>
-                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin' || Auth::user()->unit == 'MA')
                                             <th>Action</th>
                                             @endif
                                         </tr>
@@ -96,7 +96,7 @@
                                                 <td>{{ $c->shipment }}</td>
                                                 <td>{{$c->cp}}</td>
                                                 <td>{{ $c->webpage }}</td>
-                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin' || Auth::user()->unit == 'MA')
                                                 <td>
                                                     <a href="{{ route('activities.editcustomer', ['id' => $c->id]) }}"
                                                         class="btn-xs btn-warning"><i class="fas fa-pen"></i>

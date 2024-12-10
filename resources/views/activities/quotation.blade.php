@@ -25,7 +25,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin' || Auth::user()->unit == 'MA')
                         <a href="{{ route('activities.createquotation') }}" class="btn btn-primary mb-3"><i
                                 class="fas fa-plus"></i>
                             Add</a> @endif
@@ -61,7 +61,7 @@
                                             <th>Description</th>
                                             <th>Date</th>
                                             <th>Total Amount</th>
-                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin' || Auth::user()->unit == 'MA')
                                             <th>Action</th>
                                             @endif
                                         </tr>
@@ -75,7 +75,7 @@
                                                 <td>{{ $q->description }}</td>
                                                 <td>{{ $q->date }}</td>
                                                 <td class="totalamount">{{ $q->total_amount }}</td>
-                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin' || Auth::user()->unit == 'MA')
                                                 <td>
                                                     <a href="{{ url('activities/quotation/edit/' . $q->quotation_no) }}"
                                                         class="btn-xs btn-warning"><i class="fas fa-pen"></i>

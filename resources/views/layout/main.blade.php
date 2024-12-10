@@ -273,7 +273,7 @@
                 <li class="nav-item order-4 order-sm-3">
                     <a href="{{ route('file') }}" class="nav-link {{ Request::is('file') ? 'active' : '' }}">File</a>
                 </li>
-                @if (Auth::user()->role == 'superadmin')
+                @if (Auth::user()->role == 'superadmin' || Auth::user()->unit == 'MA')
                 <li class="nav-item order-5 order-sm-4">
                     <a href="{{ route('setup') }}" class="nav-link {{ Request::is('setup') ? 'active' : '' }}">Setup</a>
                 </li>
@@ -306,7 +306,7 @@
                     <div class="dropdown-menu dropdown-menu-right">
                         <a href="{{ route('dashboard') }}" class="dropdown-item {{ Request::is('dashboard') ? 'active' : '' }}">Dashboard</a>
                         <a href="{{ route('file') }}" class="dropdown-item {{ Request::is('file') ? 'active' : '' }}">File</a>
-                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin' || Auth::user()->unit == 'MA')
                         <a href="{{ route('setup') }}" class="dropdown-item {{ Request::is('setup') ? 'active' : '' }}">Setup</a>
                         @endif
                         <a href="{{ route('tables') }}" class="dropdown-item {{ Request::is('tables') ? 'active' : '' }}">Table</a>

@@ -43,6 +43,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                         with font-awesome or any other icon font library -->
+            @if (Auth::user()->role == 'superadmin')
             <li class="nav-item {{ request()->is('setup/machine')||request()->is('setup/machine/create')||(request()->is('setup/machine/edit/*')&& request()->route('id') == $machine->id)||request()->is('setup/machine/view/*') ? 'active' : '' }} ? 'active' : '' }}">
                 <a href="{{ route('setup.machine') }}" class="nav-link">
                     <i class="nav-icon fas fa-cogs"></i>
@@ -51,6 +52,8 @@
                     </p>
                 </a>
             </li>
+            @endif
+            @if (Auth::user()->role == 'superadmin')
             <li class="nav-item {{ request()->is('setup/workunit')||request()->is('setup/workunit/add')||(request()->is('setup/workunit/edit/*')&& request()->route('id')==$work_unit->id) ? 'active' : '' }}">
                 <a href="{{ route('setup.workunit') }}" class="nav-link">
                     <i class="nav-icon fas fa-network-wired"></i>
@@ -59,6 +62,8 @@
                     </p>
                 </a>
             </li>
+            @endif
+            @if (Auth::user()->role == 'superadmin')
             <li class="nav-item {{ request()->is('setup/plan')||request()->is('setup/plan/create')||(request()->is('setup/plan/edit/*')&&request()->route('plan_name')==$plan->plan_name)||request()->is('setup/plan/view/*') ? 'active' : '' }}">
                 <a href="{{ route('setup.plan') }}" class="nav-link">
                     <i class="nav-icon fas fa-industry"></i>
@@ -67,6 +72,8 @@
                     </p>
                 </a>
             </li>
+            @endif
+            @if (Auth::user()->role == 'superadmin')
             <li class="nav-item {{ request()->is('setup/ordercode/orderunit')||request()->is('setup/ordercode/orderunit/add')||(request()->is('setup/ordercode/orderunit/edit/*')&&request()->route('id')==$order_unit->id)|| request()->is('setup/ordercode/machine')||request()->is('setup/ordercode/machine-state/add')||(request()->is('setup/ordercode/machine-state/edit/*')&&request()->route('id')==$machine_state->id)|| request()->is('setup/ordercode/unit')||request()->is('setup/ordercode/unit/add')||(request()->is('setup/ordercode/unit/edit/*')&&request()->route('id')==$unit->id) ? 'active' : '' }}">
                 <a href="{{ route('setup.orderunit') }}" class="nav-link">
                     <i class="nav-icon fas fa-code-branch"></i>
@@ -75,6 +82,8 @@
                     </p>
                 </a>
             </li>
+            @endif
+            @if (Auth::user()->role == 'superadmin')
             <li class="nav-item {{ request()->is('setup/department')||request()->is('setup/department/add')||(request()->is('setup/department/edit/*')&&request()->route('id')==$department->id) ? 'active' : '' }}">
                 <a href="{{ route('setup.department') }}" class="nav-link">
                     <i class="nav-icon fas fa-house-user"></i>
@@ -83,6 +92,8 @@
                     </p>
                 </a>
             </li>
+            @endif
+            @if (Auth::user()->role == 'superadmin')
             <li class="nav-item {{ request()->is('setup/kblicode')||request()->is('setup/kblicode/add')||(request()->is('setup/kblicode/edit/*')&&request()->route('id')==$kblicode->id) ? 'active' : '' }}">
                 <a href="{{ route('setup.kblicode') }}" class="nav-link">
                     <i class="nav-icon fas fa-th-list"></i>
@@ -91,6 +102,8 @@
                     </p>
                 </a>
             </li>
+            @endif
+            @if (Auth::user()->role == 'superadmin')
             <li class="nav-item {{ request()->is('setup/material') ? 'active' : '' }}">
                 <a href="{{route('setup.material')}}" class="nav-link">
                     <i class="nav-icon fas fa-puzzle-piece"></i>
@@ -99,6 +112,8 @@
                     </p>
                 </a>
             </li>
+            @endif
+            @if (Auth::user()->role == 'superadmin' || Auth::user()->unit == 'MA')
             <li class="nav-item {{ request()->is('setup/katalog') ? 'active' : '' }}">
                 <a href="{{route('setup.katalog')}}" class="nav-link">
                     <i class="nav-icon fas fas fa-print"></i>
@@ -107,6 +122,8 @@
                     </p>
                 </a>
             </li>
+            @endif
+            @if (Auth::user()->role == 'superadmin')
             <li class="nav-item {{ request()->is('setup/salesman') ? 'active' : '' }}">
                 <a href="{{route('setup.salesman')}}" class="nav-link">
                     <i class="nav-icon fas fa-money-check"></i>
@@ -115,6 +132,7 @@
                     </p>
                 </a>
             </li>
+            @endif
           <!--<li class="nav-item {{ request()->is('setup/sotarget')||request()->is('setup/sotarget/add')||(request()->is('setup/sotarget/edit/*')&&request()->route('id')==$sotarget->id) ? 'active' : '' }}">
                 <a href="{{ route('setup.sotarget') }}" class="nav-link">
                     <i class="nav-icon fas fa-check-square"></i>
