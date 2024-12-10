@@ -38,13 +38,13 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="order_number" class="form-label">Order</label>
-                                        <select name="order_number" id="order_number" onchange="fetchOrderData()"
-                                            class="form-control select2" style="width: 100%;" required>
-                                            <option selected="selected" disabled>-- Select Order --</option>
-                                            @foreach ($orders as $o)
-                                                <option value="{{ $o->order_number }}">{{ $o->order_number }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input list="order_numbers" id="order_number" name="order_number" class="form-control"
+                                        style="width: 100%;" placeholder="-- Select Order --" required onchange="fetchOrderData()">
+                                    <datalist id="order_numbers">
+                                        @foreach ($orders as $o)
+                                            <option value="{{ $o->order_number }}">{{ $o->order_number }}</option>
+                                        @endforeach
+                                    </datalist>
                                         @error('order_number')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -257,79 +257,82 @@
 
     <script>
         $(document).ready(function() {
-            let items = []; // Declare an empty array to hold the fetched items
+    let items = []; // Declare an empty array to hold the fetched items
 
-            $('#order_number').on('change', function() {
-                var orderNumber = $(this).val();
+    // Handle order_number changes
+    $('#order_number').on('change', function() {
+        var orderNumber = $(this).val();
 
-                // Clear the items select box
-                $('#no_item').empty();
-                $('#no_item').append('<option selected="selected" disabled>-- Select Item --</option>');
+        // Clear the items select box
+        $('#no_item').empty();
+        $('#no_item').append('<option selected="selected" disabled>-- Select Item --</option>');
 
-                if (orderNumber) {
-                    console.log('Fetching items for order number: ' + orderNumber); // Log the selected order number
+        if (orderNumber) {
+            console.log('Fetching items for order number: ' + orderNumber); // Log the selected order number
 
-                    $.ajax({
-                        url: '/items-by-order/' + orderNumber,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(data) {
-                            items = data; // Assign the fetched data to the items array
-                            console.log('Fetched items:', items); // Log the fetched items array
+            $.ajax({
+                url: '/items-by-order/' + orderNumber,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    items = data; // Assign the fetched data to the items array
+                    console.log('Fetched items:', items); // Log the fetched items array
 
-                            $.each(data, function(key, item) {
-                                $('#no_item').append('<option value="' + item.no_item +
-                                    '">' + item.no_item + '</option>');
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('AJAX Error: ' + status + error);
-                        }
+                    $.each(data, function(key, item) {
+                        $('#no_item').append('<option value="' + item.no_item +
+                            '">' + item.no_item + '</option>');
                     });
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error: ' + status + error);
                 }
             });
+        }
+    });
 
-            $('#order_number').change(function() {
-                var selectedOrderNumber = $(this).val();
-                var orders = @json($orders);
+    // Populate other fields when order_number is changed
+    $('#order_number').on('change', function() {
+        var selectedOrderNumber = $(this).val();
+        var orders = @json($orders);
 
-                console.log('Selected order number:', selectedOrderNumber); // Log the selected order number
-                console.log('Orders array:', orders); // Log the orders array
+        console.log('Selected order number:', selectedOrderNumber); // Log the selected order number
+        console.log('Orders array:', orders); // Log the orders array
 
-                var selectedOrder = orders.find(function(order) {
-                    return order.order_number === selectedOrderNumber;
-                });
-
-                console.log('Selected order:', selectedOrder); // Log the selected order
-
-                $('#so_number').val(selectedOrder ? selectedOrder.so_number : '');
-                $('#product').val(selectedOrder ? selectedOrder.product : '');
-                $('#company_name').val(selectedOrder ? selectedOrder.customer : '');
-                $('#dod').val(selectedOrder ? selectedOrder.dod : '');
-            });
-
-            // When no_item is changed, populate the relevant fields based on the selected item
-            $('#no_item').change(function() {
-                var selectedItemNumber = $(this).val();
-
-                console.log('Selected item number:', selectedItemNumber); // Log the selected item number
-
-                // Find the selected item from the dynamically updated items array
-                var selectedItem = items.find(function(item) {
-                    return item.no_item === selectedItemNumber;
-                });
-
-                console.log('Selected item:', selectedItem); // Log the selected item
-
-                // Populate the fields based on the selected item
-                $('#dod_item').val(selectedItem ? selectedItem.dod_item : '');
-                $('#material').val(selectedItem ? selectedItem.material : '');
-                $('#item').val(selectedItem ? selectedItem.item : '');
-                $('#drawing_no').val(selectedItem ? selectedItem.drawing_no : '');
-                $('#nos').val(selectedItem ? selectedItem.nos : '');
-                $('#issued_item').val(selectedItem ? selectedItem.issued_item : '');
-            });
+        var selectedOrder = orders.find(function(order) {
+            return order.order_number === selectedOrderNumber;
         });
+
+        console.log('Selected order:', selectedOrder); // Log the selected order
+
+        $('#so_number').val(selectedOrder ? selectedOrder.so_number : '');
+        $('#product').val(selectedOrder ? selectedOrder.product : '');
+        $('#company_name').val(selectedOrder ? selectedOrder.customer : '');
+        $('#dod').val(selectedOrder ? selectedOrder.dod : '');
+    });
+
+    // When no_item is changed, populate the relevant fields based on the selected item
+    $('#no_item').change(function() {
+        var selectedItemNumber = $(this).val();
+
+        console.log('Selected item number:', selectedItemNumber); // Log the selected item number
+
+        // Find the selected item from the dynamically updated items array
+        var selectedItem = items.find(function(item) {
+            return item.no_item === selectedItemNumber;
+        });
+
+        console.log('Selected item:', selectedItem); // Log the selected item
+
+        // Populate the fields based on the selected item
+        $('#dod_item').val(selectedItem ? selectedItem.dod_item : '');
+        $('#material').val(selectedItem ? selectedItem.material : '');
+        $('#item').val(selectedItem ? selectedItem.item : '');
+        $('#drawing_no').val(selectedItem ? selectedItem.drawing_no : '');
+        $('#nos').val(selectedItem ? selectedItem.nos : '');
+        $('#issued_item').val(selectedItem ? selectedItem.issued_item : '');
+    });
+});
+
     </script>
 
 

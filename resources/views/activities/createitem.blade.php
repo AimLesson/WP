@@ -61,14 +61,13 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="order_number" class="form-label">Order</label>
-                                            <select name="order_number" id="order_number" onchange="fetchOrderData()"
-                                                class="form-control select2" style="width: 100%;" required>
-                                                <option selected="selected" disabled>-- Select Order ---</option>
+                                            <input list="order_numbers" id="order_number" name="order_number" class="form-control"
+                                                style="width: 100%;" placeholder="-- Select Order --" required onchange="fetchOrderData()">
+                                            <datalist id="order_numbers">
                                                 @foreach ($order as $o)
-                                                    <option value="{{ $o->order_number }}">
-                                                        {{ $o->order_number }}</option>
+                                                    <option value="{{ $o->order_number }}">{{ $o->order_number }}</option>
                                                 @endforeach
-                                            </select>
+                                            </datalist>
                                             @error('order_number')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -307,26 +306,24 @@
         });
     </script>
     <script>
-        document.getElementById('order_number').addEventListener('change', function() {
-            var selectedOrder = this.value; // Mendapatkan nilai perusahaan yang dipilih
+        document.getElementById('order_number').addEventListener('input', function() {
+    var selectedOrderNumber = this.value; // Get the selected value from the input field
 
-            // Menggunakan data dari customers yang sudah ada untuk mengisi kolom-kolom lainnya
-            var order = <?php echo json_encode($order); ?>; // Mengonversi data PHP ke JSON
-            var selectedOrder = order.find(function(order) {
-                return order.order_number === selectedOrder;
-            });
+    // Convert PHP data to JSON
+    var orders = <?php echo json_encode($order); ?>;
 
-            // Memasukkan nilai ke dalam kolom-kolom lainnya
-            document.getElementById('so_number').value = selectedOrder ? selectedOrder.so_number :
-                '';
-            document.getElementById('product').value = selectedOrder ? selectedOrder.product :
-                '';
-            document.getElementById('company_name').value = selectedOrder ? selectedOrder.customer :
-                '';
-            document.getElementById('dod').value = selectedOrder ? selectedOrder.dod :
-                '';
+    // Find the selected order in the array
+    var selectedOrder = orders.find(function(order) {
+        return order.order_number === selectedOrderNumber;
+    });
 
-        });
+    // Populate other fields based on the selected order
+    document.getElementById('so_number').value = selectedOrder ? selectedOrder.so_number : '';
+    document.getElementById('product').value = selectedOrder ? selectedOrder.product : '';
+    document.getElementById('company_name').value = selectedOrder ? selectedOrder.customer : '';
+    document.getElementById('dod').value = selectedOrder ? selectedOrder.dod : '';
+});
+
         var errorAlert = '{{ session('error') }}';
         if (errorAlert !== '') {
             Swal.fire({

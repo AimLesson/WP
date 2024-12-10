@@ -134,7 +134,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="exampleInputEmail">Email</label>
-                                                <input type="email" name="email" class="form-control"
+                                                <input type="text" name="email" class="form-control"
                                                     id="exampleInputEmail" placeholder="Insert Email" required
                                                     value="{{ old('email', $customer->email) }}">
                                                 @error('email')

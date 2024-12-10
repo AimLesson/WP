@@ -152,7 +152,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="email" class="form-label">Email</label>
-                                                <input type="email" name="email" class="form-control" id="email"
+                                                <input type="text" name="email" class="form-control" id="email"
                                                     placeholder=" Email" value="{{ $quotationJoin[0]->email }}">
                                                 @error('email')
                                                     <small class="text-danger">{{ $message }}</small>
@@ -293,6 +293,7 @@
                                                                 <th style="width:80px;">Unit</th>
                                                                 <th style="width:80px;">Disc (%)</th>
                                                                 <th>Amount</th>
+                                                                <th>Description</th>
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
@@ -350,6 +351,10 @@
                                                                             id="amount" name="amount[]"
                                                                             value="{{ $item->amount }}" value="0"
                                                                             readonly></td>
+                                                                    <td><input class="form-control deskripsi" style="width:150px"
+                                                                                type="text" id="deskripsi" name="deskripsi[]"
+                                                                                value="{{ $item->deskripsi }}">
+                                                                    </td>
                                                                     @if ($item->id == !null)
                                                                         <td><a class="text-danger font-18 delete_quotation"
                                                                                 href="#" data-toggle="modal"
@@ -988,6 +993,7 @@
                                                                     </select></td>
                     <td><input class="form-control disc"style="min-width:80px" type="text" id="disc" name="disc[]" value="0"></td>
                     <td><input class="form-control total" style="width:150px" type="text" id="amount" name="amount[]" value="0" readonly></td>
+                    <td><input class="form-control deskripsi" style="width:150px" type="text" id="deskripsi" name="deskripsi[]" ></td>
                     <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash"></i></a></td>
                 </tr>`);
             });

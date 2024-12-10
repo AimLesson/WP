@@ -29,7 +29,7 @@
                                     <div class="form-group">
                                         <label for="order_number" class="form-label">Order</label>
                                         <input name="order_number" id="order_number" class="form-control" list="order_list"
-                                            style="width: 100%;" required value="{{ session('order_number') }}"
+                                            style="width: 10%;" required value="{{ session('order_number') }}"
                                             placeholder="-- Select Order --">
                                         <datalist id="order_list">
                                             @foreach ($orders as $o)
@@ -43,7 +43,7 @@
                                     <div class="form-group">
                                         <label for="item_number" class="form-label">Item</label>
                                         <select name="item_number" id="item_number" class="form-control select2"
-                                            style="width: 100%;" required>
+                                            style="width: 10%;" required>
                                             <option disabled>-- Select Item --</option>
                                             @foreach ($items as $i)
                                                 <option value="{{ $i->item_number }}"

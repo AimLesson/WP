@@ -38,8 +38,10 @@
                                             <div class="form-group">
                                                 <label for="exampleInputCompany">Customer No.</label>
                                                 <input type="text" name="customer_no" class="form-control"
-                                                    id="exampleInputCompany" placeholder="Insert Customer No" value="{{ old('customer_no') }}"
-                                                    oninput="this.value = this.value.toUpperCase()" required>
+                                                    id="exampleInputCompany" 
+                                                    value="{{ $nextCustomerNo }}"
+                                                    oninput="this.value = this.value.toUpperCase()"
+                                                    readonly>
                                                 @error('customer_no')
                                                     <small class="text-danger">{{ $message }}</small>
                                                 @enderror
@@ -127,7 +129,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="exampleInputEmail">Email</label>
-                                                <input type="email" name="email" class="form-control"
+                                                <input type="text" name="email" class="form-control"
                                                     id="exampleInputEmail" placeholder="Insert Email" value="{{ old('email') }}">
                                                 @error('email')
                                                     <small class="text-danger">{{ $message }}</small>

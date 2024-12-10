@@ -289,6 +289,7 @@
                                                                 <th style="width:80px;">Unit</th>
                                                                 <th style="width:80px;">Disc (%)</th>
                                                                 <th>Amount</th>
+                                                                <th>Description</th>
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
@@ -339,7 +340,11 @@
                                                                 <td><input class="form-control total" style="width:150px"
                                                                         type="text" id="amount" name="amount[]"
                                                                         value="0" readonly></td>
-                                                                <td><a href="javascript:void(0)"
+                                                                <td><input class="form-control deskripsi" style="width:150px"
+                                                                            type="text" id="deskripsi" name="deskripsi[]">
+                                                                </td>
+                                                                <td>
+                                                                    <a href="javascript:void(0)"
                                                                         class="text-danger font-18 remove"
                                                                         title="Delete Product"><i
                                                                             class="fa fa-trash"></i></a>
@@ -964,6 +969,7 @@
                                                                         </select></td>
                         <td><input class="form-control disc"style="min-width:80px" type="text" id="disc" name="disc[]" value="0"></td>
                         <td><input class="form-control total" style="width:150px" type="text" id="amount" name="amount[]" value="0" readonly></td>
+                        <td><input class="form-control deskripsi" style="width:150px" type="text" id="deskripsi" name="deskripsi[]"></td>
                         <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash"></i></a></td>
                     </tr>`);
             });

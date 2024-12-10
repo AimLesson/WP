@@ -224,6 +224,8 @@ class ActivitiesController extends Controller
                 $inputAmount = str_replace(['Rp', ',', '.'], '', $request->input('amount')[$key]);
                 $quotationAdd['amount'] = $inputAmount;
 
+                $quotationAdd['deskripsi'] = $request->deskripsi[$key];
+
                 QuotationAdd::create($quotationAdd);
             }
 
@@ -982,58 +984,90 @@ class ActivitiesController extends Controller
         return view('activities.customer', compact('customer', 'customer_no'));
     }
     public function createcustomer()
-    {
-        return view('activities.createcustomer');
-    }
+{
+    $nextCustomerNo = $this->generateCustomerNumber();
+    return view('activities.createcustomer', compact('nextCustomerNo'));
+}
     public function storecustomer(Request $request)
-    {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'company' => 'required|unique:customer,company',
-                'name' => 'required',
-                'address' => 'required',
-                'city' => 'required',
-                'phone' => 'required',
-                'tax_address' => 'required',
-                'shipment' => 'required',
-                'customer_no' => 'nullable',
-                'province' => 'nullable',
-                'zipcode' => 'nullable',
-                'country' => 'nullable',
-                'cp' => 'nullable',
-                'webpage' => 'nullable',
-            ],
-            [
-                'company.unique' => 'Company name has already been taken.',
-            ],
-        );
+{
+    $validator = Validator::make(
+        $request->all(),
+        [
+            'company' => 'required|unique:customer,company',
+            'name' => 'required',
+            'address' => 'required',
+            'city' => 'required',
+            'phone' => 'required',
+            'tax_address' => 'required',
+            'shipment' => 'required',
+            'customer_no' => 'nullable',
+            'province' => 'nullable',
+            'zipcode' => 'nullable',
+            'country' => 'nullable',
+            'cp' => 'nullable',
+            'webpage' => 'nullable',
+        ],
+        [
+            'company.unique' => 'Company name has already been taken.',
+        ]
+    );
 
-        if ($validator->fails()) {
-            return redirect()->route('activities.createcustomer')->withErrors($validator)->withInput();
-        }
-
-        $customer['company'] = $request->company;
-        $customer['name'] = $request->name;
-        $customer['address'] = $request->address;
-        $customer['city'] = $request->city;
-        $customer['phone'] = $request->phone;
-        $customer['fax'] = $request->fax;
-        $customer['email'] = $request->email;
-        $customer['npwp'] = $request->npwp;
-        $customer['tax_address'] = $request->tax_address;
-        $customer['shipment'] = $request->shipment;
-        $customer['customer_no'] = $request->customer_no;
-        $customer['province'] = $request->province;
-        $customer['zipcode'] = $request->zipcode;
-        $customer['country'] = $request->country;
-        $customer['cp'] = $request->cp;
-        $customer['webpage'] = $request->webpage;
-
-        Customer::create($customer);
-
-        return redirect()->route('activities.customer')->with('success', 'Customer Added');
+    if ($validator->fails()) {
+        return redirect()->route('activities.createcustomer')->withErrors($validator)->withInput();
     }
+
+    // Generate customer number if not provided
+    $customer_no = $request->customer_no;
+    if (empty($customer_no)) {
+        $customer_no = $this->generateCustomerNumber();
+    }
+
+    $customer = [
+        'customer_no' => $customer_no,
+        'company' => $request->company,
+        'name' => $request->name,
+        'address' => $request->address,
+        'city' => $request->city,
+        'phone' => $request->phone,
+        'fax' => $request->fax,
+        'email' => $request->email,
+        'npwp' => $request->npwp,
+        'tax_address' => $request->tax_address,
+        'shipment' => $request->shipment,
+        'province' => $request->province,
+        'zipcode' => $request->zipcode,
+        'country' => $request->country,
+        'cp' => $request->cp,
+        'webpage' => $request->webpage,
+    ];
+
+    Customer::create($customer);
+
+    return redirect()->route('activities.customer')->with('success', 'Customer Added');
+}
+
+/**
+ * Generate the next sequential customer number
+ * 
+ * @return string
+ */
+private function generateCustomerNumber()
+{
+    // Find the last customer number
+    $lastCustomer = Customer::orderBy('id', 'desc')->first();
+
+    if ($lastCustomer && $lastCustomer->customer_no) {
+        // Extract the numeric part and increment
+        $lastNumber = intval(substr($lastCustomer->customer_no, -4));
+        $newNumber = $lastNumber + 1;
+    } else {
+        // Start from 1 if no previous customers
+        $newNumber = 1;
+    }
+
+    // Format as 4-digit zero-padded number
+    return sprintf('%04d', $newNumber);
+}
     public function editcustomer(Request $request, $id)
     {
         $customer = Customer::find($id);

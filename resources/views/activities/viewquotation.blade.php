@@ -279,13 +279,14 @@
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <th>ITEM</th>
-                                            <th class="d-none d-sm-table-cell">DESCRIPTION</th>
+                                            <th>NO KATALOG</th>
+                                            <th class="d-none d-sm-table-cell">ITEM DESCRIPTION</th>
                                             <th>QTY</th>
                                             <th>UNIT PRICE</th>
                                             <th>UNIT</th>
                                             <th>DISCOUNT</th>
                                             <th class="text-right">AMOUNT</th>
+                                            <th>DESCRIPTION</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -299,6 +300,7 @@
                                                 <td>{{ $item->unit }}</td>
                                                 <td>{{ $item->disc }}</td>
                                                 <td class="text-right amount">{{ $item->amount }}</td>
+                                                <td>{{ $item->deskripsi }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

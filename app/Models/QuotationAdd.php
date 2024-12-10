@@ -19,6 +19,7 @@ class QuotationAdd extends Model
         'unit',
         'disc',
         'amount',
+        'deskripsi',
     ];
 
     public function quotation()

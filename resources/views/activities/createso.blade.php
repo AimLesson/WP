@@ -65,38 +65,39 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="quotation_no" class="form-label">Quotation No.</label>
-                                                <!-- Checkbox for SO Internal -->
-                                                <input style="margin-left: 10px; margin-top:7px" class="form-check-input"
-                                                    type="checkbox" id="so_internal" name="so_internal"
-                                                    onchange="toggleQuotationInput()"
-                                                    {{ old('so_internal') ? 'checked' : '' }}>
-                                                <label style="margin-left: 35px; font-weight:500" for="so_internal"
-                                                    class="form-label">New</label>
+<div class="form-group">
+    <label for="quotation_no" class="form-label">Quotation No.</label>
+    <!-- Checkbox for SO Internal -->
+    <input style="margin-left: 10px; margin-top:7px" class="form-check-input" type="checkbox"
+        id="so_internal" name="so_internal" onchange="toggleQuotationInput()"
+        {{ old('so_internal') ? 'checked' : '' }}>
+    <label style="margin-left: 35px; font-weight:500" for="so_internal" class="form-label">New</label>
 
-                                                <!-- Manual Input Field (Only visible when checkbox is checked) -->
-                                                <input type="text" name="quotation_no" class="form-control"
-                                                    style="display: {{ old('so_internal') ? 'block' : 'none' }}"
-                                                    id="so_internal_text" placeholder="Internal" value="">
+    <!-- Manual Input Field (Only visible when checkbox is checked) -->
+    <input type="text" name="quotation_no" class="form-control" id="so_internal_text"
+        placeholder="Internal" value="{{ old('quotation_no') }}"
+        style="display: {{ old('so_internal') ? 'block' : 'none' }}"
+        {{ old('so_internal') ? 'required' : '' }}>
 
-                                                <!-- Dropdown Select (Disabled when checkbox is checked) -->
-                                                <select name="quotation_no" id="quotation_no"
-                                                    onchange="fetchQuotationData()" class="form-control select2"
-                                                    style="width: 100%;" {{ old('so_internal') ? 'disabled' : 'required' }}>
-                                                    <option selected="selected" disabled>-- Select Quotation ---</option>
-                                                    @foreach ($quotation as $q)
-                                                        <option value="{{ $q->quotation_no }}"
-                                                            {{ old('quotation_no') == $q->quotation_no ? 'selected' : '' }}>
-                                                            {{ $q->quotation_no }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                @error('quotation_no')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-
+    <!-- Dropdown Select (Disabled when checkbox is checked) -->
+    <select name="quotation_no" id="quotation_no" onchange="fetchQuotationData()"
+        class="form-control select2" style="width: 100%;"
+        {{ old('so_internal') ? 'disabled' : 'required' }}>
+        <option selected="selected" disabled>-- Select Quotation ---</option>
+        @foreach ($quotation as $q)
+            <option value="{{ $q->quotation_no }}"
+                {{ old('quotation_no') == $q->quotation_no ? 'selected' : '' }}>
+                {{ $q->quotation_no }}
+            </option>
+        @endforeach
+    </select>
+    @error('quotation_no')
+        <small class="text-danger">{{ $message }}</small>
+    @enderror
+    @error('manual_quotation_no')
+        <small class="text-danger">{{ $message }}</small>
+    @enderror
+</div>
                                             <div class="form-group">
                                                 <label for="po_number" class="form-label">PO No.</label>
                                                 <input type="text" name="po_number" class="form-control" id="po_number"
@@ -379,8 +380,8 @@
                                                                 <td class="row-index text-center fixed-column">1</td>
                                                                 <td>
                                                                     <input list="katalog-options" class="form-control"
-                                                                        name="item[]" id="item" value="{{ old('item.0') }}"
-                                                                        style="width:100px"
+                                                                        name="item[]" id="item"
+                                                                        value="{{ old('item.0') }}" style="width:100px"
                                                                         oninput="updateItemDesc(this)">
                                                                     <datalist id="katalog-options">
                                                                         @foreach ($no_katalog as $u)
@@ -395,7 +396,7 @@
                                                                 <td>
                                                                     <input class="form-control" style="min-width:200px"
                                                                         type="text" id="item_desc" name="item_desc[]"
-                                                                        value="" >
+                                                                        value="">
                                                                 </td>
                                                                 <td>
                                                                     <input class="form-control unit_price"
@@ -714,7 +715,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- <div class="col-md-3">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="file" class="form-label">Upload File</label>
                                                 <input type="file" name="file" class="form-control-file"
@@ -722,7 +723,7 @@
                                             </div>
                                             <img id="filePreview" src="#" alt=""
                                                 style="max-width: 100%; max-height: 200px; display: block; margin: 0 auto;">
-                                        </div> --}}
+                                        </div>
                                     </div>
 
                                     <div class="row">
@@ -758,8 +759,7 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
+                                        <div class="col-md-3"><div class="form-group">
                                                 <label for="salesman" class="form-label">Salesman</label>
                                                 <select class="form-control" name="salesman" id="salesman" style="width: 100%;" required>
                                                     <option disabled selected>-- Select Salesman --</option>
@@ -929,6 +929,31 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!-- Select2 -->
     <script src="../../plugins/select2/js/select2.full.min.js"></script>
+
+<script>
+    function toggleQuotationInput() {
+        const soInternal = document.getElementById('so_internal');
+        const manualInput = document.getElementById('so_internal_text');
+        const dropdown = document.getElementById('quotation_no');
+
+        if (soInternal.checked) {
+            manualInput.style.display = 'block';
+            manualInput.required = true; // Require manual input
+            dropdown.disabled = true;
+            dropdown.required = false; // Remove requirement from dropdown
+        } else {
+            manualInput.style.display = 'none';
+            manualInput.required = false; // Remove requirement from manual input
+            dropdown.disabled = false;
+            dropdown.required = true; // Require dropdown selection
+        }
+    }
+
+    // Ensure the correct state on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        toggleQuotationInput();
+    });
+</script>
     <script>
         @if (session('validationErrors'))
             // Parse the validation errors
@@ -980,69 +1005,58 @@
                         var itemData = quotationJoinData[i];
 
                         $("#soadd-table tbody").append(`
-                        <tr>
-                            <input type="hidden" name="quotationadd[]" value="${itemData.id}">
-                            <td hidden class="ids">${itemData.id}</td>
-                            <td class="row-index text-center fixed-column">${i+1}</td>
-                            <td>
-                                                                    <input list="katalog-options" class="form-control" name="item[]" id="item" value="${itemData.item}" style="width:100px" oninput="updateItemDesc(this)">
-                                                                    <datalist id="katalog-options">
-                                                                        @foreach ($no_katalog as $u)
-                                                                            <option value="{{ $u->no_katalog }}" data-name="{{ $u->nama_katalog }}" data-price="{{ $u->price }}">
-                                                                                {{ $u->no_katalog }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </datalist>
-                                                                </td>
-                            <td><input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]" value="${itemData.item_desc}"></td>
-                            <td>
-                                                                    <input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]" value="${formatCurrency(itemData.unit_price)}">
-                                                                </td>
-                            <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]" value="${itemData.qty}"></td>
-                            <td><select class="form-control" name="unit[]" id="unit"style="width:110px">
-                                    <option selected="selected" required>${itemData.unit}</option>
-                                        @foreach ($unit as $u)
-                                            <option value="{{ $u->unit }}">{{ $u->unit }}</option>
-                                        @endforeach
-                                </select>
-                            </td>
-                            <td><input class="form-control disc"style="min-width:80px"type="text" id="disc" name="disc[]" value="${itemData.disc}"></td>
-                            <td><input class="form-control total" style="width:150px" type="text" id="amount" name="amount[]" value="${formatCurrency(itemData.amount)}" readonly></td>
-                            <td><select class="form-control select2"
-                                                                        name="product_type[]" id="product_type"
-                                                                        style="min-width:210px">
-                                                                        <option selected="selected" required disabled>--
-                                                                            Select Product Type --</option>
-                                                                        @foreach ($producttype as $pt)
-                                                                            <option value="{{ $pt->product_name }}">
-                                                                                {{ $pt->product_name }}</option>
-                                                                        @endforeach
-                                                                    </select></td>
-                                                                <td><input class="form-control" style="min-width:120px"
-                                                                        type="text" id="order_no" name="order_no[]"
-                                                                        required>
-                                                                </td>
-                                                                <td><input class="form-control"style="min-width:200px"
-                                                                        type="text" id="spec" name="spec[]"
-                                                                        required>
-                                                                </td>
-                                                                <td><select class="form-control select2" name="kbli[]"
-                                                                        id="kbli" style="min-width:150px">
-                                                                        <option selected="selected" required disabled>--
-                                                                            Select KBLI --</option>
-                                                                        @foreach ($kbli as $k)
-                                                                            <option value="{{ $k->kbli_code }}">
-                                                                                {{ $k->kbli_code }} -
-                                                                                {{ $k->description }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </td>
-                            <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Delete Product">
-                                <i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>`);
-                        // generateOrderNumbers();
+                <tr>
+                    <input type="hidden" name="quotationadd[]" value="${itemData.id}">
+                    <td hidden class="ids">${itemData.id}</td>
+                    <td class="row-index text-center fixed-column">${i+1}</td>
+                    <td>
+                        <input list="katalog-options" class="form-control" name="item[]" id="item" value="${itemData.item}" style="width:100px" oninput="updateItemDesc(this)">
+                        <datalist id="katalog-options">
+                            @foreach ($no_katalog as $u)
+                                <option value="{{ $u->no_katalog }}" data-name="{{ $u->nama_katalog }}" data-price="{{ $u->price }}">
+                                    {{ $u->no_katalog }}
+                                </option>
+                            @endforeach
+                        </datalist>
+                    </td>
+                    <td><input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]" value="${itemData.item_desc}"></td>
+                    <td>
+                        <input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]" value="${formatCurrency(itemData.unit_price)}">
+                    </td>
+                    <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]" value="${itemData.qty}"></td>
+                    <td><select class="form-control" name="unit[]" id="unit" style="width:110px">
+                            <option selected="selected" required>${itemData.unit}</option>
+                            @foreach ($unit as $u)
+                                <option value="{{ $u->unit }}">{{ $u->unit }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td><input class="form-control disc" style="min-width:80px" type="text" id="disc" name="disc[]" value="${itemData.disc}"></td>
+                    <td><input class="form-control total" style="width:150px" type="text" id="amount" name="amount[]" value="${formatCurrency(itemData.amount)}" readonly></td>
+                    <td><select class="form-control select2" name="product_type[]" id="product_type" style="min-width:210px">
+                            <option selected="selected" required disabled>-- Select Product Type --</option>
+                            @foreach ($producttype as $pt)
+                                <option value="{{ $pt->product_name }}">{{ $pt->product_name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td><input class="form-control" style="min-width:120px" type="text" id="order_no" name="order_no[]" required></td>
+                    <td><input class="form-control" style="min-width:200px" type="text" id="spec" name="spec[]" required></td>
+                    <td><select class="form-control select2" name="kbli[]" id="kbli" style="min-width:150px" required>
+                            <option selected="selected" required disabled>-- Select KBLI --</option>
+                            @foreach ($kbli as $k)
+                                <option value="{{ $k->kbli_code }}">{{ $k->kbli_code }} - {{ $k->description }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Delete Product">
+                        <i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>`);
                     }
+
+                    // Automatically generate the order numbers based on the SO number
+                    generateOrderNumbers();
 
                     setRadioButton('confirmation', quotationData.confirmation);
                     setRadioButton('type', quotationData.type);
@@ -1063,13 +1077,34 @@
                     document.getElementById('tax').value = formatCurrency(quotationData.tax);
                     document.getElementById('freight').value = quotationData.freight;
                     document.getElementById('total_amount').value = formatCurrency(quotationData.total_amount);
-
                 },
                 error: function(error) {
                     console.log(error);
                 }
             });
         }
+
+        // Function to generate the incremented order numbers based on SO number input
+        function generateOrderNumbers() {
+            // Get the base SO number from the input
+            let soNumber = document.getElementById('so_number').value; // Example: "24-0000-W"
+
+            // Select all the rows in the table where the order_number input exists
+            let rows = document.querySelectorAll('#soadd-table tbody tr');
+
+            // Loop through the rows and assign incremented order numbers
+            rows.forEach(function(row, index) {
+                // Find the order_number input in the current row
+                let orderNumberInput = row.querySelector('input[name="order_no[]"]');
+
+                // Create the incremented order number, e.g., 24-0000-W1, 24-0000-W2, etc.
+                let incrementedOrderNumber = `${soNumber}${index + 1}`;
+
+                // Set the value of the order_number input field
+                orderNumberInput.value = incrementedOrderNumber;
+            });
+        }
+
 
         // Fungsi untuk mengubah nilai ke dalam format mata uang (IDR)
         function formatCurrency(value) {
@@ -1168,6 +1203,8 @@
                     inputText.value = ''; // Clear the manual input value
                 }
             }
+
+
 
             // Add event listener for checkbox change
             document.getElementById('so_internal').addEventListener('change', toggleQuotationInput);
@@ -1271,7 +1308,7 @@
                             </datalist>
                         </td>
                         <td><input class="form-control" style="min-width:200px" type="text" id="item_desc" name="item_desc[]" ></td>
-                        <td><input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]"></td>
+                        <td><input class="form-control unit_price" style="min-width:200px" type="text" id="unit_price" name="unit_price[]" ></td>
                         <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]"></td>
                         <td>
                             <select class="form-control" name="unit[]" id="unit" style="width:110px">
@@ -1304,7 +1341,7 @@
                         <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 `);
-                generateOrderNumbers();
+                 generateOrderNumbers();
             });
 
             // Function to generate the katalog options dynamically, excluding already selected katalogs
@@ -1472,26 +1509,26 @@
                 calc_total();
             });
 
-            // Function to generate the incremented order numbers based on so_number input
-            function generateOrderNumbers() {
-                // Get the base SO number from the input
-                let soNumber = document.getElementById('so_number').value; // Example: "24-0000-W"
+            // // Function to generate the incremented order numbers based on so_number input
+            // function generateOrderNumbers() {
+            //     // Get the base SO number from the input
+            //     let soNumber = document.getElementById('so_number').value; // Example: "24-0000-W"
 
-                // Select all the rows in the table where the order_number input exists
-                let rows = document.querySelectorAll('#soadd-table tbody tr');
+            //     // Select all the rows in the table where the order_number input exists
+            //     let rows = document.querySelectorAll('#soadd-table tbody tr');
 
-                // Loop through the rows and assign incremented order numbers
-                rows.forEach(function(row, index) {
-                    // Find the order_number input in the current row
-                    let orderNumberInput = row.querySelector('input[name="order_no[]"]');
+            //     // Loop through the rows and assign incremented order numbers
+            //     rows.forEach(function(row, index) {
+            //         // Find the order_number input in the current row
+            //         let orderNumberInput = row.querySelector('input[name="order_no[]"]');
 
-                    // Create the incremented order number, e.g., 24-0000-W1, 24-0000-W2, etc.
-                    let incrementedOrderNumber = `${soNumber}${index + 1}`;
+            //         // Create the incremented order number, e.g., 24-0000-W1, 24-0000-W2, etc.
+            //         let incrementedOrderNumber = `${soNumber}${index + 1}`;
 
-                    // Set the value of the order_number input field
-                    orderNumberInput.value = incrementedOrderNumber;
-                });
-            }
+            //         // Set the value of the order_number input field
+            //         orderNumberInput.value = incrementedOrderNumber;
+            //     });
+            // }
 
             // Event listener to trigger the order number generation when SO number changes
             document.getElementById('so_number').addEventListener('input', generateOrderNumbers);
