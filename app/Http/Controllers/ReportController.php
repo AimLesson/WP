@@ -28,10 +28,37 @@ class ReportController extends Controller
             return view('report.report')->with('error', 'Failed to process WIP data. Please try again!');
         }
     }
-    public function order()
-    {
-        return view('report.order');
-    }
+
+    public function order(Request $request)
+{
+    $order_number = $request->input('order_number');
+
+        // Query the sub_contract model
+        $query = \App\Models\Order::query();
+
+        // Apply filter if order_number is provided
+        if ($order_number) {
+            $query->where('order_number', 'like', '%' . $order_number . '%');
+        }
+
+        // Fetch the filtered or full data
+        $data = $query->get();
+
+        // Return the view with the data and the filter value
+        return view('report.order', compact('data', 'order_number'));
+}
+
+public function viewOrder($order_number)
+{
+    // Get the specific order based on the order_number
+    $order = Order::where('order_number', $order_number)->first();
+
+    // Pass the order object to the view
+    return view('report.vieworder', compact('order'));
+}
+
+
+
     public function controlsheet(Request $request)
     {
         // Fetch all orders except those with 'finished' status

@@ -442,6 +442,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('/report', [ReportController::class, 'report'])->name('report');
         //report-order
         Route::get('/report/order', [ReportController::class, 'order'])->name('report.order');
+        Route::get('report/order/view/{order_number}', [ReportController::class, 'viewOrder']);
         //report-controlsheet
         Route::get('/report/controlsheet', [ReportController::class, 'controlsheet'])->name('report.controlsheet');
         Route::get('/controlsheet', [ReportController::class, 'showControlSheet'])->name('controlsheet');

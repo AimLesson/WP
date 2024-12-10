@@ -25,11 +25,21 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                         <!-- Add Filter Form -->
+                         <form method="GET" action="{{ route('report.order') }}" class="form-inline mb-3">
+                            <div class="form-group mr-2">
+                                <label for="order_number" class="mr-2">Order Number:</label>
+                                <input type="text" name="order_number" id="order_number" class="form-control" value="{{ request('order_number') }}" placeholder="Enter Order Number">
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                                <a href="{{ route('report.order') }}" class="btn btn-secondary">Reset</a>
+                            </div>
+                        </form>
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Orders</h3>
                             </div>
-
                             <!-- /.card-header -->
                             {{-- <div class="card-body" style="overflow-x:auto; height:385px;"> --}}
                             <div class="card-body">
@@ -64,14 +74,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                            // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $order = \App\Models\Order::get();
-                                        @endphp
-                                        @foreach ($order as $m)
+                                        @foreach ($data as $m)
                                             <tr>
-                                                <td>{{ $m->id }}</td>
-                                                <td>{{ $m->order_number }}</td>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td><a
+                                                    href="{{ url('report/order/view/' . $m->order_number) }}">{{ $m->order_number }}</a>
+                                                </td>
                                                 <td>{{ $m->customer }}</td>
                                                 <td>{{ $m->order_date }}</td>
                                                 <td>{{ $m->so_number}}</td>
