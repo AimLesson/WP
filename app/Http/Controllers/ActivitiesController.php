@@ -609,7 +609,7 @@ $salesorder->total_amount = $totalAmount;
                         'order_date'       => $salesorder->date,
                         'product_type'     => $request->product_type[$key],
                         'po_number'        => $salesorder->po_number,
-                        'sale_price'       => $soAdd->amount,
+                        'sale_price'       => $soAdd['amount'],
                         'information'      => $salesorder->description,
                         'order_status'     => 'Queue',
                         'customer'         => $salesorder->name,
@@ -1042,97 +1042,6 @@ public function viewOrder($order_number)
         $request->all(),
         [
             'company' => 'required|unique:customer,company',
-<<<<<<< Updated upstream
-            'name' => 'required',
-            'address' => 'required',
-            'city' => 'required',
-            'phone' => 'required',
-            'tax_address' => 'required',
-            'shipment' => 'required',
-            'customer_no' => 'nullable',
-            'province' => 'nullable',
-            'zipcode' => 'nullable',
-            'country' => 'nullable',
-            'cp' => 'nullable',
-            'webpage' => 'nullable',
-        ],
-        [
-            'company.unique' => 'Company name has already been taken.',
-        ]
-    );
-
-    if ($validator->fails()) {
-        return redirect()->route('activities.createcustomer')->withErrors($validator)->withInput();
-    }
-
-    // Generate customer number if not provided
-    $customer_no = $request->customer_no;
-    if (empty($customer_no)) {
-        $customer_no = $this->generateCustomerNumber();
-    }
-
-    $customer = [
-        'customer_no' => $customer_no,
-        'company' => $request->company,
-        'name' => $request->name,
-        'address' => $request->address,
-        'city' => $request->city,
-        'phone' => $request->phone,
-        'fax' => $request->fax,
-        'email' => $request->email,
-        'npwp' => $request->npwp,
-        'tax_address' => $request->tax_address,
-        'shipment' => $request->shipment,
-        'province' => $request->province,
-        'zipcode' => $request->zipcode,
-        'country' => $request->country,
-        'cp' => $request->cp,
-        'webpage' => $request->webpage,
-    ];
-
-    Customer::create($customer);
-
-    return redirect()->route('activities.customer')->with('success', 'Customer Added');
-}
-
-/**
- * Generate the next sequential customer number
- * 
- * @return string
- */
-private function generateCustomerNumber()
-{
-    // Find the last customer number
-    $lastCustomer = Customer::orderBy('id', 'desc')->first();
-
-    if ($lastCustomer && $lastCustomer->customer_no) {
-        // Extract the numeric part and increment
-        $lastNumber = intval(substr($lastCustomer->customer_no, -4));
-        $newNumber = $lastNumber + 1;
-    } else {
-        // Start from 1 if no previous customers
-        $newNumber = 1;
-    }
-
-    // Format as 4-digit zero-padded number
-    return sprintf('%04d', $newNumber);
-}
-    public function editcustomer(Request $request, $id)
-    {
-        $customer = Customer::find($id);
-
-        if (!$customer) {
-            return redirect()->route('activities.customer')->with('error', 'Customer not found!');
-        }
-
-        return view('activities.editcustomer', compact('customer'));
-    }
-    public function updatecustomer(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'company' => 'required',
-=======
->>>>>>> Stashed changes
             'name' => 'required',
             'address' => 'required',
             'city' => 'required',
