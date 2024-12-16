@@ -2362,6 +2362,7 @@ public function overhead_manufacture(Request $request)
     {
         return view('activities.depreciationcost');
     }
+
     public function used_time(Request $request)
     {
         // Log the incoming request parameters
@@ -2382,12 +2383,24 @@ public function overhead_manufacture(Request $request)
         $orderNumber = session('order_number');
         $itemNumber = session('item_number');
 
+        // Log session values
+        Log::info('Session values', [
+            'order_number' => $orderNumber,
+            'item_number' => $itemNumber,
+        ]);
+
         // Get orders with order_status not 'Finished'
         $orders = Order::where('order_status', '!=', 'Finished')->get();
         $orderNumbers = $orders->pluck('order_number');
 
+        // Log orders retrieved
+        Log::info('Orders retrieved', $orders->toArray());
+
         // Get items based on filtered orders
         $items = ItemAdd::whereIn('order_number', $orderNumbers)->get();
+
+        // Log items retrieved
+        Log::info('Items retrieved', $items->toArray());
 
         // Start the query for ProcessingAdd with session-based filters
         $query = ProcessingAdd::whereIn('order_number', $orderNumbers);
@@ -2402,10 +2415,23 @@ public function overhead_manufacture(Request $request)
 
         // Get filtered used time data
         $usedtime = $query->get();
+
+        // Log used time data retrieved
+        foreach ($usedtime as $data) {
+            Log::info('Data retrieved from usedtime query', [
+                'order_number' => $data->order_number,
+                'item_number' => $data->item_number,
+                'barcode_id' => $data->barcode_id,
+            ]);
+        }
+
+        // Get authenticated user
         $user = auth()->user();
 
+        // Return the view with data
         return view('activities.used_time', compact('usedtime', 'orders', 'items', 'user'));
     }
+
 
     public function clearFilters()
     {

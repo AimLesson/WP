@@ -88,7 +88,7 @@
                                             <th>Finished At</th>
                                             <th>Status</th>
                                             @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
-                                            <th>Action</th> 
+                                            <th>Action</th>
                                             @endif
                                         </tr>
                                     </thead>
@@ -159,14 +159,14 @@
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Trigger change event on order_number input if there's a selected value
             var selectedOrderNumber = $('#order_number').val();
             if (selectedOrderNumber) {
                 loadItemsByOrder(selectedOrderNumber); // Trigger the AJAX call to load items for the selected order
             }
 
-            $('#order_number').on('change', function() {
+            $('#order_number').on('change', function () {
                 var orderNumber = $(this).val();
                 $('#item_number').empty();
                 $('#item_number').append('<option selected="selected" disabled>-- Select Item --</option>');
@@ -181,9 +181,9 @@
                     url: '/items-by-order/' + orderNumber,
                     type: 'GET',
                     dataType: 'json',
-                    success: function(data) {
+                    success: function (data) {
                         console.log(data);
-                        $.each(data, function(key, item) {
+                        $.each(data, function (key, item) {
                             // Only append items that have a non-empty item number
                             if (item.no_item && item.no_item.trim() !== '') {
                                 $('#item_number').append('<option value="' + item.no_item +
@@ -194,108 +194,125 @@
                             }
                         });
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.error('AJAX Error: ' + status + error);
                     }
                 });
             }
 
-        });
+            // QR Code Scanning Logic
+            $('#scan-qr-btn').on('click', function () {
+                $('#reader').show();
+                console.log("QR scan button clicked. Initializing Html5Qrcode...");
+                const html5QrCode = new Html5Qrcode("reader");
 
-        $('#scan-qr-btn').on('click', function() {
-            $('#reader').show();
-            console.log("QR scan button clicked. Initializing Html5Qrcode...");
-            const html5QrCode = new Html5Qrcode("reader");
-            const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-                console.log(`Code matched = ${decodedText}`, decodedResult);
-                $('#reader').hide();
-                console.log("Stopping Html5Qrcode...");
-                html5QrCode.stop().then((ignore) => {
-                    console.log("Html5Qrcode stopped successfully.");
-                    console.log(`Scanned QR Code Value: ${decodedText}`);
-                    filterTableByQrCode(decodedText);
-                }).catch((err) => {
-                    console.error("Error stopping Html5Qrcode:", err);
-                });
-            };
+                const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+                    console.log(`Code matched = ${decodedText}`, decodedResult);
+                    $('#reader').hide();
 
-            const config = {
-                fps: 10,
-                qrbox: {
-                    width: 250,
-                    height: 250
-                }
-            };
-            html5QrCode.start({
-                    facingMode: "environment"
-                }, config, qrCodeSuccessCallback)
-                .catch((err) => {
+                    console.log("Stopping Html5Qrcode...");
+                    html5QrCode.stop().then((ignore) => {
+                        console.log("Html5Qrcode stopped successfully.");
+                        console.log(`Scanned QR Code Value: ${decodedText}`);
+                        filterTableByQrCode(decodedText);
+                    }).catch((err) => {
+                        console.error("Error stopping Html5Qrcode:", err);
+                    });
+                };
+
+                const config = {
+                    fps: 10,
+                    qrbox: {
+                        width: 250,
+                        height: 250,
+                    },
+                };
+
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    config,
+                    qrCodeSuccessCallback
+                ).catch((err) => {
                     console.error("Error starting Html5Qrcode:", err);
                 });
-        });
+            });
 
-        function filterTableByQrCode(barcode_id) {
-            console.log(`Filtering table for barcode ID: ${barcode_id}`);
-            $('tbody tr').each(function() {
-                var cells = $(this).find('td');
-                var rowBarcodeId = cells.eq(2).text().trim(); // Adjusted index to 2
-                console.log(`Row barcode ID: ${rowBarcodeId}`);
-                if (rowBarcodeId === barcode_id) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
+            function filterTableByQrCode(barcode_id) {
+                console.log(`Filtering table for barcode ID: ${barcode_id}`);
+                let found = false;
+
+                $('tbody tr').each(function () {
+                    var cells = $(this).find('td');
+                    var rowBarcodeId = cells.eq(2).text().trim(); // Adjusted index to 2
+                    console.log(`Row barcode ID: ${rowBarcodeId}`);
+
+                    if (rowBarcodeId === barcode_id) {
+                        $(this).show();
+                        found = true; // Set found flag
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+                if (!found) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'No Match Found',
+                        text: `No matching data found for the scanned QR code: ${barcode_id}`,
+                    });
+                }
+            }
+
+            // Alerts for session messages
+            window.addEventListener('DOMContentLoaded', (event) => {
+                var errorAlert = '{{ session('error') }}';
+                if (errorAlert !== '') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: errorAlert,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        toast: true,
+                    });
+                }
+
+                var successAlert = '{{ session('success') }}';
+                if (successAlert !== '') {
+                    Swal.fire({
+                        icon: 'success',
+                        text: successAlert,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        toast: true,
+                    });
+                }
+
+                function updateTitle(pageTitle) {
+                    document.title = pageTitle;
+                }
+
+                updateTitle('Used Time');
+
+                @foreach ($usedtime as $ut)
+                    @if ($ut->status == 'started')
+                        startTimer({{ $ut->id }}, {{ $ut->duration }}, "{{ $ut->started_at }}");
+                    @endif
+                @endforeach
+
+                function startTimer(id, initialDuration, startedAt) {
+                    const startTime = new Date(startedAt).getTime();
+                    const durationElement = document.getElementById('duration-' + id);
+
+                    setInterval(function () {
+                        const now = new Date().getTime();
+                        const elapsedTime = Math.floor((now - startTime) / 1000) + initialDuration;
+                        durationElement.textContent = new Date(elapsedTime * 1000).toISOString().substr(11, 8);
+                    }, 1000);
                 }
             });
-        }
-
-
-        window.addEventListener('DOMContentLoaded', (event) => {
-            var errorAlert = '{{ session('error') }}';
-            if (errorAlert !== '') {
-                Swal.fire({
-                    icon: 'error',
-                    title: errorAlert,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 5000,
-                    toast: true,
-                });
-            }
-
-            var successAlert = '{{ session('success') }}';
-            if (successAlert !== '') {
-                Swal.fire({
-                    icon: 'success',
-                    text: successAlert,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 5000,
-                    toast: true,
-                });
-            }
-
-            function updateTitle(pageTitle) {
-                document.title = pageTitle;
-            }
-
-            updateTitle('Used Time');
-
-            @foreach ($usedtime as $ut)
-                @if ($ut->status == 'started')
-                    startTimer({{ $ut->id }}, {{ $ut->duration }}, "{{ $ut->started_at }}");
-                @endif
-            @endforeach
-
-            function startTimer(id, initialDuration, startedAt) {
-                const startTime = new Date(startedAt).getTime();
-                const durationElement = document.getElementById('duration-' + id);
-
-                setInterval(function() {
-                    const now = new Date().getTime();
-                    const elapsedTime = Math.floor((now - startTime) / 1000) + initialDuration;
-                    durationElement.textContent = new Date(elapsedTime * 1000).toISOString().substr(11, 8);
-                }, 1000);
-            }
         });
     </script>
+
 @endsection
