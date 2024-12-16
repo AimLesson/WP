@@ -452,6 +452,7 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('/report/productionsheet', [ReportController::class, 'productionsheet'])->name('report.productionsheet');
         //report-inspectionsheet
         Route::get('/report/inspectionsheet', [ReportController::class, 'inspectionsheet'])->name('report.inspectionsheet');
+        Route::get('/report/inspectionsheet/view/{item_no}', [ReportController::class, 'viewinspectionsheet']);
         //report-materialsheet
         Route::get('/report/materialsheet', [ReportController::class, 'materialsheet'])->name('report.materialsheet');
         //report-standartpartsheet

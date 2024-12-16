@@ -47,32 +47,23 @@
                                             <th>Qty</th>
                                             <th>Machine Cost</th>
                                             <th>COGS</th>
-                                            <th>Finish Date</th>
                                             <th>Labor Cost</th>
-                                            
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                            // Query untuk mengambil data pengguna menggunakan Eloquent ORM
-                                            $order = \App\Models\sub_contract::get();
-                                            // perlu ganti model database
-                                        @endphp
-                                        @foreach ($order as $m)
+                                        @foreach ($order as $m )
                                             <tr>
                                                 <td>{{ $m->id }}</td>
                                                 <td>{{ $m->order_number }}</td>
                                                 <td>{{ $m->customer }}</td>
-                                                <td>{{ $m->product }}</td>
-                                                <td>{{ $m->so_no }}</td>
+                                                <td>{{ $m->order_date }}</td>
+                                                <td>{{ $m->so_number }}</td>
                                                 <td>{{ $m->dod }}</td>
-                                                <td>{{ $m->no_product }}</td>
-                                                <td>{{ $m->item_no }}</td>
-                                                <td>{{ $m->item_name }}</td>
-                                                <td>{{ $m->sub_no }}</td>
-                                                <td>{{ $m->sub_no }}</td>
-                                                <td>{{ $m->sub_no }}</td>
-                                               
+                                                <td>{{ $m->product_type }}</td>
+                                                <td>{{ $m->qty }}</td>
+                                                <td>{{ isset($m->wip) ? 'Rp ' . number_format($m->wip->total_machine_cost, 0, ',', '.') : '-' }}</td>
+                                                <td>{{ isset($m->wip) ? 'Rp ' . number_format($m->wip->cogs, 0, ',', '.') : '-' }}</td>
+                                                <td>{{ isset($m->wip) ? 'Rp ' . number_format($m->wip->total_labor_cost, 0, ',', '.') : '-' }}</td>
                                                 {{-- <td>{{$m->total_mach}}</td> --}}
                                             </tr>
                                            

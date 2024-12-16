@@ -61,7 +61,9 @@
                                         @foreach ($order as $m)
                                             <tr>
                                                 <td>{{ $m->id }}</td>
-                                                <td>{{ $m->item_no }}</td>
+                                                <td><a
+                                                    href="{{ url('report/inspectionsheet/view/' . $m->item_no) }}">{{ $m->item_no }}</a>
+                                                </td>
                                                 <td>{{ $m->qty }}</td>
                                                 <td>{{ $m->date }}</td>
                                                 <td>{{ $m->so_no }}</td>
