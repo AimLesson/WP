@@ -68,7 +68,7 @@
                                             <th colspan="6" class="text-center align-middle">Total Cost</th>
                                             <th rowspan="2" class="text-center align-middle">WIP</th>
                                             <th rowspan="2" class="text-center align-middle">Total Sales Order</th>
-                                            <th rowspan="2" class="text-center align-middle">Last Update</th>
+                                            <th rowspan="2" class="text-center align-middle">DOD</th>
                                         </tr>
                                         <tr>
                                             <th>Material Cost</th>
@@ -92,7 +92,7 @@
                                                 <td>{{ formatRupiah($m->total_overhead_cost) }}</td>
                                                 <td>{{ formatRupiah($m->cogs) }}</td>
                                                 <td>{{ formatRupiah($m->total_sales) }}</td>
-                                                <td>{{ $m->wip_date }}</td>
+                                                <td>{{ $m->dod }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

@@ -62,6 +62,7 @@
                                             <th>COGS</th>
                                             <th>Gross Profit Margin</th>
                                             <th>Order Date</th>
+                                            <th>DOD</th>
                                             <th>Product</th>
                                             <th>Quantity</th>
                                         </tr>
@@ -81,6 +82,7 @@
                                                 <td>{{ $wip->cogs ? 'Rp ' . number_format($wip->cogs, 0, ',', '.') : 'Rp 0' }}</td>
                                                 <td>{{ $wip->gpm ? 'Rp ' . number_format($wip->gpm, 0, ',', '.') : 'Rp 0' }}</td>
                                                 <td>{{ $wip->order->order_date ?? 'N/A' }}</td>
+                                                <td>{{ $wip->order->dod ?? 'N/A' }}</td>
                                                 <td>{{ $wip->order->product ?? 'N/A' }}</td>
                                                 <td>{{ $wip->order->qty ?? 'N/A' }}</td>
                                             </tr>

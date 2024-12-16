@@ -3,33 +3,21 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\WIP;
 use App\Models\Order;
 use App\Models\ItemAdd;
+use App\Models\WIP;
 use Illuminate\Http\Request;
-use App\Models\ProcessingAdd;
+use App\Models\processingadd;
 use App\Models\Inspection_sheet;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\ActivitiesController;
+use Illuminate\Support\Facades\DB;
 
 
 class ReportController extends Controller
 {
     public function report()
     {
-        try {
-            // Instantiate ActivitiesController
-            $activitiesController = new ActivitiesController();
-
-            // Call the storeWIPDataForAllOrders method
-            $activitiesController->storeWIPDataForAllOrders();
-
-            return view('report.report')->with('success', 'WIP data processed successfully.');
-        } catch (\Exception $e) {
-            Log::error('Error calling WIP data process from ReportController.', ['error' => $e->getMessage()]);
-
-            return view('report.report')->with('error', 'Failed to process WIP data. Please try again!');
-        }
+        return view('report.report');
     }
 
     public function order(Request $request)
@@ -60,54 +48,33 @@ public function viewOrder($order_number)
     return view('report.vieworder', compact('order'));
 }
 
-
-
-    public function controlsheet(Request $request)
-    {
-        // Fetch all orders except those with 'finished' status
-        $orders = Order::all();
-    
-        // Get the order_number from the request
-        $orderNumber = $request->input('order_number');
-    
-        // Fetch the selected order details
-        $order = Order::where('order_number', $orderNumber)->first();
-    
-        // Fetch the items with the specified order_number and their related processing steps
-        $items = ItemAdd::with(['processingAdds' => function ($query) use ($orderNumber) {
-                $query->where('order_number', $orderNumber);
-            }])
-            ->where('order_number', $orderNumber)
-            ->get();
-    
-        // Validate duplicates
-        $duplicateProcesses = $items->flatMap->processingAdds->duplicates('id');
-        if ($duplicateProcesses->isNotEmpty()) {
-            return redirect()->back()->withErrors([
-                'duplicates' => 'Duplicate processing steps found for this order.',
-            ]);
-        }
-    
-        return view('report.controlsheet', compact('items', 'orderNumber', 'orders', 'order'));
-    }
-    
-    
-    public function showControlSheet(Request $request)
+public function controlsheet(Request $request)
 {
-    $orderNumber = $request->get('order_number');
-    $order = null;
+    // Fetch all orders except those with 'finished' status
+    $orders = Order::all();
 
-    // Fetch the order based on the provided order number
-    if ($orderNumber) {
-        $order = Order::where('order_number', $orderNumber)->with('items.processingAdds')->first();
+    // Get the order_number from the request
+    $orderNumber = $request->input('order_number');
+
+    // Fetch the selected order details
+    $order = Order::where('order_number', $orderNumber)->first();
+
+    // Fetch the items with the specified order_number and their related processing steps
+    $items = ItemAdd::with(['processingAdds' => function ($query) use ($orderNumber) {
+            $query->where('order_number', $orderNumber);
+        }])
+        ->where('order_number', $orderNumber)
+        ->get();
+
+    // Validate duplicates
+    $duplicateProcesses = $items->flatMap->processingAdds->duplicates('id');
+    if ($duplicateProcesses->isNotEmpty()) {
+        return redirect()->back()->withErrors([
+            'duplicates' => 'Duplicate processing steps found for this order.',
+        ]);
     }
 
-    // Pass the data to the view
-    return view('controlsheet', [
-        'orderNumber' => $orderNumber,
-        'order' => $order,
-        'items' => $order ? $order->items : collect(),
-    ]);
+    return view('report.controlsheet', compact('items', 'orderNumber', 'orders', 'order'));
 }
 
 
@@ -176,7 +143,6 @@ public function viewOrder($order_number)
         'order' => $order,
     ]);
 }
-
     public function inspectionsheet()
     {
         return view('report.inspectionsheet');
@@ -207,25 +173,28 @@ public function viewOrder($order_number)
     }
     public function monitoranalisaorder(Request $request)
     {
-    // Fetch filters from the request
-    $startDate = $request->input('start_date');
-    $endDate = $request->input('end_date');
+        // Fetch filters from the request
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
 
-    // Fetch WIP data with associated orders and filters
-    $wipData = WIP::with(['order' => function ($query) {
-        $query->QCPass()->Delivered()->Finished(); // Apply QC Pass and notDelivered conditions
-    }])
-    ->when($startDate, function ($query, $startDate) {
-        $query->whereDate('wip_date', '>=', $startDate);
-    })
-    ->when($endDate, function ($query, $endDate) {
-        $query->whereDate('wip_date', '<=', $endDate);
-    })
-    ->get();
+        // Fetch WIP data with associated orders and filters
+        $wipData = WIP::with(['order' => function ($query) {
+                $query->with(['items', 'processings', 'subContracts', 'salesOrder', 'standartParts', 'overheads']);
+            }])
+            ->whereHas('order', function ($query) use ($startDate, $endDate) {
+                // Apply filters based on dod
+                if ($startDate) {
+                    $query->whereDate('dod', '>=', $startDate);
+                }
+                if ($endDate) {
+                    $query->whereDate('dod', '<=', $endDate);
+                }
+            })
+            ->get();
 
-    // Return the view with WIP data and filter values
-    return view('report.monitoranalisaorder', compact('wipData', 'startDate', 'endDate'));    
-}
+        // Return the view with WIP data and filter values
+        return view('report.monitoranalisaorder', compact('wipData', 'startDate', 'endDate'));
+    }
 
     public function statistic()
     {
@@ -260,7 +229,7 @@ public function viewOrder($order_number)
     {
         return view('report.wip');
     }
-    public function wip_process(Request $request)
+        public function wip_process(Request $request)
     {
         // Fetch start and end dates from the request
         $startDate = $request->input('start_date');
@@ -361,7 +330,6 @@ public function viewOrder($order_number)
             'totalRows' // Pass the unfiltered total row count
         ));
     }
-
     public function wip_material()
     {
         return view('report.wip_material');
@@ -379,8 +347,7 @@ public function viewOrder($order_number)
 
     return view('report.outstanding', compact('order')); // Pass data to the view
 }
-
-    public function finishgood(Request $request)
+        public function finishgood(Request $request)
     {
         // Fetch start and end dates from the request
         $startDate = $request->input('start_date');
@@ -396,28 +363,22 @@ public function viewOrder($order_number)
 
         // Query to fetch WIP data where the associated order status is not "Finished" or "Delivered"
         $orders = \App\Models\WIP::whereHas('order', function ($query) {
-            $query->QCPass();
+            $query->finished();
         });
-
-        // Log the base query
-        Log::info('Base Finish Good query executed');
 
         // Filter by date range
         if ($startDate && $endDate) {
             $orders = $orders->whereBetween('wip_date', [$startDate, $endDate]);
-
-            // Log the detailed information about the date range used
             Log::info('Date Range Filter Applied', [
                 'start_date' => $startDate,
                 'end_date' => $endDate,
                 'query' => "Filtering records between $startDate and $endDate"
             ]);
         } else {
-            // Log when the date range is not applied
             Log::info('No Date Range Filter Applied');
         }
 
-        // Filter by order type (WF or MDC) based on the order_number format
+        // Filter by order type (WF or MDC)
         if ($orderType == 'WF') {
             $orders = $orders->whereHas('order', function ($query) {
                 $query->where('order_number', 'like', '%-W%');
@@ -430,10 +391,19 @@ public function viewOrder($order_number)
             Log::info('MDC Order Type Filter Applied');
         }
 
-        // Get the results of the query
-        $orders = $orders->get();
+$orders = \App\Models\WIP::select('w_i_p_s.*')
+    ->join(
+        DB::raw('(SELECT order_number, MAX(wip_date) as latest_date FROM w_i_p_s GROUP BY order_number) as latest_wips'),
+        function ($join) {
+            $join->on('w_i_p_s.order_number', '=', 'latest_wips.order_number')
+                 ->on('w_i_p_s.wip_date', '=', 'latest_wips.latest_date');
+        }
+    )
+    ->whereHas('order', function ($query) {
+        $query->QCPass();
+    })
+    ->get();
 
-        // Log the number of results retrieved
         Log::info('Finish Good Query Results', [
             'total_orders' => $orders->count()
         ]);
@@ -473,7 +443,6 @@ public function viewOrder($order_number)
             'totalSales'
         ));
     }
-
     public function delivered(Request $request)
     {
         // Fetch start and end dates from the request
@@ -481,14 +450,23 @@ public function viewOrder($order_number)
         $endDate = $request->input('end_date');
         $orderType = $request->input('order_type'); // New order type filter
 
-        // Query to fetch WIP data where the associated order status is not "Finished" or "Delivered"
-        $orders = \App\Models\WIP::whereHas('order', function ($query) {
-            $query->delivered();
-        });
+        // Query to fetch WIP data where the associated order status is "Delivered"
+        $orders = \App\Models\WIP::select('w_i_p_s.*', 'order.dod') // Include 'dod' from 'orders' table
+            ->join(
+                DB::raw('(SELECT order_number, MAX(wip_date) as latest_date FROM w_i_p_s GROUP BY order_number) as latest_wips'),
+                function ($join) {
+                    $join->on('w_i_p_s.order_number', '=', 'latest_wips.order_number')
+                         ->on('w_i_p_s.wip_date', '=', 'latest_wips.latest_date');
+                }
+            )
+            ->join('order', 'w_i_p_s.order_number', '=', 'order.order_number') // Join with 'orders' table
+            ->whereHas('order', function ($query) {
+                $query->delivered();
+            });
 
-        // Filter by date range
+        // Filter by delivery date range (dod) instead of wip_date
         if ($startDate && $endDate) {
-            $orders = $orders->whereBetween('wip_date', [$startDate, $endDate]);
+            $orders = $orders->whereBetween('order.dod', [$startDate, $endDate]); // Changed from wip_date to dod
         }
 
         // Filter by order type (WF or MDC) based on the order_number format
@@ -502,7 +480,6 @@ public function viewOrder($order_number)
             });
         }
 
-        // Get the results of the query
         $orders = $orders->get();
 
         // Calculate the sums for the total columns
@@ -528,6 +505,8 @@ public function viewOrder($order_number)
             'totalSales'
         ));
     }
+
+
     public function hpp()
     {
         return view('report.hpp');
