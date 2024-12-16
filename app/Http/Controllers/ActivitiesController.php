@@ -50,22 +50,22 @@ class ActivitiesController extends Controller
     {
         // Get the quotation_no filter from the request
         $filterQuotationNo = $request->input('quotation_no');
-    
+
         // Start the query
         $quotation = DB::table('quotation');
-    
+
         // Apply filter if quotation_no is present
         if ($filterQuotationNo) {
             $quotation->where('quotation_no', 'like', '%' . $filterQuotationNo . '%');
         }
-    
+
         // Fetch the quotations and perform the join
         $quotation = $quotation->get();
         $quotationJoin = DB::table('quotation')
             ->join('quotationadd', 'quotation.quotation_no', '=', 'quotationadd.quotation_no')
             ->select('quotation.*', 'quotationadd.*')
             ->get();
-    
+
         // Return the view with the filtered data
         return view('activities.quotation', compact('quotation', 'quotationJoin', 'filterQuotationNo'));
     }
@@ -230,7 +230,7 @@ class ActivitiesController extends Controller
                 // Menghilangkan karakter 'Rp', ',', dan '.'
                 $inputAmount = str_replace(['Rp', ',', '.'], '', $request->input('amount')[$key]);
                 $quotationAdd['amount'] = $inputAmount;
-		
+
 		$quotationAdd['deskripsi'] = $request->deskripsi[$key];
 
                 $quotationAdd['deskripsi'] = $request->deskripsi[$key];
@@ -401,19 +401,19 @@ class ActivitiesController extends Controller
     {
         // Get the search input from the request (if any)
         $search = $request->input('so_number');
-    
+
         // If a search input exists, filter the salesorder by so_number
         $salesorder = DB::table('salesorder')
             ->when($search, function ($query, $search) {
                 return $query->where('so_number', 'like', '%' . $search . '%');
             })
             ->get();
-    
+
         $salesorderJoin = DB::table('salesorder')
             ->join('soadd', 'salesorder.so_number', '=', 'soadd.so_number')
             ->select('salesorder.*', 'soadd.*')
             ->get();
-    
+
         return view('activities.salesorder', compact('salesorder', 'salesorderJoin', 'search'));
     }
     public function viewsalesorder($so_number)
@@ -453,7 +453,7 @@ class ActivitiesController extends Controller
 
         return response()->json($result);
     }
-        public function storeso(Request $request)
+    public function storeso(Request $request)
     {
         // Begin logging the input data for debugging
         Log::info('Store SO request data: ', $request->all());
@@ -499,7 +499,6 @@ class ActivitiesController extends Controller
             'tax_type'          => 'required',
             'description'       => 'required',
         ]);
-
 
         // Check if validation fails
         if ($validator->fails()) {
@@ -561,8 +560,8 @@ class ActivitiesController extends Controller
             $freight = trim(str_replace(['Rp', '.', ','], '', $request->input('freight')));
             $salesorder->freight = $freight;
 
-$totalAmount = trim(preg_replace('/[^\d]/', '', $request->input('total_amount')));
-$salesorder->total_amount = $totalAmount;
+            $totalAmount = trim(preg_replace('/[^\d]/', '', $request->input('total_amount')));
+            $salesorder->total_amount = $totalAmount;
             $salesorder->discount_percent  = $request->discount_percent;
             $salesorder->tax_type          = $request->tax_type;
             $salesorder->description       = $request->description;
@@ -580,55 +579,54 @@ $salesorder->total_amount = $totalAmount;
             // Log successful creation of the Sales Order
             Log::info('Sales Order created successfully: ', ['so_number' => $salesorder->so_number]);
 
-            // Save the additional items in SalesOrderAdd
+            // Save the additional items in SalesOrderAdd and create orders for each item
             foreach ($request->item as $key => $items) {
                 // Prepare SalesOrderAdd data
-                $soAdd['item'] = $items;
-                $soAdd['so_number'] = $salesorder->so_number;
-                $soAdd['item_desc'] = $request->item_desc[$key];
-                $soAdd['qty'] = $request->qty[$key];
-                $soAdd['unit'] = $request->unit[$key];
-                $soAdd['unit_price'] = str_replace(['Rp', ',', '.'], '', $request->input('unit_price')[$key]);
-                $soAdd['disc'] = $request->disc[$key];
-                $soAdd['amount'] = str_replace(['Rp', ',', '.'], '', $request->input('amount')[$key]);
-                $soAdd['product_type'] = $request->product_type[$key];
-                $soAdd['order_no'] = $request->order_no[$key];
-                $soAdd['spec'] = $request->spec[$key];
-                $soAdd['kbli'] = $request->kbli[$key];
+                $soAdd = [
+                    'item'         => $items,
+                    'so_number'    => $salesorder->so_number,
+                    'item_desc'    => $request->item_desc[$key],
+                    'qty'          => $request->qty[$key],
+                    'unit'         => $request->unit[$key],
+                    'unit_price'   => str_replace(['Rp', ',', '.'], '', $request->input('unit_price')[$key]),
+                    'disc'         => $request->disc[$key],
+                    'amount'       => (int) preg_replace('/[^\d]/', '', $request->input('amount')[$key]),
+                    'product_type' => $request->product_type[$key],
+                    'order_no'     => $request->order_no[$key],
+                    'spec'         => $request->spec[$key],
+                    'kbli'         => $request->kbli[$key],
+                ];
 
                 // Create the SalesOrderAdd record
                 SalesOrderAdd::create($soAdd);
 
-                // Loop through each item to update or create Order records
-                foreach ($request->item as $key => $items) {
-                    $orderData = [
-                        'order_number'     => $request->order_no[$key], // Unique identifier
-                        'so_number'        => $salesorder->so_number,
-                        'quotation_number' => $salesorder->quotation_no,
-                        'kbli_code'        => $request->kbli[$key],
-                        'order_date'       => $salesorder->date,
-                        'product_type'     => $request->product_type[$key],
-                        'po_number'        => $salesorder->po_number,
-                        'sale_price'       => $soAdd['amount'],
-                        'information'      => $salesorder->description,
-                        'order_status'     => 'Queue',
-                        'customer'         => $salesorder->name,
-                        'product'          => $items,
-                        'qty'              => $request->qty[$key],
-                        'dod'              => $salesorder->dod,
-                        'dod_forecast'     => $salesorder->dod,
-                        'sample'           => $salesorder->sample,
-                        'dod_adj'          => $salesorder->dod
-                    ];
+                // Prepare Order data for each item (this needs to be done in the same loop, but separately for each item)
+                $orderData = [
+                    'order_number'     => $request->order_no[$key], // Unique identifier
+                    'so_number'        => $salesorder->so_number,
+                    'quotation_number' => $salesorder->quotation_no,
+                    'kbli_code'        => $request->kbli[$key],
+                    'order_date'       => $salesorder->date,
+                    'product_type'     => $request->product_type[$key],
+                    'po_number'        => $salesorder->po_number,
+                    'sale_price'       => preg_replace('/[^\d]/', '', $request->input('amount')[$key]), // Use 'amount' as the sale price
+                    'information'      => $salesorder->description,
+                    'order_status'     => 'Queue',
+                    'customer'         => $salesorder->name,
+                    'product'          => $items,
+                    'qty'              => $request->qty[$key],
+                    'dod'              => $salesorder->dod,
+                    'dod_forecast'     => $salesorder->dod,
+                    'sample'           => $salesorder->sample,
+                    'dod_adj'          => $salesorder->dod
+                ];
 
-                    // Use updateOrCreate for Order model
-                    Order::updateOrCreate(
-                        ['order_number' => $request->order_no[$key]], // Match on unique order number
-                        $orderData // Data to insert or update
-                    );
-                }
+                // Use updateOrCreate for Order model to ensure that each order is unique by 'order_number'
+                Order::updateOrCreate(
+                    ['order_number' => $request->order_no[$key]], // Match on unique order number
+                    $orderData // Data to insert or update
+                );
             }
-
 
             DB::commit();
 
@@ -645,6 +643,7 @@ $salesorder->total_amount = $totalAmount;
         }
     }
 
+
     public function editsalesorder($so_number)
     {
         try {
@@ -659,7 +658,7 @@ $salesorder->total_amount = $totalAmount;
             $no_katalog = NoKatalog::get();
             Log::info('Fetched NoKatalog');
 
-	    $salesmen = Salesman::get(); 
+	    $salesmen = Salesman::get();
        	    Log::info('Fetched Salesmen');
 
             $tax_type = TaxType::get();
@@ -1096,7 +1095,7 @@ public function viewOrder($order_number)
 
 /**
  * Generate the next sequential customer number
- * 
+ *
  * @return string
  */
 private function generateCustomerNumber()
@@ -2011,7 +2010,7 @@ public function item(Request $request)
 
         // Return the view with the data and the filter value
         return view('activities.subcontract', compact('data', 'order_number'));
-    }    
+    }
 
     public function createsub_contract()
     {
@@ -2419,17 +2418,17 @@ public function overhead_manufacture(Request $request)
         public function updateStatus(Request $request, $id)
     {
         Log::info('updateStatus called with parameters', ['id' => $id, 'request_data' => $request->all()]);
-    
+
         // Retrieve ProcessingAdd by $id
         $processingAdd = ProcessingAdd::find($id);
         if (!$processingAdd) {
             Log::error('ProcessingAdd not found.', ['processing_add_id' => $id]);
             return redirect()->route('activities.used_time')->withErrors(['error' => 'ProcessingAdd not found.']);
         }
-    
+
         $order_number = $processingAdd->order_number;
         $user = auth()->user();
-    
+
         // Update ProcessingAdd status based on requested action
         switch ($request->action) {
             case 'start':
@@ -2451,26 +2450,26 @@ public function overhead_manufacture(Request $request)
                 Log::error('Invalid action provided.', ['action' => $request->action]);
                 return redirect()->route('activities.used_time')->withErrors(['error' => 'Invalid action.']);
         }
-    
+
         $processingAdd->user_name = $user->name;
         $processingAdd->save();
-    
+
         Log::info('ProcessingAdd status updated.', [
             'processing_add_id' => $processingAdd->id,
             'status' => $processingAdd->status,
             'duration' => $processingAdd->duration,
         ]);
-    
+
         // Find the related ItemAdd and update its status
         $itemAdd = ItemAdd::where('order_number', $order_number)
                           ->whereHas('processingAdds', function ($query) use ($id) {
                               $query->where('id', $id);
                           })->first();
-    
+
         if ($itemAdd) {
             $itemAdd->updateItemStatus();
             Log::info('Item status updated.', ['item_id' => $itemAdd->id]);
-    
+
             // Trigger the order status update
             $order = $itemAdd->order;
             if ($order) {
@@ -2481,7 +2480,7 @@ public function overhead_manufacture(Request $request)
             Log::error('Associated ItemAdd not found.', ['processing_add_id' => $id]);
             return redirect()->route('activities.used_time')->withErrors(['error' => 'Associated ItemAdd not found.']);
         }
-    
+
         return redirect()->route('activities.used_time');
     }
 
@@ -3335,7 +3334,7 @@ public function storeCopiedOrder(Request $request)
         $order = $query->get(); // Fetch the filtered results
         return view('activities.deliveryprocess', compact('order'));
     }
-    
+
     public function real_hpp()
     {
         return view('activities.realhpp');
