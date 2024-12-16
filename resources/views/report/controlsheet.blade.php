@@ -398,7 +398,30 @@
                     <span class="legend-color bg-secondary"></span>Queue
                 </div>
             </div>
-            
+            <table>
+                <tr>
+                                            <th>Item Number</th>
+                                            <th>SN</th>
+                                            <th>Drawing Number</th>
+                                            <th>NOS.</th>
+                                            <th>Nama Item</th>
+                                            @php
+                                                // Find the maximum number of processes for any item
+                                                $maxProcesses = $items
+                                                    ->map(function ($item) {
+                                                        return $item->processingAdds->count();
+                                                    })
+                                                    ->max();
+                                            @endphp
+
+                                            <!-- Create headers for each process column -->
+                                            @for ($i = 1; $i <= $maxProcesses; $i++)
+                                                <th>Process {{ $i }}</th>
+                                            @endfor
+
+                                            <th>Date Out</th>
+                                        </tr>
+            </table>
             ${tableHTML}
 
             

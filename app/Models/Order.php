@@ -119,5 +119,9 @@ class Order extends Model
     
         $this->save();
     }
+    public function wip()
+{
+    return $this->hasOne(WIP::class, 'order_number', 'order_number');
+}
     
 }

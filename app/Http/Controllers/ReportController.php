@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\WIP;
 use App\Models\Order;
 use App\Models\ItemAdd;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use App\Models\ProcessingAdd;
 use App\Models\Inspection_sheet;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\ActivitiesController;
+
 
 class ReportController extends Controller
 {
@@ -203,10 +205,28 @@ public function viewOrder($order_number)
     {
         return view('report.overheadmanufacture');
     }
-    public function monitoranalisaorder()
+    public function monitoranalisaorder(Request $request)
     {
-        return view('report.monitoranalisaorder');
-    }
+    // Fetch filters from the request
+    $startDate = $request->input('start_date');
+    $endDate = $request->input('end_date');
+
+    // Fetch WIP data with associated orders and filters
+    $wipData = WIP::with(['order' => function ($query) {
+        $query->QCPass()->Delivered()->Finished(); // Apply QC Pass and notDelivered conditions
+    }])
+    ->when($startDate, function ($query, $startDate) {
+        $query->whereDate('wip_date', '>=', $startDate);
+    })
+    ->when($endDate, function ($query, $endDate) {
+        $query->whereDate('wip_date', '<=', $endDate);
+    })
+    ->get();
+
+    // Return the view with WIP data and filter values
+    return view('report.monitoranalisaorder', compact('wipData', 'startDate', 'endDate'));    
+}
+
     public function statistic()
     {
         return view('report.statistic');
@@ -346,10 +366,20 @@ public function viewOrder($order_number)
     {
         return view('report.wip_material');
     }
-    public function outstanding()
-    {
-        return view('report.outstanding');
+    public function outstanding(Request $request)
+{
+    $query = Order::notFinished()->notQCPass()->notDelivered()->with('wip'); // Eager load WIP relationship
+
+    if ($request->has('order_number')) {
+        $order_number = $request->input('order_number');
+        $query->where('order_number', 'LIKE', '%' . $order_number . '%');
     }
+
+    $order = $query->get(); // Fetch the filtered results
+
+    return view('report.outstanding', compact('order')); // Pass data to the view
+}
+
     public function finishgood(Request $request)
     {
         // Fetch start and end dates from the request
