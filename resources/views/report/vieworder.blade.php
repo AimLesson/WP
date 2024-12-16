@@ -1,4 +1,4 @@
-@extends('activities.activities')
+@extends('report.report')
 @section('content')
 <style>
     .print-only {

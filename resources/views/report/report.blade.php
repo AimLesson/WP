@@ -148,22 +148,13 @@
                     </p>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
+            <li class="nav-item {{ request()->is('report/outstanding') ? 'active' : '' }}">
+                <a href="{{route('report.outstanding')}}" class="nav-link">
                     <i class="nav-icon fas fa-location-arrow"></i>
                     <p>
-                        Out Standing
-                        <i class="right fas fa-angle-left"></i>
+                        Outstanding
                     </p>
                 </a>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="{{route('report.outstanding')}}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Process</p>
-                        </a>
-                    </li>
-                </ul>
             </li>
             <li class="nav-item {{ request()->is('report/finishgood') ? 'active' : '' }}">
                 <a href="{{route('report.finishgood')}}" class="nav-link">

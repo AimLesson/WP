@@ -35,43 +35,51 @@
                             <form action="{{ route('report.productionsheet') }}" method="GET">
                                 <div class="form-group">
                                     <label for="order_number" class="form-label">Order</label>
-                                    <select name="order_number" id="order_number" class="form-control select2"
-                                        style="width: 100%;" required>
-                                        <option selected="selected" disabled>-- Select Order --</option>
+                                    <select name="order_number" id="order_number" class="form-control select2" style="width: 100%;" required>
+                                        <option disabled {{ !isset($orderNumber) ? 'selected' : '' }}>-- Select Order --</option>
                                         @foreach ($orders as $o)
-                                        <option value="{{ $o->order_number }}">{{ $o->order_number }}</option>
+                                        <option value="{{ $o->order_number }}" 
+                                            {{ isset($orderNumber) && $orderNumber == $o->order_number ? 'selected' : '' }}>
+                                            {{ $o->order_number }}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="item_number" class="form-label">Item</label>
-                                    <select name="item_number" id="item_number" class="form-control select2"
-                                        style="width: 100%;" required>
-                                        <option selected="selected" disabled>-- Select Item --</option>
+                                    <select name="item_number" id="item_number" class="form-control select2" style="width: 100%;" required>
+                                        <option disabled {{ !isset($itemNumber) ? 'selected' : '' }}>-- Select Item --</option>
+                                        @foreach ($items as $item)
+                                        <option value="{{ $item->no_item }}" 
+                                            {{ isset($itemNumber) && $itemNumber == $item->no_item ? 'selected' : '' }}>
+                                            {{ $item->no_item }}
+                                        </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-custom">Filter</button>
+                                <a href="{{ route('report.productionsheet') }}" class="btn btn-secondary">Reset</a>
                             </form>
+                        
                             <div class="card p-3 m-3">
                                 @if ($order)
-                                    <!-- Display Order details -->
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
-                                            <p><strong>Issued:</strong> {{ $order->order_date }}</p>
-                                            <p><strong>Date Wanted:</strong> {{ $order->dod }}</p>
-                                            <p><strong>Number SO:</strong> {{ $order->so_number }}</p>
-                                            <p><strong>Customer:</strong> {{ $order->customer }}</p>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <p><strong>Product:</strong> {{ $order->product }}</p>
-                                            <p><strong>Number of Product:</strong> {{ $order->qty }}</p>
-                                            <p><strong>Customer Name:</strong> {{ $order->customer_name }}</p>
-                                            <p><strong>Order Date:</strong> {{ $order->order_date }}</p>
-                                        </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
+                                        <p><strong>Issued:</strong> {{ $order->order_date }}</p>
+                                        <p><strong>Date Wanted:</strong> {{ $order->dod }}</p>
+                                        <p><strong>Number SO:</strong> {{ $order->so_number }}</p>
+                                        <p><strong>Customer:</strong> {{ $order->customer }}</p>
                                     </div>
+                                    <div class="col-md-5">
+                                        <p><strong>Product:</strong> {{ $order->product }}</p>
+                                        <p><strong>Number of Product:</strong> {{ $order->qty }}</p>
+                                        <p><strong>Customer Name:</strong> {{ $order->customer_name }}</p>
+                                        <p><strong>Order Date:</strong> {{ $order->order_date }}</p>
+                                    </div>
+                                </div>
                                 @endif
-                            </div>
+                            </div>                       
                               <!-- Add print button -->
                             <button onclick="printProductionSheet()" class="btn btn-secondary float-justify mb-3">
                                 <i class="fas fa-print"></i> Print Production Sheet
@@ -81,7 +89,7 @@
                             <table id="productionsheet" class="table table-head-fixed text-nowrap mt-4">
                                 <thead>
                                     <tr>
-                                        <th>Check</th>
+                                        <th>QR Code</th>
                                         <th>Cost Palace</th>
                                         <th>Finish Date</th>
                                         <th>Operation</th>
@@ -89,7 +97,7 @@
                                         <th>Used Time</th>
                                         <th>Finished Date</th>
                                         <th>Operator</th>
-                                        <th>QR Code</th>
+                                        <th>Check</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -144,8 +152,8 @@
         // Get the order details and table content
         const orderDetails = document.querySelector('.card.p-3.m-3').innerHTML;
         const tableContent = document.getElementById('productionsheet').innerHTML;
-        
-        // Create print window content
+
+        // Create the print content with the production sheet layout
         const printContent = `
             <!DOCTYPE html>
             <html>
@@ -157,69 +165,282 @@
                             display: none !important;
                         }
                     }
-                    
+
                     body {
                         font-family: Arial, sans-serif;
-                        padding: 20px;
+                        margin: 20px;
+                        padding: 0;
                     }
-                    
+
                     .header {
                         text-align: center;
-                        margin-bottom: 20px;
+                        margin-bottom: 10px;
                     }
-                    
-                    .order-details {
-                        margin-bottom: 30px;
-                    }
-                    
+
+                    .details, .table-wrapper {
+                    width: 100%;
+                    margin: 0 auto; /* Centers the table */
+                    padding: 0;
+                }
+
+                .details {
+                    font-size: 14px;
+                }
+
+                .details table {
+                    width: 100%;
+                    margin: 0; /* Ensures no margins */
+                    margin-bottom: 10px; /* Space between tables */
+                    border-collapse: collapse; /* Ensures no extra spacing between borders */
+                    border: 2px solid black; /* Outer table border only */
+                    table-layout: fixed; /* Aligns columns evenly */
+                }
+
+                .details td {
+                    padding: 4px 6px; /* Consistent padding for table content */
+                    font-size: 14px;
+                    border: none; /* Removes individual borders */
+                    vertical-align: top; /* Aligns text to the top of the cells */
+                }
+
+                .details td span.bold {
+                    font-weight: bold;
+                }
+
+                /* Add this to align tables with surrounding sentences */
+                .details:first-child {
+                    margin-top: 0; /* Ensures the first table aligns properly */
+                }
+
+                .details:last-child {
+                    margin-bottom: 0; /* Ensures no extra spacing after the last table */
+                }
+
                     table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        font-size: 14px;
+                        margin-top: 10px;
+                    }
+
+                    th, td {
+                        border: 1px solid black;
+                        padding: 5px;
+                        text-align: left;
+                    }
+
+                    th {
+                        background-color: #f2f2f2;
+                    }
+
+                    .footer {
+                    margin-top: 30px;
+                    width: 100%;
+                }
+
+                .footer table {
+                    width: 100%;
+                    border-collapse: collapse; /* Ensures clean borders */
+                }
+
+                .footer td {
+                    width: 50%; /* Makes each column take equal space */
+                    padding: 8px; /* Adds space inside cells */
+                    border: 1px solid black; /* Ensures borders are visible */
+                    vertical-align: top; /* Aligns text to the top */
+                    box-sizing: border-box; /* Prevents padding from overflowing width */
+                }
+
+                    .date-wanted {
+                        font-size: 30px;
+                        font-weight: bold;
+                        margin-top: 20px;
+                    }
+
+                    @page {
+                        size: portrait;
+                    }
+                    .header {
+                        text-align: center;
+                        margin-bottom: 10px;
+                    }
+
+                    .header h3 {
+                        margin: 0;
+                        font-size: 18px;
+                        font-weight: bold;
+                    }
+
+                    .header p {
+                        margin: 0;
+                        font-size: 12px;
+                    }
+
+                    .header-table {
                         width: 100%;
                         border-collapse: collapse;
                         margin-top: 20px;
                     }
-                    
-                    th, td {
-                        border: 1px solid #ddd;
-                        padding: 8px;
+
+                    .header-table td, .header-table th {
+                        border: 1px solid black;
+                        padding: 4px 6px;
                         text-align: left;
+                        vertical-align: top;
                     }
-                    
-                    th {
-                        background-color: #f2f2f2;
+
+                    .header-table td.title {
+                        font-weight: bold;
                     }
-                    
-                    .qr-code {
-                        width: 100px;
-                        height: 100px;
+
+                    .header-table .center {
+                        text-align: center;
                     }
-                    
-                    @page {
-                        size: landscape;
+
+                    .production-title {
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        margin: 10px 0;
                     }
                 </style>
             </head>
             <body>
-                <div class="header">
-                    <h1>Production Sheet</h1>
-                </div>
-                
-                <div class="col-md-5">
-                    ${orderDetails}
-                </div>
-                
-                <table>
-                    ${tableContent}
+               <table class="header-table">
+                    <tr>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td>9.47</td>
+                                </tr>
+                                <tr>
+                                    <td>13/08/2024</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td>SN : 25</td>
+                                </tr>
+                                <tr>
+                                    <td>NS : 36</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="center" rowspan="2">
+                            <div class="production-title">ISO 9001:2015</div>
+                            <div class="production-title">PRODUCTION SHEET</div>
+                        </td>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td>Dokumen</td>
+                                    <td>8.5.2.F1</td>
+                                </tr>
+                                <tr>
+                                    <td>Revisi ke</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>Tanggal terbit</td>
+                                    <td>11.10.2016</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
                 </table>
+
+                <div class="details">
+                <table>
+                     @if ($order)
+                    <tr>
+                        <td><span class="bold">Order Number:</span> {{ $order->order_number }}</td>
+                        <td><span class="bold">SO No.:</span> {{ $order->so_number }}</td>
+                        <td><span class="bold">PO (ref).:</span> </td> 
+                    </tr>
+                    <tr>
+                        <td><span class="bold">Customer:</span> {{ $order->customer }}</td>
+                        <td><span class="bold">Date of Delivery:</span> 04/10/2024</td>
+                        <td><span class="bold">No. of Prod.:</span> {{ $order->qty }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="bold">Product:</span> {{ $order->product }}</td>
+                        <td><span class="bold">Assy. Drawing:</span> </td> 
+                    </tr>
+                    @endif
+                </table>
+            </div>
+            <div class="details">
+                <table>
+                     @if ($order)
+                    <tr>
+                        <td><span class="bold">Item Number:</span> 5.1</td>
+                        <td><span class="bold">Material:</span> Sub Ass</td>
+                        <td><span class="bold">Item Name:</span> </td>
+                    </tr>
+                    <tr>
+                        <td><span class="bold">Drawing Number:</span> 4383</td>
+                        <td><span class="bold">No. of Blank:</span> 3 </td>
+                        <td><span class="bold">Rack:</span> </td>
+                    </tr>
+                    <tr>
+                        <td><span class="bold">Date Wanted:</span> {{ \Carbon\Carbon::parse($order->dod)->format('d-m-Y') }}</td>
+                        <td><span class="bold">Weight[kg/pce]:</span> 0</td>
+                        <td><span class="bold">Issued:</span> </td>
+                    </tr>
+                    <tr>
+                        <td><span class="bold">No. of Pieces:</span> 3</td>
+                        <td><span class="bold">Blank Size (mm):</span> 0</td>
+                    </tr>
+                    @endif
+                </table>
+            </div>
+                <!-- Table Content -->
+                <div class="table-wrapper">
+                    <table>
+                        ${tableContent}
+                    </table>
+                </div>
+
+                <!-- Footer Section -->
+                 @if ($order)
+                <div class="date-wanted">DATE WANTED: {{ \Carbon\Carbon::parse($order->dod)->format('d-m-Y') }}</div>
+                @endif
+                <div class="footer">
+                    <table>
+                        <tr>
+                            <td>Issued by PPIC:</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Material Taken By:</td>
+                            <td></td>
+                        </tr>
+                         <tr>
+                            <td>Delivered By:</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Section:</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Date:</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
             </body>
             </html>
         `;
-        
-        // Create and open print window
+
+        // Open a new print window
         const printWindow = window.open('', '_blank');
         printWindow.document.write(printContent);
         printWindow.document.close();
-        
-        // Wait for images to load before printing
+
+        // Ensure the content is loaded before printing
         printWindow.onload = function() {
             printWindow.print();
             printWindow.onafterprint = function() {
@@ -227,18 +448,19 @@
             };
         };
     }
-    </script>
+</script>
+
     
     
 <script>
-   $(document).ready(function() {
-    $('#productionsheet').DataTable({
-        responsive: false,
-        lengthChange: false,
-        autoWidth: false,
-        scrollX: true,
-        buttons: [
-//             {
+//    $(document).ready(function() {
+//     $('#productionsheet').DataTable({
+//         responsive: false,
+//         lengthChange: false,
+//         autoWidth: false,
+//         scrollX: true,
+//         buttons: [
+// //             {
 //                 extend: 'print',
 //                 className: 'btn-custom',
 //                 customize: function (win) {
@@ -323,14 +545,14 @@
 //             },
 //             {
 //                 extend: 'excel',
+// //                 className: 'btn-custom'
+// //             },
+//             {
+//                 extend: 'colvis',
 //                 className: 'btn-custom'
-//             },
-            {
-                extend: 'colvis',
-                className: 'btn-custom'
-            }
-        ]
-    }).buttons().container().appendTo('#productionsheet_wrapper .col-md-6:eq(0)');
+//             }
+//         ]
+//     }).buttons().container().appendTo('#productionsheet_wrapper .col-md-6:eq(0)');
 
         $('#order_number').on('change', function () {
             var orderNumber = $(this).val();
@@ -364,7 +586,6 @@
         }
 
         updateTitle('Production Sheet');
-    });
 </script>
 
 @endsection
