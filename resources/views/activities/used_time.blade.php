@@ -94,58 +94,48 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($usedtime as $ut)
-                                            <tr>
+                                            <tr data-barcode-id="{{ $ut->barcode_id }}">
                                                 <td>{{ $ut->order_number }}</td>
                                                 <td>{{ $ut->item_number }}</td>
-                                                <td style="display: none;">{{ $ut->barcode_id }}</td>
+                                                <td>{{ $ut->barcode_id }}</td>
                                                 <td>{{ $ut->date_wanted }}</td>
                                                 <td>{{ $ut->user_name }}</td>
                                                 <td>{{ $ut->machine }}</td>
                                                 <td>{{ $ut->operation }}</td>
                                                 <td>{{ gmdate('H:i:s', $ut->estimated_time * 3600) }}</td>
-                                                <td><span
-                                                        id="duration-{{ $ut->id }}">{{ gmdate('H:i:s', $ut->duration) }}</span>
-                                                </td>
+                                                <td><span id="duration-{{ $ut->id }}">{{ gmdate('H:i:s', $ut->duration) }}</span></td>
                                                 <td>{{ $ut->pending_at }}</td>
                                                 <td>{{ $ut->started_at }}</td>
                                                 <td>{{ $ut->finished_at }}</td>
                                                 <td>{{ ucfirst($ut->status) }}</td>
                                                 @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
-                                                <td>
-                                                    <div class="button-container">
-                                                        <form action="{{ route('activities.update_status', $ut->id) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="action" value="start">
-                                                            <input type="hidden" name="user_name"
-                                                                value="{{ $user->name }}">
-                                                            <button type="submit" class="btn btn-success btn-start"
-                                                                {{ ($ut->status != 'pending' && $ut->status != 'queue') || $ut->status == 'finished' ? 'disabled' : '' }}>Start</button>
-                                                        </form>
-                                                        <form action="{{ route('activities.update_status', $ut->id) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="action" value="pending">
-                                                            <input type="hidden" name="user_name"
-                                                                value="{{ $user->name }}">
-                                                            <button type="submit" class="btn btn-warning btn-reset"
-                                                                {{ $ut->status == 'pending' || $ut->status == 'finished' || $ut->status == 'queue' ? 'disabled' : '' }}>Pending</button>
-                                                        </form>
-                                                        <form action="{{ route('activities.update_status', $ut->id) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="action" value="finish">
-                                                            <input type="hidden" name="user_name"
-                                                                value="{{ $user->name }}">
-                                                            <button type="submit" class="btn btn-danger btn-remove"
-                                                                {{ $ut->status == 'finished' || $ut->status == 'queue' ? 'disabled' : '' }}>Finish</button>
-                                                        </form>
-                                                    </div>
-                                                </td>
+                                                    <td>
+                                                        <div class="button-container">
+                                                            <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="action" value="start">
+                                                                <input type="hidden" name="user_name" value="{{ $user->name }}">
+                                                                <button type="submit" class="btn btn-success btn-start" {{ ($ut->status != 'pending' && $ut->status != 'queue') || $ut->status == 'finished' ? 'disabled' : '' }}>Start</button>
+                                                            </form>
+                                                            <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="action" value="pending">
+                                                                <input type="hidden" name="user_name" value="{{ $user->name }}">
+                                                                <button type="submit" class="btn btn-warning btn-reset" {{ $ut->status == 'pending' || $ut->status == 'finished' || $ut->status == 'queue' ? 'disabled' : '' }}>Pending</button>
+                                                            </form>
+                                                            <form action="{{ route('activities.update_status', $ut->id) }}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="action" value="finish">
+                                                                <input type="hidden" name="user_name" value="{{ $user->name }}">
+                                                                <button type="submit" class="btn btn-danger btn-remove" {{ $ut->status == 'finished' || $ut->status == 'queue' ? 'disabled' : '' }}>Finish</button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
                                                 @endif
                                             </tr>
                                         @endforeach
                                     </tbody>
+
                                 </table>
                             </div>
                         </div>
@@ -241,27 +231,36 @@
                 console.log(`Filtering table for barcode ID: ${barcode_id}`);
                 let found = false;
 
+                // Iterate through each row and compare barcodes
                 $('tbody tr').each(function () {
-                    var cells = $(this).find('td');
-                    var rowBarcodeId = cells.eq(2).text().trim(); // Adjusted index to 2
+                    var rowBarcodeId = $(this).data('barcode-id'); // Use data attribute
                     console.log(`Row barcode ID: ${rowBarcodeId}`);
 
-                    if (rowBarcodeId === barcode_id) {
-                        $(this).show();
-                        found = true; // Set found flag
+                    // Normalize and compare
+                    if (rowBarcodeId && rowBarcodeId.trim().toLowerCase() === barcode_id.trim().toLowerCase()) {
+                        $(this).show(); // Show matching row
+                        found = true;
                     } else {
-                        $(this).hide();
+                        $(this).hide(); // Hide non-matching rows
                     }
                 });
 
+                // Handle no match
                 if (!found) {
+                    const allBarcodes = [];
+                    $('tbody tr').each(function () {
+                        allBarcodes.push($(this).data('barcode-id') || 'undefined');
+                    });
+
+                    console.warn(`No matching barcode. Scanned: ${barcode_id}, Table barcodes: ${allBarcodes.join(', ')}`);
                     Swal.fire({
                         icon: 'error',
                         title: 'No Match Found',
-                        text: `No matching data found for the scanned QR code: ${barcode_id}`,
+                        text: `Scanned: ${barcode_id}. Available barcodes: ${allBarcodes.join(', ')}`,
                     });
                 }
             }
+
 
             // Alerts for session messages
             window.addEventListener('DOMContentLoaded', (event) => {

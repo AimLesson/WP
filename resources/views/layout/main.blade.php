@@ -604,6 +604,7 @@
                 "lengthChange": false,
                 "autoWidth": false,
                 "scrollX": true,
+                "paging": false,
             }).container().appendTo('#customer_wrapper .col-md-6:eq(0), #sotarget_wrapper .col-md-6:eq(0)');
         });
 
