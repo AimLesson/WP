@@ -71,7 +71,7 @@
                                 <h3 class="card-title">Used Time Data</h3>
                             </div>
                             <div class="card-body">
-                                <table id='customer' class="table table-head-fixed text-nowrap ">
+                                <table id='usedtime' class="table table-head-fixed text-nowrap ">
                                     <thead>
                                         <tr>
                                             <th>Order Number</th>
