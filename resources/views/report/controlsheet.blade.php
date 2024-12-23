@@ -256,9 +256,36 @@
     // Create print window
     const printWindow = window.open('', '_blank');
     
-    // Get table data
+    // Get table data and explicitly create the table HTML
     const table = document.getElementById('controlsheet');
-    const tableHTML = table.outerHTML;
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+    
+    // Create table HTML manually to ensure headers are included
+    let tableHTML = `
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th>Item Number</th>
+                    <th>SN</th>
+                    <th>Drawing Number</th>
+                    <th>NOS.</th>
+                    <th>Nama Item</th>
+                    <th>Process 1</th>
+                    <th>Date Out</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    // Add rows from the original table
+    rows.forEach(row => {
+        tableHTML += row.outerHTML;
+    });
+
+    tableHTML += '</tbody></table>';
+
+    // Count the number of rows
+    const noOfItems = rows.length;
 
     // Get order details
     const orderNumber = document.querySelector('[data-order-number]')?.dataset.orderNumber || '';
@@ -281,6 +308,10 @@
                         size: landscape;
                         margin: 1cm;
                     }
+                    thead { display: table-header-group !important; }
+                    tfoot { display: table-footer-group !important; }
+                    tr { page-break-inside: avoid !important; }
+                    th { background-color: #f2f2f2 !important; }
                 }
                 body {
                     font-family: Arial, sans-serif;
@@ -312,23 +343,47 @@
                     font-weight: bold;
                     width: 150px;
                 }
-                table {
+                .print-table {
                     width: 100%;
                     border-collapse: collapse;
                     margin-top: 20px;
                 }
-                th, td {
+                .print-table th, 
+                .print-table td {
                     border: 1px solid #000;
                     padding: 8px;
                     text-align: left;
                 }
-                th {
+                .print-table th {
                     background-color: #f2f2f2;
+                    font-weight: bold;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
                 }
-                .bg-success { background-color: #28a745 !important; color: #fff !important; }
-                .bg-warning { background-color: #ffc107 !important; color: #fff !important; }
-                .bg-primary { background-color: #007bff !important; color: #fff !important; }
-                .bg-secondary { background-color: #6c757d !important; color: #fff !important; }
+                .bg-success { 
+                    background-color: #28a745 !important;
+                    color: #fff !important;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
+                .bg-warning { 
+                    background-color: #ffc107 !important;
+                    color: #fff !important;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
+                .bg-primary { 
+                    background-color: #007bff !important;
+                    color: #fff !important;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
+                .bg-secondary { 
+                    background-color: #6c757d !important;
+                    color: #fff !important;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
                 .legend {
                     margin-top: 20px;
                     padding: 10px;
@@ -344,6 +399,11 @@
                     height: 20px;
                     margin-right: 5px;
                     vertical-align: middle;
+                }
+                .footer {
+                    margin-top: 10px;
+                    text-align: right;
+                    font-weight: bold;
                 }
             </style>
         </head>
@@ -398,33 +458,11 @@
                     <span class="legend-color bg-secondary"></span>Queue
                 </div>
             </div>
-            <table>
-                <tr>
-                                            <th>Item Number</th>
-                                            <th>SN</th>
-                                            <th>Drawing Number</th>
-                                            <th>NOS.</th>
-                                            <th>Nama Item</th>
-                                            @php
-                                                // Find the maximum number of processes for any item
-                                                $maxProcesses = $items
-                                                    ->map(function ($item) {
-                                                        return $item->processingAdds->count();
-                                                    })
-                                                    ->max();
-                                            @endphp
-
-                                            <!-- Create headers for each process column -->
-                                            @for ($i = 1; $i <= $maxProcesses; $i++)
-                                                <th>Process {{ $i }}</th>
-                                            @endfor
-
-                                            <th>Date Out</th>
-                                        </tr>
-            </table>
+           
             ${tableHTML}
-
-            
+            <div class="footer">
+                NO OF ITEMS = ${noOfItems}
+            </div>
         </body>
         </html>
     `;

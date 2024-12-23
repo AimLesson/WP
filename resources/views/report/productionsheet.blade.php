@@ -90,12 +90,12 @@
                                 <thead>
                                     <tr>
                                         <th>QR Code</th>
-                                        <th>Cost Palace</th>
+                                        <th>Cost Place</th>
                                         <th>Finish Date</th>
                                         <th>Operation</th>
                                         <th>Estimated Time</th>
                                         <th>Used Time</th>
-                                        <th>Finished Date</th>
+                                        <th>Finished</th>
                                         <th>Operator</th>
                                         <th>Check</th>
                                     </tr>
@@ -119,7 +119,7 @@
                                         <td>{{ $m->duration }}</td>
                                         <td>{{ $m->finished_date }}</td>
                                         <td>{{ $m->user_name }}</td>
-                                        <td>-</td>
+                                        <td></td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -151,7 +151,24 @@
     function printProductionSheet() {
         // Get the order details and table content
         const orderDetails = document.querySelector('.card.p-3.m-3').innerHTML;
-        const tableContent = document.getElementById('productionsheet').innerHTML;
+
+    // Clone the table to manipulate it
+    const table = document.getElementById('productionsheet').cloneNode(true);
+
+    // Reset the data in unwanted columns in tbody
+    const tbody = table.querySelector('tbody');
+    Array.from(tbody.rows).forEach(row => {
+        row.cells[5].innerText = ""; // Clear duration column
+        row.cells[6].innerText = ""; // Clear finished_date column
+        row.cells[7].innerText = ""; // Clear user_name column
+    });
+
+    // Get the modified table content
+    const tableContent = table.innerHTML;
+
+        // time 
+        const now = new Date();
+        const currentTime = `${now.getHours().toString().padStart(2, '0')}.${now.getMinutes().toString().padStart(2, '0')}`;
 
         // Create the print content with the production sheet layout
         const printContent = `
@@ -311,10 +328,10 @@
                         <td>
                             <table>
                                 <tr>
-                                    <td>9.47</td>
+                                    <td>${currentTime}</td>
                                 </tr>
                                 <tr>
-                                    <td>13/08/2024</td>
+                                    <td>{{ now()->format('d-m-Y') }}</td>
                                 </tr>
                             </table>
                         </td>
@@ -354,6 +371,7 @@
                 <div class="details">
                 <table>
                      @if ($order)
+                     @if ($items)
                     <tr>
                         <td><span class="bold">Order Number:</span> {{ $order->order_number }}</td>
                         <td><span class="bold">SO No.:</span> {{ $order->so_number }}</td>
@@ -366,41 +384,44 @@
                     </tr>
                     <tr>
                         <td><span class="bold">Product:</span> {{ $order->product }}</td>
-                        <td><span class="bold">Assy. Drawing:</span> </td> 
+                        <td><span class="bold">Assy. Drawing:</span> {{ $item->ass_drawing }} </td> 
                     </tr>
+                    @endif
                     @endif
                 </table>
             </div>
             <div class="details">
                 <table>
                      @if ($order)
+                     @if ($items)
                     <tr>
-                        <td><span class="bold">Item Number:</span> 5.1</td>
-                        <td><span class="bold">Material:</span> Sub Ass</td>
-                        <td><span class="bold">Item Name:</span> </td>
+                        <td><span class="bold">Item Number:</span> {{ $item->no_item }}</td>
+                        <td><span class="bold">Material:</span> {{ $item->material }}</td>
+                        <td><span class="bold">Item Name:</span> {{ $item->item }} </td>
                     </tr>
                     <tr>
-                        <td><span class="bold">Drawing Number:</span> 4383</td>
-                        <td><span class="bold">No. of Blank:</span> 3 </td>
+                        <td><span class="bold">Drawing Number:</span> {{ $item->drawing_no }}</td>
+                        <td><span class="bold">No. of Blank:</span> {{ $item->nob }} </td>
                         <td><span class="bold">Rack:</span> </td>
                     </tr>
                     <tr>
                         <td><span class="bold">Date Wanted:</span> {{ \Carbon\Carbon::parse($order->dod)->format('d-m-Y') }}</td>
-                        <td><span class="bold">Weight[kg/pce]:</span> 0</td>
-                        <td><span class="bold">Issued:</span> </td>
+                        <td><span class="bold">Weight[kg/pce]:</span> {{ $item->weight }}</td>
+                        <td><span class="bold">Issued:</span> {{ now()->format('d-m-Y') }} </td>
                     </tr>
                     <tr>
                         <td><span class="bold">No. of Pieces:</span> 3</td>
                         <td><span class="bold">Blank Size (mm):</span> 0</td>
                     </tr>
+                     @endif
                     @endif
                 </table>
             </div>
                 <!-- Table Content -->
                 <div class="table-wrapper">
                     <table>
-                        ${tableContent}
-                    </table>
+                    ${tableContent}
+                </table>
                 </div>
 
                 <!-- Footer Section -->
