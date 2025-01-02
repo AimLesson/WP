@@ -155,6 +155,13 @@
     // Clone the table to manipulate it
     const table = document.getElementById('productionsheet').cloneNode(true);
 
+    // Get the selected item number from the dropdown
+    const selectedItemNumber = document.getElementById('item_number').value;
+    
+    // Get item details for the selected item only
+    const itemData = {!! $items->toJson() !!};
+    const selectedItem = itemData.find(item => item.no_item === selectedItemNumber);
+
     // Reset the data in unwanted columns in tbody
     const tbody = table.querySelector('tbody');
     Array.from(tbody.rows).forEach(row => {
@@ -371,7 +378,6 @@
                 <div class="details">
                 <table>
                      @if ($order)
-                     @if ($items)
                     <tr>
                         <td><span class="bold">Order Number:</span> {{ $order->order_number }}</td>
                         <td><span class="bold">SO No.:</span> {{ $order->so_number }}</td>
@@ -379,41 +385,38 @@
                     </tr>
                     <tr>
                         <td><span class="bold">Customer:</span> {{ $order->customer }}</td>
-                        <td><span class="bold">Date of Delivery:</span> 04/10/2024</td>
+                        <td><span class="bold">Date of Delivery:</span> {{ $order ? \Carbon\Carbon::parse($order->dod)->format('d-m-Y') : '' }}</td>
                         <td><span class="bold">No. of Prod.:</span> {{ $order->qty }}</td>
                     </tr>
                     <tr>
                         <td><span class="bold">Product:</span> {{ $order->product }}</td>
-                        <td><span class="bold">Assy. Drawing:</span> {{ $item->ass_drawing }} </td> 
+                        <td><span class="bold">Assy. Drawing:</span> ${selectedItem ? selectedItem.ass_drawing : ''}</td> 
                     </tr>
-                    @endif
                     @endif
                 </table>
             </div>
             <div class="details">
                 <table>
-                     @if ($order)
-                     @if ($items)
+                     @if ($order && $item)
                     <tr>
-                        <td><span class="bold">Item Number:</span> {{ $item->no_item }}</td>
-                        <td><span class="bold">Material:</span> {{ $item->material }}</td>
-                        <td><span class="bold">Item Name:</span> {{ $item->item }} </td>
+                        <td><span class="bold">Item Number:</span> ${selectedItem ? selectedItem.no_item : ''}</td>
+                        <td><span class="bold">Material:</span> ${selectedItem ? selectedItem.material : ''}</td>
+                        <td><span class="bold">Item Name:</span> ${selectedItem ? selectedItem.item : ''}</td>
                     </tr>
                     <tr>
-                        <td><span class="bold">Drawing Number:</span> {{ $item->drawing_no }}</td>
-                        <td><span class="bold">No. of Blank:</span> {{ $item->nob }} </td>
+                        <td><span class="bold">Drawing Number:</span> ${selectedItem ? selectedItem.drawing_no : ''}</td>
+                        <td><span class="bold">No. of Blank:</span> ${selectedItem ? selectedItem.nob : ''}</td>
                         <td><span class="bold">Rack:</span> </td>
                     </tr>
                     <tr>
-                        <td><span class="bold">Date Wanted:</span> {{ \Carbon\Carbon::parse($order->dod)->format('d-m-Y') }}</td>
-                        <td><span class="bold">Weight[kg/pce]:</span> {{ $item->weight }}</td>
-                        <td><span class="bold">Issued:</span> {{ now()->format('d-m-Y') }} </td>
+                        <td><span class="bold">Date Wanted:</span> {{ $order ? \Carbon\Carbon::parse($order->dod)->format('d-m-Y') : '' }}</td>
+                        <td><span class="bold">Weight[kg/pce]:</span> ${selectedItem ? selectedItem.weight : ''}</td>
+                        <td><span class="bold">Issued:</span> {{ now()->format('d-m-Y') }}</td>
                     </tr>
                     <tr>
                         <td><span class="bold">No. of Pieces:</span> 3</td>
                         <td><span class="bold">Blank Size (mm):</span> 0</td>
                     </tr>
-                     @endif
                     @endif
                 </table>
             </div>

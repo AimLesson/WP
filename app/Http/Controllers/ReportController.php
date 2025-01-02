@@ -134,6 +134,8 @@ public function controlsheet(Request $request)
     $usedtime = $query->get();
     Log::info('Used time data retrieved', ['usedtime' => json_encode($usedtime)]);
 
+    
+
     return view('report.productionsheet', [
         'usedtime' => $usedtime,
         'orders' => $orders,
