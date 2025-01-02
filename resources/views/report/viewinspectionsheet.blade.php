@@ -275,7 +275,7 @@
             text-align: center;
         }
         .label {
-            width: 20%; /* Set the width of the first column */
+            width: 30%; /* Set the width of the first column */
         }
         .kontainer {
             border: 1px solid #000;
@@ -336,6 +336,103 @@
       width: 30%;
     }
 
+    /* Specific styles for the inspection table */
+.card-body table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.card-body table th,
+.card-body table td {
+    border: 1px solid #000;
+    padding: 4px;
+    font-size: 12px;
+    text-align: center;
+    height: 25px;
+    vertical-align: middle;
+}
+
+/* Process column */
+.card-body table th[rowspan="2"]:first-child,
+.card-body table td:first-child {
+    width: 100px;
+}
+
+/* Workplace Number columns */
+.card-body table td:nth-child(2),
+.card-body table td:nth-child(3) {
+    width: 80px;
+}
+
+/* Inspection Result columns - making them wider */
+.card-body table td:nth-child(n+4):nth-child(-n+11) {
+    width: 45px; /* Increased width for inspection columns */
+}
+
+/* Last two columns */
+.card-body table td:nth-last-child(2),
+.card-body table td:nth-last-child(1) {
+    width: 90px;
+}
+
+/* Remove div inside table */
+.card-body table div.kolomtengah {
+    display: contents;
+}
+
+/* Header text alignment */
+.card-body table th {
+    font-weight: normal;
+    background-color: #fff;
+}
+
+/* Print styles */
+@media print {
+    .card-body table {
+        page-break-inside: avoid;
+    }
+}
+
+/* Remove internal borders for Process column */
+table td[rowspan]:first-child {
+    border: none;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+}
+table tr:last-child td[rowspan]:first-child {
+    border-bottom: 1px solid #000;
+}
+table tr:nth-child(3) td[rowspan]:first-child {
+    border-top: 1px solid #000;
+}
+
+/* Remove internal borders for Measuring Tool ID column */
+table td[rowspan]:nth-last-child(2) {
+    border: none;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+}
+table tr:last-child td[rowspan]:nth-last-child(2) {
+    border-bottom: 1px solid #000;
+}
+table tr:nth-child(3) td[rowspan]:nth-last-child(2) {
+    border-top: 1px solid #000;
+}
+
+/* Remove internal borders for Verified column */
+table td[rowspan]:last-child {
+    border: none;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+}
+table tr:last-child td[rowspan]:last-child {
+    border-bottom: 1px solid #000;
+}
+table tr:nth-child(3) td[rowspan]:last-child {
+    border-top: 1px solid #000;
+}
+
     }
 </style>
     <div class="content-wrapper" style="background-color: rgb(255, 255, 255);">
@@ -382,8 +479,8 @@
                                 <!-- ORDER DETAILS -->
                                 <table class="title-section">
                                     <tr>
-                                        <td>PO Number:</td>
-                                        <td>No Order:</td>
+                                        <td>PO Number: </td>
+                                        <td>SO Number: {{ $inspectionSheet->so_no }}</td>
                                     </tr>
                                     <tr>
                                         <td>Vendor:</td>
@@ -391,10 +488,10 @@
                                     </tr>
                                     <tr>
                                         <td>Product:</td>
-                                        <td>Material:</td>
+                                        <td>Material: {{ $inspectionSheet->material }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Item Number / Name:</td>
+                                        <td>Item Number / Name: {{ $inspectionSheet->item_no }}</td>
                                         <td>No Order:</td>
                                     </tr>
                                 </table>
@@ -420,51 +517,71 @@
                                         <th>Result</th>
                                         <th>Result</th>
                                     </tr>
-                                    <!-- Empty Rows for Data Input -->
+                                    <!-- Empty Rows for Data Input with merged cells -->
                                     <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td rowspan="3"></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td rowspan="3"></td>
+                                        <td rowspan="3"></td>
                                     </tr>
                                     <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                                     </tr>
                                     <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td rowspan="3"></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td rowspan="3"></td>
+                                        <td rowspan="3"></td>
                                     </tr>
                                     <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                                     </tr>
                                     <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td rowspan="3"></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td rowspan="3"></td>
+                                        <td rowspan="3"></td>
                                     </tr>
                                     <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                                     </tr>
                                     <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                                     </tr>
-
+                                    
                                     <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                                    </tr><tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td rowspan="3"></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td rowspan="3"></td>
+                                        <td rowspan="3"></td>
                                     </tr>
                                     <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                                     </tr>
                                     <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td rowspan="3"></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td rowspan="3"></td>
+                                        <td rowspan="3"></td>
                                     </tr>
                                     <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                                     </tr>
                                     <tr>
-                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                                     </tr>
-
-                                    <!-- Add more rows as needed -->
                                 </table>
 
                                 <!-- NON-DIMENSION MEASUREMENT SECTION -->
