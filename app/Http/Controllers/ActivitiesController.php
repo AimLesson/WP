@@ -2298,9 +2298,7 @@ public function overhead_manufacture(Request $request)
 
         $items = ItemAdd::get();
         $standardParts = StandartpartAPI::whereIn('kd_akun', [
-            '131210', '131220', '131240', '135110', '135120', '135220',
-            '136100', '136200', '136310', '136320', '136400',
-            '514110', '514210', '523422', '524120', '524220'
+            '131110', '131120', '131130', '515100'
         ])->get();
         return view('activities.creatematerial', compact('orders','items','standardParts'));
     }
