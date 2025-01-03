@@ -2285,39 +2285,111 @@ public function overhead_manufacture(Request $request)
     //Material Controller
     public function material()
     {
-        $material = Material::get();
+        $material = Material::all();
         return view('activities.material', compact('material'));
     }
 
     public function creatematerial()
     {
-        $creatematerial = Material::get();
-        return view('activities.creatematerial', compact('creatematerial'));
+        $orders = Order::where('order_status', '!=', 'Finished')
+               ->notQCPass()
+               ->notDelivered()
+               ->get();
+
+        $items = ItemAdd::get();
+        $standardParts = StandartpartAPI::whereIn('kd_akun', [
+            '131210', '131220', '131240', '135110', '135120', '135220',
+            '136100', '136200', '136310', '136320', '136400',
+            '514110', '514210', '523422', '524120', '524220'
+        ])->get();
+        return view('activities.creatematerial', compact('orders','items','standardParts'));
     }
 
     public function storeMaterial(Request $request)
     {
-        // Validate the request data
-        $request->validate([
-            'id_material' => 'required|string|max:255',
-            'material' => 'required|string|max:255',
-            'length' => 'required|numeric|min:0',
-            'width' => 'required|numeric|min:0',
-            'thickness' => 'required|numeric|min:0',
+        // Log the initial request data
+        Log::info('StoreMaterial method called', ['request' => $request->all()]);
+
+        // Validation rules
+        $validator = Validator::make($request->all(), [
+            'order_number' => 'required',
+            'no_item' => 'required',
+            'date.*' => 'required|date',
+            'part_name.*' => 'required|string|max:255',
+            'qty.*' => 'required|integer|min:1',
+            'unit.*' => 'required|string|max:255',
+            'price_unit.*' => 'required|numeric|min:0',
+            'total_price.*' => 'required|numeric|min:0',
+            'info.*' => 'nullable|string|max:255',
+            'item.*' => 'nullable|string|max:255',
         ]);
 
-        // Create a new material record
-        $material = new Material;
-        $material->id_material = $request->id_material;
-        $material->material = $request->material;
-        $material->length = $request->length;
-        $material->width = $request->width;
-        $material->thickness = $request->thickness;
-        $material->save();
+        // Log validation result
+        if ($validator->fails()) {
+            Log::error('Validation failed', ['errors' => $validator->errors()->all()]);
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Log successful validation
+        Log::info('Validation passed');
+
+        // Iterate over each set of item details and create standart_part entries
+        foreach ($request->date as $index => $date) {
+            // Log each iteration
+            Log::info('Creating material entry', [
+                'order_number' => $request->order_number,
+                'item_no' => $request->no_item,
+                'item_name' => $request->item[$index] ?? null,
+                'date' => $date,
+                'part_name' => $request->part_name[$index],
+                'qty' => $request->qty[$index],
+                'unit' => $request->unit[$index],
+                'price' => $request->price_unit[$index],
+                'total' => $request->total_price[$index],
+                'info' => $request->info[$index] ?? null,
+            ]);
+
+            try {
+                Material::create([
+                    'order_number' => $request->order_number,
+                    'item_no' => $request->no_item,
+                    'item_name' => $request->item[$index] ?? null,
+                    'date' => $date,
+                    'part_name' => $request->part_name[$index],
+                    'qty' => $request->qty[$index],
+                    'unit' => $request->unit[$index],
+                    'price' => $request->price_unit[$index],
+                    'total' => $request->total_price[$index],
+                    'info' => $request->info[$index] ?? null,
+                ]);
+            } catch (\Exception $e) {
+                // Log any exceptions that occur during the creation of entries
+                Log::error('Error creating material entry', [
+                    'exception' => $e->getMessage(),
+                    'data' => [
+                        'order_number' => $request->order_number,
+                        'item_no' => $request->no_item,
+                        'item_name' => $request->item[$index] ?? null,
+                        'date' => $date,
+                        'part_name' => $request->part_name[$index],
+                        'qty' => $request->qty[$index],
+                        'unit' => $request->unit[$index],
+                        'price' => $request->price_unit[$index],
+                        'total' => $request->total_price[$index],
+                        'info' => $request->info[$index] ?? null,
+                    ]
+                ]);
+                return redirect()->back()->with('error', 'An error occurred while saving the data. Please try again.');
+            }
+        }
+
+        // Log successful insertion of all entries
+        Log::info('All material entries added successfully');
 
         // Redirect with success message
-        return redirect()->route('activities.material')->with('success', 'Material added successfully!');
+        return redirect()->route('activities.material')->with('success', 'material added successfully.');
     }
+
 
     public function editMaterial($id)
     {
