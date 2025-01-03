@@ -2283,9 +2283,17 @@ public function overhead_manufacture(Request $request)
 
 
     //Material Controller
-    public function material()
+    public function material(Request $request)
     {
-        $material = Material::all();
+        $query = Material::query();
+
+        // Check if 'order_number' is provided in the request and apply the filter
+        if ($request->has('order_number') && $request->order_number !== null) {
+            $query->where('order_number', 'LIKE', '%' . $request->order_number . '%');
+        }
+
+        $material = $query->get();
+
         return view('activities.material', compact('material'));
     }
 

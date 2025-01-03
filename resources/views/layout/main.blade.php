@@ -599,19 +599,19 @@
                 "searching": false,
                 "buttons": ["excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#department_wrapper .col-md-6:eq(0)');
+            $("#usedtime").DataTable({
+                "responsive": false,
+                "lengthChange": false,
+                "autoWidth": false,
+                "scrollX": true,
+                "paging": false,
+            }).buttons().container().appendTo('#usedtime_wrapper .col-md-6:eq(0)');
             $("#customer, #sotarget").DataTable({
                 "responsive": false,
                 "lengthChange": false,
                 "autoWidth": false,
                 "scrollX": true,
             }).container().appendTo('#customer_wrapper .col-md-6:eq(0), #sotarget_wrapper .col-md-6:eq(0)');
-            $("#usedtime, #sotarget").DataTable({
-                "responsive": false,
-                "lengthChange": false,
-                "autoWidth": false,
-                "scrollX": true,
-                "paging": false,
-            }).container().appendTo('#usedtime_wrapper .col-md-6:eq(0), #sotarget_wrapper .col-md-6:eq(0)');
         });
 
         $(document).ready(function() {

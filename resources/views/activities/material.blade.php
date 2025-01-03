@@ -30,7 +30,7 @@
                             <i class="fas fa-plus"></i> Add
                         </a> @endif
                          <!-- Filter Form -->
-                          <form method="GET" action="{{ route('activities.standartpart') }}" class="mb-3">
+                          <form method="GET" action="{{ route('activities.material') }}" class="mb-3">
                             <div class="form-group row">
                                 <label for="order_number" class="col-sm-2 col-form-label">Filtered by Order Number:</label>
                                 <div class="col-sm-4">
@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <button type="submit" class="btn btn-primary btn-custom">Filter</button>
-                                    <a href="{{ route('activities.standartpart') }}" class="btn btn-secondary">Reset</a>
+                                    <a href="{{ route('activities.material') }}" class="btn btn-secondary">Reset</a>
                                 </div>
                             </div>
                         </form>
