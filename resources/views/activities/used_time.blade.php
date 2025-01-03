@@ -97,7 +97,7 @@
                                             <tr data-barcode-id="{{ $ut->barcode_id }}">
                                                 <td>{{ $ut->order_number }}</td>
                                                 <td>{{ $ut->item_number }}</td>
-                                                <td>{{ $ut->barcode_id }}</td>
+                                                <td style="display: none;">{{ $ut->barcode_id }}</td>
                                                 <td>{{ $ut->date_wanted }}</td>
                                                 <td>{{ $ut->user_name }}</td>
                                                 <td>{{ $ut->machine }}</td>
