@@ -68,9 +68,7 @@
                                         @foreach ($order as $o)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td><a
-                                                        href="#">{{ $o->order_number }}</a>
-                                                </td>
+                                                <td>{{ $o->order_number }}</td>
                                                 <td>{{ $o->customer }}</td>
                                                 <td>{{ $o->order_date }}</td>
                                                 <td>{{ $o->so_number }}</td>

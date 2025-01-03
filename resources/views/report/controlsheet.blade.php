@@ -242,10 +242,9 @@
     <!-- DataTables Buttons CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
 
-    <script>
+<script>
         function printControlSheet() {
-    // Get the current date and time
-    const currentDateTime = new Date().toLocaleString('en-GB', {
+            const currentDateTime = new Date().toLocaleString('en-GB', {
         hour: '2-digit',
         minute: '2-digit',
         day: '2-digit',
@@ -255,34 +254,36 @@
 
     // Create print window
     const printWindow = window.open('', '_blank');
-    
-    // Get table data and explicitly create the table HTML
-    const table = document.getElementById('controlsheet');
-    const rows = Array.from(table.querySelectorAll('tbody tr'));
-    
-    // Create table HTML manually to ensure headers are included
-    let tableHTML = `
-        <table class="print-table">
-            <thead>
-                <tr>
-                    <th>Item Number</th>
-                    <th>SN</th>
-                    <th>Drawing Number</th>
-                    <th>NOS.</th>
-                    <th>Nama Item</th>
-                    <th>Process 1</th>
-                    <th>Date Out</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
 
-    // Add rows from the original table
+    // Get table data
+    const table = document.getElementById('controlsheet');
+    const headers = Array.from(table.querySelectorAll('thead th')); // Get all headers
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+
+    // Create table header HTML dynamically
+    let theadHTML = '<tr>';
+    headers.forEach(header => {
+        theadHTML += `<th>${header.textContent}</th>`;
+    });
+    theadHTML += '</tr>';
+
+    // Create table body HTML
+    let tbodyHTML = '';
     rows.forEach(row => {
-        tableHTML += row.outerHTML;
+        tbodyHTML += `<tr>${row.innerHTML}</tr>`;
     });
 
-    tableHTML += '</tbody></table>';
+    // Complete table HTML
+    const tableHTML = `
+        <table class="print-table">
+            <thead>
+                ${theadHTML}
+            </thead>
+            <tbody>
+                ${tbodyHTML}
+            </tbody>
+        </table>
+    `;
 
     // Count the number of rows
     const noOfItems = rows.length;
@@ -303,109 +304,110 @@
         <head>
             <title>Control Sheet Print</title>
             <style>
-                @media print {
-                    @page {
-                        size: landscape;
-                        margin: 1cm;
-                    }
-                    thead { display: table-header-group !important; }
-                    tfoot { display: table-footer-group !important; }
-                    tr { page-break-inside: avoid !important; }
-                    th { background-color: #f2f2f2 !important; }
-                }
-                body {
-                    font-family: Arial, sans-serif;
-                    font-size: 12px;
-                    line-height: 1.4;
-                    color: #000;
-                }
-                .header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: flex-start;
-                    margin-bottom: 20px;
-                    padding-bottom: 10px;
-                    border-bottom: 1px solid #000;
-                }
-                .company-info {
-                    font-weight: bold;
-                }
-                .order-details {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-bottom: 20px;
-                }
-                .order-details td {
-                    border: 1px solid #000;
-                    padding: 5px;
-                }
-                .order-details td:first-child {
-                    font-weight: bold;
-                    width: 150px;
-                }
-                .print-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-top: 20px;
-                }
-                .print-table th, 
-                .print-table td {
-                    border: 1px solid #000;
-                    padding: 8px;
-                    text-align: left;
-                }
-                .print-table th {
-                    background-color: #f2f2f2;
-                    font-weight: bold;
-                    -webkit-print-color-adjust: exact !important;
-                    print-color-adjust: exact !important;
-                }
-                .bg-success { 
-                    background-color: #28a745 !important;
-                    color: #fff !important;
-                    -webkit-print-color-adjust: exact !important;
-                    print-color-adjust: exact !important;
-                }
-                .bg-warning { 
-                    background-color: #ffc107 !important;
-                    color: #fff !important;
-                    -webkit-print-color-adjust: exact !important;
-                    print-color-adjust: exact !important;
-                }
-                .bg-primary { 
-                    background-color: #007bff !important;
-                    color: #fff !important;
-                    -webkit-print-color-adjust: exact !important;
-                    print-color-adjust: exact !important;
-                }
-                .bg-secondary { 
-                    background-color: #6c757d !important;
-                    color: #fff !important;
-                    -webkit-print-color-adjust: exact !important;
-                    print-color-adjust: exact !important;
-                }
-                .legend {
-                    margin-top: 20px;
-                    padding: 10px;
-                    border: 1px solid #000;
-                }
-                .legend-item {
-                    display: inline-block;
-                    margin-right: 20px;
-                }
-                .legend-color {
-                    display: inline-block;
-                    width: 20px;
-                    height: 20px;
-                    margin-right: 5px;
-                    vertical-align: middle;
-                }
-                .footer {
-                    margin-top: 10px;
-                    text-align: right;
-                    font-weight: bold;
-                }
-            </style>
+    @media print {
+        @page {
+            size: A4; /* or use 'auto' for default */
+            margin: 1cm;
+        }
+        thead { display: table-header-group !important; }
+        tfoot { display: table-footer-group !important; }
+        tr { page-break-inside: avoid !important; }
+        th { background-color: #f2f2f2 !important; }
+    }
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        line-height: 1.4;
+        color: #000;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #000;
+    }
+    .company-info {
+        font-weight: bold;
+    }
+    .order-details {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    .order-details td {
+        border: 1px solid #000;
+        padding: 5px;
+    }
+    .order-details td:first-child {
+        font-weight: bold;
+        width: 150px;
+    }
+    .print-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .print-table th, 
+    .print-table td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: left;
+    }
+    .print-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .bg-success { 
+        background-color: #28a745 !important;
+        color: #fff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .bg-warning { 
+        background-color: #ffc107 !important;
+        color: #fff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .bg-primary { 
+        background-color: #007bff !important;
+        color: #fff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .bg-secondary { 
+        background-color: #6c757d !important;
+        color: #fff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .legend {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #000;
+    }
+    .legend-item {
+        display: inline-block;
+        margin-right: 20px;
+    }
+    .legend-color {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+    .footer {
+        margin-top: 10px;
+        text-align: right;
+        font-weight: bold;
+    }
+</style>
+
         </head>
         <body>
             <div class="header">
@@ -477,8 +479,8 @@
         // Optional: close the window after printing
         // printWindow.close();
     };
-}
-    </script>
+    }
+</script>
 
     <script>
         $(document).ready(function() {
