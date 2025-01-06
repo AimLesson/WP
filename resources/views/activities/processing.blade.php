@@ -80,7 +80,7 @@
                                                         N/A
                                                     @endif
                                                 </td>
-                                                <td><a href="#">{{ $pr->order_number }}</a></td>
+                                                <td><a href="{{ route('activities.showprocessing', $pr->order_number) }}">{{ $pr->order_number }}</a></td>
                                                 <td>{{ $pr->item_number }}</td>
                                                 <td>{{ $pr->date_wanted }}</td>
                                                 <td>{{ $pr->machine }}</td>
@@ -90,7 +90,7 @@
                                                 <td>{{ $pr->created_at }}</td>
                                                 @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
-                                                    <a href="{{ route('activities.editprocessing',$pr->id) }}"
+                                                    <a href="{{ route('activities.showprocessing', $pr->order_number) }}"
                                                         class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
                                                     <a href="{{ route('activities.deleteprocessing', $pr->id) }}"
                                                         data-toggle="modal" data-target="#modal-delete{{ $pr->id }}"

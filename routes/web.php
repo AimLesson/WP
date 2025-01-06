@@ -326,6 +326,11 @@ Route::group(['middleware' => 'disable_back_btn'], function () {
         Route::get('/activities/processing/edit/{id}', [ActivitiesController::class, 'editprocessing'])->name('activities.editprocessing');
         Route::post('/activities/processing/update/{id}', [ActivitiesController::class, 'updateprocessing'])->name('activities.updateprocessing');
         Route::delete('/activities/processing/{id}', [ActivitiesController::class, 'deleteprocessing'])->name('activities.deleteprocessing');
+        Route::get('/activities/processing/{orderNumber}', [ActivitiesController::class, 'showprocessing'])->name('activities.showprocessing');
+        Route::post('/activities/bulk-updateprocessing', [ActivitiesController::class, 'bulkupdateprocessing'])->name('activities.bulkupdateprocessing');
+        Route::post('/activities/bulkdeleteprocessing', [ActivitiesController::class, 'bulkdeleteprocessing'])->name('activities.bulkdeleteprocessing');
+
+
         // Route::post('/activities/soadd/delete', [ActivitiesController::class, 'deleteprocessing'])->name('activities.deleteprocessing');
         Route::get('activities/processing/view/{order_number}', [ActivitiesController::class, 'viewprocessing']);
         Route::get('activities/processing/get-Order-data/{OrderNo}', [ActivitiesController::class, 'getOrderData']);

@@ -1478,26 +1478,145 @@ public function item(Request $request)
 
 
     public function processing(Request $request)
-{
-    // Get all order numbers from the Order model where order_status is not 'Finished'
-    $orderNumbers = Order::where('order_status', '!=', 'Finished')
-                ->notQCPass()
-                ->notDelivered()
-                ->pluck('order_number') // Extract only the order_number values
-                ->toArray(); // Ensure it is a flat array    // Check if the request has an order_number filter
-    $query = ProcessingAdd::whereIn('order_number', $orderNumbers);
+    {
+        // Get all order numbers from the Order model where order_status is not 'Finished'
+        $orderNumbers = Order::where('order_status', '!=', 'Finished')
+                    ->notQCPass()
+                    ->notDelivered()
+                    ->pluck('order_number') // Extract only the order_number values
+                    ->toArray(); // Ensure it is a flat array    // Check if the request has an order_number filter
+        $query = ProcessingAdd::whereIn('order_number', $orderNumbers);
 
-    if ($request->has('order_number') && !empty($request->order_number)) {
-        $query->where('order_number', $request->order_number);
+        if ($request->has('order_number') && !empty($request->order_number)) {
+            $query->where('order_number', $request->order_number);
+        }
+
+        // Get the filtered results
+        $processing = $query->get();
+
+        // Return the view with filtered data and the current filter
+        return view('activities.processing', compact('processing'))->with('order_number', $request->order_number);
     }
 
-    // Get the filtered results
-    $processing = $query->get();
+    public function showprocessing($orderNumber)
+    {
+        $processing = ProcessingAdd::where('order_number', $orderNumber)->get();
+        $machines = Machine::all(); // Get all machines
+    
+        return view('activities.viewprocessing', compact('processing', 'machines', 'orderNumber'));
+    }
 
-    // Return the view with filtered data and the current filter
-    return view('activities.processing', compact('processing'))->with('order_number', $request->order_number);
-}
+    public function bulkupdateprocessing(Request $request)
+    {
+        try {
+            // Retrieve the order number from the request
+            $orderNumber = $request->input('order_number');
+    
+            // Validate that the order number exists
+            if (!$orderNumber) {
+                return response()->json(['success' => false, 'message' => 'Order number is required.']);
+            }
+    
+            // Separate new rows (new_*) from existing rows
+            $newRows = [];
+            $existingRows = [];
+    
+            foreach ($request->all() as $key => $data) {
+                if (is_array($data)) {
+                    foreach ($data as $id => $value) {
+                        if (str_starts_with($id, 'new_')) {
+                            $newRows[$id] = $data; // Collect new rows
+                        } else {
+                            $existingRows[$id] = $data; // Collect existing rows
+                        }
+                    }
+                }
+            }
+    
+            // Handle new rows
+            foreach ($newRows as $id => $data) {
+                $barcodeId = $this->generateBarcodeId($orderNumber, $id);
+                $processingId = uniqid('proc_'); // Generate a unique processing ID
+    
+                // Save the new row to the database
+                ProcessingAdd::create([
+                    'nop' => $request->input("nop.$id"),
+                    'item_number' => $request->input("item_number.$id"),
+                    'machine' => $request->input("machine.$id"),
+                    'operation' => $request->input("operation.$id"),
+                    'estimated_time' => $request->input("estimated_time.$id"),
+                    'mach_cost' => $request->input("mach_cost.$id"),
+                    'date_wanted' => $request->input("date_wanted.$id"),
+                    'barcode_id' => $barcodeId, // Add generated barcode_id
+                    'order_number' => $orderNumber, // Add order_number
+                    'processing_id' => $processingId, // Add generated processing_id
+                ]);
+            }
+    
+            // Handle existing rows
+            foreach ($existingRows as $id => $data) {
+                // Check if the record exists
+                $processingRecord = ProcessingAdd::find($id);
+                if (!$processingRecord) {
+                    \Log::warning("Record with ID $id not found for update.");
+                    continue; // Skip this iteration if the record doesn't exist
+                }
+    
+                // Update the existing row
+                $updateData = [
+                    'nop' => $request->input("nop.$id"),
+                    'item_number' => $request->input("item_number.$id"),
+                    'machine' => $request->input("machine.$id"),
+                    'operation' => $request->input("operation.$id"),
+                    'estimated_time' => $request->input("estimated_time.$id"),
+                    'mach_cost' => $request->input("mach_cost.$id"),
+                    'date_wanted' => $request->input("date_wanted.$id"),
+                ];
+    
+                // Ensure processing_id is set for existing rows
+                if (!$processingRecord->processing_id) {
+                    $updateData['processing_id'] = uniqid('proc_');
+                }
+    
+                ProcessingAdd::where('id', $id)->update($updateData);
+            }
+    
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
 
+    public function bulkdeleteprocessing(Request $request)
+    {
+        try {
+            $deleteIds = $request->input('delete_ids');
+    
+            if (empty($deleteIds)) {
+                return response()->json(['success' => false, 'message' => 'No rows selected for deletion.']);
+            }
+    
+            // Filter out new rows (new_*) since they don't exist in the database
+            $existingIds = array_filter($deleteIds, function ($id) {
+                return !str_starts_with($id, 'new_');
+            });
+    
+            // Delete the rows that exist in the database
+            if (!empty($existingIds)) {
+                ProcessingAdd::whereIn('id', $existingIds)->delete();
+            }
+    
+            return response()->json(['success' => true, 'message' => 'Selected rows deleted successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+    
+
+    
+    
+    
+    
 
 
     public function createprocessing()
