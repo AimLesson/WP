@@ -2468,7 +2468,11 @@ public function overhead_manufacture(Request $request)
         ]);
 
         // Get orders with order_status not 'Finished'
-        $orders = Order::where('order_status', '!=', 'Finished')->get();
+        // $orders = Order::where('order_status', '!=', 'Finished')->get();
+        $orders = Order::where('order_status', '!=', 'Finished')
+               ->notQCPass()
+               ->notDelivered()
+               ->get();
         $orderNumbers = $orders->pluck('order_number');
 
         // Log orders retrieved
