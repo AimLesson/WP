@@ -86,7 +86,7 @@ class Order extends Model
     }
     public function scopeNotQCPass($query)
     {
-        return $query->where('order_status', '!=', 'QCPass');
+        return $query->where('order_status', '!=', 'QC Pass');
     }
     public function scopenotDelivered($query)
     {
