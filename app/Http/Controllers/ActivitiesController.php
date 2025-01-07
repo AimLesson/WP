@@ -1352,14 +1352,18 @@ public function item(Request $request)
     {
         $order = Order::where('order_status', '!=', 'Finished')->get();
         $material = Material::get();
+        $kode_log = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])
+            ->select('kode_log') // Select only the 'kode_log' field
+            ->distinct()         // Ensure distinct 'kode_log' values
+            ->get();
         $standardParts = StandartpartAPI::whereIn('kd_akun', ['131110', '131120', '131130'])->get();
         $item       = DB::table('item')->where('order_number', $order_number)->first();
         $itemJoin   = DB::table('item')
-            ->join('itemadd', 'item.order_number', '=', 'itemadd.order_number')
+            ->join('itemadd', 'item.order_number', '=', 'itemadd.order_number',)
             ->select('item.*', 'itemadd.*')
             ->where('itemadd.order_number', $order_number)
             ->get();
-        return view('activities.edititem', compact('order', 'material', 'item', 'itemJoin','standardParts'));
+        return view('activities.edititem', compact('order', 'material', 'item', 'itemJoin','standardParts','kode_log'));
     }
     public function updateitem(Request $request)
     {
@@ -2223,7 +2227,7 @@ public function item(Request $request)
         // Find the sub-contract entry
         $sub_contract = sub_contract::find($id);
         if (!$sub_contract) {
-            return redirect()->route('activities.sub_contract')->with('error', 'Sub-contract not found.');
+            return redirect()->route('activities.subcontract')->with('error', 'Sub-contract not found.');
         }
 
         // Update the sub-contract entry
@@ -2241,7 +2245,7 @@ public function item(Request $request)
         ]);
 
         // Redirect with success message
-        return redirect()->route('activities.sub_contract')->with('success', 'Sub-contract updated successfully.');
+        return redirect()->route('activities.subcontract')->with('success', 'Sub-contract updated successfully.');
     }
 
     public function deletesub_contract($id)

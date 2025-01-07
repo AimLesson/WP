@@ -65,17 +65,8 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="order_number" class="form-label">Order</label>
-                                            <select name="order_number" id="order_number" onchange="fetchOrderData()"
-                                                class="form-control select2" style="width: 100%;" required>
-                                                <option selected="selected" disabled>-- Select SO ---</option>
-                                                @foreach ($order as $o)
-                                                    <option
-                                                        value="{{ $o->order_number }}"@if ($o->order_number === $itemJoin[0]->order_number) selected @endif>
-                                                        {{ $o->order_number }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                            <label for="order_number">Order Number</label>
+                                            <input type="text" name="order_number" class="form-control" value="{{ old('order_number', $item->order_number) }}" readonly>
                                             @error('order_number')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -83,10 +74,8 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="so_number" class="form-label">SO Number</label>
-                                            <input type="text" name="so_number" class="form-control" id="so_number"
-                                                placeholder="Input SO Number" value="{{ $itemJoin[0]->so_number }}"
-                                                required>
+                                            <label for="so_number">SO Number</label>
+                                            <input type="text" name="so_number" class="form-control" value="{{ old('so_number', $item->so_number) }}" readonly>
                                             @error('so_number')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -97,7 +86,7 @@
                                         <div class="form-group">
                                             <label for="product" class="form-label">Product</label>
                                             <input type="text" name="product" class="form-control" id="product"
-                                                placeholder="Input Product" value="{{ $itemJoin[0]->product }}" required>
+                                                placeholder="Input Product" value="{{ $itemJoin[0]->product }}" required readonly>
                                             @error('product')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -110,7 +99,7 @@
                                             <label for="company_name" class="form-label">Company Name</label>
                                             <input type="text" name="company_name" class="form-control" id="company_name"
                                                 placeholder="Company Name" value="{{ $itemJoin[0]->company_name }}"
-                                                required>
+                                                required readonly>
                                             @error('company_name')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
@@ -121,7 +110,7 @@
                                         <div class="form-group">
                                             <label for="dod" class="form-label">DOD</label>
                                             <input type="date" name="dod" class="form-control" id="dod"
-                                                placeholder="SO No." value="{{ $itemJoin[0]->dod }}" required>
+                                                placeholder="SO No." value="{{ $itemJoin[0]->dod }}" required readonly>
                                             @error('dod')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
