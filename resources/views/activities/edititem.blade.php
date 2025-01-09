@@ -1,37 +1,7 @@
 @extends('activities.activities')
 @section('content')
-    <style>
-        .vertical-center {
-            display: flex;
-            align-items: center;
-            justify-content: left;
-            height: 100%;
-        }
-
-        .fixed-column {
-            position: sticky;
-            left: 0;
-            background-color: white;
-            /* Background color of the fixed column */
-            z-index: 1;
-        }
-
-        .radio-label input[type="radio"] {
-            position: absolute;
-            left: 0;
-            top: 0;
-            margin: 0;
-        }
-
-        .radio-label {
-            position: relative;
-            padding-left: 5px;
-            /* Sesuaikan dengan ukuran bulatan radio button */
-        }
-    </style>
 
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
@@ -49,9 +19,7 @@
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
         </div>
-        <!-- /.content-header -->
 
-        <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
                 <form action="{{ route('activities.updateitem') }}" enctype="multipart/form-data" method="POST">
@@ -88,7 +56,7 @@
                                         <div class="form-group">
                                             <label for="product" class="form-label">Product</label>
                                             <input type="text" name="product" class="form-control" id="product"
-                                                placeholder="Input Product" value="{{ $itemJoin[0]->product }}" required
+                                                placeholder="Input Product" value="{{ old('product', $itemJoin[0]->product) }}" required
                                                 readonly>
                                             @error('product')
                                                 <small class="text-danger">{{ $message }}</small>
@@ -101,7 +69,7 @@
                                         <div class="form-group">
                                             <label for="company_name" class="form-label">Company Name</label>
                                             <input type="text" name="company_name" class="form-control" id="company_name"
-                                                placeholder="Company Name" value="{{ $itemJoin[0]->company_name }}"
+                                                placeholder="Company Name" value="{{ old('company_name', $itemJoin[0]->company_name) }}"
                                                 required readonly>
                                             @error('company_name')
                                                 <small class="text-danger">{{ $message }}</small>
@@ -113,14 +81,13 @@
                                         <div class="form-group">
                                             <label for="dod" class="form-label">DOD</label>
                                             <input type="date" name="dod" class="form-control" id="dod"
-                                                placeholder="SO No." value="{{ $itemJoin[0]->dod }}" required readonly>
+                                                placeholder="SO No." value="{{ old('dod', $itemJoin[0]->dod) }}" required readonly>
                                             @error('dod')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                     </div>
                                 </div>
-
 
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -150,15 +117,15 @@
                                                         <th style="width:100px;">Length(mm)</th>
                                                         <th style="width:80px;">Width(mm)</th>
                                                         <th>Thickness(mm)</th>
+                                                        <th>Material Cost</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($itemJoin as $key => $item)
-                                                        <tr>
+                                                        <tr id="R{{ $key+1 }}">
                                                             <input type="hidden" name="itemadd[]"
                                                                 value="{{ $item->id }}">
-                                                            <td hidden class="ids">{{ $item->id }}</td>
                                                             <td><input class="form-control" style="width:50px"
                                                                     type="text" id="id_item" name="id_item[]"
                                                                     value="{{ $item->id_item }}">
@@ -208,20 +175,16 @@
                                                             </td>
                                                             <td><input class="form-control weight" style="width:80px"
                                                                     type="number" id="weight" name="weight[]"
-                                                                    value="{{ $item->weight }}" step="0.01" value="0">
-                                                            </td>
+                                                                    value="{{ $item->weight }}" step="0.01"></td>
                                                             <td><input class="form-control length" style="width:80px"
                                                                     type="number" id="length" name="length[]"
-                                                                    value="{{ $item->length }}" step="0.01" value="0">
-                                                            </td>
+                                                                    value="{{ $item->length }}" step="0.01"></td>
                                                             <td><input class="form-control width" style="width:80px"
                                                                     type="number" id="width" name="width[]"
-                                                                    value="{{ $item->width }}" step="0.01" value="0">
-                                                            </td>
+                                                                    value="{{ $item->width }}" step="0.01"></td>
                                                             <td><input class="form-control thickness" style="width:80px"
                                                                     type="number" id="thickness" name="thickness[]"
-                                                                    value="{{ $item->thickness }}" step="0.01" value="0">
-                                                            </td>
+                                                                    value="{{ $item->thickness }}" step="0.01"></td>
                                                             <td><a href="javascript:void(0)" class="text-danger font-18 remove"
                                                                     title="Delete Product"><i class="fa fa-trash"></i></a></td>
                                                         </tr>
@@ -242,12 +205,13 @@
         </section>
     </div>
 
-    <!-- SweetAlert and jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
-        var rowIdx = {{ count($itemJoin) }};
         $(document).ready(function() {
+            var rowIdx = {{ count($itemJoin) }};
+            
+            // Add new row
             $("#addBtn").on("click", function() {
                 rowIdx++;
                 $("#soadd-table tbody").append(`
@@ -268,10 +232,10 @@
                         <td><input class="form-control" style="min-width:120px" type="date" id="issued_item" name="issued_item[]"></td>
                         <td><input class="form-control" style="min-width:200px" type="text" id="ass_drawing" name="ass_drawing[]"></td>
                         <td><input class="form-control" style="min-width:200px" type="text" id="drawing_no" name="drawing_no[]"></td>
-                        <td><input class="form-control weight" style="width:100px" type="number" id="weight" name="weight[]" value="0" step="0.01"></td>
-                        <td><input class="form-control length" style="width:100px" type="number" id="length" name="length[]" value="0" step="0.01"></td>
-                        <td><input class="form-control width" style="width:100px" type="number" id="width" name="width[]" value="0" step="0.01"></td>
-                        <td><input class="form-control thickness" style="width:100px" type="number" id="thickness" name="thickness[]" value="0" step="0.01"></td>
+                        <td><input class="form-control weight" style="width:80px" type="number" id="weight" name="weight[]" value="0" step="0.01"></td>
+                        <td><input class="form-control length" style="width:80px" type="number" id="length" name="length[]" value="0" step="0.01"></td>
+                        <td><input class="form-control width" style="width:80px" type="number" id="width" name="width[]" value="0" step="0.01"></td>
+                        <td><input class="form-control thickness" style="width:80px" type="number" id="thickness" name="thickness[]" value="0" step="0.01"></td>
                         <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Delete Product"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 `);
@@ -285,14 +249,15 @@
                     updateRowIndexes();
                 });
 
-                updateRowIndexes(); // Update row indexes after adding a row
+                updateRowIndexes(); // Update row indexes when a new row is added
             });
 
+            // Update row indexes after adding/removing rows
             function updateRowIndexes() {
                 $("#soadd-table tbody tr").each(function(index) {
                     var newIdx = index + 1;
-                    $(this).find(".row-index").val(newIdx);
-                    $(this).attr("id", "R" + newIdx);
+                    $(this).find(".row-index").val(newIdx); // Update row index in the input field
+                    $(this).attr("id", "R" + newIdx); // Update row ID
                 });
             }
         });

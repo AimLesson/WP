@@ -1369,7 +1369,7 @@ public function item(Request $request)
     {
         DB::beginTransaction();
         try {
-            // dd($request->all());
+            // Update the main item data based on the order_number
             $update = [
                 'order_number'  =>  $request->order_number,
                 'so_number'     =>  $request->so_number,
@@ -1377,37 +1377,57 @@ public function item(Request $request)
                 'company_name'  =>  $request->company_name,
                 'dod'           =>  $request->dod,
             ];
+    
+            // Update the main Item record
             Item::where('order_number', $request->order_number)->update($update);
+    
+            // Delete the previous item additions
             ItemAdd::where('order_number', $request->order_number)->delete();
-
-            foreach ($request->item as $key => $item) {
+    
+            // Iterate through each item entry in the request and save them
+            $maxItems = max(count($request->item), count($request->id_item), count($request->no_item)); // Get the largest array size
+            for ($key = 0; $key < $maxItems; $key++) {
+                // Check if required data exists for the current index
+                if (!isset($request->item[$key]) || !isset($request->id_item[$key])) {
+                    continue; // Skip if data is missing for the row
+                }
+    
                 $itemAdd = [
-                    'item'        => $item,
-                    'dod_item'    => $request->dod_item[$key],
-                    'id_item'     => $request->id_item[$key],
-                    'no_item'     => $request->no_item[$key],
-                    'order_number' => $item->order_number,
-                    'material'    => $request->material[$key],
-                    'weight'      => $request->weight[$key],
-                    'length'      => $request->length[$key],
-                    'width'       => $request->width[$key],
-                    'thickness'   => $request->thickness[$key],
-                    'ass_drawing' => $request->ass_drawing[$key],
-                    'drawing_no'  => $request->drawing_no[$key],
-                    'nos'         => $request->nos[$key],
-                    'nob'         => $request->nob[$key],
-                    'issued_item' => $request->issued_item[$key],
+                    'item'         => isset($request->item[$key]) ? $request->item[$key] : null,
+                    'dod_item'     => isset($request->dod_item[$key]) ? $request->dod_item[$key] : null,
+                    'id_item'      => isset($request->id_item[$key]) ? $request->id_item[$key] : null,
+                    'no_item'      => isset($request->no_item[$key]) ? $request->no_item[$key] : null,
+                    'order_number' => $request->order_number, // Ensure the correct order number is passed
+                    'material'     => isset($request->material[$key]) ? $request->material[$key] : null,
+                    'weight'       => isset($request->weight[$key]) ? $request->weight[$key] : null,
+                    'length'       => isset($request->length[$key]) ? $request->length[$key] : null,
+                    'width'        => isset($request->width[$key]) ? $request->width[$key] : null,
+                    'thickness'    => isset($request->thickness[$key]) ? $request->thickness[$key] : null,
+                    'ass_drawing'  => isset($request->ass_drawing[$key]) ? $request->ass_drawing[$key] : null,
+                    'drawing_no'   => isset($request->drawing_no[$key]) ? $request->drawing_no[$key] : null,
+                    'nos'          => isset($request->nos[$key]) ? $request->nos[$key] : null,
+                    'nob'          => isset($request->nob[$key]) ? $request->nob[$key] : null,
+                    'issued_item'  => isset($request->issued_item[$key]) ? $request->issued_item[$key] : null,
                 ];
+    
+                // Insert new records for the added items (dynamic rows)
                 ItemAdd::create($itemAdd);
             }
+    
+            // Commit the transaction if everything is successful
             DB::commit();
+    
             return redirect()->route('activities.item')->with('success', 'Item Successfully Updated');
         } catch (\Exception $e) {
+            // Rollback in case of an error and log the error
             DB::rollBack();
             Log::error('Error' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed Updated Item');
+            return redirect()->back()->with('error', 'Failed to Update Item');
         }
     }
+    
+    
+    
     public function deleteitemadd(Request $request)
     {
         DB::beginTransaction();
