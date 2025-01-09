@@ -54,7 +54,7 @@
 
                                     @php
                                         $data = \App\Models\Overhead::all();
-                                    @endphp
+                                    @endphp 
                                 @endif
                                 <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
@@ -78,7 +78,7 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
-                                                    <a href="{{ route('activities.editoverhead_manufacture', $m->id) }}" class="btn-xs btn-warning">
+                                                    <a href="{{ route('activities.editoverhead_manufacture', $m->order_number) }}" class="btn-xs btn-warning">
                                                         <i class="fas fa-pen"></i> Edit
                                                     </a>
                                                     <button class="btn-xs btn-danger" data-toggle="modal" data-target="#modal-hapus{{ $m->id }}">

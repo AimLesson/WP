@@ -81,7 +81,7 @@
                                                 <td>{{ $m->item_no }}</td>
                                                 @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
-                                                    <a href="{{ route('activities.editstandartpart', $m->id) }}" class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
+                                                    <a href="{{ route('activities.editstandartpart', $m->order_number) }}" class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
                                                     <button class="btn-xs btn-danger" data-toggle="modal" data-target="#modal-hapus{{ $m->id }}">
                                                         <i class="fas fa-trash-alt"></i> Delete
                                                     </button>

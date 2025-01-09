@@ -25,58 +25,53 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Edit Standard Part</h3>
+                    <div class="container">
+                        <div class="card">
+                            <div class="card-header">
+                                <h1 class="m-0">Material Details: {{ $orderNumber }}</h1>
+                            </div>
+                            <div class="card-body">
+                                <form id="bulkEditForm" method="POST" action="{{ route('activities.update_all_standart_part') }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="order_number" value="{{ $orderNumber }}">
+                                    <table id="customer" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Item Number</th>
+                                                <th>Item Name</th>
+                                                <th>Material Number</th>
+                                                <th>Material Name</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Total Price</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($standartpart as $pr)
+                                                <tr class="processing-row" data-id="{{ $pr->id }}">
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td><input type="text" name="item_no[{{ $pr->id }}]" value="{{ $pr->item_no }}" class="form-control" readonly></td>
+                                                    <td><input type="text" name="item_name[{{ $pr->id }}]" value="{{ $pr->item_name }}" class="form-control" readonly></td>
+                                                    <td><input type="text" name="id[{{ $pr->id }}]" value="{{ $pr->id }}" class="form-control" readonly></td>
+                                                    <td><input type="text" name="part_name[{{ $pr->id }}]" value="{{ $pr->part_name }}" class="form-control"></td>
+                                                    <td><input type="number" name="qty[{{ $pr->id }}]" value="{{ $pr->qty }}" class="form-control qty-input"></td>
+                                                    <td><input type="number" name="price[{{ $pr->id }}]" value="{{ $pr->price }}" class="form-control price-input"></td>
+                                                    <td><input type="number" name="total[{{ $pr->id }}]" value="{{ $pr->total }}" class="form-control total-input"></td>
+                                                    <td><input type="date" name="date[{{ $pr->id }}]" value="{{ $pr->date }}" class="form-control"></td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <a href="{{ route('activities.material') }}" class="btn btn-secondary">Back to Material List</a>
+                                        <button type="submit" class="btn btn-primary btn-custom">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <form action="{{ route('activities.updatestandartpart', $standartpart->id) }}" method="POST">
-                                @csrf
-                                <div class="form-group">
-                                    <label for="order_number">Order Number</label>
-                                    <input type="text" name="order_number" class="form-control" value="{{ $standartpart->order_number }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="no_item">Item Number</label>
-                                    <input type="text" name="no_item" class="form-control" value="{{ $standartpart->item_no }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="date">Date</label>
-                                    <input type="date" name="date" class="form-control" value="{{ $standartpart->date }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="part_name">Part Name</label>
-                                    <input type="text" name="part_name" class="form-control" value="{{ $standartpart->part_name }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="qty">Quantity</label>
-                                    <input type="number" name="qty" class="form-control" value="{{ $standartpart->qty }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="unit">Unit</label>
-                                    <input type="text" name="unit" class="form-control" value="{{ $standartpart->unit }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="price_unit">Price per Unit</label>
-                                    <input type="number" name="price_unit" class="form-control" value="{{ $standartpart->price }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="total_price">Total Price</label>
-                                    <input type="number" name="total_price" class="form-control" value="{{ $standartpart->total }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="info">Info</label>
-                                    <input type="text" name="info" class="form-control" value="{{ $standartpart->info }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="item">Item</label>
-                                    <input type="text" name="item" class="form-control" value="{{ $standartpart->item_name }}">
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-custom">Update</button>
-                            </form>
-                        </div>
-                        <!-- /.card-body -->
                     </div>
                     <!-- /.card -->
                 </div>
@@ -86,4 +81,40 @@
     </section>
     <!-- /.content -->
 </div>
+
+<script>
+    $(document).ready(function() {
+        // Set up AJAX to include CSRF token
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // Handle form submission
+        $('#bulkEditForm').on('submit', function(event) {
+
+            // Collect all form data
+            var formData = $(this).serialize();
+            console.log(formData);  // Log the form data to the console to check
+
+            // Send the data via AJAX
+            $.ajax({
+                url: "{{ route('activities.update_all_standart_part') }}", // URL to the update route
+                method: 'PUT',
+                data: formData,
+                success: function(response) {
+                    alert(response.message);  // Show success message
+                    // Optionally, reload or update the page to reflect the changes
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText); // Log the response for debugging
+                    alert('Something went wrong! Please try again.');
+                }
+            });
+        });
+    });
+
+
+</script>
 @endsection

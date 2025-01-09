@@ -81,7 +81,7 @@
                                                 <td>{{ $m->item_no }}</td>
                                                 @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
-                                                    <a href="{{ route('activities.editstandartpart', $m->id) }}" class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
+                                                    <a href="{{ route('activities.editmaterial', $m->order_number) }}" class="btn-xs btn-warning"><i class="fas fa-pen"></i> Edit</a>
                                                     <button class="btn-xs btn-danger" data-toggle="modal" data-target="#modal-hapus{{ $m->id }}">
                                                         <i class="fas fa-trash-alt"></i> Delete
                                                     </button>
@@ -118,47 +118,6 @@
                             <!-- /.card-body -->
                         </div>
 
-                        {{-- <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Standart Part (StockBar)</h3>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <table id="customer" class="table table-head-fixed text-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Order Number</th>
-                                            <th scope="col">Item Number</th>
-                                            <th scope="col">Tanggal</th>
-                                            <th scope="col">Nama Barang</th>
-                                            <th scope="col">Jumlah</th>
-                                            <th scope="col">satuan</th>
-                                            <th scope="col">Harga</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $standart_part = \App\Models\WPLink::where('jenis', 'parts')->get();
-                                        @endphp
-                                        @foreach ($standart_part as $m)
-                                            <tr>
-                                                <td>{{ $m->order_number }}</td>
-                                                <td>{{ $m->no_item }}</td>
-                                                <td>{{ $m->created_at }}</td>
-                                                <td>{{ $m->material }}</td>
-                                                <td>{{ $m->jumlah }}</td>
-                                                <td>{{ $m->satuan }}</td>
-                                                <td>{{ formatRupiah($m->harga) }}</td>
-                                                <td>{{ formatRupiah($m->total) }}</td>
-                                            </tr>
-                                            <!-- /.modal -->
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div> --}}
                         <!-- /.card -->
                     </div>
                 </div>
@@ -197,28 +156,29 @@
         updateTitle('Standart Part');
 
         window.addEventListener('DOMContentLoaded', (event) => {
-                    var errorAlert = '{{ session('error') }}';
-                    if (errorAlert !== '') {
-                        Swal.fire({
-                            icon: 'error',
-                            title: errorAlert,
-                            position: 'top-end', // Change position to center
-                            showConfirmButton: false, // Show OK button
-                            timer: 5000,
-                            toast: true,
-                        });
-                    }
+            var errorAlert = '{{ session('error') }}';
+            if (errorAlert !== '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: errorAlert,
+                    position: 'top-end', // Toast position
+                    showConfirmButton: false, // No button needed
+                    timer: 5000, // Display for 5 seconds
+                    toast: true, // Show as a toast
+                });
+            }
 
-                    var successAlert = '{{ session('success') }}';
-                    if (successAlert !== '') {
-                        Swal.fire({
-                            icon: 'success',
-                            text: successAlert,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 5000,
-                            toast: true,
-                        });
-                    }
+            var successAlert = '{{ session('success') }}';
+            if (successAlert !== '') {
+                Swal.fire({
+                    icon: 'success',
+                    text: successAlert,
+                    position: 'top-end', // Toast position
+                    showConfirmButton: false, // No button needed
+                    timer: 5000, // Display for 5 seconds
+                    toast: true, // Show as a toast
+                });
+            }
+        });
     </script>
 @endsection

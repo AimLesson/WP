@@ -2036,18 +2036,59 @@ public function item(Request $request)
     }
 
 
-    public function editstandartpart($id)
+    public function editstandartpart($orderNumber)
     {
-        $standartpart = DB::table('standart_part')->where('id', $id)->first();
+        $standartpart = Standart_part::where('order_number', $orderNumber)->get();
         if (!$standartpart) {
             return redirect()->route('activities.standartpart')->with('error', 'Standard part not found.');
         }
 
-        $orders = Order::get();
-        $items = ItemAdd::get();
-        $standardParts = StandartpartAPI::get();
+        return view('activities.editstandartpart', compact('standartpart', 'orderNumber'));
+    }
 
-        return view('activities.editstandartpart', compact('standartpart', 'orders', 'items', 'standardParts'));
+    public function updateAllStandartPart(Request $request)
+    {
+        // Validate the incoming data
+        $validated = $request->validate([
+            'order_number' => 'required|string',
+            'item_no' => 'array',
+            'item_no.*' => 'required|string',
+            'item_name' => 'array',
+            'item_name.*' => 'required|string',
+            'id' => 'array',
+            'id.*' => 'required|exists:material,id',
+            'part_name' => 'array',
+            'part_name.*' => 'nullable|string',
+            'qty' => 'array',
+            'qty.*' => 'required|numeric',
+            'price' => 'array',
+            'price.*' => 'required|numeric',
+            'total' => 'array',
+            'total.*' => 'required|numeric',
+            'date' => 'array',
+            'date.*' => 'required|date',
+        ]);
+    
+        // Loop through each of the records to update
+        foreach ($validated['id'] as $id) {
+            // Find the material record by id
+            $material = Standart_part::find($id);
+    
+            if ($material) {
+                // Update the material record with the new data
+                $material->part_name = $validated['part_name'][$id] ?? $material->part_name;
+                $material->qty = $validated['qty'][$id];
+                $material->price = $validated['price'][$id];
+                $material->total = $validated['total'][$id];
+                $material->date = $validated['date'][$id];
+                $material->save();
+            }
+        }
+        session()->flash('success', 'SP updated successfully!');
+
+    
+        // Return a success message
+        return redirect()->route('activities.standartpart');
     }
 
     public function updatestandartpart(Request $request, $id)
@@ -2336,15 +2377,16 @@ public function overhead_manufacture(Request $request)
         return redirect()->route('activities.overhead_manufacture')->with('success', 'Overhead Manufacture(s) added successfully.');
     }
 
-    public function editoverhead_manufacture($id)
+    public function editoverhead_manufacture($orderNumber)
     {
-        $overhead = overhead::find($id);
+
+        $overhead = overhead::where('order_number', $orderNumber)->get();
         if (!$overhead) {
             return redirect()->route('activities.overhead_manufacture')->with('error', 'Overhead manufacture record not found.');
         }
 
         $order = Order::where('order_status', '!=', 'Finished')->get();
-        return view('activities.editoverhead_manufacture', compact('overhead', 'order'));
+        return view('activities.editoverhead_manufacture', compact('overhead', 'order','orderNumber'));
     }
 
     public function updateoverhead_manufacture(Request $request, $id)
@@ -2403,6 +2445,44 @@ public function overhead_manufacture(Request $request)
         // Redirect with success message
         return redirect()->route('activities.overhead_manufacture')->with('success', 'Overhead manufacture record deleted successfully.');
     }
+
+    public function updateAllOverheadManufacture(Request $request)
+{
+    // Validate the incoming data
+    $validated = $request->validate([
+        'order_number' => 'required|string',
+        'tanggal' => 'array',
+        'tanggal.*' => 'required|date',
+        'description' => 'array',
+        'description.*' => 'required|string',
+        'ref' => 'array',
+        'ref.*' => 'required|string',
+        'jumlah' => 'array',
+        'jumlah.*' => 'required|numeric',
+        'keterangan' => 'array',
+        'keterangan.*' => 'nullable|string',
+        'info' => 'array',
+        'info.*' => 'nullable|string',
+    ]);
+
+    // Loop through each of the records to update
+    foreach ($validated['tanggal'] as $id => $tanggal) {
+        $overhead = Overhead::find($id);
+        if ($overhead) {
+            $overhead->tanggal = $tanggal;
+            $overhead->description = $validated['description'][$id];
+            $overhead->ref = $validated['ref'][$id];
+            $overhead->jumlah = $validated['jumlah'][$id];
+            $overhead->keterangan = $validated['keterangan'][$id] ?? null;
+            $overhead->info = $validated['info'][$id] ?? null;
+            $overhead->save();
+        }
+    }
+
+    // Return a success message
+    return response()->json(['message' => 'All overhead records updated successfully.']);
+}
+
 
 
     //Material Controller
@@ -2520,11 +2600,59 @@ public function overhead_manufacture(Request $request)
     }
 
 
-    public function editMaterial($id)
+    public function editMaterial($orderNumber)
     {
-        $material = Material::findOrFail($id);
-        return view('activities.editmaterial', compact('material'));
+        $material = Material::where('order_number', $orderNumber)->get();
+        return view('activities.editmaterial', compact('material', 'orderNumber'));
     }
+
+    
+    public function updateAllMaterial(Request $request)
+    {
+        // Validate the incoming data
+        $validated = $request->validate([
+            'order_number' => 'required|string',
+            'item_no' => 'array',
+            'item_no.*' => 'required|string',
+            'item_name' => 'array',
+            'item_name.*' => 'required|string',
+            'id' => 'array',
+            'id.*' => 'required|exists:material,id',
+            'part_name' => 'array',
+            'part_name.*' => 'nullable|string',
+            'qty' => 'array',
+            'qty.*' => 'required|numeric',
+            'price' => 'array',
+            'price.*' => 'required|numeric',
+            'total' => 'array',
+            'total.*' => 'required|numeric',
+            'date' => 'array',
+            'date.*' => 'required|date',
+        ]);
+    
+        // Loop through each of the records to update
+        foreach ($validated['id'] as $id) {
+            // Find the material record by id
+            $material = Material::find($id);
+    
+            if ($material) {
+                // Update the material record with the new data
+                $material->part_name = $validated['part_name'][$id] ?? $material->part_name;
+                $material->qty = $validated['qty'][$id];
+                $material->price = $validated['price'][$id];
+                $material->total = $validated['total'][$id];
+                $material->date = $validated['date'][$id];
+                $material->save();
+            }
+        }
+        session()->flash('success', 'Material updated successfully!');
+
+    
+        // Return a success message
+        return redirect()->route('activities.material');
+    }
+    
+    
 
     public function updateMaterial(Request $request, $id)
     {
