@@ -60,9 +60,6 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
-                                            <th>Action</th>
-                                            @endif
                                             <th>Order Number</th>
                                             <th>Tanggal</th>
                                             <th>Reference</th>
@@ -70,12 +67,22 @@
                                             <th>Jumlah</th>
                                             <th>Keterangan</th>
                                             <th>Info</th>
+                                            @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                                            <th>Action</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($data as $m)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $m->order_number }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($m->tanggal)->format('d-m-y') }}</td>
+                                                <td>{{ $m->ref }}</td>
+                                                <td>{{ $m->description }}</td>
+                                                <td>{{ formatRupiah($m->jumlah) }}</td>
+                                                <td>{{ $m->keterangan }}</td>
+                                                <td>{{ $m->info }}</td>
                                                 @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
                                                     <a href="{{ route('activities.editoverhead_manufacture', $m->order_number) }}" class="btn-xs btn-warning">
@@ -86,13 +93,6 @@
                                                     </button>
                                                 </td>
                                                 @endif
-                                                <td>{{ $m->order_number }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($m->tanggal)->format('d-m-y') }}</td>
-                                                <td>{{ $m->ref }}</td>
-                                                <td>{{ $m->description }}</td>
-                                                <td>{{ formatRupiah($m->jumlah) }}</td>
-                                                <td>{{ $m->keterangan }}</td>
-                                                <td>{{ $m->info }}</td>
                                             </tr>
                                             <div class="modal fade" id="modal-hapus{{ $m->id }}">
                                                 <div class="modal-dialog">

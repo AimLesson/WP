@@ -53,6 +53,7 @@
                                 <table id="customer" class="table table-head-fixed text-nowrap">
                                     <thead>
                                         <tr>
+                                            <th>No</th>
                                             <th>Order Number</th>
                                             <th>Part Number</th>
                                             <th>Part Name</th>
@@ -70,6 +71,7 @@
                                     <tbody>
                                         @foreach ($material as $m)
                                             <tr>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $m->order_number }}</td>
                                                 <td>{{ $m->id }}</td>
                                                 <td>{{ $m->part_name }}</td>
