@@ -235,9 +235,9 @@
                                                         <td><input class="form-control massa" style="width:100px"
                                                                 type="number" id="massa1" name="massa[]"
                                                                 step="0.001" value="0"></td>
-                                                        <td><input class="form-control" style="min-width:80px"
-                                                                type="text" id="nos1" name="nos[]"
-                                                                value="-"></td>
+                                                        <td><input class="form-control nos" style="min-width:80px"
+                                                                type="number" id="nos1" name="nos[]" step="0.001"
+                                                                value="0"></td>
                                                         <td><input class="form-control" style="min-width:80px"
                                                                 type="text" id="nob1" name="nob[]"
                                                                 value="-"></td>
@@ -464,39 +464,50 @@
             calculateWeight(row);
         });
 
-        function calculateMaterialCost(row) {
-            const weight = calculateWeight(row);
-            const material = $(row).find('.material').val();
-            const kodeLog = $(row).find('.kodelog').val();
-            let materialCost = 0;
+            function calculateMaterialCost(row) {
+                const $row = $(row);
+                const weight = calculateWeight(row); // Calculate the weight
+                const material = $row.find('.material').val();
+                const kodeLog = $row.find('.kodelog').val();
 
-            // Set material cost to 0 for Rangkaian
-            if (kodeLog === 'Assy' || material === 'Assy' || kodeLog === 'Sub-Assy' || material ===
-                'Sub-Assy') {
-                console.log('Assy or Sub-Assy selected, setting material cost to 0');
-                materialCost = 0;
-            } else {
-                const materialPrice = getMaterialPrice(material);
-                materialCost = weight * materialPrice;
+                // Retrieve the NOS value dynamically
+                const nos = parseFloat($row.find('.nos').val()) || 0;
+
+                let materialCost = 0;
+
+                if (kodeLog === 'Assy' || material === 'Assy' || kodeLog === 'Sub-Assy' || material === 'Sub-Assy') {
+                    console.log('Assy or Sub-Assy selected, setting material cost to 0');
+                    materialCost = 0;
+                } else {
+                    const materialPrice = getMaterialPrice(material) || 0;
+                    console.log('Weight:', weight, 'Material Price:', materialPrice, 'NOS:', nos);
+
+                    // Calculate material cost
+                    materialCost = weight > 0 && nos > 0 ? (weight * materialPrice * nos) : 0;
+                }
+
+                // Log and update the material cost in the DOM
+                console.log('Calculated material cost for row:', $row.index(), 'Cost:', materialCost.toFixed(2));
+                $row.find('.material-cost').val(materialCost.toFixed(2));
             }
 
-            console.log('Calculated material cost for row:', row.index(), 'Cost:', materialCost.toFixed(2));
-
-            $(row).find('.material-cost').val(materialCost.toFixed(2));
-        }
 
         function addListeners(row) {
-            $(row).find('.shape, .massa, .length, .width, .thickness, .material').on('input change',
-                function() {
-                    console.log('Input changed in row:', row.index());
-                    calculateMaterialCost(row);
-                });
+            const $row = $(row);
 
-            // Reapply filterNamaBarang function when a new row is added
-            $(row).find('.kodelog').on('change', function() {
+            // Attach event listeners to recalculate cost on input changes
+            $row.find('.shape, .massa, .length, .width, .thickness, .material, .nos').on('input change', function () {
+                console.log('Input changed in row:', $row.index());
+                calculateMaterialCost(row);
+            });
+
+            // Attach event listener for kodelog changes
+            $row.find('.kodelog').on('change', function () {
                 filterNamaBarang(row);
             });
         }
+
+
 
         addListeners($('#soadd-table tbody tr'));
 
@@ -555,7 +566,7 @@
                         </select>
                     </td>
                     <td><input class="form-control massa" style="width:100px" type="number" id="massa${rowIdx}" name="massa[]" step="0.01" value="0"></td>
-                    <td><input class="form-control" style="min-width:80px" type="text" id="nos${rowIdx}" name="nos[]" value="-"></td>
+                    <td><input class="form-control nos" style="min-width:80px" type="text" id="nos${rowIdx}" name="nos[]" value="-"></td>
                     <td><input class="form-control" style="min-width:80px" type="text" id="nob${rowIdx}" name="nob[]" value="-"></td>
                     <td><input class="form-control" style="min-width:120px" type="date" id="issued_item${rowIdx}" name="issued_item[]" required></td>
                     <td><input class="form-control" style="min-width:200px" type="text" id="ass_drawing${rowIdx}" name="ass_drawing[]" value="-"></td>
