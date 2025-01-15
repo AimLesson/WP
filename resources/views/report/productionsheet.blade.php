@@ -35,15 +35,15 @@
                             <form action="{{ route('report.productionsheet') }}" method="GET">
                                 <div class="form-group">
                                     <label for="order_number" class="form-label">Order</label>
-                                    <select name="order_number" id="order_number" class="form-control select2" style="width: 100%;" required>
-                                        <option disabled {{ !isset($orderNumber) ? 'selected' : '' }}>-- Select Order --</option>
+                                    <input list="order_list" name="order_number" id="order_number" 
+                                           class="form-control" required 
+                                           value="{{ isset($orderNumber) ? $orderNumber : '' }}"
+                                           placeholder="-- Select Order --">
+                                    <datalist id="order_list">
                                         @foreach ($orders as $o)
-                                        <option value="{{ $o->order_number }}" 
-                                            {{ isset($orderNumber) && $orderNumber == $o->order_number ? 'selected' : '' }}>
-                                            {{ $o->order_number }}
-                                        </option>
+                                            <option value="{{ $o->order_number }}">
                                         @endforeach
-                                    </select>
+                                    </datalist>
                                 </div>
                                 <div class="form-group">
                                     <label for="item_number" class="form-label">Item</label>
@@ -578,32 +578,47 @@
 //         ]
 //     }).buttons().container().appendTo('#productionsheet_wrapper .col-md-6:eq(0)');
 
-        $('#order_number').on('change', function () {
-            var orderNumber = $(this).val();
-            $('#item_number').empty();
-            $('#item_number').append('<option selected="selected" disabled>-- Select Item --</option>');
+$(document).ready(function() {
+    $('#order_number').on('input', function() {
+        var orderNumber = $(this).val();
+        $('#item_number').empty();
+        $('#item_number').append('<option selected="selected" disabled>-- Select Item --</option>');
 
-            if (orderNumber) {
-                $.ajax({
-                    url: '/items-by-orders/' + orderNumber,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (data) {
-                        console.log(data);  // Debug: Log the data to see the response
-                        if (data.length > 0) {
-                            $.each(data, function (key, item) {
-                                $('#item_number').append('<option value="' + item.no_item + '">' + item.no_item + '</option>');
-                            });
-                        } else {
-                            $('#item_number').append('<option disabled>No items found</option>');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('AJAX Error: ' + status + ' ' + error);  // Debug: Log the error details
-                    }
-                });
+        // Verify if the entered value exists in the datalist
+        var exists = false;
+        $('#order_list option').each(function() {
+            if ($(this).val() === orderNumber) {
+                exists = true;
+                return false; // Break the loop
             }
         });
+
+        if (exists) {
+            $.ajax({
+                url: '/items-by-orders/' + orderNumber,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data);  // Debug: Log the data to see the response
+                    if (data.length > 0) {
+                        $.each(data, function(key, item) {
+                            $('#item_number').append('<option value="' + item.no_item + '">' + item.no_item + '</option>');
+                        });
+                    } else {
+                        $('#item_number').append('<option disabled>No items found</option>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error: ' + status + ' ' + error);
+                }
+            });
+        } else {
+            // Clear item select if invalid order number
+            $('#item_number').empty();
+            $('#item_number').append('<option selected="selected" disabled>-- Select Item --</option>');
+        }
+    });
+});
 
         function updateTitle(pageTitle) {
             document.title = pageTitle;

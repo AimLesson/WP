@@ -79,13 +79,13 @@
                                         <input type="text" name="mach_cost[{{ $pr->id }}]" value="{{ $pr->mach_cost }}" class="form-control mach-cost-field" id="mach-cost-{{ $pr->id }}" readonly>
                                     </td>
                                     <td><input type="date" name="date_wanted[{{ $pr->id }}]}" value="{{ $pr->date_wanted }}" class="form-control"></td>
-                                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                                    <td><button type="button" class="btn btn-danger btn-remove remove-row">Remove</button></td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    <button type="button" id="add-row" class="btn btn-success">Add Row</button>
-                    <button type="button" id="delete-selected" class="btn btn-danger">Delete Selected</button>
+                    <button type="button" id="add-row" class="btn btn-success btn-start">Add Row</button>
+                    <button type="button" id="delete-selected" class="btn btn-danger btn-remove">Delete Selected</button>
                     <div class="d-flex justify-content-between mt-3">
                         <a href="{{ route('activities.processing') }}" class="btn btn-secondary">Back to Processing List</a>
                         <button type="submit" class="btn btn-primary btn-custom">Save Changes</button>
@@ -135,7 +135,7 @@
                     <input type="text" name="mach_cost[new_${rowCount}]" class="form-control mach-cost-field" id="mach-cost-new_${rowCount}" readonly>
                 </td>
                 <td><input type="date" name="date_wanted[new_${rowCount}]" class="form-control"></td>
-                <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                <td><button type="button" class="btn btn-danger btn-remove remove-row">Remove</button></td>
             </tr>
         `;
 

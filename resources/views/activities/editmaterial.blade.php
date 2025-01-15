@@ -77,23 +77,31 @@
 </div>
 
 <script>
-    $(document).ready(function() {
-        // Listen for changes to quantity or price fields and update the total dynamically
-        $('input.qty-input, input.price-input').on('input', function() {
-            var row = $(this).closest('tr'); // Get the closest row
-            var qty = row.find('input.qty-input').val(); // Get the quantity value
-            var price = row.find('input.price-input').val(); // Get the price value
+   document.addEventListener('DOMContentLoaded', function() {
+    // Function to calculate and update total
+    function updateTotal(row) {
+        const qtyInput = row.querySelector('.qty-input');
+        const priceInput = row.querySelector('.price-input');
+        const totalInput = row.querySelector('.total-input');
+        
+        const qty = parseFloat(qtyInput.value) || 0;
+        const price = parseFloat(priceInput.value) || 0;
+        const total = qty * price;
+        
+        totalInput.value = total.toFixed(2);
+    }
 
-            // Check if qty and price are valid numbers
-            if (isNaN(qty) || isNaN(price)) {
-                return; // If either is not a number, don't proceed
-            }
+    // Add event listeners to all qty and price inputs
+    document.querySelectorAll('.processing-row').forEach(row => {
+        const qtyInput = row.querySelector('.qty-input');
+        const priceInput = row.querySelector('.price-input');
 
-            // Calculate the total price and set it
-            var total = parseFloat(qty) * parseFloat(price);
-            row.find('input.total-input').val(total.toFixed(2)); // Set the total price with 2 decimal places
-        });
-    });
+        qtyInput.addEventListener('input', () => updateTotal(row));
+        priceInput.addEventListener('input', () => updateTotal(row));
+        
+        // Calculate initial totals
+        updateTotal(row);
+   })});
 
 </script>
 <script>

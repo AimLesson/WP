@@ -35,6 +35,7 @@ class Order extends Model
         'catalog_number',
         'material_cost',
         'dod_adj',
+        'qc_description',
     ];
 
     public function items()

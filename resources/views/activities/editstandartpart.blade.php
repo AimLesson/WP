@@ -28,7 +28,7 @@
                     <div class="container">
                         <div class="card">
                             <div class="card-header">
-                                <h1 class="m-0">Material Details: {{ $orderNumber }}</h1>
+                                <h1 class="m-0">Standart Part Details: {{ $orderNumber }}</h1>
                             </div>
                             <div class="card-body">
                                 <form id="bulkEditForm" method="POST" action="{{ route('activities.update_all_standart_part') }}">
@@ -41,8 +41,8 @@
                                                 <th>No</th>
                                                 <th>Item Number</th>
                                                 <th>Item Name</th>
-                                                <th>Material Number</th>
-                                                <th>Material Name</th>
+                                                <th>Standart Part Number</th>
+                                                <th>Standart Part Name</th>
                                                 <th>Quantity</th>
                                                 <th>Price</th>
                                                 <th>Total Price</th>
@@ -66,7 +66,7 @@
                                         </tbody>
                                     </table>
                                     <div class="d-flex justify-content-between mt-3">
-                                        <a href="{{ route('activities.material') }}" class="btn btn-secondary">Back to Material List</a>
+                                        <a href="{{ route('activities.standartpart') }}" class="btn btn-secondary">Back to Standart Part List</a>
                                         <button type="submit" class="btn btn-primary btn-custom">Save Changes</button>
                                     </div>
                                 </form>
@@ -82,39 +82,55 @@
     <!-- /.content -->
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Set up AJAX to include CSRF token
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+    // Set up AJAX to include CSRF token
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
-        // Handle form submission
-        $('#bulkEditForm').on('submit', function(event) {
+    // Function to calculate total for a row
+    function calculateTotal(row) {
+        const qty = parseFloat(row.find('.qty-input').val()) || 0;
+        const price = parseFloat(row.find('.price-input').val()) || 0;
+        const total = qty * price;
+        row.find('.total-input').val(total.toFixed(2));
+    }
 
-            // Collect all form data
-            var formData = $(this).serialize();
-            console.log(formData);  // Log the form data to the console to check
-
-            // Send the data via AJAX
-            $.ajax({
-                url: "{{ route('activities.update_all_standart_part') }}", // URL to the update route
-                method: 'PUT',
-                data: formData,
-                success: function(response) {
-                    alert(response.message);  // Show success message
-                    // Optionally, reload or update the page to reflect the changes
-                },
-                error: function(xhr, status, error) {
-                    console.log(xhr.responseText); // Log the response for debugging
-                    alert('Something went wrong! Please try again.');
-                }
-            });
+    // Add event listeners for quantity and price inputs
+    $('.processing-row').each(function() {
+        const row = $(this);
+        
+        row.find('.qty-input, .price-input').on('input', function() {
+            calculateTotal(row);
         });
     });
 
+    // Handle form submission
+    $('#bulkEditForm').on('submit', function(event) {
+        // Collect all form data
+        var formData = $(this).serialize();
+        console.log(formData);  // Log the form data to the console to check
+
+        // Send the data via AJAX
+        $.ajax({
+            url: $(this).attr('action'), // Get URL from form action
+            method: 'PUT',
+            data: formData,
+            success: function(response) {
+                alert(response.message);  // Show success message
+                // Optionally, reload or update the page to reflect the changes
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText); // Log the response for debugging
+                alert('Something went wrong! Please try again.');
+            }
+        });
+    });
+});
 
 </script>
 @endsection

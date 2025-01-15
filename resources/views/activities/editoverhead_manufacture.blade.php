@@ -34,7 +34,6 @@
                             <div class="card-body">
                                 <form id="bulkEditForm">
                                     @csrf
-                                    @method('PUT')
                                     <input type="hidden" name="order_number" value="{{ $orderNumber }}">
                                     <table id="customer" class="table table-bordered">
                                         <thead>
@@ -44,20 +43,20 @@
                                                 <th>Description</th>
                                                 <th>Reference Number</th>
                                                 <th>Amount</th>
-                                                <th>Information 1</th>
-                                                <th>Information 2</th>
+                                                <th>Keterangan</th>
+                                                <th>Info</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($overhead as $pr)
                                                 <tr class="processing-row" data-id="{{ $pr->id }}">
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td><input type="date" name="tanggal[{{ $pr->id }}]" value="{{ $pr->tanggal }}" class="form-control"></td>
-                                                    <td><input type="textarea" name="description[{{ $pr->id }}]" value="{{ $pr->description }}" class="form-control"></td>
-                                                    <td><input type="text" name="ref[{{ $pr->id }}]" value="{{ $pr->ref }}" class="form-control"></td>
-                                                    <td><input type="number" name="jumlah[{{ $pr->id }}]" value="{{ $pr->jumlah }}" class="form-control"></td>
-                                                    <td><input type="textarea" name="keterangan[{{ $pr->id }}]" value="{{ $pr->keterangan }}" class="form-control"></td>
-                                                    <td><input type="textarea" name="info[{{ $pr->id }}]" value="{{ $pr->info }}" class="form-control"></td>
+                                                    <td><input type="date" name="tanggal[{{ $pr->id }}]" value="{{ $pr->tanggal }}" class="form-control" required></td>
+                                                    <td><input type="text" name="description[{{ $pr->id }}]" value="{{ $pr->description }}" class="form-control" required></td>
+                                                    <td><input type="text" name="ref[{{ $pr->id }}]" value="{{ $pr->ref }}" class="form-control" required></td>
+                                                    <td><input type="number" name="jumlah[{{ $pr->id }}]" value="{{ $pr->jumlah }}" class="form-control" required></td>
+                                                    <td><input type="text" name="keterangan[{{ $pr->id }}]" value="{{ $pr->keterangan }}" class="form-control"></td>
+                                                    <td><input type="text" name="info[{{ $pr->id }}]" value="{{ $pr->info }}" class="form-control"></td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -79,29 +78,67 @@
     <!-- /.content -->
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        // When the form is submitted
-        $('#bulkEditForm').on('submit', function(event) {
-            event.preventDefault(); // Prevent form from submitting the default way
+    // Ensure CSRF token is properly set
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
-            // Prepare the data to send to the server
-            var formData = $(this).serialize(); // Collects all form data
-
-            // Send the data via AJAX
-            $.ajax({
-                url: "{{ route('activities.update_all_overhead_manufacture') }}", // Route to handle the update
-                method: 'PUT',
-                data: formData,
-                success: function(response) {
-                    alert(response.message);  // Show success message
-                    // Optionally, reload or update the page to reflect the changes
-                },
-                error: function(xhr, status, error) {
-                    alert('Something went wrong! Please try again.');
+    $('#bulkEditForm').on('submit', function(event) {
+        event.preventDefault();
+        
+        var formData = $(this).serialize();
+        console.log('Form Data:', formData);
+        
+        // Disable button and show loading state
+        $('.btn-custom').prop('disabled', true).text('Saving...');
+        
+        $.ajax({
+        url: '/activities/overhead-manufacture/update-all',
+        method: 'PUT',
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+            console.log('Success:', response);
+            alert(response.message);
+            // Redirect to the overhead manufacture page
+            window.location.href = "{{ route('activities.overhead_manufacture') }}";
+        },
+            error: function(xhr, status, error) {
+                console.error('Error Details:', {
+                    status: status,
+                    error: error,
+                    response: xhr.responseText
+                });
+                
+                let errorMessage = 'An error occurred while saving.';
+                
+                if (xhr.status === 422) {
+                    try {
+                        let errors = JSON.parse(xhr.responseText).errors;
+                        errorMessage = 'Validation errors:\n';
+                        Object.keys(errors).forEach(key => {
+                            errorMessage += `${key}: ${errors[key].join(', ')}\n`;
+                        });
+                    } catch (e) {
+                        errorMessage = 'Invalid response format';
+                    }
+                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
                 }
-            });
+                
+                alert(errorMessage);
+            },
+            complete: function() {
+                // Always re-enable the button
+                $('.btn-custom').prop('disabled', false).text('Save Changes');
+            }
         });
     });
+});
 </script>
 @endsection

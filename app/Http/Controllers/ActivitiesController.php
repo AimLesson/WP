@@ -435,13 +435,14 @@ class ActivitiesController extends Controller
     {
         $kbli = Kblicode::get();
         $unit = Unit::get();
-	$salesmen = Salesman::get();
+	    $salesmen = Salesman::get();
         $no_katalog = NoKatalog::get();
         $tax_type = TaxType::get();
         $user = User::get();
         $producttype = ProductType::get();
         $order_unit = OrderUnit::get();
         $quotation  = Quotation::get();
+        
 
         return view('activities.createso', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation', 'no_katalog','salesmen'));
     }
@@ -619,7 +620,7 @@ class ActivitiesController extends Controller
                     'information'      => $salesorder->description,
                     'order_status'     => 'Queue',
                     'customer'         => $salesorder->name,
-                    'product'          => $items,
+                    'product'          => $request->item_desc[$key],
                     'qty'              => $request->qty[$key],
                     'dod'              => $salesorder->dod,
                     'dod_forecast'     => $salesorder->dod,
@@ -1536,7 +1537,7 @@ private function generateCustomerNumber()
         $processing = ProcessingAdd::where('order_number', $orderNumber)->get();
         $machines = Machine::all(); // Get all machines
     
-        return view('activities.viewprocessing', compact('processing', 'machines', 'orderNumber'));
+        return view('activities.processing', compact('processing', 'machines', 'orderNumber'));
     }
 
     public function bulkupdateprocessing(Request $request)
@@ -2489,42 +2490,84 @@ public function overhead_manufacture(Request $request)
 
     public function updateAllOverheadManufacture(Request $request)
 {
-    // Validate the incoming data
-    $validated = $request->validate([
-        'order_number' => 'required|string',
-        'tanggal' => 'array',
-        'tanggal.*' => 'required|date',
-        'description' => 'array',
-        'description.*' => 'required|string',
-        'ref' => 'array',
-        'ref.*' => 'required|string',
-        'jumlah' => 'array',
-        'jumlah.*' => 'required|numeric',
-        'keterangan' => 'array',
-        'keterangan.*' => 'nullable|string',
-        'info' => 'array',
-        'info.*' => 'nullable|string',
-    ]);
+    \Log::info('Request data received:', $request->all());
 
-    // Loop through each of the records to update
-    foreach ($validated['tanggal'] as $id => $tanggal) {
-        $overhead = Overhead::find($id);
-        if ($overhead) {
-            $overhead->tanggal = $tanggal;
-            $overhead->description = $validated['description'][$id];
-            $overhead->ref = $validated['ref'][$id];
-            $overhead->jumlah = $validated['jumlah'][$id];
-            $overhead->keterangan = $validated['keterangan'][$id] ?? null;
-            $overhead->info = $validated['info'][$id] ?? null;
-            $overhead->save();
+    try {
+        $validated = $request->validate([
+            'order_number' => 'required|string',
+            'tanggal' => 'required|array',
+            'tanggal.*' => 'required|date',
+            'description' => 'required|array',
+            'description.*' => 'required|string',
+            'ref' => 'required|array',
+            'ref.*' => 'required|string',
+            'jumlah' => 'required|array',
+            'jumlah.*' => 'required|numeric',
+            'keterangan' => 'required|array',
+            'keterangan.*' => 'nullable|string',
+            'info' => 'required|array',
+            'info.*' => 'nullable|string',
+        ]);
+
+        DB::beginTransaction();
+
+        $updatedCount = 0;
+        $errors = [];
+
+        foreach ($validated['tanggal'] as $id => $tanggal) {
+            $overhead = Overhead::findOrFail($id);
+            
+            try {
+                $updated = $overhead->update([
+                    'tanggal' => $tanggal,
+                    'description' => $validated['description'][$id],
+                    'ref' => $validated['ref'][$id],
+                    'jumlah' => $validated['jumlah'][$id],
+                    'keterangan' => $validated['keterangan'][$id] ?? null,
+                    'info' => $validated['info'][$id] ?? null
+                ]);
+
+                if ($updated) {
+                    $updatedCount++;
+                } else {
+                    $errors[] = "Failed to update record ID: {$id}";
+                }
+
+                \Log::info("Updated overhead record {$id}", [
+                    'success' => $updated,
+                    'data' => $overhead->toArray()
+                ]);
+
+            } catch (\Exception $e) {
+                $errors[] = "Error updating record ID {$id}: " . $e->getMessage();
+                \Log::error("Error updating overhead record {$id}: " . $e->getMessage());
+            }
         }
+
+        if (!empty($errors)) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Some records failed to update',
+                'errors' => $errors
+            ], 422);
+        }
+
+        DB::commit();
+        return response()->json([
+            'message' => "{$updatedCount} overhead records updated successfully.",
+            'updated_count' => $updatedCount
+        ]);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        DB::rollBack();
+        \Log::error('Validation failed:', $e->errors());
+        return response()->json(['errors' => $e->errors()], 422);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        \Log::error('Error updating overhead records:', ['error' => $e->getMessage()]);
+        return response()->json(['message' => 'An error occurred while updating records: ' . $e->getMessage()], 500);
     }
-
-    // Return a success message
-    return response()->json(['message' => 'All overhead records updated successfully.']);
 }
-
-
 
     //Material Controller
     public function material(Request $request)
@@ -3509,7 +3552,8 @@ public function overhead_manufacture(Request $request)
             'success' => true,
             'message' => $status === 'approved' ? 'Order approved successfully.' : 'Order rejected successfully.',
         ]);
-    }    public function maintenance_standart()
+    }   
+     public function maintenance_standart()
     {
         return view('activities.maintenancestandart');
     }

@@ -76,8 +76,8 @@
                                                 <td>{{ $m->id }}</td>
                                                 <td>{{ $m->part_name }}</td>
                                                 <td>{{ $m->qty }}</td>
-                                                <td>{{ formatRupiah($m->price) }}</td>
-                                                <td>{{ formatRupiah($m->total) }}</td>
+                                                <td>{{ 'Rp. ' . number_format($m->price, 0, ',', '.') }}</td>
+                                                <td>{{ 'Rp. ' . number_format($m->total, 0, ',', '.') }}</td>
                                                 <td>{{ $m->date }}</td>
                                                 <td>{{ $m->item_name }}</td>
                                                 <td>{{ $m->item_no }}</td>
