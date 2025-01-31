@@ -3020,8 +3020,7 @@ public function overhead_manufacture(Request $request)
             'order_id' => $id,
             'request_data' => $request->all(),
         ]);
-
-        // Validate the request
+    
         try {
             $request->validate([
                 'order_status' => 'required|in:pending,started,finished',
@@ -3032,28 +3031,35 @@ public function overhead_manufacture(Request $request)
                 'order_id' => $id,
                 'error_message' => $e->getMessage()
             ]);
-            return response()->json(['success' => false, 'message' => 'Validation failed.'], 400); // Return 400 for validation error
+            return response()->json(['success' => false, 'message' => 'Validation failed.'], 400);
         }
-
+    
         try {
-            // Find the order and update the status
             $order = Order::findOrFail($id);
             $newStatus = $request->input('order_status');
             $order->order_status = $newStatus;
             $order->save();
-
+    
             Log::info('Order status updated', [
                 'order_id' => $order->id,
                 'new_status' => $newStatus,
             ]);
-
-            return response()->json(['success' => true, 'message' => 'Order status updated successfully.'], 200); // Return 200 for success
+    
+            if ($newStatus !== 'finished') {
+                ProcessingAdd::where('order_number', $order->order_number)
+                    ->update(['status' => 'Queue']);
+    
+                ItemAdd::where('order_number', $order->order_number)
+                    ->update(['status' => 'Queue']);
+            }
+    
+            return response()->json(['success' => true, 'message' => 'Order status updated successfully.'], 200);
         } catch (\Exception $e) {
             Log::error('Error updating order status', [
                 'order_id' => $id,
                 'error_message' => $e->getMessage(),
             ]);
-            return response()->json(['success' => false, 'message' => 'Failed to update order status.'], 500); // Return 500 for server error
+            return response()->json(['success' => false, 'message' => 'Failed to update order status.'], 500);
         }
     }
 
