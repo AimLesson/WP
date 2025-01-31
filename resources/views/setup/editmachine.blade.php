@@ -78,7 +78,7 @@
                                 <div class="form-group">
                                     <label for="InputIDMachine">ID</label>
                                     <input type="text" name="id_machine" class="form-control" id="InputIDMachine"
-                                        placeholder="Input ID" value="{{ $machine->id_machine }}" required>
+                                        placeholder="Input ID" value="{{ $machine->id_machine }}"readonly required>
                                 </div>
                                 <div class="form-group">
                                     <label for="InputMachine">Machine</label>
@@ -94,202 +94,83 @@
                                     <label for="InputGroup">Group (ID/NAME)</label>
                                     <div class="row">
                                         <div class="col-md-9">
-                                            <select class="form-control select2" name="group_name" id="InputGroupName"
-                                                style="width: 100%;" required>
-                                                <option selected="selected" disabled>-- Select Group --</option>
-                                                <option value="ASSY EL MDC"
-                                                    @if ($machine->group_name == 'ASSY EL MDC') selected @endif>ASSY EL MDC</option>
-                                                <option value="ASSY MDC"@if ($machine->group_name == 'ASSY MDC') selected @endif>
-                                                    ASSY MDC</option>
-                                                <option value="ASSY WF"@if ($machine->group_name == 'ASSY WF') selected @endif>
-                                                    ASSY WF</option>
-                                                <option
-                                                    value="BEND CNC WF"@if ($machine->group_name == 'BEND CNC WF') selected @endif>
-                                                    BEND CNC WF</option>
-                                                <option
-                                                    value="BEND MAN WF"@if ($machine->group_name == 'BEND MAN WF') selected @endif>
-                                                    BEND MAN WF</option>
-                                                <option
-                                                    value="BEND PIPE WF"@if ($machine->group_name == 'BEND PIPE WF') selected @endif>
-                                                    BEND PIPE WF</option>
-                                                <option value="BW CT"@if ($machine->group_name == 'BW CT') selected @endif>BW
-                                                    CT</option>
-                                                <option value="BW MDC"@if ($machine->group_name == 'BW MDC') selected @endif>BW
-                                                    MDC</option>
-                                                <option value="BW WAP"@if ($machine->group_name == 'BW WAP') selected @endif>BW
-                                                    WAP</option>
-                                                <option value="BW WBS"@if ($machine->group_name == 'BW WBS') selected @endif>BW
-                                                    WBS</option>
-                                                <option value="BW WF"@if ($machine->group_name == 'BW WF') selected @endif>BW
-                                                    WF</option>
-                                                <option value="CUT WF"@if ($machine->group_name == 'CUT WF') selected @endif>
-                                                    CUT WF</option>
-                                                <option value="DESIGN"@if ($machine->group_name == 'DESIGN') selected @endif>
-                                                    DESIGN</option>
-                                                <option
-                                                    value="DRILL MDC"@if ($machine->group_name == 'DRILL MDC') selected @endif>
-                                                    DRILL MDC</option>
-                                                <option
-                                                    value="DRILL WAP"@if ($machine->group_name == 'DRILL WAP') selected @endif>
-                                                    DRILL WAP</option>
-                                                <option
-                                                    value="DRILL WBS"@if ($machine->group_name == 'DRILL WBS') selected @endif>
-                                                    DRILL WBS</option>
-                                                <option value="DRILL WF"@if ($machine->group_name == 'DRILL WF') selected @endif>
-                                                    DRILL WF</option>
-                                                <option value="EDM WAD"@if ($machine->group_name == 'EDM WAD') selected @endif>
-                                                    EDM WAD</option>
-                                                <option value="ENG"@if ($machine->group_name == 'ENG') selected @endif>
-                                                    ENG</option>
-                                                <option value="FTW WF"@if ($machine->group_name == 'FTW WF') selected @endif>
-                                                    FTW WF</option>
-                                                <option
-                                                    value="GR CUT WF"@if ($machine->group_name == 'GR CUT WF') selected @endif>GR
-                                                    CUT WF</option>
-                                                <option value="HK"@if ($machine->group_name == 'HK') selected @endif>HK
-                                                </option>
-                                                <option value="HOBB WAD"@if ($machine->group_name == 'HOBB WAD') selected @endif>
-                                                    HOBB WAD</option>
-                                                <option value="HTM"@if ($machine->group_name == 'HTM') selected @endif>
-                                                    HTM</option>
-                                                <option value="IT"@if ($machine->group_name == 'IT') selected @endif>IT
-                                                </option>
-                                                <option value="LOG"@if ($machine->group_name == 'LOG') selected @endif>
-                                                    LOG</option>
-                                                <option
-                                                    value="LW CNC MDC"@if ($machine->group_name == 'LW CNC MDC') selected @endif>LW
-                                                    CNC MDC</option>
-                                                <option
-                                                    value="LW CNC SMK"@if ($machine->group_name == 'LW CNC SMK') selected @endif>LW
-                                                    CNC SMK</option>
-                                                <option
-                                                    value="LW CNC STP"@if ($machine->group_name == 'LW CNC STP') selected @endif>LW
-                                                    CNC STP</option>
-                                                <option
-                                                    value="LW CNC WAD"@if ($machine->group_name == 'LW CNC WAD') selected @endif>LW
-                                                    CNC WAD</option>
-                                                <option
-                                                    value="LW MAN WAD"@if ($machine->group_name == 'LW MAN WAD') selected @endif>LW
-                                                    MAN WAD</option>
-                                                <option value="LW MANUAL STP"
-                                                    @if ($machine->group_name == 'LW MANUAL STP') selected @endif>LW MANUAL STP
-                                                </option>
-                                                <option value="LW MDC"@if ($machine->group_name == 'LW MDC') selected @endif>LW
-                                                    MDC</option>
-                                                <option value="LW WAP"@if ($machine->group_name == 'LW WAP') selected @endif>LW
-                                                    WAP</option>
-                                                <option value="LW WBS"@if ($machine->group_name == 'LW WBS') selected @endif>
-                                                    LW WBS</option>
-                                                <option
-                                                    value="MILL CNC MAHO"@if ($machine->group_name == 'MILL CNC MAHO') selected @endif>
-                                                    MILL CNC MAHO</option>
-                                                <option
-                                                    value="MILL CNC SMK"@if ($machine->group_name == 'MILL CNC SMK') selected @endif>
-                                                    MILL CNC SMK</option>
-                                                <option
-                                                    value="MILL CNC STARRAG"@if ($machine->group_name == 'MILL CNC STARRAG') selected @endif>
-                                                    MILL CNC STARRAG</option>
-                                                <option
-                                                    value="MILL CNC STP"@if ($machine->group_name == 'MILL CNC STP') selected @endif>
-                                                    MILL CNC STP</option>
-                                                <option
-                                                    value="MILL CNC VICTOR"@if ($machine->group_name == 'MILL CNC VICTOR') selected @endif>
-                                                    MILL CNC VICTOR</option>
-                                                <option
-                                                    value="MILL CNC WAD"@if ($machine->group_name == 'MILL CNC WAD') selected @endif>
-                                                    MILL CNC WAD</option>
-                                                <option
-                                                    value="MILL CNC WAP"@if ($machine->group_name == 'MILL CNC WAP') selected @endif>
-                                                    MILL CNC WAP</option>
-                                                <option
-                                                    value="MILL MAN MDC"@if ($machine->group_name == 'MILL MAN MDC') selected @endif>
-                                                    MILL MAN MDC</option>
-                                                <option
-                                                    value="MILL MAN WAP"@if ($machine->group_name == 'MILL MAN WAP') selected @endif>
-                                                    MILL MAN WAP</option>
-                                                <option
-                                                    value="MILL MANUAL STP"@if ($machine->group_name == 'MILL MANUAL STP') selected @endif>
-                                                    MILL MANUAL STP</option>
-                                                <option
-                                                    value="MILL WAP"@if ($machine->group_name == 'MILL WAP') selected @endif>
-                                                    MILL WAP</option>
-                                                <option
-                                                    value="MILL WBS"@if ($machine->group_name == 'MILL WBS') selected @endif>
-                                                    MILL WBS</option>
-                                                <option
-                                                    value="MILL YCM MDC"@if ($machine->group_name == 'MILL YCM MDC') selected @endif>
-                                                    MILL YCM MDC</option>
-                                                <option
-                                                    value="MILLING SMK"@if ($machine->group_name == 'MILLING SMK') selected @endif>
-                                                    MILLING SMK</option>
-                                                <option value="MN"@if ($machine->group_name == 'MN') selected @endif>
-                                                    MN</option>
-                                                <option value="MT"@if ($machine->group_name == 'MT') selected @endif>
-                                                    MT</option>
-                                                <option
-                                                    value="PACKING WF"@if ($machine->group_name == 'PACKING WF') selected @endif>
-                                                    PACKING WF</option>
-                                                <option
-                                                    value="PAINTING WF"@if ($machine->group_name == 'PAINTING WF') selected @endif>
-                                                    PAINTING WF</option>
-                                                <option value="PPIC"@if ($machine->group_name == 'PPIC') selected @endif>
-                                                    PPIC</option>
-                                                <option
-                                                    value="PUN CNC WF"@if ($machine->group_name == 'PUN CNC WF') selected @endif>
-                                                    PUN CNC WF</option>
-                                                <option
-                                                    value="PUN MAN WF"@if ($machine->group_name == 'PUN MAN WF') selected @endif>
-                                                    PUN MAN WF</option>
-                                                <option value="QC"@if ($machine->group_name == 'QC') selected @endif>
-                                                    QC</option>
-                                                <option value="ROOL WF"@if ($machine->group_name == 'ROOL WF') selected @endif>
-                                                    ROOL WF</option>
-                                                <option
-                                                    value="SALVAGNINI"@if ($machine->group_name == 'SALVAGNINI') selected @endif>
-                                                    SALVAGNINI</option>
-                                                <option value="SAW"@if ($machine->group_name == 'SAW') selected @endif>
-                                                    SAW</option>
-                                                <option
-                                                    value="SF GR CT"@if ($machine->group_name == 'SF GR CT') selected @endif>SF
-                                                    GR CT</option>
-                                                <option
-                                                    value="SF GR STP"@if ($machine->group_name == 'SF GR STP') selected @endif>SF
-                                                    GR STP</option>
-                                                <option
-                                                    value="SLOT WAD"@if ($machine->group_name == 'SLOT WAD') selected @endif>
-                                                    SLOT WAD</option>
-                                                <option
-                                                    value="SPOT WELD WF"@if ($machine->group_name == 'SPOT WELD WF') selected @endif>
-                                                    SPOT WELD WF</option>
-                                                <option value="TC"@if ($machine->group_name == 'TC') selected @endif>
-                                                    TC</option>
-                                                <option
-                                                    value="TL GR CT"@if ($machine->group_name == 'TL GR CT') selected @endif>TL
-                                                    GR CT</option>
-                                                <option value="TMK"@if ($machine->group_name == 'TMK') selected @endif>
-                                                    TMK</option>
-                                                <option value="TURNING"@if ($machine->group_name == 'TURNING') selected @endif>
-                                                    TURNING</option>
-                                                <option
-                                                    value="UN GR CT"@if ($machine->group_name == 'UN GR CT') selected @endif>UN
-                                                    GR CT</option>
-                                                <option
-                                                    value="UN GR MDC"@if ($machine->group_name == 'UN GR MDC') selected @endif>UN
-                                                    GR MDC</option>
-                                                <option
-                                                    value="UN GR STP"@if ($machine->group_name == 'UN GR STP') selected @endif>UN
-                                                    GR STP</option>
-                                                <option
-                                                    value="W CUT WAD"@if ($machine->group_name == 'W CUT WAD') selected @endif>W
-                                                    CUT WAD</option>
-                                                <option
-                                                    value="WELD MDC"@if ($machine->group_name == 'WELD MDC') selected @endif>
-                                                    WELD MDC</option>
-                                                <option
-                                                    value="WELD WAP"@if ($machine->group_name == 'WELD WAP') selected @endif>
-                                                    WELD WAP</option>
-                                                <option value="WELD WF"@if ($machine->group_name == 'WELD WF') selected @endif>
-                                                    WELD WF</option>
+                                            <select class="form-control select2" name="group_name" id="InputGroupName" style="width: 100%;" required>
+                                                <option disabled>-- Select Group --</option>
+                                                <option value="ASSY EL MDC" {{ $machine->group_name == 'ASSY EL MDC' ? 'selected' : '' }}>ASSY EL MDC</option>
+                                                <option value="ASSY MDC" {{ $machine->group_name == 'ASSY MDC' ? 'selected' : '' }}>ASSY MDC</option>
+                                                <option value="ASSY WF" {{ $machine->group_name == 'ASSY WF' ? 'selected' : '' }}>ASSY WF</option>
+                                                <option value="BEND CNC WF" {{ $machine->group_name == 'BEND CNC WF' ? 'selected' : '' }}>BEND CNC WF</option>
+                                                <option value="BEND MAN WF" {{ $machine->group_name == 'BEND MAN WF' ? 'selected' : '' }}>BEND MAN WF</option>
+                                                <option value="BEND PIPE WF" {{ $machine->group_name == 'BEND PIPE WF' ? 'selected' : '' }}>BEND PIPE WF</option>
+                                                <option value="BW CT" {{ $machine->group_name == 'BW CT' ? 'selected' : '' }}>BW CT</option>
+                                                <option value="BW MDC" {{ $machine->group_name == 'BW MDC' ? 'selected' : '' }}>BW MDC</option>
+                                                <option value="BW WAP" {{ $machine->group_name == 'BW WAP' ? 'selected' : '' }}>BW WAP</option>
+                                                <option value="BW WBS" {{ $machine->group_name == 'BW WBS' ? 'selected' : '' }}>BW WBS</option>
+                                                <option value="BW WF" {{ $machine->group_name == 'BW WF' ? 'selected' : '' }}>BW WF</option>
+                                                <option value="CUT WF" {{ $machine->group_name == 'CUT WF' ? 'selected' : '' }}>CUT WF</option>
+                                                <option value="DESIGN" {{ $machine->group_name == 'DESIGN' ? 'selected' : '' }}>DESIGN</option>
+                                                <option value="DRILL MDC" {{ $machine->group_name == 'DRILL MDC' ? 'selected' : '' }}>DRILL MDC</option>
+                                                <option value="DRILL WAP" {{ $machine->group_name == 'DRILL WAP' ? 'selected' : '' }}>DRILL WAP</option>
+                                                <option value="DRILL WBS" {{ $machine->group_name == 'DRILL WBS' ? 'selected' : '' }}>DRILL WBS</option>
+                                                <option value="DRILL WF" {{ $machine->group_name == 'DRILL WF' ? 'selected' : '' }}>DRILL WF</option>
+                                                <option value="EDM WAD" {{ $machine->group_name == 'EDM WAD' ? 'selected' : '' }}>EDM WAD</option>
+                                                <option value="ENG" {{ $machine->group_name == 'ENG' ? 'selected' : '' }}>ENG</option>
+                                                <option value="FTW WF" {{ $machine->group_name == 'FTW WF' ? 'selected' : '' }}>FTW WF</option>
+                                                <option value="GR CUT WF" {{ $machine->group_name == 'GR CUT WF' ? 'selected' : '' }}>GR CUT WF</option>
+                                                <option value="HK" {{ $machine->group_name == 'HK' ? 'selected' : '' }}>HK</option>
+                                                <option value="HOBB WAD" {{ $machine->group_name == 'HOBB WAD' ? 'selected' : '' }}>HOBB WAD</option>
+                                                <option value="HTM" {{ $machine->group_name == 'HTM' ? 'selected' : '' }}>HTM</option>
+                                                <option value="IT" {{ $machine->group_name == 'IT' ? 'selected' : '' }}>IT</option>
+                                                <option value="LOG" {{ $machine->group_name == 'LOG' ? 'selected' : '' }}>LOG</option>
+                                                <option value="LW CNC MDC" {{ $machine->group_name == 'LW CNC MDC' ? 'selected' : '' }}>LW CNC MDC</option>
+                                                <option value="LW CNC SMK" {{ $machine->group_name == 'LW CNC SMK' ? 'selected' : '' }}>LW CNC SMK</option>
+                                                <option value="LW CNC STP" {{ $machine->group_name == 'LW CNC STP' ? 'selected' : '' }}>LW CNC STP</option>
+                                                <option value="LW CNC WAD" {{ $machine->group_name == 'LW CNC WAD' ? 'selected' : '' }}>LW CNC WAD</option>
+                                                <option value="LW MAN WAD" {{ $machine->group_name == 'LW MAN WAD' ? 'selected' : '' }}>LW MAN WAD</option>
+                                                <option value="LW MANUAL STP" {{ $machine->group_name == 'LW MANUAL STP' ? 'selected' : '' }}>LW MANUAL STP</option>
+                                                <option value="LW MDC" {{ $machine->group_name == 'LW MDC' ? 'selected' : '' }}>LW MDC</option>
+                                                <option value="LW WAP" {{ $machine->group_name == 'LW WAP' ? 'selected' : '' }}>LW WAP</option>
+                                                <option value="LW WBS" {{ $machine->group_name == 'LW WBS' ? 'selected' : '' }}>LW WBS</option>
+                                                <option value="MILL CNC MAHO" {{ $machine->group_name == 'MILL CNC MAHO' ? 'selected' : '' }}>MILL CNC MAHO</option>
+                                                <option value="MILL CNC SMK" {{ $machine->group_name == 'MILL CNC SMK' ? 'selected' : '' }}>MILL CNC SMK</option>
+                                                <option value="MILL CNC STARRAG" {{ $machine->group_name == 'MILL CNC STARRAG' ? 'selected' : '' }}>MILL CNC STARRAG</option>
+                                                <option value="MILL CNC STP" {{ $machine->group_name == 'MILL CNC STP' ? 'selected' : '' }}>MILL CNC STP</option>
+                                                <option value="MILL CNC VICTOR" {{ $machine->group_name == 'MILL CNC VICTOR' ? 'selected' : '' }}>MILL CNC VICTOR</option>
+                                                <option value="MILL CNC WAD" {{ $machine->group_name == 'MILL CNC WAD' ? 'selected' : '' }}>MILL CNC WAD</option>
+                                                <option value="MILL CNC WAP" {{ $machine->group_name == 'MILL CNC WAP' ? 'selected' : '' }}>MILL CNC WAP</option>
+                                                <option value="MILL MAN MDC" {{ $machine->group_name == 'MILL MAN MDC' ? 'selected' : '' }}>MILL MAN MDC</option>
+                                                <option value="MILL MAN WAP" {{ $machine->group_name == 'MILL MAN WAP' ? 'selected' : '' }}>MILL MAN WAP</option>
+                                                <option value="MILL MANUAL STP" {{ $machine->group_name == 'MILL MANUAL STP' ? 'selected' : '' }}>MILL MANUAL STP</option>
+                                                <option value="MILL WAP" {{ $machine->group_name == 'MILL WAP' ? 'selected' : '' }}>MILL WAP</option>
+                                                <option value="MILL WBS" {{ $machine->group_name == 'MILL WBS' ? 'selected' : '' }}>MILL WBS</option>
+                                                <option value="MILL YCM MDC" {{ $machine->group_name == 'MILL YCM MDC' ? 'selected' : '' }}>MILL YCM MDC</option>
+                                                <option value="MILLING SMK" {{ $machine->group_name == 'MILLING SMK' ? 'selected' : '' }}>MILLING SMK</option>
+                                                <option value="MN" {{ $machine->group_name == 'MN' ? 'selected' : '' }}>MN</option>
+                                                <option value="MT" {{ $machine->group_name == 'MT' ? 'selected' : '' }}>MT</option>
+                                                <option value="PACKING WF" {{ $machine->group_name == 'PACKING WF' ? 'selected' : '' }}>PACKING WF</option>
+                                                <option value="PAINTING WF" {{ $machine->group_name == 'PAINTING WF' ? 'selected' : '' }}>PAINTING WF</option>
+                                                <option value="PPIC" {{ $machine->group_name == 'PPIC' ? 'selected' : '' }}>PPIC</option>
+                                                <option value="PUN CNC WF" {{ $machine->group_name == 'PUN CNC WF' ? 'selected' : '' }}>PUN CNC WF</option>
+                                                <option value="PUN MAN WF" {{ $machine->group_name == 'PUN MAN WF' ? 'selected' : '' }}>PUN MAN WF</option>
+                                                <option value="QC" {{ $machine->group_name == 'QC' ? 'selected' : '' }}>QC</option>
+                                                <option value="ROOL WF" {{ $machine->group_name == 'ROOL WF' ? 'selected' : '' }}>ROOL WF</option>
+                                                <option value="SALVAGNINI" {{ $machine->group_name == 'SALVAGNINI' ? 'selected' : '' }}>SALVAGNINI</option>
+                                                <option value="SAW" {{ $machine->group_name == 'SAW' ? 'selected' : '' }}>SAW</option>
+                                                <option value="SF GR CT" {{ $machine->group_name == 'SF GR CT' ? 'selected' : '' }}>SF GR CT</option>
+                                                <option value="SF GR STP" {{ $machine->group_name == 'SF GR STP' ? 'selected' : '' }}>SF GR STP</option>
+                                                <option value="SLOT WAD" {{ $machine->group_name == 'SLOT WAD' ? 'selected' : '' }}>SLOT WAD</option>
+                                                <option value="SPOT WELD WF" {{ $machine->group_name == 'SPOT WELD WF' ? 'selected' : '' }}>SPOT WELD WF</option>
+                                                <option value="TC" {{ $machine->group_name == 'TC' ? 'selected' : '' }}>TC</option>
+                                                <option value="TL GR CT" {{ $machine->group_name == 'TL GR CT' ? 'selected' : '' }}>TL GR CT</option>
+                                                <option value="TMK" {{ $machine->group_name == 'TMK' ? 'selected' : '' }}>TMK</option>
+                                                <option value="TURNING" {{ $machine->group_name == 'TURNING' ? 'selected' : '' }}>TURNING</option>
+                                                <option value="UN GR CT" {{ $machine->group_name == 'UN GR CT' ? 'selected' : '' }}>UN GR CT</option>
+                                                <option value="UN GR MDC" {{ $machine->group_name == 'UN GR MDC' ? 'selected' : '' }}>UN GR MDC</option>
+                                                <option value="UN GR STP" {{ $machine->group_name == 'UN GR STP' ? 'selected' : '' }}>UN GR STP</option>
+                                                <option value="W CUT WAD" {{ $machine->group_name == 'W CUT WAD' ? 'selected' : '' }}>W CUT WAD</option>
+                                                <option value="WELD MDC" {{ $machine->group_name == 'WELD MDC' ? 'selected' : '' }}>WELD MDC</option>
+                                                <option value="WELD WAP" {{ $machine->group_name == 'WELD WAP' ? 'selected' : '' }}>WELD WAP</option>
+                                                <option value="WELD WF" {{ $machine->group_name == 'WELD WF' ? 'selected' : '' }}>WELD WF</option>
                                             </select>
                                         </div>
                                         <div class="col-md-3">

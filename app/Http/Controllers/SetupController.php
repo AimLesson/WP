@@ -291,7 +291,9 @@ class SetupController extends Controller
         );
 
         if ($validator->fails()) {
-            return redirect()->route('setup.editmachine')->withErrors($validator)->withInput();
+            return redirect()->route('setup.editmachine', ['id' => $id])
+                ->withErrors($validator)
+                ->withInput();
         }
 
         $machine = Machine::find($id);

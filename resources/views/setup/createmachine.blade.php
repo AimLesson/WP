@@ -1249,7 +1249,7 @@
             Swal.fire({
                 icon: 'success',
                 text: successAlert,
-                position: 'top-end',
+                position: 'top-end',  
                 showConfirmButton: false,
                 timer: 5000,
                 toast: true,
