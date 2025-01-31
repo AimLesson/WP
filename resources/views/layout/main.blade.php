@@ -220,6 +220,22 @@
         border-color: #1be700; /* Change this to your desired hover border color */
         }
 
+        .btn-gray {
+        background-color: #696969; /* Change this to your desired background color */
+        color: white; /* Change this to your desired text color */
+        border: 2px solid #ffffff; /* Add a border with your desired color and width */
+        border-radius: 5px; /* Optional: Add rounded corners */
+        padding: 10px 20px; /* Adjust padding as needed */
+        font-size: 16px; /* Adjust font size as needed */
+        cursor: pointer;
+        transition: background-color 0.3s, border-color 0.3s; /* Optional: Add transition for smooth color changes */
+         }
+
+        .btn-gray:hover {
+        background-color: #696969; /* Change this to your desired hover background color */
+        border-color: #696969; /* Change this to your desired hover border color */
+        }
+
         .btn:disabled {
         background-color: gray !important;
         border-color: gray !important;

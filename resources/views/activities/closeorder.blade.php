@@ -59,6 +59,7 @@
                                             <th>QTY</th>
                                             <th>DOD</th>
                                             <th>Sale Price</th>
+                                            <th>QC Description</th>
                                             @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                             <th style="width: 100%">State</th>
                                             @endif
@@ -76,6 +77,7 @@
                                                 <td>{{ $o->qty }}</td>
                                                 <td>{{ $o->dod }}</td>
                                                 <td>{{ formatRupiah($o->sale_price) }}</td>
+                                                <td>{{ $o->qc_description }}</td>
                                                 @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                 <td>
                                                     <form action="{{ route('activities.updateStatusClosed', $o->id) }}" method="POST" class="order-status-form">

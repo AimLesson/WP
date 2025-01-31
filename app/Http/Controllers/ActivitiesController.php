@@ -3573,34 +3573,37 @@ public function overhead_manufacture(Request $request)
 
 
     public function updateQCStatus(Request $request, $id)
-    {
-        $order = Order::findOrFail($id);
-        $status = $request->input('status');
-    
-        if ($status === 'approved') {
-            $order->order_status = 'QC Pass';
-            $order->produksi_status = 'Disetujui';
-        } elseif ($status === 'pending') {
-            $order->order_status = 'Pending';
-        }
-    
-        $order->save();
-    
-        if ($status !== 'approved') {
-            // Update ProcessingAdd status based on matching order_number
-            ProcessingAdd::where('order_number', $order->order_number)
-                ->update(['status' => 'Queue']);
-    
-            // Update ItemAdd status based on matching order_number
-            ItemAdd::where('order_number', $order->order_number)
-                ->update(['status' => 'Queue']);
-        }
-    
-        return response()->json([
-            'success' => true,
-            'message' => $status === 'approved' ? 'Order approved successfully.' : 'Order rejected successfully.',
-        ]);
+{
+    $order = Order::findOrFail($id);
+    $status = $request->input('status');
+    $qcDescription = $request->input('qc_description');
+
+    if ($status === 'approved') {
+        $order->order_status = 'QC Pass';
+        $order->produksi_status = 'Disetujui';
+        $order->qc_description = $qcDescription;
+    } elseif ($status === 'pending') {
+        $order->order_status = 'Pending';
+        $order->qc_description = $qcDescription;
     }
+
+    $order->save();
+
+    if ($status !== 'approved') {
+        // Update ProcessingAdd status based on matching order_number
+        ProcessingAdd::where('order_number', $order->order_number)
+            ->update(['status' => 'Queue']);
+
+        // Update ItemAdd status based on matching order_number
+        ItemAdd::where('order_number', $order->order_number)
+            ->update(['status' => 'Queue']);
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => $status === 'approved' ? 'Order approved successfully.' : 'Order rejected successfully.',
+    ]);
+}
     
 
      public function maintenance_standart()
