@@ -488,107 +488,120 @@
             }
 
             function setInputValues(response) {
-                $('#totalSales').val(response.totalSales);
-                $('#totalMaterialCost').val(response.totalMaterialCost);
-                $('#totalLaborCost').val(response.totalLaborCost); // Corrected key
-                $('#totalMachineCost').val(response.totalMachineCost); // Corrected key
-                $('#totalStandardPartCost').val(response.totalStandardPartCost);
-                $('#totalSubContractCost').val(response.totalSubContractCost);
-                $('#totalOverheadCost').val(response.totalOverheadCost);
-            }
+            const totalSales = parseFloat(response.totalSales.replace(/,/g, '')) || 0;
+            const discountedTotalSales = totalSales;
+            
+            $('#totalSales').val(discountedTotalSales);
+            $('#totalMaterialCost').val(response.totalMaterialCost);
+            $('#totalLaborCost').val(response.totalLaborCost);
+            $('#totalMachineCost').val(response.totalMachineCost);
+            $('#totalStandardPartCost').val(response.totalStandardPartCost);
+            $('#totalSubContractCost').val(response.totalSubContractCost);
+            $('#totalOverheadCost').val(response.totalOverheadCost);
+        }
 
             function setDisplayValues(response) {
-                $('#displayTotalSales').text(formatRupiah(response.totalSales));
-                $('#displayTotalMaterialCost').text(formatRupiah(response.totalMaterialCost));
-                $('#displayTotalLaborCost').text(formatRupiah(response.totalLaborCost)); // Corrected key
-                $('#displayTotalMachineCost').text(formatRupiah(response.totalMachineCost)); // Corrected key
-                $('#displayTotalStandardPartCost').text(formatRupiah(response.totalStandardPartCost));
-                $('#displayTotalSubContractCost').text(formatRupiah(response.totalSubContractCost));
-                $('#displayTotalOverheadCost').text(formatRupiah(response.totalOverheadCost));
-            }
-
-            function parseResponseValues(response) {
-                return {
-                    totalSales: parseFloat(response.totalSales.replace(/,/g, '')) || 0,
-                    totalMaterialCost: parseFloat(response.totalMaterialCost.replace(/,/g, '')) || 0,
-                    totalMachineCost: parseFloat(response.totalMachineCost.replace(/,/g, '')) || 0,
-                    totalLaborCost: parseFloat(response.totalLaborCost.replace(/,/g, '')) || 0,
-                    totalSubContractCost: parseFloat(response.totalSubContractCost.replace(/,/g, '')) || 0,
-                    totalStandardPartCost: parseFloat(response.totalStandardPartCost.replace(/,/g, '')) || 0,
-                    totalOverheadCost: parseFloat(response.totalOverheadCost.replace(/,/g, '')) || 0,
-                };
-            }
-
-            function calculatePercentages(parsedValues) {
-                var totalSales = parsedValues.totalSales;
-                return {
-                    materialCostPercentage: (parsedValues.totalMaterialCost / totalSales) * 100 || 0,
-                    laborCostPercentage: (parsedValues.totalLaborCost / totalSales) * 100 || 0,
-                    machineCostPercentage: (parsedValues.totalMachineCost / totalSales) * 100 || 0,
-                    standardPartCostPercentage: (parsedValues.totalStandardPartCost / totalSales) * 100 || 0,
-                    subContractCostPercentage: (parsedValues.totalSubContractCost / totalSales) * 100 || 0,
-                    overheadCostPercentage: (parsedValues.totalOverheadCost / totalSales) * 100 || 0,
-                };
-            }
-
-            function logParsedValues(parsedValues) {
-                console.log("Parsed Values:", parsedValues);
-            }
-
-            function logCalculationSteps(parsedValues, percentages) {
-                var COGS = parsedValues.totalMaterialCost + parsedValues.totalMachineCost + parsedValues
-                    .totalLaborCost + parsedValues.totalSubContractCost + parsedValues.totalStandardPartCost +
-                    parsedValues.totalOverheadCost;
-                var GPM = parsedValues.totalSales - COGS;
-                var OHorg = parsedValues.totalSales * 0.1;
-                var NOI = GPM - OHorg;
-                var BNP = parsedValues.totalSales * 0.02;
-                var LSP = NOI - BNP;
-
-                console.log("COGS:", COGS);
-                console.log("GPM:", GPM);
-                console.log("OHorg:", OHorg);
-                console.log("NOI:", NOI);
-                console.log("BNP:", BNP);
-                console.log("LSP:", LSP);
-            }
-
-            function setCalculationResults(parsedValues) {
-            var COGS = parsedValues.totalMaterialCost + parsedValues.totalMachineCost +
-                    parsedValues.totalLaborCost + parsedValues.totalSubContractCost +
-                    parsedValues.totalStandardPartCost + parsedValues.totalOverheadCost;
-            var GPM = parsedValues.totalSales - COGS;
-            var OHorg = parsedValues.totalSales * 0.1;
-            var NOI = GPM - OHorg;
-            var BNP = parsedValues.totalSales * 0.02;
-            var LSP = NOI - BNP;
-
-            $('#COGS').text(formatRupiah(COGS));
-            $('#GPM').text(formatRupiah(GPM));
-            $('#OHorg').text(formatRupiah(OHorg));
-            $('#NOI').text(formatRupiah(NOI));
-            $('#BNP').text(formatRupiah(BNP));
-            $('#LSP').text(formatRupiah(LSP));
-
-            // Calculate percentages for Table 2
-            var totalSales = parsedValues.totalSales || 1; // Avoid division by zero
-            var percentages = {
-                cogsPercentage: (COGS / totalSales) * 100,
-                gpmPercentage: (GPM / totalSales) * 100,
-                ohorgPercentage: (OHorg / totalSales) * 100,
-                noiPercentage: (NOI / totalSales) * 100,
-                bnpPercentage: (BNP / totalSales) * 100,
-                lspPercentage: (LSP / totalSales) * 100
-            };
-
-            // Set percentages for Table 2
-            $('#cogsPercentage').text(percentages.cogsPercentage.toFixed(3) + '%');
-            $('#gpmPercentage').text(percentages.gpmPercentage.toFixed(3) + '%');
-            $('#ohorgPercentage').text(percentages.ohorgPercentage.toFixed(3) + '%');
-            $('#noiPercentage').text(percentages.noiPercentage.toFixed(3) + '%');
-            $('#bnpPercentage').text(percentages.bnpPercentage.toFixed(3) + '%');
-            $('#lspPercentage').text(percentages.lspPercentage.toFixed(3) + '%');
+            // Calculate total sales minus 11%
+            const totalSales = parseFloat(response.totalSales.replace(/,/g, '')) || 0;
+            const discountedTotalSales = totalSales;
+            
+            // Display the discounted total sales
+            $('#displayTotalSales').text(formatRupiah(discountedTotalSales));
+            
+            // Rest of the display values remain the same
+            $('#displayTotalMaterialCost').text(formatRupiah(response.totalMaterialCost));
+            $('#displayTotalLaborCost').text(formatRupiah(response.totalLaborCost));
+            $('#displayTotalMachineCost').text(formatRupiah(response.totalMachineCost));
+            $('#displayTotalStandardPartCost').text(formatRupiah(response.totalStandardPartCost));
+            $('#displayTotalSubContractCost').text(formatRupiah(response.totalSubContractCost));
+            $('#displayTotalOverheadCost').text(formatRupiah(response.totalOverheadCost));
         }
+
+        function parseResponseValues(response) {
+    const originalTotalSales = parseFloat(response.totalSales.replace(/,/g, '')) || 0;
+    const discountedTotalSales = originalTotalSales;
+    
+    return {
+        totalSales: discountedTotalSales,
+        totalMaterialCost: parseFloat(response.totalMaterialCost.replace(/,/g, '')) || 0,
+        totalMachineCost: parseFloat(response.totalMachineCost.replace(/,/g, '')) || 0,
+        totalLaborCost: parseFloat(response.totalLaborCost.replace(/,/g, '')) || 0,
+        totalSubContractCost: parseFloat(response.totalSubContractCost.replace(/,/g, '')) || 0,
+        totalStandardPartCost: parseFloat(response.totalStandardPartCost.replace(/,/g, '')) || 0,
+        totalOverheadCost: parseFloat(response.totalOverheadCost.replace(/,/g, '')) || 0,
+    };
+}
+
+function calculatePercentages(parsedValues) {
+    var totalSales = parsedValues.totalSales; // This is now using discounted total sales
+    return {
+        materialCostPercentage: (parsedValues.totalMaterialCost / totalSales) * 100 || 0,
+        laborCostPercentage: (parsedValues.totalLaborCost / totalSales) * 100 || 0,
+        machineCostPercentage: (parsedValues.totalMachineCost / totalSales) * 100 || 0,
+        standardPartCostPercentage: (parsedValues.totalStandardPartCost / totalSales) * 100 || 0,
+        subContractCostPercentage: (parsedValues.totalSubContractCost / totalSales) * 100 || 0,
+        overheadCostPercentage: (parsedValues.totalOverheadCost / totalSales) * 100 || 0,
+    };
+}
+
+function logParsedValues(parsedValues) {
+    console.log("Parsed Values (with 11% discount):", parsedValues);
+}
+
+function logCalculationSteps(parsedValues, percentages) {
+    var COGS = parsedValues.totalMaterialCost + parsedValues.totalMachineCost + parsedValues
+        .totalLaborCost + parsedValues.totalSubContractCost + parsedValues.totalStandardPartCost +
+        parsedValues.totalOverheadCost;
+    var GPM = parsedValues.totalSales - COGS; // Using discounted total sales
+    var OHorg = parsedValues.totalSales * 0.1; // Using discounted total sales
+    var NOI = GPM - OHorg;
+    var BNP = parsedValues.totalSales * 0.02; // Using discounted total sales
+    var LSP = NOI - BNP;
+
+    console.log("COGS:", COGS);
+    console.log("GPM:", GPM);
+    console.log("OHorg:", OHorg);
+    console.log("NOI:", NOI);
+    console.log("BNP:", BNP);
+    console.log("LSP:", LSP);
+}
+
+function setCalculationResults(parsedValues) {
+    var COGS = parsedValues.totalMaterialCost + parsedValues.totalMachineCost +
+        parsedValues.totalLaborCost + parsedValues.totalSubContractCost +
+        parsedValues.totalStandardPartCost + parsedValues.totalOverheadCost;
+    var GPM = parsedValues.totalSales - COGS; // Using discounted total sales
+    var OHorg = parsedValues.totalSales * 0.1; // Using discounted total sales
+    var NOI = GPM - OHorg;
+    var BNP = parsedValues.totalSales * 0.02; // Using discounted total sales
+    var LSP = NOI - BNP;
+
+    $('#COGS').text(formatRupiah(COGS));
+    $('#GPM').text(formatRupiah(GPM));
+    $('#OHorg').text(formatRupiah(OHorg));
+    $('#NOI').text(formatRupiah(NOI));
+    $('#BNP').text(formatRupiah(BNP));
+    $('#LSP').text(formatRupiah(LSP));
+
+    // Calculate percentages for Table 2
+    var totalSales = parsedValues.totalSales || 1; // Using discounted total sales
+    var percentages = {
+        cogsPercentage: (COGS / totalSales) * 100,
+        gpmPercentage: (GPM / totalSales) * 100,
+        ohorgPercentage: (OHorg / totalSales) * 100,
+        noiPercentage: (NOI / totalSales) * 100,
+        bnpPercentage: (BNP / totalSales) * 100,
+        lspPercentage: (LSP / totalSales) * 100
+    };
+
+    // Set percentages for Table 2
+    $('#cogsPercentage').text(percentages.cogsPercentage.toFixed(3) + '%');
+    $('#gpmPercentage').text(percentages.gpmPercentage.toFixed(3) + '%');
+    $('#ohorgPercentage').text(percentages.ohorgPercentage.toFixed(3) + '%');
+    $('#noiPercentage').text(percentages.noiPercentage.toFixed(3) + '%');
+    $('#bnpPercentage').text(percentages.bnpPercentage.toFixed(3) + '%');
+    $('#lspPercentage').text(percentages.lspPercentage.toFixed(3) + '%');
+}
 
 
             function setPercentageValues(percentages) {

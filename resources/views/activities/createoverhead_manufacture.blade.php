@@ -38,13 +38,20 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="order_number" class="form-label">Order</label>
-                                        <select name="order_number" id="order_number" onchange="fetchOrderData()"
-                                            class="form-control select2" style="width: 100%;" required>
-                                            <option selected="selected" disabled>-- Select Order --</option>
+                                        <input 
+                                            type="text" 
+                                            list="orderList" 
+                                            name="order_number" 
+                                            id="order_number" 
+                                            class="form-control" 
+                                            placeholder="-- Select Order --" 
+                                            required
+                                        >
+                                        <datalist id="orderList">
                                             @foreach ($orders as $o)
-                                                <option value="{{ $o->order_number }}">{{ $o->order_number }}</option>
+                                                <option value="{{ $o->order_number }}">
                                             @endforeach
-                                        </select>
+                                        </datalist>
                                         @error('order_number')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -258,19 +265,51 @@
                 document.title = pageTitle;
             }
 
-            $('#order_number').change(function() {
-                var selectedOrderNumber = $(this).val();
-                var orders = @json($orders);
+            $('#order_number').on('input', function() {
+        var selectedOrderNumber = $(this).val();
+        var orders = @json($orders);
 
-                var selectedOrder = orders.find(function(order) {
-                    return order.order_number === selectedOrderNumber;
-                });
+        var selectedOrder = orders.find(function(order) {
+            return order.order_number === selectedOrderNumber;
+        });
 
-                $('#so_number').val(selectedOrder ? selectedOrder.so_number : '');
-                $('#product').val(selectedOrder ? selectedOrder.product : '');
-                $('#company_name').val(selectedOrder ? selectedOrder.customer : '');
-                $('#dod').val(selectedOrder ? selectedOrder.dod : '');
+        if (selectedOrder) {
+            $('#so_number').val(selectedOrder.so_number);
+            $('#product').val(selectedOrder.product);
+            $('#company_name').val(selectedOrder.customer);
+            $('#dod').val(selectedOrder.dod);
+        } else {
+            // Clear fields if no match is found
+            $('#so_number').val('');
+            $('#product').val('');
+            $('#company_name').val('');
+            $('#dod').val('');
+        }
+    });
+
+    // Add blur event to handle validation
+    $('#order_number').on('blur', function() {
+        var selectedOrderNumber = $(this).val();
+        var orders = @json($orders);
+
+        var isValid = orders.some(function(order) {
+            return order.order_number === selectedOrderNumber;
+        });
+
+        if (!isValid && selectedOrderNumber !== '') {
+            // Show error message if invalid order number is entered
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Order Number',
+                text: 'Please select a valid order number from the list',
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                toast: true
             });
+            $(this).val(''); // Clear invalid input
+        }
+    });
 
             updateTitle('Add Overhead Manufacture');
         });

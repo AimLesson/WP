@@ -72,7 +72,6 @@ class ActivitiesController extends Controller
     // Return the view with the filtered and sorted data
     return view('activities.quotation', compact('quotation', 'quotationJoin', 'filterQuotationNo'));
 }
-
     public function viewquotation($quotation_no)
     {
         $quotationJoin = DB::table('quotation')
@@ -422,6 +421,7 @@ class ActivitiesController extends Controller
 
         return view('activities.salesorder', compact('salesorder', 'salesorderJoin', 'search'));
     }
+
     public function viewsalesorder($so_number)
     {
         $salesorderJoin = DB::table('salesorder')
@@ -435,14 +435,13 @@ class ActivitiesController extends Controller
     {
         $kbli = Kblicode::get();
         $unit = Unit::get();
-	    $salesmen = Salesman::get();
+	$salesmen = Salesman::get();
         $no_katalog = NoKatalog::get();
         $tax_type = TaxType::get();
         $user = User::get();
         $producttype = ProductType::get();
         $order_unit = OrderUnit::get();
         $quotation  = Quotation::get();
-        
 
         return view('activities.createso', compact('producttype', 'order_unit', 'user', 'tax_type', 'unit', 'kbli', 'quotation', 'no_katalog','salesmen'));
     }
@@ -1200,7 +1199,7 @@ private function generateCustomerNumber()
     //     return view('activities.item', compact('order'));
     // }
 
-    public function item(Request $request)
+public function item(Request $request)
     {
         // Get the order number filter from the request
         $filterOrderNumber = $request->input('order_number');
@@ -1240,8 +1239,6 @@ private function generateCustomerNumber()
     
         return view('activities.item', compact('item', 'itemJoin', 'filterOrderNumber'));
     }
-    
-
 
 
     public function viewitem($order_number)
@@ -1383,7 +1380,8 @@ private function generateCustomerNumber()
     
         return view('activities.edititem', compact('material', 'order', 'standardParts', 'kode_log', 'item', 'itemDetails' ,'orderNumber'));
     }
-    
+
+
     public function updateitem(Request $request)
     {
         // Validate the request
@@ -1464,13 +1462,7 @@ private function generateCustomerNumber()
             return redirect()->back()->with('error', 'Failed to Update Item. Please check logs for details.');
         }
     }
-    
-    
-    
-    
-    
-    
-    public function deleteitemadd(Request $request)
+public function deleteitemadd(Request $request)
     {
         DB::beginTransaction();
         try {
@@ -1569,7 +1561,7 @@ private function generateCustomerNumber()
         $processing = ProcessingAdd::where('order_number', $orderNumber)->get();
         $machines = Machine::all(); // Get all machines
     
-        return view('activities.processing', compact('processing', 'machines', 'orderNumber'));
+        return view('activities.viewprocessing', compact('processing', 'machines', 'orderNumber'));
     }
 
     public function bulkupdateprocessing(Request $request)
@@ -1990,8 +1982,6 @@ private function generateCustomerNumber()
     return view('activities.standartpart', compact('standartpart', 'standartpartJoin', 'noDataFound'));
 }
 
-
-
     public function viewstandartpart($order_number)
     {
         $quotationJoin = DB::table('standart_part')
@@ -2025,89 +2015,87 @@ private function generateCustomerNumber()
     }
 
     public function storestandartpart(Request $request)
-    {
-        // Log the initial request data
-        Log::info('StoreStandartPart method called', ['request' => $request->all()]);
+{
+    // Log the initial request data
+    Log::info('StoreStandartPart method called', ['request' => $request->all()]);
 
-        // Validation rules
-        $validator = Validator::make($request->all(), [
-            'order_number' => 'required',
-            'no_item' => 'required',
-            'date.*' => 'required|date',
-            'part_name.*' => 'required|string|max:255',
-            'qty.*' => 'required|integer|min:1',
-            'unit.*' => 'required|string|max:255',
-            'price_unit.*' => 'required|numeric|min:0',
-            'total_price.*' => 'required|numeric|min:0',
-            'info.*' => 'nullable|string|max:255',
-            'item.*' => 'nullable|string|max:255',
-        ]);
+    // Validation rules
+    $validator = Validator::make($request->all(), [
+        'order_number' => 'required',
+        'no_item' => 'required',
+        'date.*' => 'required|date',
+        'part_name.*' => 'required|string|max:255',
+        'qty.*' => 'required|integer|min:1',
+        'unit.*' => 'required|string|max:255',
+        'price_unit.*' => 'required|numeric|min:0',
+        'total_price.*' => 'required|numeric|min:0',
+        'info.*' => 'nullable|string|max:255',
+        'item.*' => 'nullable|string|max:255',
+    ]);
 
-        // Log validation result
-        if ($validator->fails()) {
-            Log::error('Validation failed', ['errors' => $validator->errors()->all()]);
-            return redirect()->back()->withErrors($validator)->withInput();
+    if ($validator->fails()) {
+        Log::error('Validation failed', ['errors' => $validator->errors()->all()]);
+        return redirect()->back()->withErrors($validator)->withInput();
+    }
+
+    Log::info('Validation passed');
+
+    $lowStockItems = []; // Store items with insufficient stock
+
+    foreach ($request->date as $index => $date) {
+        // Get the available stock for the item
+        $item = Standart_part::where('item_no', $request->no_item)->first();
+        $availableStock = $item ? $item->qty : 0;
+        $requestedQty = $request->qty[$index];
+
+        // Check if requested qty exceeds available stock
+        if ($requestedQty > $availableStock) {
+            $lowStockItems[] = $request->part_name[$index]; // Collect part names with low stock
         }
 
-        // Log successful validation
-        Log::info('Validation passed');
-
-        // Iterate over each set of item details and create standart_part entries
-        foreach ($request->date as $index => $date) {
-            // Log each iteration
-            Log::info('Creating standart_part entry', [
+        try {
+            Standart_part::create([
                 'order_number' => $request->order_number,
                 'item_no' => $request->no_item,
                 'item_name' => $request->item[$index] ?? null,
                 'date' => $date,
                 'part_name' => $request->part_name[$index],
-                'qty' => $request->qty[$index],
+                'qty' => $requestedQty,
                 'unit' => $request->unit[$index],
                 'price' => $request->price_unit[$index],
                 'total' => $request->total_price[$index],
                 'info' => $request->info[$index] ?? null,
             ]);
-
-            try {
-                standart_part::create([
+        } catch (\Exception $e) {
+            Log::error('Error creating standart_part entry', [
+                'exception' => $e->getMessage(),
+                'data' => [
                     'order_number' => $request->order_number,
                     'item_no' => $request->no_item,
                     'item_name' => $request->item[$index] ?? null,
                     'date' => $date,
                     'part_name' => $request->part_name[$index],
-                    'qty' => $request->qty[$index],
+                    'qty' => $requestedQty,
                     'unit' => $request->unit[$index],
                     'price' => $request->price_unit[$index],
                     'total' => $request->total_price[$index],
                     'info' => $request->info[$index] ?? null,
-                ]);
-            } catch (\Exception $e) {
-                // Log any exceptions that occur during the creation of entries
-                Log::error('Error creating standart_part entry', [
-                    'exception' => $e->getMessage(),
-                    'data' => [
-                        'order_number' => $request->order_number,
-                        'item_no' => $request->no_item,
-                        'item_name' => $request->item[$index] ?? null,
-                        'date' => $date,
-                        'part_name' => $request->part_name[$index],
-                        'qty' => $request->qty[$index],
-                        'unit' => $request->unit[$index],
-                        'price' => $request->price_unit[$index],
-                        'total' => $request->total_price[$index],
-                        'info' => $request->info[$index] ?? null,
-                    ]
-                ]);
-                return redirect()->back()->with('error', 'An error occurred while saving the data. Please try again.');
-            }
+                ]
+            ]);
+            return redirect()->back()->with('error', 'An error occurred while saving the data. Please try again.');
         }
-
-        // Log successful insertion of all entries
-        Log::info('All standart_part entries added successfully');
-
-        // Redirect with success message
-        return redirect()->route('activities.standartpart')->with('success', 'Standart Part(s) added successfully.');
     }
+
+    Log::info('All standart_part entries added successfully');
+
+    // Prepare notification message
+    $message = 'Standart Part(s) added successfully.';
+    if (!empty($lowStockItems)) {
+        $message .= ' However, stock is low for: ' . implode(', ', $lowStockItems);
+    }
+
+    return redirect()->route('activities.standartpart')->with('success', $message);
+}
 
 
     public function editstandartpart($orderNumber)
@@ -2300,14 +2288,14 @@ private function generateCustomerNumber()
         }
 
         // Redirect with success message
-        return redirect()->route('activities.sub_contract')->with('success', 'Sub Contract(s) added successfully.');
+        return redirect()->route('activities.subcontract')->with('success', 'Sub Contract(s) added successfully.');
     }
 
     public function editsub_contract($id)
     {
         $sub_contract = sub_contract::find($id);
         if (!$sub_contract) {
-            return redirect()->route('activities.sub_contract')->with('error', 'Sub-contract not found.');
+            return redirect()->route('activities.subcontract')->with('error', 'Sub-contract not found.');
         }
 
         $orders = Order::get();
@@ -2367,14 +2355,14 @@ private function generateCustomerNumber()
     {
         $sub_contract = sub_contract::find($id);
         if (!$sub_contract) {
-            return redirect()->route('activities.sub_contract')->with('error', 'Sub-contract not found.');
+            return redirect()->route('activities.subcontract')->with('error', 'Sub-contract not found.');
         }
 
         // Delete the sub-contract entry
         $sub_contract->delete();
 
         // Redirect with success message
-        return redirect()->route('activities.sub_contract')->with('success', 'Sub-contract deleted successfully.');
+        return redirect()->route('activities.subcontract')->with('success', 'Sub-contract deleted successfully.');
     }
 
 
@@ -2403,6 +2391,7 @@ public function overhead_manufacture(Request $request)
     // Return the view with the filtered data and the filter value
     return view('activities.overheadmanufacture', compact('data', 'filterOrderNumber'));
 }
+
     public function createoverhead_manufacture()
     {
         $orders = Order::notQCPass()
@@ -2601,6 +2590,7 @@ public function overhead_manufacture(Request $request)
     }
 }
 
+
     //Material Controller
     public function material(Request $request)
     {
@@ -2615,6 +2605,7 @@ public function overhead_manufacture(Request $request)
 
         return view('activities.material', compact('material'));
     }
+
 
     public function creatematerial()
     {
@@ -2908,7 +2899,13 @@ public function overhead_manufacture(Request $request)
         switch ($request->action) {
             case 'start':
                 $processingAdd->status = 'started';
-                $processingAdd->started_at = now();
+                
+                // Gunakan nilai started_at yang sudah ada, jika belum ada, set dengan now()
+                if (!$processingAdd->started_at) {
+                    $processingAdd->started_at = now();
+                }
+            
+                // Reset duration hanya jika status sebelumnya adalah 'pending'
                 $processingAdd->duration = $processingAdd->status === 'pending' ? $processingAdd->duration : 0;
                 break;
             case 'pending':
@@ -3046,7 +3043,7 @@ public function overhead_manufacture(Request $request)
             ]);
     
             if ($newStatus !== 'finished') {
-                ProcessingAdd::where('order_number', $order->order_number)
+                processingadd::where('order_number', $order->order_number)
                     ->update(['status' => 'Queue']);
     
                 ItemAdd::where('order_number', $order->order_number)
@@ -3062,7 +3059,6 @@ public function overhead_manufacture(Request $request)
             return response()->json(['success' => false, 'message' => 'Failed to update order status.'], 500);
         }
     }
-
 
 
     public function calculation()
@@ -3221,7 +3217,7 @@ public function overhead_manufacture(Request $request)
     private function calculateCosts($order)
     {
         try {
-            $totalSales = $order->salesOrder->total_amount ?? 0;
+            $totalSales = $order->sale_price ?? 0;
             Log::info('Total sales calculated.', ['total_sales' => $totalSales]);
 
             $totalMaterialCost = $this->fetchWPLinkCosts($order->order_number, 'materials');
@@ -3571,7 +3567,6 @@ public function overhead_manufacture(Request $request)
         return view('activities.qc', compact('order'));
     }
 
-
     public function updateQCStatus(Request $request, $id)
 {
     $order = Order::findOrFail($id);
@@ -3604,9 +3599,7 @@ public function overhead_manufacture(Request $request)
         'message' => $status === 'approved' ? 'Order approved successfully.' : 'Order rejected successfully.',
     ]);
 }
-    
-
-     public function maintenance_standart()
+    public function maintenance_standart()
     {
         return view('activities.maintenancestandart');
     }
@@ -3670,7 +3663,8 @@ public function storeCopiedOrder(Request $request)
             foreach ($itemAdds as $itemAdd) {
                 $newItemAdd = $itemAdd->replicate();
                 $newItemAdd->order_number = $newItem->order_number;
-		$newItemAdd->status= 'Queue';
+                $newItemAdd->status = 'Queue';
+                $newItemAdd->issued_item = now()->toDateString(); // Set issued_item ke tanggal hari ini
                 $newItemAdd->save();
 
                 Log::info('ItemAdd replicated', ['itemAdd' => $itemAdd, 'newItemAdd' => $newItemAdd]);
