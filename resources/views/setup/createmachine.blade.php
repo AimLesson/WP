@@ -793,21 +793,88 @@
             var electricalCostInput = document.getElementById('InputElectricalCost');
             var laborCostInput = document.getElementById('InputLaborCost');
             var machTotalInput = document.getElementById('InputTotalMach');
+            var machHourInput = document.getElementById('InputMachHour');
+
 
             // Fungsi untuk menghapus semua karakter selain angka
             function extractNumber(value) {
-                return value.replace(/\D/g, '');
-            }
+            // Pastikan value adalah string
+            let stringValue = value.toString();
+            
+            // Hapus 'Rp. ' dan spasi
+            stringValue = stringValue.replace(/^Rp\.\s*/, '');
+            
+            // Hapus titik pemisah ribuan
+            stringValue = stringValue.replace(/\./g, '');
+            
+            // Hapus karakter non-digit
+            stringValue = stringValue.replace(/\D/g, '');
+            
+            return stringValue;
+        }
 
             // Fungsi untuk mengubah angka ke format mata uang Rupiah
             function formatRupiah(angka) {
-                var rupiah = 'Rp. ' + angka.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-                return rupiah;
-            }
+            // Pastikan angka dalam bentuk number
+            let number = parseFloat(angka);
+            
+            // Bulatkan ke bilangan bulat terdekat
+            let roundedNumber = Math.round(number);
+            
+            // Format dengan titik sebagai pemisah ribuan
+            var rupiah = 'Rp. ' + roundedNumber.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+            
+            return rupiah;
+        }
 
+//         // Pastikan event listener untuk semua input
+// function setupInputListeners() {
+//     const inputsToWatch = [
+//         purchasePriceInput, 
+//         document.getElementById('InputUsedAge'),
+//         document.getElementById('InputMachHour'),
+//         document.getElementById('InputDaysPerYear')
+//     ];
 
-            // Fungsi untuk menghitung dan memperbarui Depreciation Cost
-            function updateDepreciationCost() {
+//     inputsToWatch.forEach(input => {
+//         input.addEventListener('input', function(e) {
+//             // Hapus karakter selain angka
+//             var inputValue = extractNumber(e.target.value);
+            
+//             // Format kembali ke Rupiah untuk input harga
+//             if (e.target.id === 'InputPurchasePrice') {
+//                 e.target.value = formatRupiah(inputValue);
+//             } else {
+//                 e.target.value = inputValue;
+//             }
+            
+//             // Perbarui perhitungan
+//             updateDepreciationCost();
+//         });
+//     });
+// }
+
+// Panggil setup listener saat halaman dimuat
+document.addEventListener('DOMContentLoaded', setupInputListeners);
+
+            // Fungsi validasi yang lebih fleksibel
+function isValidNumber(num) {
+    return typeof num === 'number' && 
+           !isNaN(num) && 
+           num > 0 && 
+           isFinite(num);
+}
+
+// Add this function to give default values to empty inputs
+function ensureDefaultValues() {
+    // Check each input and set default if empty
+    if (!usedAgeInput.value) usedAgeInput.value = '1';
+    if (!machHourInput.value) machHourInput.value = '1';
+    if (!daysPerYearInput.value) daysPerYearInput.value = '276';
+    if (!purchasePriceInput.value) purchasePriceInput.value = formatRupiah('0');
+}
+
+function updateDepreciationCost() {
                 // Mengambil nilai Purchase Price dan Depreciation Age dalam bentuk angka
                 var purchasePrice = parseFloat(extractNumber(purchasePriceInput.value));
                 var machHour = parseFloat(extractNumber(machHourInput.value));
@@ -830,35 +897,57 @@
                 }
             }
 
+// Add this to your setupInputListeners function
+function setupInputListeners() {
+    console.log("DEBUG: Setting up input listeners");
+    
+    const inputsToWatch = [
+        purchasePriceInput, 
+        document.getElementById('InputUsedAge'),
+        document.getElementById('InputMachHour'),
+        document.getElementById('InputDaysPerYear'),
+        document.getElementById('InputDepreciationAge') // Add this line
+    ];
+
+    inputsToWatch.forEach(input => {
+        console.log("DEBUG: Adding listener to", input);
+        input.addEventListener('input', function(e) {
+            console.log("DEBUG: Input event triggered for", e.target.id);
+            updateDepreciationCost();
+        });
+    });
+}
+
+// Pastikan fungsi dipanggil setelah DOM siap
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DEBUG: DOM Loaded");
+    setupInputListeners();
+    updateDepreciationCost();
+});
+
             // Event listener untuk input Purchase Price
             purchasePriceInput.addEventListener('input', function(e) {
-                // Mengambil nilai input dan membersihkannya dari karakter selain angka
-                var inputValue = extractNumber(e.target.value);
-
-                // Ubah nilai input ke dalam format mata uang Rupiah dan kembalikan ke input
-                e.target.value = formatRupiah(inputValue);
-
-                // Otomatis perbarui Depreciation Cost
-                updateDepreciationCost();
-            });
+    // Hapus karakter selain angka
+    var inputValue = extractNumber(e.target.value);
+    
+    // Format kembali ke Rupiah
+    e.target.value = formatRupiah(inputValue);
+    
+    // Perbarui perhitungan
+    updateDepreciationCost();
+});
 
             // Event listener untuk input usedAge
             usedAgeInput.addEventListener('input', function(e) {
-                // Menghapus karakter yang bukan angka
-                this.value = this.value.replace(/[^0-9]/g, '');
-
-                // Otomatis perbarui Depreciation Cost
-                updateDepreciationCost();
-            });
+            this.value = this.value.replace(/[^0-9]/g, '');
+            updateDepreciationCost();
+        });
 
             // Event listener untuk input usedAge
             machHourInput.addEventListener('input', function(e) {
-                // Menghapus karakter yang bukan angka
-                this.value = this.value.replace(/[^0-9]/g, '');
-
-                // Otomatis perbarui Depreciation Cost
-                updateDepreciationCost();
-            });
+            this.value = this.value.replace(/[^0-9]/g, '');
+            updateDepreciationCost();
+        });
             // Inisialisasi Depreciation Cost saat halaman dimuat
             updateDepreciationCost();
 
@@ -1216,13 +1305,16 @@
             function calculateDepreciationCost() {
                 const depreciationAge = parseFloat(depreciationAgeInput.value) || 0;
                 const usedAge = parseFloat(usedAgeInput.value) || 0;
+                const purchasePrice = parseFloat(document.getElementById('InputPurchasePrice').value.replace(/\D/g, '')) || 0;
+                const machHour = parseFloat(document.getElementById('InputMachHour').value) || 0; 
+                const daysPerYear = parseFloat(document.getElementById('InputDaysPerYear').value) || 0;      
 
                 // Check the condition: if Used Age > Depreciation Age
                 if (usedAge > depreciationAge) {
                     depreciationCostInput.value = 0;
                 } else {
                     // If needed, you can set this value to something else when the condition is not met.
-                    depreciationCostInput.value = ''; // or set a calculated value here if appropriate
+                    depreciationCostInput.value = formatRupiah(purchasePrice / (usedAge * (machHour * daysPerYear))); // or set a calculated value here if appropriate
                 }
             }
         });
@@ -1297,4 +1389,4 @@
             });
         });
     </script>
-@endsection
+@endsection 

@@ -106,7 +106,7 @@
                                         <td>
                                             @if($m->barcode_id)
                                             <div class="qr-code" data-barcode="{{ $m->barcode_id }}">
-                                                {!! QrCode::size(100)->generate($m->barcode_id) !!}
+                                                {!! QrCode::size(30)->generate($m->barcode_id) !!}
                                             </div>
                                             @else
                                                 N/A
