@@ -95,7 +95,7 @@
                                         <th>Operation</th>
                                         <th>Estimated Time</th>
                                         <th>Used Time</th>
-                                        <th>Finished</th>
+                                        <th>Finished date</th>
                                         <th>Operator</th>
                                         <th>Check</th>
                                     </tr>
@@ -106,7 +106,7 @@
                                         <td>
                                             @if($m->barcode_id)
                                             <div class="qr-code" data-barcode="{{ $m->barcode_id }}">
-                                                {!! QrCode::size(30)->generate($m->barcode_id) !!}
+                                                {!! QrCode::size(80)->generate($m->barcode_id) !!}
                                             </div>
                                             @else
                                                 N/A
@@ -185,148 +185,151 @@
                 <title>Production Sheet</title>
                 <style>
                     @media print {
-                        .no-print {
-                            display: none !important;
-                        }
-                    }
+    .no-print {
+        display: none !important;
+    }
+}
 
-                    body {
-                        font-family: Arial, sans-serif;
-                        margin: 20px;
-                        padding: 0;
-                    }
+body {
+    font-family: Arial, sans-serif;
+    margin: 15px;
+    padding: 0;
+    font-size: 12px; /* Base font size increased */
+}
 
-                    .header {
-                        text-align: center;
-                        margin-bottom: 10px;
-                    }
+.header {
+    text-align: center;
+    margin-bottom: 8px;
+}
 
-                    .details, .table-wrapper {
-                    width: 100%;
-                    margin: 0 auto; /* Centers the table */
-                    padding: 0;
-                }
+.details, .table-wrapper {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
 
-                .details {
-                    font-size: 14px;
-                }
+.details {
+    font-size: 15px; /* Increased from 14px */
+}
 
-                .details table {
-                    width: 100%;
-                    margin: 0; /* Ensures no margins */
-                    margin-bottom: 10px; /* Space between tables */
-                    border-collapse: collapse; /* Ensures no extra spacing between borders */
-                    border: 2px solid black; /* Outer table border only */
-                    table-layout: fixed; /* Aligns columns evenly */
-                }
+.details table {
+    width: 100%;
+    margin: 0;
+    margin-bottom: 8px;
+    border-collapse: collapse;
+    border: 2px solid black;
+    table-layout: fixed;
+}
 
-                .details td {
-                    padding: 4px 6px; /* Consistent padding for table content */
-                    font-size: 14px;
-                    border: none; /* Removes individual borders */
-                    vertical-align: top; /* Aligns text to the top of the cells */
-                }
+.details td {
+    padding: 5px 7px; /* Slightly increased padding */
+    font-size: 15px; /* Increased from 14px */
+    border: none;
+    vertical-align: top;
+}
 
-                .details td span.bold {
-                    font-weight: bold;
-                }
+.details td span.bold {
+    font-weight: bold;
+}
 
-                /* Add this to align tables with surrounding sentences */
-                .details:first-child {
-                    margin-top: 0; /* Ensures the first table aligns properly */
-                }
+.details:first-child {
+    margin-top: 0;
+}
 
-                .details:last-child {
-                    margin-bottom: 0; /* Ensures no extra spacing after the last table */
-                }
+.details:last-child {
+    margin-bottom: 0;
+}
 
-                    table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        font-size: 14px;
-                        margin-top: 10px;
-                    }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px; /* Increased from 14px */
+    margin-top: 8px;
+}
 
-                    th, td {
-                        border: 1px solid black;
-                        padding: 5px;
-                        text-align: left;
-                    }
+th, td {
+    border: 1px solid black;
+    padding: 6px; /* Increased from 5px */
+    text-align: left;
+}
 
-                    th {
-                        background-color: #f2f2f2;
-                    }
+th {
+    background-color: #f2f2f2;
+}
 
-                    .footer {
-                    margin-top: 30px;
-                    width: 100%;
-                }
+.footer {
+    margin-top: 25px;
+    width: 100%;
+}
 
-                .footer table {
-                    width: 100%;
-                    border-collapse: collapse; /* Ensures clean borders */
-                }
+.footer table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
-                .footer td {
-                    width: 50%; /* Makes each column take equal space */
-                    padding: 8px; /* Adds space inside cells */
-                    border: 1px solid black; /* Ensures borders are visible */
-                    vertical-align: top; /* Aligns text to the top */
-                    box-sizing: border-box; /* Prevents padding from overflowing width */
-                }
+.footer td {
+    width: 50%;
+    padding: 10px; /* Increased from 8px */
+    border: 1px solid black;
+    vertical-align: top;
+    box-sizing: border-box;
+    font-size: 15px; /* Added explicit font size */
+}
 
-                    .date-wanted {
-                        font-size: 30px;
-                        font-weight: bold;
-                        margin-top: 20px;
-                    }
+.date-wanted {
+    font-size: 32px; /* Increased from 30px */
+    font-weight: bold;
+    margin-top: 20px;
+}
 
-                    @page {
-                        size: portrait;
-                    }
-                    .header {
-                        text-align: center;
-                        margin-bottom: 10px;
-                    }
+@page {
+    size: portrait;
+    margin: 0.5cm; /* Added smaller margins to maximize printable area */
+}
 
-                    .header h3 {
-                        margin: 0;
-                        font-size: 18px;
-                        font-weight: bold;
-                    }
+.header {
+    text-align: center;
+    margin-bottom: 8px;
+}
 
-                    .header p {
-                        margin: 0;
-                        font-size: 12px;
-                    }
+.header h3 {
+    margin: 0;
+    font-size: 20px; /* Increased from 18px */
+    font-weight: bold;
+}
 
-                    .header-table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-top: 20px;
-                    }
+.header p {
+    margin: 0;
+    font-size: 14px; /* Increased from 12px */
+}
 
-                    .header-table td, .header-table th {
-                        border: 1px solid black;
-                        padding: 4px 6px;
-                        text-align: left;
-                        vertical-align: top;
-                    }
+.header-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
 
-                    .header-table td.title {
-                        font-weight: bold;
-                    }
+.header-table td, .header-table th {
+    border: 1px solid black;
+    padding: 5px 7px; /* Increased from 4px 6px */
+    text-align: left;
+    vertical-align: top;
+}
 
-                    .header-table .center {
-                        text-align: center;
-                    }
+.header-table td.title {
+    font-weight: bold;
+}
 
-                    .production-title {
-                        font-weight: bold;
-                        font-size: 14px;
-                        text-align: center;
-                        margin: 10px 0;
-                    }
+.header-table .center {
+    text-align: center;
+}
+
+.production-title {
+    font-weight: bold;
+    font-size: 16px; /* Increased from 14px */
+    text-align: center;
+    margin: 10px 0;
+}
                 </style>
             </head>
             <body>
