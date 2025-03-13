@@ -145,6 +145,7 @@ class HomeController extends Controller
                 'unit' => 'required',
                 'password' => 'required',
                 'role' => 'required',
+                'permissions' => 'nullable|array',
             ]
         );
 
@@ -159,6 +160,7 @@ class HomeController extends Controller
         $user->unit = $request->input('unit');
         $user->password = Hash::make($request->input('password'));
         $user->role = $request->input('role');
+        $user->permissions = json_encode($request->input('permissions', []));
         $user->save();
 
         return redirect()->route('user')->with('success', 'User Berhasil ditambahkan');
@@ -223,41 +225,44 @@ class HomeController extends Controller
     }
 
     public function updateuser(Request $request, $id)
-    {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'name' => 'required',
-                'username' => 'required|unique:users,username,' . $id,
-                'email' => 'required|email',
-                'unit' => 'required',
-                'password' => 'nullable',
-                'role' => 'required',
-            ]
-        );
-
-        if ($validator->fails()) {
-            return redirect()->route('user.edit', ['id' => $id])->withErrors($validator)->withInput();
-        }
-
-        $user = User::find($id);
-
-        if (!$user) {
-            return redirect()->route('user')->with('error', 'User not found');
-        }
-
-        $user->name = $request->input('name');
-        $user->username = $request->input('username');
-        $user->email = $request->input('email');
-        $user->unit = $request->input('unit');
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->input('password'));
-        }
-
-        $user->role = $request->input('role');
-        $user->save();
-        return redirect()->route('user')->with('success', 'Data User berhasil diperbarui');
+{
+    $validator = Validator::make(
+        $request->all(),
+        [
+            'name' => 'required',
+            'username' => 'required|unique:users,username,' . $id,
+            'email' => 'required|email',
+            'unit' => 'required',
+            'password' => 'nullable',
+            'role' => 'required',
+            'permissions' => 'nullable|array',
+        ]
+    );
+    
+    if ($validator->fails()) {
+        return redirect()->route('user.edit', ['id' => $id])->withErrors($validator)->withInput();
     }
+    
+    $user = User::find($id);
+    if (!$user) {
+        return redirect()->route('user')->with('error', 'User not found');
+    }
+    
+    $user->name = $request->input('name');
+    $user->username = $request->input('username');
+    $user->email = $request->input('email');
+    $user->unit = $request->input('unit');
+    
+    if ($request->filled('password')) {
+        $user->password = Hash::make($request->input('password'));
+    }
+    
+    $user->role = $request->input('role');
+    $user->permissions = json_encode($request->input('permissions', []));
+    $user->save();
+    
+    return redirect()->route('user')->with('success', 'User data has been successfully updated');
+}
 
     public function deleteuser(Request $request, $id)
     {

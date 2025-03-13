@@ -28,6 +28,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'permissions',
         'last_activity',
     ];
 
@@ -59,5 +60,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    
+    public function hasPermission($permission)
+    {
+        if (!$this->permissions) {
+            return false;
+        }
+        
+        $permissions = json_decode($this->permissions, true);
+        return in_array($permission, $permissions);
+    }
 }

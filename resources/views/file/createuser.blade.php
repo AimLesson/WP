@@ -98,9 +98,92 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary btn-custom">Add</button>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card card-info">
+                                <div class="card-header">
+                                    <h3 class="card-title">Menu Permissions</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-sm btn-primary" id="selectAllMenus">Select All</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" id="deselectAllMenus">Deselect All</button>
+                                    </div>
                                 </div>
+                                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                                    <div class="form-group">
+                                        <label>Accessible Menu Items:</label>
+                                        <div class="menu-permissions">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_quotation" name="permissions[]" value="quotation">
+                                                <label class="custom-control-label" for="menu_quotation">Quotation</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_salesorder" name="permissions[]" value="salesorder">
+                                                <label class="custom-control-label" for="menu_salesorder">Sales Order</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_order" name="permissions[]" value="order">
+                                                <label class="custom-control-label" for="menu_order">Order</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_customer" name="permissions[]" value="customer">
+                                                <label class="custom-control-label" for="menu_customer">Customer</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_item" name="permissions[]" value="item">
+                                                <label class="custom-control-label" for="menu_item">Item</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_processing" name="permissions[]" value="processing">
+                                                <label class="custom-control-label" for="menu_processing">Processings</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_standartpart" name="permissions[]" value="standartpart">
+                                                <label class="custom-control-label" for="menu_standartpart">Standart Part</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_subcontract" name="permissions[]" value="subcontract">
+                                                <label class="custom-control-label" for="menu_subcontract">Sub. Cont.</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_overhead" name="permissions[]" value="overhead_manufacture">
+                                                <label class="custom-control-label" for="menu_overhead">Over Head Manufacture</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_material" name="permissions[]" value="material">
+                                                <label class="custom-control-label" for="menu_material">Material</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_used_time" name="permissions[]" value="used_time">
+                                                <label class="custom-control-label" for="menu_used_time">Used Time</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_qc" name="permissions[]" value="qc">
+                                                <label class="custom-control-label" for="menu_qc">QC Approval</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_closeorder" name="permissions[]" value="closeorder">
+                                                <label class="custom-control-label" for="menu_closeorder">Finished Process</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_calculation" name="permissions[]" value="calculation">
+                                                <label class="custom-control-label" for="menu_calculation">Calculation</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_copy_order" name="permissions[]" value="copy_order">
+                                                <label class="custom-control-label" for="menu_copy_order">Copy Order</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input menu-item" id="menu_delivery" name="permissions[]" value="deliveryprocess">
+                                                <label class="custom-control-label" for="menu_delivery">Delivery Process</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-right">
+                                <button type="submit" class="btn btn-primary btn-custom">Add User</button>
                             </div>
                         </div>
                     </div>
@@ -108,28 +191,47 @@
             </div>
         </section>
     </div>
-    <!-- Pastikan Anda telah menyertakan SweetAlert di proyek Anda -->
+    <!-- Include SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Fungsi untuk memeriksa apakah unit dan role telah dipilih
+        // Function to check if unit and role have been selected
         function validateForm() {
             var unit = document.getElementById('exampleInputUnit').value;
             var role = document.getElementById('exampleInputRole').value;
 
-            if (unit === 'pilihunit' || role === 'pilihrole') {
-                alert('Silakan pilih Unit dan Role sebelum menambahkan pengguna!');
-                return false; // Mencegah pengiriman formulir
+            if (unit === 'Select Unit' || role === 'Select Role') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'Please select Unit and Role before adding user!'
+                });
+                return false; // Prevent form submission
             }
 
-            return true; // Lanjutkan pengiriman formulir jika unit dan role telah dipilih
+            return true; // Continue form submission if unit and role have been selected
         }
 
-        // Fungsi untuk mengubah judul berdasarkan halaman
+        // Function to update page title
         function updateTitle(pageTitle) {
             document.title = pageTitle;
         }
 
-        // Panggil fungsi ini saat halaman "barcode" dimuat
+        // Call this function when the "barcode" page loads
         updateTitle('Add User');
+
+        // Select/Deselect all menu items
+        document.getElementById('selectAllMenus').addEventListener('click', function() {
+            var checkboxes = document.querySelectorAll('.menu-item');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = true;
+            });
+        });
+
+        document.getElementById('deselectAllMenus').addEventListener('click', function() {
+            var checkboxes = document.querySelectorAll('.menu-item');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+        });
     </script>
 @endsection
