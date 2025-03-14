@@ -829,13 +829,35 @@ class ActivitiesController extends Controller
 {
     $query = Order::notFinished()->notQCPass()->notDelivered();
 
+    // Filter by order_number if provided
     if ($request->has('order_number')) {
         $order_number = $request->input('order_number');
-        // Apply filter by order_number
         $query->where('order_number', 'LIKE', '%' . $order_number . '%');
     }
+    
+    // Filter by date range if both start_date and end_date are provided
+    if ($request->has('start_date') && $request->has('end_date')) {
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        
+        // Add one day to end_date to include all records from that day
+        $end_date_adjusted = date('Y-m-d', strtotime($end_date . ' +1 day'));
+        
+        $query->whereBetween('created_at', [$start_date, $end_date_adjusted]);
+    }
+    // If only start_date is provided
+    elseif ($request->has('start_date')) {
+        $start_date = $request->input('start_date');
+        $query->whereDate('created_at', '>=', $start_date);
+    }
+    // If only end_date is provided
+    elseif ($request->has('end_date')) {
+        $end_date = $request->input('end_date');
+        $end_date_adjusted = date('Y-m-d', strtotime($end_date . ' +1 day'));
+        $query->whereDate('created_at', '<', $end_date_adjusted);
+    }
 
-    $order = $query->orderBy('created_at', 'desc')->get(); // Fetch the filtered results
+    $order = $query->orderBy('created_at', 'desc')->get();
     return view('activities.order', compact('order'));
 }
 

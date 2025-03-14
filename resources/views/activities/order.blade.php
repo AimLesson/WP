@@ -29,7 +29,7 @@
                             class="fas fa-plus"></i>
                         Add</a> --}}
 
-                        <!-- Filter Form -->
+                      {{--   <!-- Filter Form -->
                         <form action="{{ route('activities.order') }}" method="GET" class="mb-3">
                             <div class="form-group row">
                                 <label for="order_number" class="col-auto">Filtered by Order No.</label>
@@ -42,7 +42,38 @@
                                     <a href="{{ route('activities.order') }}" class="btn btn-secondary">Reset</a>
                                 </div>
                             </div>
+                        </form> --}}
+
+                        <form method="GET" action="{{ route('activities.order') }}" class="mb-4 p-3 border rounded shadow-sm bg-light">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label for="order_number" class="fw-bold">Filtered by Order No.</label>
+                                    <input type="text" class="form-control" id="order_number" name="order_number" 
+                                           value="{{ request('order_number') }}" placeholder="Enter order number">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="start_date" class="fw-bold">Start Date</label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" 
+                                           value="{{ request('start_date') }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="end_date" class="fw-bold">End Date</label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date" 
+                                           value="{{ request('end_date') }}">
+                                </div>
+                                <div class="col-md-3 d-flex align-items-end"> <!-- This ensures vertical alignment -->
+                                    <div class="d-flex gap-2 w-100"> <!-- Full width for the button container -->
+                                        <button type="submit" class="btn btn-primary btn-custom flex-grow-1">
+                                            <i class="bi bi-filter"></i> Filter
+                                        </button>
+                                        <a href="{{ route('activities.order') }}" class="btn btn-secondary flex-grow-1">
+                                            <i class="bi bi-x-circle"></i> Reset
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
+                        
 
 
                         <div class="card">
