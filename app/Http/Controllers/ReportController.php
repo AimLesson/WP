@@ -134,6 +134,20 @@ public function controlsheet(Request $request)
     $usedtime = $query->get();
     Log::info('Used time data retrieved', ['usedtime' => json_encode($usedtime)]);
 
+    // Get the selected item data explicitly for printing
+    $item = null;
+    if ($request->filled('item_number')) {
+        $item = ItemAdd::where('no_item', $request->item_number)
+            ->where('order_number', $request->order_number)
+            ->first();
+            
+        // Get the newprocessing data for this item
+        $newprocessingData = \App\Models\newprocessing::where('item_number', $request->item_number)
+            ->where('order_number', $request->order_number)
+            ->get();
+    } else {
+        $newprocessingData = collect();
+    }
     
 
     return view('report.productionsheet', [
@@ -143,6 +157,9 @@ public function controlsheet(Request $request)
         'orderNumber' => $request->order_number,
         'itemNumber' => $request->item_number,
         'order' => $order,
+        'item' => $item,
+        'processingData' => $usedtime,
+        'newprocessingData' => $newprocessingData 
     ]);
 }
     public function inspectionsheet()

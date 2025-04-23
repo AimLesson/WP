@@ -162,6 +162,9 @@
     const itemData = {!! $items->toJson() !!};
     const selectedItem = itemData.find(item => item.no_item === selectedItemNumber);
 
+    // Get the newprocessing data for the selected item
+    const newprocessingData = {!! $newprocessingData->toJson() !!};
+
     // Reset the data in unwanted columns in tbody
     const tbody = table.querySelector('tbody');
     Array.from(tbody.rows).forEach(row => {
@@ -417,7 +420,9 @@ th {
                         <td><span class="bold">Issued:</span> {{ now()->format('d-m-Y') }}</td>
                     </tr>
                     <tr>
-                        <td><span class="bold">No. of Pieces:</span> 3</td>
+                        ${newprocessingData.map(proc => `
+                        <td><span class="bold">No. of Pieces:</span>${proc.nop || ''}</td>
+                        `).join('')}
                         <td><span class="bold">Blank Size (mm):</span> 0</td>
                     </tr>
                     @endif
