@@ -72,4 +72,9 @@ class processingadd extends Model
         return $this->belongsTo(WPLink::class, 'item_number', 'no_item');
     }
 
+    public function pendingTimes()
+    {
+        return $this->hasMany(PendingTime::class);
+    }
+
 }

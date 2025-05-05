@@ -23,6 +23,7 @@ use App\Models\OrderUnit;
 use App\Models\Quotation;
 use App\Models\Department;
 use App\Models\processing;
+use App\Models\PendingTime;
 use App\Models\SalesOrder;
 use App\Models\ProductType;
 use App\Models\QuotationAdd;
@@ -36,6 +37,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Unique;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+
 
 class ActivitiesController extends Controller
 {
@@ -2903,67 +2906,91 @@ public function overhead_manufacture(Request $request)
 
 
 
-        public function updateStatus(Request $request, $id)
+    public function updateStatus(Request $request, $id)
     {
         Log::info('updateStatus called with parameters', ['id' => $id, 'request_data' => $request->all()]);
-
+    
         // Retrieve ProcessingAdd by $id
         $processingAdd = ProcessingAdd::find($id);
         if (!$processingAdd) {
             Log::error('ProcessingAdd not found.', ['processing_add_id' => $id]);
             return redirect()->route('activities.used_time')->withErrors(['error' => 'ProcessingAdd not found.']);
         }
-
+    
         $order_number = $processingAdd->order_number;
         $user = auth()->user();
-
+    
         // Update ProcessingAdd status based on requested action
         switch ($request->action) {
             case 'start':
-                $processingAdd->status = 'started';
-                
-                // Gunakan nilai started_at yang sudah ada, jika belum ada, set dengan now()
-                if (!$processingAdd->started_at) {
-                    $processingAdd->started_at = now();
+                // If coming from pending, record the previous pending session first
+                if ($processingAdd->started_at && $processingAdd->pending_at) {
+                    // Convert string dates to Carbon instances if they aren't already
+                    $startedAt = $processingAdd->started_at instanceof Carbon 
+                        ? $processingAdd->started_at 
+                        : Carbon::parse($processingAdd->started_at);
+                        
+                    $pendingAt = $processingAdd->pending_at instanceof Carbon 
+                        ? $processingAdd->pending_at 
+                        : Carbon::parse($processingAdd->pending_at);
+                    
+                    PendingTime::create([
+                        'processing_add_id' => $processingAdd->id,
+                        'started_at' => $processingAdd->started_at,
+                        'pending_at' => $processingAdd->pending_at,
+                        'duration_seconds' => $pendingAt->diffInSeconds($startedAt),
+                        'user_name' => $processingAdd->user_name
+                    ]);
                 }
-            
-                // Reset duration hanya jika status sebelumnya adalah 'pending'
-                $processingAdd->duration = $processingAdd->status === 'pending' ? $processingAdd->duration : 0;
+                
+                $processingAdd->status = 'started';
+                $processingAdd->started_at = now();
                 break;
+                
             case 'pending':
                 $processingAdd->status = 'pending';
                 $processingAdd->pending_at = now();
-                $processingAdd->duration += now()->diffInSeconds($processingAdd->started_at);
+                
+                // Calculate and add to the cumulative duration
+                if ($processingAdd->started_at) {
+                    $processingAdd->duration += now()->diffInSeconds($processingAdd->started_at);
+                }
                 break;
+                
             case 'finish':
                 $processingAdd->status = 'finished';
                 $processingAdd->finished_at = now();
-                $processingAdd->duration += now()->diffInSeconds($processingAdd->started_at);
+                
+                // If coming from started status, add the final duration
+                if ($processingAdd->started_at) {
+                    $processingAdd->duration += now()->diffInSeconds($processingAdd->started_at);
+                }
                 break;
+                
             default:
                 Log::error('Invalid action provided.', ['action' => $request->action]);
                 return redirect()->route('activities.used_time')->withErrors(['error' => 'Invalid action.']);
         }
-
+    
         $processingAdd->user_name = $user->name;
         $processingAdd->save();
-
+    
         Log::info('ProcessingAdd status updated.', [
             'processing_add_id' => $processingAdd->id,
             'status' => $processingAdd->status,
             'duration' => $processingAdd->duration,
         ]);
-
+    
         // Find the related ItemAdd and update its status
         $itemAdd = ItemAdd::where('order_number', $order_number)
-                          ->whereHas('processingAdds', function ($query) use ($id) {
-                              $query->where('id', $id);
-                          })->first();
-
+                  ->whereHas('processingAdds', function ($query) use ($id) {
+                      $query->where('id', $id);
+                  })->first();
+    
         if ($itemAdd) {
             $itemAdd->updateItemStatus();
             Log::info('Item status updated.', ['item_id' => $itemAdd->id]);
-
+    
             // Trigger the order status update
             $order = $itemAdd->order;
             if ($order) {
@@ -2974,7 +3001,7 @@ public function overhead_manufacture(Request $request)
             Log::error('Associated ItemAdd not found.', ['processing_add_id' => $id]);
             return redirect()->route('activities.used_time')->withErrors(['error' => 'Associated ItemAdd not found.']);
         }
-
+    
         return redirect()->route('activities.used_time');
     }
 
