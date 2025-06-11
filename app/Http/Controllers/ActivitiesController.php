@@ -2897,6 +2897,110 @@ public function overhead_manufacture(Request $request)
         return view('activities.used_time', compact('usedtime', 'orders', 'items', 'user'));
     }
 
+    public function editusedtime($id)
+{
+    try {
+        // Find the used time record
+        $usedtime = ProcessingAdd::findOrFail($id);
+        
+        // Get all orders for dropdown (if needed)
+        $orders = Order::where('order_status', '!=', 'Finished')
+                     ->notQCPass()
+                     ->notDelivered()
+                     ->get();
+        
+        // Get items for the selected order
+        $items = ItemAdd::where('order_number', $usedtime->order_number)->get();
+        
+        // Get authenticated user
+        $user = auth()->user();
+        
+        Log::info('Edit used time record', [
+            'id' => $id,
+            'order_number' => $usedtime->order_number,
+            'item_number' => $usedtime->item_number,
+        ]);
+        
+        return view('activities.edit_used_time', compact('usedtime', 'orders', 'items', 'user'));
+        
+    } catch (\Exception $e) {
+        Log::error('Error loading edit used time form', [
+            'id' => $id,
+            'error' => $e->getMessage()
+        ]);
+        
+        return redirect()->route('activities.used_time')
+                        ->with('error', 'Unable to load the record for editing.');
+    }
+}
+
+/**
+ * Update the specified used time record in storage.
+ */
+public function updateusedtime(Request $request, $id)
+{
+    try {
+        // Validate the request
+        $validatedData = $request->validate([
+            'order_number' => 'required|string|max:255',
+            'item_number' => 'required|string|max:255',
+            'machine' => 'required|string|max:255',
+            'operation' => 'required|string|max:255',
+            'estimated_time' => 'required|numeric|min:0',
+            'date_wanted' => 'required|date',
+            'user_name' => 'required|string|max:255',
+            'pending_at' => 'nullable|date',
+            'started_at' => 'nullable|date',
+            'finished_at' => 'nullable|date',
+            'status' => 'required|in:pending,queue,in_progress,finished',
+            'duration' => 'nullable|integer|min:0',
+        ]);
+        
+        // Find the record
+        $usedtime = ProcessingAdd::findOrFail($id);
+        
+        // Calculate duration if start and finish times are provided
+        if ($request->started_at && $request->finished_at) {
+            $startTime = \Carbon\Carbon::parse($request->started_at);
+            $finishTime = \Carbon\Carbon::parse($request->finished_at);
+            $validatedData['duration'] = $finishTime->diffInSeconds($startTime);
+        }
+        
+        // Update the record
+        $usedtime->update($validatedData);
+        
+        Log::info('Used time record updated', [
+            'id' => $id,
+            'order_number' => $validatedData['order_number'],
+            'item_number' => $validatedData['item_number'],
+            'updated_by' => auth()->user()->name,
+        ]);
+        
+        return redirect()->route('activities.used_time')
+                        ->with('success', 'Used time record updated successfully.');
+        
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        Log::warning('Validation failed for used time update', [
+            'id' => $id,
+            'errors' => $e->errors()
+        ]);
+        
+        return redirect()->back()
+                        ->withErrors($e->errors())
+                        ->withInput();
+                        
+    } catch (\Exception $e) {
+        Log::error('Error updating used time record', [
+            'id' => $id,
+            'error' => $e->getMessage()
+        ]);
+        
+        return redirect()->back()
+                        ->with('error', 'Unable to update the record. Please try again.')
+                        ->withInput();
+    }
+}
+
 
     public function clearFilters()
     {

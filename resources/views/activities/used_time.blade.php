@@ -74,6 +74,9 @@
                                 <table id='usedtime' class="table table-head-fixed text-nowrap ">
                                     <thead>
                                         <tr>
+                                             @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                                            <th>Action</th>
+                                            @endif
                                             <th>Order Number</th>
                                             <th>Item Number</th>
                                             <th style="display: none;">QR ID</th>
@@ -88,26 +91,13 @@
                                             <th>Finished At</th>
                                             <th>Status</th>
                                             @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
-                                            <th>Action</th>
+                                            <th>Edit</th>
                                             @endif
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($usedtime as $ut)
                                             <tr data-barcode-id="{{ $ut->barcode_id }}">
-                                                <td>{{ $ut->order_number }}</td>
-                                                <td>{{ $ut->item_number }}</td>
-                                                <td style="display: none;">{{ $ut->barcode_id }}</td>
-                                                <td>{{ $ut->date_wanted }}</td>
-                                                <td>{{ $ut->user_name }}</td>
-                                                <td>{{ $ut->machine }}</td>
-                                                <td>{{ $ut->operation }}</td>
-                                                <td>{{ gmdate('H:i:s', $ut->estimated_time * 3600) }}</td>
-                                                <td><span id="duration-{{ $ut->id }}">{{ gmdate('H:i:s', $ut->duration) }}</span></td>
-                                                <td>{{ $ut->pending_at }}</td>
-                                                <td>{{ $ut->started_at }}</td>
-                                                <td>{{ $ut->finished_at }}</td>
-                                                <td>{{ ucfirst($ut->status) }}</td>
                                                 @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
                                                     <td>
                                                         <div class="button-container">
@@ -131,6 +121,26 @@
                                                             </form>
                                                         </div>
                                                     </td>
+                                                @endif
+                                                <td>{{ $ut->order_number }}</td>
+                                                <td>{{ $ut->item_number }}</td>
+                                                <td style="display: none;">{{ $ut->barcode_id }}</td>
+                                                <td>{{ $ut->date_wanted }}</td>
+                                                <td>{{ $ut->user_name }}</td>
+                                                <td>{{ $ut->machine }}</td>
+                                                <td>{{ $ut->operation }}</td>
+                                                <td>{{ gmdate('H:i:s', $ut->estimated_time * 3600) }}</td>
+                                                <td><span id="duration-{{ $ut->id }}">{{ gmdate('H:i:s', $ut->duration) }}</span></td>
+                                                <td>{{ $ut->pending_at }}</td>
+                                                <td>{{ $ut->started_at }}</td>
+                                                <td>{{ $ut->finished_at }}</td>
+                                                <td>{{ ucfirst($ut->status) }}</td>
+                                                @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin' || Auth::user()->unit == 'MA')
+                                                <td>
+                                                    <a href="{{ url('activities/used_time/edit/' . $ut->id) }}"
+                                                        class="btn-xs btn-warning"><i class="fas fa-pen"></i>
+                                                        Edit</a>
+                                                </td>
                                                 @endif
                                             </tr>
                                         @endforeach
